@@ -80,7 +80,7 @@ openGDSM.publicOpenData.env = {
 			else if(this.envType=="o3Value")
 				envRange = this.O3Range;  	 
 			//WFS addLayer
-			openGDSMGeoserver.wfs(Map.map, 'http://113.198.80.60/','opengds',this.mapLayer);
+			openGDSMGeoserver.wfs(Map.map, 'http://113.198.80.9/','opengds',this.mapLayer);
 			
 			curMaps = Map.map.getLayers().getArray();
 			for(var i=0; i<curMaps.length; i++){
