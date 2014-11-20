@@ -208,7 +208,7 @@
                                         <li data-theme="z" data-role="list-divider">기본 제공 데이터</li>
                                                 <li><a href="#" onclick="openGDSM.wfsMap.geoserver('City_gu')">전국(구 단위)</a></li>
                                                 <!-- <li><a href="#" onclick="openGDSM.wfsMap.geoserver('City_dong')">전국(동 단위)</a></li> -->
-                                                <li><a href="#" onclick="openGDSM.wfsMap.geoserver('Seoul_gu')">서울특별시(구 단위)</a></li>
+                                                <li><a href="#" onclick="openGDSM.wfsMap.geoserver('Seoul_si')">서울특별시(구 단위)</a></li>
                                                 <li><a href="#" onclick="openGDSM.wfsMap.geoserver('Seoul_dong')">서울특별시(동 단위)</a></li>
                                                 <li><a href="#" onclick="openGDSM.wfsMap.geoserver('Incheon_dong')">인천광역시(동 단위)</a></li>
                                                 <li><a href="#" onclick="openGDSM.wfsMap.geoserver('Sejong_dong')">세종시(동 단위)</a></li>
