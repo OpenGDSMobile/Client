@@ -1,0 +1,218 @@
+/** blog array value (data)
+	createkeyValueJsonString = function(data){    
+		var str = "{";
+		for(var i in data){ 
+			str= str + '"'+data[i].attr('data-key')+'":';
+			str= str + '"'+data[i].attr('data-value'); 
+			if((data.length-1)==i)	str +='"}';
+			else						str +='",';
+		}  
+		return JSON.parse(str); 
+	};//JSON {key:value} 
+	
+	
+
+
+<!-- Public Data PopUp --> 
+		<!-- <fieldset data-role="controlgroup" data-type="horizontal" class="egov-align-center">
+			<input type="checkbox" name="keyValue" id="chkkeyValue" class="custom" checked/>
+			<label for="chkkeyValue">키값</label>
+			<input type="checkbox" name="dateValue" id="chkdateValue" class="custom" checked/>
+			<label for="chkdateValue">날짜</label>
+			<input type="checkbox" name="timeValue" id="chktimeValue" class="custom" checked/>
+			<label for="chktimeValue">시간</label>
+		</fieldset>
+		<!-- 
+		<fieldset data-role="controlgroup" data-type="horizontal" class="egov-align-center">
+			<input type="radio" name="visType" id="chart" class="custom"/>
+			<label for="chart">Chart</label>
+			<input type="radio" name="visType" id="map" class="custom" checked/>
+			<label for="map">Map</label>
+			<input type="radio" name="visType" id="chartAndMap" class="custom"/>
+			<label for="chartAndMap">Chart & Map</label>
+		</fieldset>
+		<label for="dateValue">날짜 : (금일 날짜로 기본 세팅)</label>
+		<input type="date" id="dateValue" data-key="dateValue"/>
+		<label for="timeValue">시간 : (최신 데이터 시간)</label>
+		<input type="time" id="timeValue" data-key="timeValue"> 
+		
+		
+		<label for="envValue">환경정보:</label>
+		<fieldset data-role="controlgroup" data-type="horizontal">
+		<input type="radio" id="env-radio1" name="env" value="PM10" checked>
+			<label for="env-radio1">PM10</label>
+		<input type="radio" id="env-radio2" name="env" value="PM25">
+			<label for="env-radio2">PM25</label>
+		<input type="radio" id="env-radio3" name="env" value="SO2">
+			<label for="env-radio3">SO2</label>
+		</fieldset>
+		<fieldset data-role="controlgroup" data-type="horizontal"> 
+		<input type="radio" id="env-radio6" name="env" value="O3">
+			<label for="env-radio6">O3</label>
+		<input type="radio" id="env-radio4" name="env" value="NO2">
+			<label for="env-radio4">NO2</label>
+		<input type="radio" id="env-radio5" name="env" value="CO">
+			<label for="env-radio5">CO</label>
+		</fieldset>
+		<a href="#" data-popup="setting" data-role="button" id="serviceName" data-key="serviceName" 
+			data-name="SeoulpublicOpenData" onclick="hmw.publicOpenData(this)">세팅 완료/값 불러오기</a> 
+		-->
+		
+ 
+		 
+		 
+		 
+		 
+	extent = Map.map.getView().calculateExtent(Map.map.getSize());
+	console.log(extent);
+	parseResponse = function(features){
+		console.log(features);
+		var canvasFunction = function(extent,resolution,pixelRatio,size,projection){
+			var canvasWidth = size[0];
+		    var canvasHeight = size[1];
+		    console.log(extent);
+		    var canvas = d3.select(document.createElement('canvas'));
+		    canvas.attr('width', canvasWidth).attr('height', canvasHeight);
+
+		    var context = canvas.node().getContext('2d');
+
+		    var d3Projection = d3.geo.mercator().scale(1).translate([0, 0]);
+		    var d3Path = d3.geo.path().projection(d3Projection);
+
+		    var pixelBounds = d3Path.bounds(features);
+		    var pixelBoundsWidth = pixelBounds[1][0] - pixelBounds[0][0];
+		    var pixelBoundsHeight = pixelBounds[1][1] - pixelBounds[0][1];
+
+		    var geoBounds = d3.geo.bounds(features);
+		    var geoBoundsLeftBottom = ol.proj.transform(
+		        geoBounds[0], 'EPSG:4326', projection);
+		    var geoBoundsRightTop = ol.proj.transform(
+		        geoBounds[1], 'EPSG:4326', projection);
+		    var geoBoundsWidth = geoBoundsRightTop[0] - geoBoundsLeftBottom[0];
+		    if (geoBoundsWidth < 0) {
+		      geoBoundsWidth += ol.extent.getWidth(projection.getExtent());
+		    }
+		    var geoBoundsHeight = geoBoundsRightTop[1] - geoBoundsLeftBottom[1];
+
+		    var widthResolution = geoBoundsWidth / pixelBoundsWidth;
+		    var heightResolution = geoBoundsHeight / pixelBoundsHeight;
+		    var r = Math.max(widthResolution, heightResolution);
+		    var scale = r / (resolution / pixelRatio);
+
+		    var center = ol.proj.transform(ol.extent.getCenter(extent),
+		        projection, 'EPSG:4326');
+		    d3Projection.scale(scale).center(center)
+		        .translate([canvasWidth / 2, canvasHeight / 2]);
+		    d3Path = d3Path.projection(d3Projection).context(context);
+		    //d3Path(features); 
+		    $.each(features.features, function(index, value){ 
+		    	
+		    	console.log(value.properties.SIG_KOR_NM.toString());
+		    	var test = new String('����');
+		    	if(value.properties.SIG_KOR_NM.toString()=='������'){
+		    		console.log("eee");
+		    		d3Path(value); 
+			        context.fillStyle = '#8ED6FF';
+			        context.fill();
+			    	context.strokeStyle = '#ff0000';
+			    	context.stroke(); 
+		    	}
+		    	else{
+		    		console.log("eee1");
+		    		d3Path(value); 
+		    		context.stroke();
+		    	}
+		    });
+		    //d3Path(features.features[0]); 
+		    return canvas[0][0];
+		};
+		var layer = new ol.layer.Image({
+		    source: new ol.source.ImageCanvas({
+		      canvasFunction: canvasFunction,
+		      projection: 'EPSG:900913'
+		    })
+		  });
+		Map.map.addLayer(layer);
+	};
+	var url = 'http://113.198.80.9/geoserver/wfs';
+	//var url = 'http://113.198.80.9/geoserver/wfs?service=wfs&version=1.1.0&request=GetFeature&typeNames=opengds:seoul_si&outputFormat=text/javascript';
+	$.ajax({
+		type:'GET',
+		url:url, 
+		data : {
+			service : 'wfs',
+			version : '1.1.0',
+			request : 'getFeature',
+			typeNames : 'opengds:'+obj,
+			outputFormat : 'text/javascript'
+		},
+		dataType : 'jsonp',
+		jsonpCallback : 'parseResponse',
+		success:function(msg){ 
+			console.log("OK"); 
+		},
+		error:function(xhr, status , err){
+			console.log(status +';'+err);
+		}
+	});   
+
+ 
+	
+	//d3 vector... 
+	d3.json(Layer.jsonfile,function(error,us){
+		//console.log(d3.geo.mercator());
+		//var features = topojson.feature(us, us.objects.counties);
+		var features = us;
+		
+		var canvasFunction = function(extent,resolution,pixelRatio,size,projection){
+			var canvasWidth = size[0];
+		    var canvasHeight = size[1];
+
+		    var canvas = d3.select(document.createElement('canvas'));
+		    canvas.attr('width', canvasWidth).attr('height', canvasHeight);
+
+		    var context = canvas.node().getContext('2d');
+
+		    var d3Projection = d3.geo.mercator().scale(1).translate([0, 0]);
+		    var d3Path = d3.geo.path().projection(d3Projection);
+
+		    var pixelBounds = d3Path.bounds(features);
+		    var pixelBoundsWidth = pixelBounds[1][0] - pixelBounds[0][0];
+		    var pixelBoundsHeight = pixelBounds[1][1] - pixelBounds[0][1];
+
+		    var geoBounds = d3.geo.bounds(features);
+		    var geoBoundsLeftBottom = ol.proj.transform(
+		        geoBounds[0], 'EPSG:4326', projection);
+		    var geoBoundsRightTop = ol.proj.transform(
+		        geoBounds[1], 'EPSG:4326', projection);
+		    var geoBoundsWidth = geoBoundsRightTop[0] - geoBoundsLeftBottom[0];
+		    if (geoBoundsWidth < 0) {
+		      geoBoundsWidth += ol.extent.getWidth(projection.getExtent());
+		    }
+		    var geoBoundsHeight = geoBoundsRightTop[1] - geoBoundsLeftBottom[1];
+
+		    var widthResolution = geoBoundsWidth / pixelBoundsWidth;
+		    var heightResolution = geoBoundsHeight / pixelBoundsHeight;
+		    var r = Math.max(widthResolution, heightResolution);
+		    var scale = r / (resolution / pixelRatio);
+
+		    var center = ol.proj.transform(ol.extent.getCenter(extent),
+		        projection, 'EPSG:4326');
+		    d3Projection.scale(scale).center(center)
+		        .translate([canvasWidth / 2, canvasHeight / 2]);
+		    d3Path = d3Path.projection(d3Projection).context(context);
+		    d3Path(features);
+		    context.stroke();
+
+		    return canvas[0][0];
+		};
+		var layer = new ol.layer.Image({
+		    source: new ol.source.ImageCanvas({
+		      canvasFunction: canvasFunction,
+		      projection: 'EPSG:900913'
+		    })
+		  });
+		Map.map.addLayer(layer);
+	});  
+	
+	 
