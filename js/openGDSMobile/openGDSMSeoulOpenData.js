@@ -33,7 +33,7 @@ openGDSM.seoulOpenData.env = {
 			data=JSON.parse(data);
 		$.ajax({
 			type:'POST',
-			url:'EnvironmentSeoulData.do',
+			url:serverURL+serverFolder+'EnvironmentSeoulData.do',
 			data: JSON.stringify(data), 
 			contentType : "application/json;charset=UTF-8",
 			dataType : 'json',
@@ -90,7 +90,7 @@ openGDSM.seoulOpenData.env = {
 		else if(this.envType=="O3")
 			envRange = this.O3Range; 
 		//WFS addLayer
-		openGDSMGeoserver.wfs(Map.map, 'http://113.198.80.9/','opengds',this.mapLayer);
+		openGDSMGeoserver.wfs(Map.map, serverURL,'opengds',this.mapLayer);
 		
 		curMaps = Map.map.getLayers().getArray();
 		for(var i=0; i<curMaps.length; i++){

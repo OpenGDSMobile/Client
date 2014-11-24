@@ -10,7 +10,7 @@ Layer.createLayer = function(obj,color,width){
 		format: new ol.format.GeoJSON(),
 		loader: function(extent, resolution, projection){
 			//console.log('Loading Data: '+data);
-			var url = 'http://113.198.80.9/geoserver/wfs?service=WFS&' +
+			var url = serverURL+'geoserver/wfs?service=WFS&' +
 			'version=1.1.0&request=GetFeature' +  
 			'&typeNames=opengds:'+obj+ 
 			'&outputFormat=text/javascript&format_options=callback:loadFeatures' +

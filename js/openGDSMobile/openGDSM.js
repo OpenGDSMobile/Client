@@ -82,7 +82,7 @@ var cur_date = new Date();
 	 */
 	//openGDSM.wfsMap.geoserver = function(url,workspace,layerName,color,width){
 	openGDSM.wfsMap.geoserver = function(layerName){
-		var url = "http://113.198.80.9/",
+		var url = geoServerURL,
 			workspace = 'opengds',
 			//layerName = 'Seoul_si',
 			r = Math.floor(Math.random()*256),

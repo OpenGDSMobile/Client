@@ -53,7 +53,7 @@ Gui.initViewer = function(){
 	 **/
 	$(Map.map.getViewport()).bind('tap',function(evt){
 		var pixel = Map.map.getEventPixel(evt.originalEvent);
-		Layer.displayFeatureInfo(pixel);
+	//	Layer.displayFeatureInfo(pixel);
 	}); 
 	Gui.updateLayout();
 };

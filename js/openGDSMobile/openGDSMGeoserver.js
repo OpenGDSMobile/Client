@@ -14,7 +14,7 @@ openGDSMGeoserver.getLayers = function(){
 		 if(this.mapLayers){
 			 $.ajax({
 					type:'POST',
-					url:'getLayerNames.do',
+					url:serverURL+serverFolder+'getLayerNames.do',
 					data: JSON.stringify(data), 
 					contentType : "application/json;charset=UTF-8",
 					dataType : 'json',
@@ -78,9 +78,9 @@ openGDSMGeoserver.wfs = function(olmap,url,workspace,layername,color,width,epsg)
 
 
 
+/*
 
-
-Layer.displayFeatureInfo = function(pixel){
+openGDSMGeoserver.displayFeatureInfo = function(pixel){
 	var feature = Map.map.forEachFeatureAtPixel(pixel, function(feature, layer){
 		return feature;
 	});
@@ -91,4 +91,5 @@ Layer.displayFeatureInfo = function(pixel){
 	else{
 		
 	}	
-}; 
+};
+*/
