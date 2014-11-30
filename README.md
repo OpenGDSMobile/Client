@@ -12,10 +12,10 @@ How to Install?
 Dependent libraries
 ======
 > + e-Govement framework (Korea)
->> + EgovMobile 1.3.2
->> + jQuery 1.9.1
->> + jQuery Mobile 1.3.2
->> + modernizr-2.0.4
+ >> EgovMobile 1.3.2
+ >> jQuery 1.9.1
+ >> jQuery Mobile 1.3.2
+ >> modernizr-2.0.4
 > + D3.js 3.4.13
 > + OpenLayers 3
 > + proj4 2.2.2
