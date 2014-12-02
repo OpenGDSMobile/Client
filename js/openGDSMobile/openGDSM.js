@@ -50,7 +50,7 @@ var cur_date = new Date();
  
 			openGDSM.vWorld.wmsAPI(Map.map, apiKey, selectedData); 
 		}; 
-		apiKey = "9E21E5EE-67D4-36B9-85BB-E153321EEE65";
+		apiKey = vWorldKey;
 		var rootDiv = $('#'+divName);
 		var html = 'Select Max 5<br><fieldset data-role="controlgroup" data-type="horizontal" class="egov-align-center">';
 		var styles = ['LT_C_UQ111','LT_C_UQ112','LT_C_UQ113','LT_C_UQ114',
@@ -196,7 +196,7 @@ var cur_date = new Date();
 				$('#'+divName).empty();
 				this.divName = divName;
 				this.dateChk = true, this.timeChk = true;
-				this.apiKey = '6473565a72696e7438326262524174'; 
+				this.apiKey = seoulAreaEnvkey;
 				var rootDiv = $('#'+divName);
 				openGDSM.PublicDataUI.visualTypeRadioBtn(rootDiv);
 				openGDSM.PublicDataUI.inputDate(rootDiv);
@@ -229,7 +229,7 @@ var cur_date = new Date();
 					$('#'+divName).empty(); 
 					this.divName = divName;
 					this.dateChk = false, this.timeChk = false;
-					this.apiKey = '4b56506967696e7437317348694371';
+					this.apiKey = seoulRoadEnvkey;
 				 	var rootDiv = $('#'+this.divName); 
 				 	openGDSM.PublicDataUI.visualTypeRadioBtn(rootDiv,false);  
 							
