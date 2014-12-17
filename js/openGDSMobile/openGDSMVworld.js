@@ -9,14 +9,14 @@ openGDSM.vWorld ={
 				source: new ol.source.TileWMS(({
 					url: "http://map.vworld.kr/js/wms.do",
 					params: {
-						  domain:domain,
-	  					  apiKey:apiKey, 
-	  					  LAYERS:mapStyles,
-	  					  STYLES:mapStyles,
-	  					  FORMAT:'image/png',
-	  					  CRS:'EPSG:900913',
-	  					  EXCEPTIONS:'text/xml',
-	  					  TRANSPARENT:true
+							domain:domain,
+	  						apiKey:apiKey, 
+	  						LAYERS:mapStyles,
+	  						STYLES:mapStyles,
+	  						FORMAT:'image/png',
+	  						CRS:'EPSG:900913',
+	  						EXCEPTIONS:'text/xml',
+	  						TRANSPARENT:true
 	  					}
 	  			}))
 			});
