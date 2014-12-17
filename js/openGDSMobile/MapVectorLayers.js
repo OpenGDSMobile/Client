@@ -2,6 +2,7 @@ var Layer = {};
 var	LayerSources =null;
 	Layer.vectorSource = null;
 	Layer.jsonfile = null;
+
 //192.168.0.9
 //113.198.80.60:8080
 Layer.createLayer = function(obj,color,width){
@@ -60,6 +61,16 @@ Layer.createLayer = function(obj,color,width){
 Layer.removeLayer = function(data){
 	Map.map.removeLayer(data);
 };
+
+
+
+
+
+
+
+
+
+
 /*
 Layer.displayFeatureInfo = function(pixel){
 	var feature = Map.map.forEachFeatureAtPixel(pixel, function(feature, layer){
