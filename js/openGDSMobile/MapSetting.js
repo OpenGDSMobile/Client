@@ -8,6 +8,7 @@ var Map = {};
 	Map.deviceOrientation = null;
 	Map.windowOrientation = undefined;
 	Map.geolocation = null;
+
 /**
  * Create Base Map based on OL3 
  * parameter : div-> Map div Name , mapStyle -> map style(new ol.source.*) 
@@ -58,6 +59,7 @@ Map.setWindowOrientation = function(orientation) {
 		Map.setRotation(Map.adjustedHeading(-Map.deviceOrientation.getHeading()));
 	}
 }; 
+
 //adjust max zoom
 Map.clampToScale = function(scaleDenom) {
 	var minRes = Map.scaleDenomToResolution(scaleDenom, true);
@@ -76,6 +78,7 @@ Map.scaleDenomToResolution = function(scaleDenom, closest) {
 	  return res;
 	}
 }; 
+
 /**
  * GeoLocation
  */
