@@ -28,6 +28,7 @@ Gui.initViewer = function(){
 	$(window).on('orientationchange', function(e) {
 	    Map.setWindowOrientation(window.orientation);
 	});   
+
 	/**
 	 * Vworld Projection
 	 */
@@ -37,17 +38,20 @@ Gui.initViewer = function(){
 		units : 'm'
 	});
 	ol.proj.addProjection(projection);  
+
 	/**
 	 * parameter
 	 */
 	openGDSM.baseMap('map','osm'); 
 	Map.centerOnLocation();   
+
 	/**
 	 * Geolocation Event(Set Center)
 	 **/
 	Map.geolocation.once('change:position',function(){
 		Map.map.getView().setCenter(Map.geolocation.getPosition());
 	}); 
+
 	/**
 	 * Layers Event
 	 **/
