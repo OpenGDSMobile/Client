@@ -1,12 +1,12 @@
 openGDSM.seoulOpenData = { };  
 var styleCache = {};
-
 openGDSM.seoulOpenData.env = {
 	key : "6473565a72696e7438326262524174",
 	serviceName : '',
 	envType : '',
 	visType : '',
 	mapLayer : '',
+    olmap :'',
 	dateValue : '',
 	timeValue : '',
 	colorRange : ["#4C4Cff","#9999FF","#4cff4c","#99ff99","#FFFF00","#FFFF99","#FF9900","#FF0000"],
@@ -16,16 +16,19 @@ openGDSM.seoulOpenData.env = {
 	NO2Range : [0.015,0.03,0.05,0.06,0.1045,0.15,0.2],
 	SO2Range : [0.01,0.02,0.035,0.05,0.075,0.1,0.15],
 	O3Range : [0.02,0.04,0.06,0.08,0.10,0.12,0.3], 
-	dataLoad : function(serviceName,apiKey, visType, envType, mapLayer, dateValue, timeValue){
+	dataLoad : function(serviceName,apiKey, visType, envType, olmap, mapLayer, dateValue, timeValue){
+        olmap= (typeof(olmap) !== 'undefined') ? olmap : "";
 		mapLayer = (typeof(mapLayer) !== 'undefined') ? mapLayer : "";
 		dateValue = (typeof(dateValue) !== 'undefined') ? dateValue : "";
 		timeValue = (typeof(timeValue) !== 'undefined') ? timeValue : "";
 		this.serviceName = serviceName;
 		this.envType = envType;
 		this.visType = visType;
+        this.olmap = olmap;
 		this.mapLayer = mapLayer;
 		this.dateValue = dateValue;
 		this.timeValue = timeValue;
+
 		var data = '{"serviceName":"'+serviceName+'",'+
 		   			' "keyValue":"'+apiKey+'",'+					
 		   			'"dateValue":'+'"'+dateValue+'",'+
@@ -90,7 +93,7 @@ openGDSM.seoulOpenData.env = {
 		else if(this.envType=="O3")
 			envRange = this.O3Range; 
 		//WFS addLayer
-		openGDSMGeoserver.wfs(Map.map, serverURL,'opengds',this.mapLayer);
+		openGDSM.openGDSMGeoserver.wfs(this.olmap, geoServerURL,'opengds',this.mapLayer);
 		
 		curMaps = Map.map.getLayers().getArray();
 		for(var i=0; i<curMaps.length; i++){
@@ -133,9 +136,29 @@ openGDSM.seoulOpenData.env = {
 			return styleCache[text];  
 		});
 		envMap.setOpacity(0.6);
-		$('#interpolationMapImage').attr('src','http://113.198.80.60/html/aqm/resultImages/'+this.dateValue.split("-").join("")+this.timeValue.replace(":","")+this.envType+'_result.jpg');
-		$('#interpolationMapImage').attr('height','250px');
-		$('#interpolationMap').show();
+
+		$.ajax({
+			type:'POST',
+			url:serverURL+serverFolder+'airQualityCreateMap.do',
+			data: JSON.stringify(data),
+			contentType : "application/json;charset=UTF-8",
+			dataType : 'json',
+			success:function(msg){
+                $('#interpolationMapImage').attr('src',apacheServerURL+'aqm/resultImages/'+openGDSM.seoulOpenData.env.dateValue.split("-").join("")+openGDSM.seoulOpenData.env.timeValue.replace(":","")+openGDSM.seoulOpenData.env.envType+'_result.png');
+                $('#interpolationMapImage').attr('height','250px');
+                $('#interpolationMap').show();
+
+                //////
+                $('#d3viewonMap').height(50);
+		        $('#d3viewonMap').css('top',$(window).height()-50);
+                $('#d3viewonMap').show();
+
+			},
+			error:function(){
+				console.log("err");
+			}
+		});
+
 	},
 	chartMapVisual: function(data){ 
 		$('#d3viewonMap').show(); 

@@ -1,0 +1,22 @@
+{
+  "name": "openGDSMobileClient",
+  "version": "1.0.0",
+  "description": "visualization of geospatial data and public data ",
+  "main": "./js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/OpenGDSMobile/Client.git"
+  },
+  "author": "intruder",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/OpenGDSMobile/Client/issues"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.5",
+    "grunt-contrib-uglify": "~0.6.0"
+  }
+}

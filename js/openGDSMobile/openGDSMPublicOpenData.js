@@ -8,6 +8,7 @@ openGDSM.publicOpenData.env = {
 		visType :'',
 		envType :'',
 		areaType :'',
+        olmap:'',
 		mapLayer : '',
 		colorRange : ["#4C4Cff","#9999FF","#4cff4c","#99ff99","#FFFF00","#FFFF99","#FF9900","#FF0000"],
 		PM10Range : [15,30,55,80,100,120,200], 
@@ -15,12 +16,14 @@ openGDSM.publicOpenData.env = {
 		NO2Range : [0.015,0.03,0.05,0.06,0.1045,0.15,0.2],
 		SO2Range : [0.01,0.02,0.035,0.05,0.075,0.1,0.15],
 		O3Range : [0.02,0.04,0.06,0.08,0.10,0.12,0.3], 
-		dataLoad : function(provider,serviceName,apiKey,visType,envType,areaType,mapLayer){
+		dataLoad : function(provider,serviceName,apiKey,visType,envType,areaType,olmap,mapLayer){
+            olmap= (typeof(olmap) !== 'undefined') ? olmap : "";
 			mapLayer = (typeof(mapLayer) !== 'undefined') ? mapLayer : "";
 			//console.log(provider+' '+serviceName+' '+apiKey+' '+visType+' '+envType+' '+areaType+' '+mapLayer);
 			this.visType = visType;
 			this.envType = envType;
 			this.areaType = areaType;
+            this.olmap = olmap;
 			this.mapLayer = mapLayer;
 			var data = '{"serviceName":"'+serviceName+'",'+
 			   			'"keyValue":"'+apiKey+'",'+	
@@ -80,7 +83,7 @@ openGDSM.publicOpenData.env = {
 			else if(this.envType=="o3Value")
 				envRange = this.O3Range;  	 
 			//WFS addLayer
-			openGDSMGeoserver.wfs(Map.map, serverURL,'opengds',this.mapLayer);
+			openGDSM.openGDSMGeoserver.wfs(this.olmap, geoServerURL,'opengds',this.mapLayer);
 			
 			curMaps = Map.map.getLayers().getArray();
 			for(var i=0; i<curMaps.length; i++){
@@ -90,7 +93,7 @@ openGDSM.publicOpenData.env = {
 			}  
 			styleCache = {};
 			envMap.setStyle(function(f,r){  
-				var text ; 
+				var text;
 				if(openGDSM.publicOpenData.env.mapLayer =='Seoul_si') text =r < 5000 ? f.get('SIG_KOR_NM') : '';
 				else text =r < 5000 ? f.get('EMD_KOR_NM') : '';
 				if(!styleCache[text]){ 
@@ -104,7 +107,7 @@ openGDSM.publicOpenData.env = {
 								}
 							}
 						}
-					} 
+					}
 					styleCache[text] = [new ol.style.Style({
 						fill : new ol.style.Fill({
 							color : color
