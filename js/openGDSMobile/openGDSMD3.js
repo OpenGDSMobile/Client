@@ -1,5 +1,6 @@
 openGDSM.d3 = {};
 
+
 /**
  * Create Bar Chart
  * parameter : div id, xyAxis(2 dim Array), color (1 dim Array), range(1 dim Array)
@@ -68,6 +69,9 @@ openGDSM.d3.barchart = function(divId, xyData, color, range){
 							return d;
 						});
 };
+
+
+
 
 
 /**
