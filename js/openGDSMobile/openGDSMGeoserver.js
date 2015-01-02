@@ -8,7 +8,7 @@
 openGDSM.openGDSMGeoserver = {
 	mapLayers : [],
     getLayers : function(){
-         data = {ws:'opengds'};
+         data = {WorkspaceName:'opengds'};
 		 if(this.mapLayers){
 			 $.ajax({
 					type:'POST',

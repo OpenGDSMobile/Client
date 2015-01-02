@@ -6,7 +6,7 @@ openGDSM.d3 = {};
  * parameter : div id, xyAxis(2 dim Array), color (1 dim Array), range(1 dim Array)
  */
 openGDSM.d3.barchart = function(divId, xyData, color, range){ 
-	var barHeight = 17;
+	var barHeight = 18;
 	var minusWidth=0;
 	$('#'+divId).empty();
 	var div = d3.select('#'+divId).append("svg")
@@ -17,7 +17,7 @@ openGDSM.d3.barchart = function(divId, xyData, color, range){
 	var maxData = d3.max(xyData[0]);  
 	var x = d3.scale.linear()
 			.domain([0, maxData])
-			.range([0,$('#'+divId).width()]); 
+			.range([0,$('#'+divId).width()-50]);
 	div.selectAll('rect')
 				.data(xyData[0])
 				.enter()
@@ -27,10 +27,12 @@ openGDSM.d3.barchart = function(divId, xyData, color, range){
 						return i*barHeight;
 					})
 					.attr('width',function(d){
+						if(d=='-' || d=='0') return x(20);
 						return x(d)-minusWidth;
 					})
 					.attr('height',barHeight-2)
 					.attr('fill',function(d,i){
+						if(d=='-' || d=='0') return '#AAAAAA';
 						for(var z=0; z<range.length; z++) 
 							if(xyData[0][i] <=range[z]){ 
 								return color[z];
@@ -47,7 +49,7 @@ openGDSM.d3.barchart = function(divId, xyData, color, range){
 					})
 					//.attr('dy','.15em')
 					.attr('font-weight','bold')
-					.attr('font-size','0.9em')
+					.attr('font-size','0.8em')
 					.text(function(d){ 
 						return d;
 					});
@@ -56,16 +58,18 @@ openGDSM.d3.barchart = function(divId, xyData, color, range){
 					.enter()
 					.append('text')
 						.attr('x',function(d){
+							if(d=='-'||d=='0') return x(10);
 							return x(d)-minusWidth;
 						})
 						.attr('y',function(d,i){
-							return i*barHeight+12;
+							return i*barHeight+barHeight-5;
 						})
 						.attr('dy','.15em')
 						.attr('fill','black')
 						.attr('font-size','0.8em')
 						.attr('font-weight','bold')
 						.text(function(d){
+							if(d=='-' || d=='0') return '점검중';
 							return d;
 						});
 };
