@@ -8,30 +8,6 @@ var openGDSM = {};
 var date = {};
 var cur_date = new Date(); 
 (function(){
-	openGDSM.init = function(){ 
-		$(document).on("pageinit",function(){
-			$.mobile.loader.prototype.options.text="loading";
-			$.mobile.loader.prototype.options.textVisible=false;
-			$.mobile.loader.prototype.options.theme="a";
-			$.mobile.loader.prototype.options.html="";
-		});
-		
-	};
-	/**
-	 * base Map Setting
-	 * Parameter : divName -> Map div Name,     mapStyle -> osm , vworld
-	 */
-	openGDSM.baseMap = function(divName, mapStyle){ 
-		var mapType=null;
-		if(mapStyle =='osm'){	
-			mapType = new ol.source.OSM();		
-		}
-		else if(mapStyle=='vworld'){ 
-			mapType = openGDSM.vWorld.TMS();
-		} 
-		//OpenLayers 3  
-		Map.createBaseMap(divName, mapType); 
-	};   
 	/**  // F65FC751-4918-3760-9218-318D5E3577E0   //60
 	 * Vworld WMS API User Interface 
 	 * Parameter : divName -> UI div Name, apiKey->Vworld APIKey

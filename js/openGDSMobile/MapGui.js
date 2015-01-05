@@ -3,7 +3,7 @@ var Gui = {};
 Gui.initialLoad = true;
 Gui.selectedLayer = null;
 Gui.tracking = true;
-
+/*
 Gui.updateLayout = function(){ 
 	var footer = $("div[data-role='footer']:visible"),
 	header = $("div[data-role='header']:visible"),
@@ -16,8 +16,8 @@ Gui.updateLayout = function(){
 	}
     $("#map").width( $(window).width() );
     $("#map").height( contentHeight   );
-  
 };
+*/
 
 //Default Projection : EPSG:900913
 Gui.initViewer = function(){
