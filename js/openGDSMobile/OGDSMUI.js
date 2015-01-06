@@ -1,36 +1,83 @@
 /*jslint devel: true */
 /*global $, jQuery, ol, OGDSM*/
-OGDSM.ns('UI');
-
-OGDSM.UI = (function () {
+OGDSM.ns('eGovFrameUI');
+OGDSM.eGovFrameUI = (function () {
     'use strict';
     var ui,
         OGDSM,
-        VWorldKey = null;
+        visualType,
+        dateInput,
+        timeInput,
+        areaType,
+        envType,
+        VWorldWMS = {
+            apiKey : null,
+            domain : null
+        };
 
     ui = function (obj) {
         this.OGDSM = obj;
+        visualType = dateInput = timeInput = areaType = envType = false;
     };
-
     ui.prototype = {
-        constructor : OGDSM.UI,
+        constructor : ui,
         setVWorldKey : function (keyValue) {
-            this.VWorldKey = keyValue;
+            this.VWorldWMS.apiKey = keyValue;
+        },
+        setVWorldDomain : function (domainValue) {
+            this.VWorldWMS.domain = domainValue;
         },
         getVWorldKey : function () {
-            return this.keyValue;
+            return this.VWorldWMS.apiKey;
+        },
+        getVWorldDomain : function () {
+            return this.VWorldWMS.domain;
+        },
+        setVisualType : function () {
+            this.visualType = true;
+        },
+        setDateInput : function () {
+            this.dateInput = true;
+        },
+        setTimeInput : function () {
+            this.timeInput = true;
+        },
+        setAreaType : function () {
+            this.areaType = true;
+        },
+        setEnvType : function () {
+            this.envType = true;
         }
     };
     return ui;
 }());
-
-OGDSM.UI.prototype.VWorldWMS = function (divName) {
+/*
+ *
+ *
+ */
+OGDSM.eGovFrameUI.prototype.VWorldWMS = function (divName) {
     'use strict';
-    var rootDiv, html, styles, stylesText, i;
-
+    var obj, rootDiv, html, styles, stylesText, i, btnObj, OGDSM, preProcess;
+    preProcess = function () {
+        var styles, checkedData;
+        styles = "";
+        checkedData = $("input[name='vworldWMS']:checkbox");
+        checkedData.each(function (i) {
+            if ($(this).is(':checked')) {
+                styles += $(this).attr('value');
+                styles += ',';
+            }
+        });
+        styles = styles.slice(0, -1);
+        console.log(OGDSM.getMap());
+        console.log(obj.getVWorldDomain());
+        console.log(styles);
+    };
+    OGDSM = this.OGDSM;
+    obj = this;
     rootDiv = $('#' + divName);
     html =
-        'Select Max 5<br><fieldset data-role="controlgroup" data-type="horizontal" class="egov-align-center">';
+        '<fieldset data-role="controlgroup" data-type="horizontal" class="egov-align-center">';
     styles = [
         'LP_PA_CBND_BUBUN,LP_PA_CBND_BONBUN',
         'LT_C_UQ111', 'LT_C_UQ112', 'LT_C_UQ113', 'LT_C_UQ114',
@@ -86,11 +133,161 @@ OGDSM.UI.prototype.VWorldWMS = function (divName) {
                     '<fieldset data-role="controlgroup" data-type="horizontal" class="egov-align-center">';
         }
     }
-
+    /*
+    *Limilt 5
+    */
     html += '</fieldset>' +
-            '<a href="#" id=wmsButton data-role="button" ' +
-            'onclick=makeData("' + this.VWorldKey + '","vworldWMS")>지도 추가</a>';
-            //'>지도 추가</a>';
+            '<a href="#" id=VWorldWMSButton data-role="button" ' +
+//            'onclick=this.makeData("' + this.VWorldKey + '","vworldWMS")>지도 추가</a>';
+            '>지도 추가</a>';
     rootDiv.html(html);
     rootDiv.trigger("create");
+    /*
+     *
+     */
+    btnObj = $('#VWorldWMSButton').click(function () {
+        preProcess();
+    });
+};
+/*
+ *
+ *
+ */
+OGDSM.eGovFrameUI.prototype.visualTypeRadio = function (divName, mapEnable) {
+    'use strict';
+    mapEnable = (typeof (mapEnable) !== 'undefined') ? mapEnable : true;
+    var rootDiv, html, arr, arrText, i;
+    rootDiv = $('#' + divName);
+    html = '<fieldset data-role="controlgroup" data-type="horizontal" class="egov-align-center">';
+    arr = ['map', 'chart'];
+    arrText = ['맵', '차트'];
+    for (i = 0; i < arr.length; i += 1) {
+        html += '<input type="radio" name="visualType" class="custom" ' +
+								' id="id-' + arr[i] + '" value="' + arr[i] + '" ';//+\
+		if (mapEnable === false && arr[i] !== 'chart') {
+            html += 'disabled ';
+        }
+        if (i === 0) {
+            html += 'checked';
+        }
+        //html += ' onclick="openGDSM.PublicDataUI.mapSelect($(this))"/>' +
+        html += '>' + '<label for="id-' + arr[i] + '">' + arrText[i] + '</label>';
+    }
+    rootDiv.append(html);
+    rootDiv.trigger("create");
+    $('input[name=visualType]').change(function () {
+        if ($(this).val() === 'chart') {
+            console.log('test');
+        }
+    });
+    this.setVisualType();
+    return $('input[name=visualType]');
+};
+/*
+ *
+ *
+ */
+OGDSM.eGovFrameUI.prototype.dateInput = function (divName) {
+    'use strict';
+    var rootDiv, html;
+    rootDiv = $('#' + divName);
+    html = '<label for="dateValue">날짜 : </label>' +
+			'<input type="date" id="dateValue"/>';
+    rootDiv.append(html);
+    rootDiv.trigger("create");
+    this.setDateInput();
+    return $('#dateValue');
+};
+/*
+ *
+ *
+ */
+OGDSM.eGovFrameUI.prototype.timeInput = function (divName) {
+    'use strict';
+    var rootDiv, html;
+    rootDiv = $('#' + divName);
+    html =  '<label for="timeValue">시간 : </label>' +
+			'<input type="time" id="timeValue">';
+    rootDiv.append(html);
+    rootDiv.trigger("create");
+    this.setTimeInput();
+    return $('#timeValue');
+};
+/*
+ *
+ *
+ */
+OGDSM.eGovFrameUI.prototype.envTypeRadio = function (divName, provider) {
+    'use strict';
+    provider = (typeof (provider) !== 'undefined') ? provider : "seoul";
+    var rootDiv, html, envTypes, envTypeValues, i;
+    rootDiv = $('#' + divName);
+
+    html = '<label for="envValue">환경정보:</label>' +
+		   '<fieldset data-role="controlgroup" data-type="horizontal" class="egov-align-center">';
+    envTypes = ['pm10', 'pm25', 'so2', 'o3', 'no2', 'co'];
+    if (provider === 'seoul') {
+        envTypeValues = ['PM10', 'PM25', 'SO2', 'O3', 'NO2', 'CO'];
+    } else if (provider === 'public') {
+        envTypeValues = ['pm10Value', 'pm25Value', 'so2Value', 'o3Value', 'no2Value', 'coValue'];
+    }
+    for (i = 0; i < envTypes.length; i += 1) {
+        html += '<input type="radio" name="envradio" class="custom" ' +
+            ' id="id-' + envTypeValues[i] + '" value="' + envTypeValues[i] + '"/>' +
+            '<label for="id-' + envTypeValues[i] + '">' +
+            '<img src="images/' + envTypes[i] + '.png" width=30>' +
+            '</label>';
+        if (i !== 0 && (i + 1) % 3 === 0) {
+            html += '</fieldset>' +
+                '<fieldset data-role="controlgroup" data-type="horizontal" class="egov-align-center">';
+        }
+    }
+    rootDiv.append(html);
+    rootDiv.trigger("create");
+    this.setEnvType();
+    return $('input[name=envTypeRadio]');
+};
+/*
+ *
+ *
+ */
+OGDSM.eGovFrameUI.prototype.areaTypeRadio = function (divName) {
+    'use strict';
+    var rootDiv, html, areaTypes, i;
+    rootDiv = $('#' + divName);
+    html = '<label for="areaValue">지역:</label>' +
+        '<fieldset data-role="controlgroup" data-type="horizontal" class="egov-align-center">';
+    areaTypes =
+        ['서울', '부산', '대구', '대전', '광주', '울산', '인천', '전남', '전북', '경남', '경북', '강원', '경기', '제주'];//Values
+    for (i = 0; i < areaTypes.length; i += 1) {
+        html += '<input type="radio" name="arearadio" class="custom" ' +
+            ' id="id-' + areaTypes[i] + '" value="' + areaTypes[i] + '"/>' +
+            '<label for="id-' + areaTypes[i] + '">' + areaTypes[i] + '</label>';
+        if (i !== 0 && (i + 1) % 3 === 0) {
+            html += '</fieldset>' +
+                '<fieldset data-role="controlgroup" data-type="horizontal" class="egov-align-center">';
+        }
+    }
+    html += '</fieldset>';
+    rootDiv.append(html);
+    rootDiv.trigger("create");
+    this.setAreaType();
+    return $('input[name=areaTypeRadio]');
+};
+/*
+ *
+ *
+ */
+OGDSM.eGovFrameUI.prototype.processBtn = function (divName) {
+    'use strict';
+    var rootDiv, html;
+    rootDiv = $('#' + divName);
+    html = '<a href="#" id="processBtn" data-role="button">시각화</a>';
+/*
+'<a href="#" data-role="button" data-provider="'+provider+'" data-serivce="'+serviceName+'" '+
+'onclick="openGDSM.'+obj+'.makeData($(this))">시각화</a>';
+*/
+    rootDiv.append(html);
+    rootDiv.trigger("create");
+    return $('#processBtn');
 };

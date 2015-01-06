@@ -6,9 +6,8 @@ WEBAPP = (function ($) {
     var map, divName, minResolution = null,
         windowOrientation = null,
         deviceOrientation = null;
-    WEBAPP = function (divName) {
+    WEBAPP = function () {/*
         this.divName = divName;
-
         this.map = new ol.Map({
             target : divName,
             layers : [
@@ -35,6 +34,7 @@ WEBAPP = (function ($) {
 				this.setResolution(minResolution);
 			}
 		});
+        */
     };
     WEBAPP.prototype = {
         constructor : WEBAPP
@@ -56,6 +56,39 @@ var beforeProcess = {
         'use strict';
         $('#serviceName').attr('data-value', $(obj).attr('data-value'));
     }
+};
+WEBAPP.prototype.mapInit = function (divName) {
+    'use strict';
+    var map, obj;
+    obj = this;
+    map = new ol.Map({
+
+        target : divName,
+        layers : [
+            new ol.layer.Tile({
+                title : 'basemap',
+                source : new ol.source.OSM()
+            })
+        ],
+        view: new ol.View({
+            projection : ol.proj.get('EPSG:900913'),
+            center : [0, 0],
+            zoom : 10
+        })
+    });
+
+    map.getView().on('change:rotation', function () {
+        $.event.trigger({
+            type : 'maprotation',
+            rotation : obj.getRotation()
+        });
+    });
+    map.getView().on('change:resolution', function () {
+        if (obj.getResolution() < obj.minResolution) {
+            obj.setResolution(obj.minResolution);
+        }
+    });
+    return map;
 };
 WEBAPP.prototype.getMap = function () {
     'use strict';
@@ -95,6 +128,14 @@ WEBAPP.prototype.setRotation = function (rotation) {
     'use strict';
     this.map.getView.setRotation(rotation);
 };
+WEBAPP.prototype.adjustedHeading = function (heading) {
+    'use strict';
+	if (this.windowOrientation !== undefined) {
+		// include window orientation (0, 90, -90 or 180)
+		heading -= this.windowOrientation * Math.PI / 180.0;
+	}
+	return heading;
+};
 WEBAPP.prototype.setWindowOrientation = function (orientation) {
     'use strict';
 	this.windowOrientation = orientation;
@@ -103,6 +144,8 @@ WEBAPP.prototype.setWindowOrientation = function (orientation) {
 		this.setRotation(this.adjustedHeading(-this.deviceOrientation.getHeading()));
 	}
 };
+
+
 WEBAPP.prototype.initViewer = function () {
     'use strict';
     var map,
@@ -117,16 +160,17 @@ WEBAPP.prototype.initViewer = function () {
 	});
     /*
 	$(window).on('orientationchange', function (e) {
-        WEBAPP.setWindowOrientation(window.orientation);
+        obj.setWindowOrientation(window.orientation);
 	});
     */
 	projection = new ol.proj.Projection({
-		code: 'EPSG:900913',
 		extent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
 		units : 'm'
 	});
 	ol.proj.addProjection(projection);
 
+    map = this.mapInit('map');
+    this.map = map;
     geolocation = new ol.Geolocation({
 		projection:	map.getView().getProjection(),
 		tracking : true
@@ -158,8 +202,12 @@ $(document).ready(function (e) {
      */
     var webAppObj,
         openGDSMObj,
-        openGDSMUI;
-    webAppObj = new WEBAPP('map');
+        VWorldUI,
+        seoulAreaEnvUI,
+        seoulRoadEnvUI,
+        publicEnvUI;
+    //webAppObj = new WEBAPP('map');
+    webAppObj = new WEBAPP();
     webAppObj.initViewer();
     /*
     $(document).on("pageinit", function () {
@@ -171,17 +219,41 @@ $(document).ready(function (e) {
     */
 	//openGDSM.openGDSMGeoserver.getLayers();
     openGDSMObj = new OGDSM(webAppObj.getMap());
-    console.log(openGDSMObj);
     this.baseMap = function (style) {
         openGDSMObj.changeBaseMap(style);
     };
 
-    openGDSMUI = new OGDSM.UI(openGDSMObj);
-    console.log(openGDSMUI);
+    VWorldUI = new OGDSM.eGovFrameUI(openGDSMObj);
+    seoulAreaEnvUI = new OGDSM.eGovFrameUI(openGDSMObj);
+    seoulRoadEnvUI = new OGDSM.eGovFrameUI(openGDSMObj);
+    publicEnvUI = new OGDSM.eGovFrameUI(openGDSMObj);
     this.createVWorldUI = function () {
-        openGDSMUI.VWorldWMS('vworldList');
-        openGDSMUI.setVWorldKey('9E21E5EE-67D4-36B9-85BB-E153321EEE65');
+        VWorldUI.VWorldWMS('vworldList');
+        VWorldUI.setVWorldKey('9E21E5EE-67D4-36B9-85BB-E153321EEE65');
+        VWorldUI.setVWorldDomain('http://localhost');
         //openGDSM.wmsMapUI.vworld('vworldList',vWorldKey,'http://localhost',Map.map);
+    };
+
+    this.createSeoulPublicAreaEnvUI = function () {
+        $('#setting').empty();
+        seoulAreaEnvUI.visualTypeRadio("setting");
+        seoulAreaEnvUI.dateInput("setting");
+        seoulAreaEnvUI.timeInput("setting");
+        seoulAreaEnvUI.envTypeRadio("setting");
+        seoulAreaEnvUI.processBtn("setting");
+    };
+    this.createSeoulPublicRoadEnvUI = function () {
+        $('#setting').empty();
+        seoulRoadEnvUI.visualTypeRadio("setting", false);
+        seoulRoadEnvUI.envTypeRadio("setting");
+        seoulRoadEnvUI.processBtn("setting");
+    };
+    this.createPublicPortalUI = function () {
+        $('#setting').empty();
+        publicEnvUI.visualTypeRadio("setting");
+        publicEnvUI.areaTypeRadio("setting");
+        publicEnvUI.envTypeRadio("setting", "public");
+        publicEnvUI.processBtn("setting");
     };
 
 });
