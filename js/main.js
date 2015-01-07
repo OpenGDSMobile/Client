@@ -35,7 +35,6 @@ WEBAPP.prototype.mapInit = function (divName) {
     var map, obj;
     obj = this;
     map = new ol.Map({
-
         target : divName,
         layers : [
             new ol.layer.Tile({
@@ -48,18 +47,6 @@ WEBAPP.prototype.mapInit = function (divName) {
             center : [0, 0],
             zoom : 10
         })
-    });
-
-    map.getView().on('change:rotation', function () {
-        $.event.trigger({
-            type : 'maprotation',
-            rotation : obj.getRotation()
-        });
-    });
-    map.getView().on('change:resolution', function () {
-        if (obj.getResolution() < obj.minResolution) {
-            obj.setResolution(obj.minResolution);
-        }
     });
     return map;
 };
@@ -93,7 +80,7 @@ WEBAPP.prototype.updateLayout = function () {
 	beforeProcess.popupSize("#vworldList", "300px");
 	$('#layersList').css('height', $(window).height());
 	$('#layersList').css("overflow-y", "auto");
-
+    console.log("layout update");
 };
 
 
@@ -125,9 +112,9 @@ WEBAPP.prototype.initViewer = function () {
         projection,
         geolocation,
         obj;
-    map = this.map;
+//    map = this.map;
     obj = this;
-	this.updateLayout();
+	obj.updateLayout();
 	$(window).on('resize', function () {
 		obj.updateLayout();
 	});
@@ -157,10 +144,12 @@ WEBAPP.prototype.initViewer = function () {
 	/**
 	 * Layers Event
 	 **/
+    /*
 	$(map.getViewport()).bind('tap', function (evt) {
 		var pixel = map.getEventPixel(evt.originalEvent);
 	//	Layer.displayFeatureInfo(pixel);
 	});
+    */
 	this.updateLayout();
 };
 
