@@ -10,8 +10,10 @@ var OGDSM = OGDSM || {};
 * OGDSM Super Class.<br>
 * --
 * Classes
-*  - olMap
 *  - eGovFrameUI
+*  - externalConnection
+*  - olMap
+*  - visulaization
 *
 * @class OGDSM
 */
