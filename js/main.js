@@ -6,35 +6,8 @@ WEBAPP = (function ($) {
     var map, divName, minResolution = null,
         windowOrientation = null,
         deviceOrientation = null;
-    WEBAPP = function () {/*
-        this.divName = divName;
-        this.map = new ol.Map({
-            target : divName,
-            layers : [
-                new ol.layer.Tile({
-                    title : 'basemap',
-                    source : new ol.source.OSM()
-                })
-            ],
-            view: new ol.View({
-                projection : ol.proj.get('EPSG:900913'),
-                center : [0, 0],
-                zoom : 10
-            })
-        });
+    WEBAPP = function () {
 
-		this.map.getView().on('change:rotation', function () {
-			$.event.trigger({
-                type : 'maprotation',
-                rotation : this.getRotation()
-            });
-		});
-		this.map.getView().on('change:resolution', function () {
-			if (this.getResolution() < minResolution) {
-				this.setResolution(minResolution);
-			}
-		});
-        */
     };
     WEBAPP.prototype = {
         constructor : WEBAPP
@@ -197,15 +170,32 @@ var styleChange = function (obj) {
 };
 $(document).ready(function (e) {
     'use strict';
-    /*
-     *
-     */
     var webAppObj,
+
         openGDSMObj,
         VWorldUI,
         seoulAreaEnvUI,
         seoulRoadEnvUI,
-        publicEnvUI;
+        publicEnvUI,
+
+        vworldList,
+        vworldProcessBtn,
+
+        seoulEnvVis,
+        seoulEnvDate,
+        seoulEnvTime,
+        seoulEnvType,
+        seoulEnvProcessBtn,
+
+        seoulEnvRoadVis,
+        seoulEnvRoadType,
+        seoulEnvRoadProcessBtn,
+
+        publicEnvVis,
+        publicEnvArea,
+        publicEnvType,
+        publicEnvProcessBtn;
+
     //webAppObj = new WEBAPP('map');
     webAppObj = new WEBAPP();
     webAppObj.initViewer();
@@ -218,42 +208,45 @@ $(document).ready(function (e) {
     });
     */
 	//openGDSM.openGDSMGeoserver.getLayers();
-    openGDSMObj = new OGDSM(webAppObj.getMap());
+
+
+    openGDSMObj = new OGDSM.olMap(webAppObj.getMap());
     this.baseMap = function (style) {
         openGDSMObj.changeBaseMap(style);
     };
 
-    VWorldUI = new OGDSM.eGovFrameUI(openGDSMObj);
-    seoulAreaEnvUI = new OGDSM.eGovFrameUI(openGDSMObj);
-    seoulRoadEnvUI = new OGDSM.eGovFrameUI(openGDSMObj);
-    publicEnvUI = new OGDSM.eGovFrameUI(openGDSMObj);
+    VWorldUI = new OGDSM.eGovFrameUI();
+    seoulAreaEnvUI = new OGDSM.eGovFrameUI();
+    seoulRoadEnvUI = new OGDSM.eGovFrameUI();
+    publicEnvUI = new OGDSM.eGovFrameUI();
     this.createVWorldUI = function () {
-        VWorldUI.VWorldWMS('vworldList');
-        VWorldUI.setVWorldKey('9E21E5EE-67D4-36B9-85BB-E153321EEE65');
-        VWorldUI.setVWorldDomain('http://localhost');
-        //openGDSM.wmsMapUI.vworld('vworldList',vWorldKey,'http://localhost',Map.map);
+        vworldList = VWorldUI.vworldWMSCheck('vworldList');
+        vworldProcessBtn = VWorldUI.processButton('vworldList');
     };
 
     this.createSeoulPublicAreaEnvUI = function () {
         $('#setting').empty();
-        seoulAreaEnvUI.visualTypeRadio("setting");
-        seoulAreaEnvUI.dateInput("setting");
-        seoulAreaEnvUI.timeInput("setting");
-        seoulAreaEnvUI.envTypeRadio("setting");
-        seoulAreaEnvUI.processBtn("setting");
+        seoulEnvVis = seoulAreaEnvUI.visTypeRadio("setting");
+        seoulEnvDate = seoulAreaEnvUI.dateInput("setting");
+        seoulEnvTime = seoulAreaEnvUI.timeInput("setting");
+        seoulEnvType = seoulAreaEnvUI.envTypeRadio("setting");
+        seoulEnvProcessBtn = seoulAreaEnvUI.processButton("setting");
     };
     this.createSeoulPublicRoadEnvUI = function () {
         $('#setting').empty();
-        seoulRoadEnvUI.visualTypeRadio("setting", false);
-        seoulRoadEnvUI.envTypeRadio("setting");
-        seoulRoadEnvUI.processBtn("setting");
+        seoulEnvRoadVis = seoulRoadEnvUI.visTypeRadio("setting", false);
+        seoulEnvRoadType = seoulRoadEnvUI.envTypeRadio("setting");
+        seoulEnvRoadProcessBtn = seoulRoadEnvUI.processButton("setting");
     };
     this.createPublicPortalUI = function () {
         $('#setting').empty();
-        publicEnvUI.visualTypeRadio("setting");
-        publicEnvUI.areaTypeRadio("setting");
-        publicEnvUI.envTypeRadio("setting", "public");
-        publicEnvUI.processBtn("setting");
+        publicEnvVis = publicEnvUI.visTypeRadio("setting");
+        publicEnvArea = publicEnvUI.areaTypeRadio("setting");
+        publicEnvType = publicEnvUI.envTypeRadio("setting", "public");
+        publicEnvProcessBtn = publicEnvUI.processButton("setting");
     };
 
+        //VWorldUI.setVWorldKey('9E21E5EE-67D4-36B9-85BB-E153321EEE65');
+        //VWorldUI.setVWorldDomain('http://localhost');
+        //openGDSM.wmsMapUI.vworld('vworldList',vWorldKey,'http://localhost',Map.map);
 });

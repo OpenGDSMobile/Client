@@ -1,61 +1,30 @@
 /*jslint devel: true */
 /*global $, jQuery, ol, OGDSM*/
-OGDSM.ns('eGovFrameUI');
-OGDSM.eGovFrameUI = (function () {
-    'use strict';
-    var ui,
-        OGDSM,
-        visualType,
-        dateInput,
-        timeInput,
-        areaType,
-        envType,
-        VWorldWMS = {
-            apiKey : null,
-            domain : null
-        };
 
-    ui = function (obj) {
-        this.OGDSM = obj;
-        visualType = dateInput = timeInput = areaType = envType = false;
+/**
+* e-Goverement Framework User Interface Automatic Create.
+* @class OGDSM.eGovFramUI
+* @constructor
+*/
+OGDSM.namesapce('eGovFrameUI');
+OGDSM.eGovFrameUI = (function (OGDSM) {
+    'use strict';
+
+    OGDSM.eGovFrameUI = function () {
+
     };
-    ui.prototype = {
-        constructor : ui,
-        setVWorldKey : function (keyValue) {
-            this.VWorldWMS.apiKey = keyValue;
-        },
-        setVWorldDomain : function (domainValue) {
-            this.VWorldWMS.domain = domainValue;
-        },
-        getVWorldKey : function () {
-            return this.VWorldWMS.apiKey;
-        },
-        getVWorldDomain : function () {
-            return this.VWorldWMS.domain;
-        },
-        setVisualType : function () {
-            this.visualType = true;
-        },
-        setDateInput : function () {
-            this.dateInput = true;
-        },
-        setTimeInput : function () {
-            this.timeInput = true;
-        },
-        setAreaType : function () {
-            this.areaType = true;
-        },
-        setEnvType : function () {
-            this.envType = true;
-        }
+    OGDSM.eGovFrameUI.prototype = {
+        constructor : OGDSM.eGovFrameUI
     };
-    return ui;
-}());
-/*
- *
- *
+    return OGDSM.eGovFrameUI;
+}(OGDSM));
+/**
+ * User Interface Create about VWorld WMS API List (CheckBox).
+ * @method vworldWMSCheck
+ * @param {String} divId - div id about HTML tag attribute
+ * @return {jQuery Object} User Interface CheckBox Object (VWorld WMS API list)
  */
-OGDSM.eGovFrameUI.prototype.VWorldWMS = function (divName) {
+OGDSM.eGovFrameUI.prototype.vworldWMSCheck = function (divId) {
     'use strict';
     var obj, rootDiv, html, styles, stylesText, i, btnObj, OGDSM, preProcess;
     preProcess = function () {
@@ -75,7 +44,7 @@ OGDSM.eGovFrameUI.prototype.VWorldWMS = function (divName) {
     };
     OGDSM = this.OGDSM;
     obj = this;
-    rootDiv = $('#' + divName);
+    rootDiv = $('#' + divId);
     html =
         '<fieldset data-role="controlgroup" data-type="horizontal" class="egov-align-center">';
     styles = [
@@ -125,7 +94,7 @@ OGDSM.eGovFrameUI.prototype.VWorldWMS = function (divName) {
         '시계비행로', '시계비행보고지점',
         '한강회랑', '헬기장'];
     for (i = 0; i < styles.length; i += 1) {
-        html += '<input type="checkbox" name="vworldWMS" class="custom" ' +
+        html += '<input type="checkbox" name="vworldWMSChk" class="custom" ' +
                 ' id="id-' + styles[i] + '" value="' + styles[i] + '" />' +
 				'<label for="id-' + styles[i] + '">' + stylesText[i] + '</label>';
         if (i !== 0 && (i + 1) % 2 === 0) {
@@ -136,28 +105,32 @@ OGDSM.eGovFrameUI.prototype.VWorldWMS = function (divName) {
     /*
     *Limilt 5
     */
-    html += '</fieldset>' +
-            '<a href="#" id=VWorldWMSButton data-role="button" ' +
+    html += '</fieldset>';
+//            '<a href="#" id=VWorldWMSButton data-role="button" ' +
 //            'onclick=this.makeData("' + this.VWorldKey + '","vworldWMS")>지도 추가</a>';
-            '>지도 추가</a>';
+//            '>지도 추가</a>';
     rootDiv.html(html);
     rootDiv.trigger("create");
     /*
      *
      */
-    btnObj = $('#VWorldWMSButton').click(function () {
-        preProcess();
-    });
+//    btnObj = $('#VWorldWMSButton').click(function () {
+//        preProcess();
+//    });
+    return $('input[name=vworldWMSChk]');
 };
-/*
- *
- *
+/**
+ * User Interface Create about visualization type (Radio Button).
+ * @method visTypeRadio
+ * @param {String} divId - div id about HTML tag attribute
+ * @param {Boolean} mapEnable - Map visualization enable/disable
+ * @return {jQuery Object} User Interface Radio Button Object (Visuliaztion type)
  */
-OGDSM.eGovFrameUI.prototype.visualTypeRadio = function (divName, mapEnable) {
+OGDSM.eGovFrameUI.prototype.visTypeRadio = function (divId, mapEnable) {
     'use strict';
     mapEnable = (typeof (mapEnable) !== 'undefined') ? mapEnable : true;
     var rootDiv, html, arr, arrText, i;
-    rootDiv = $('#' + divName);
+    rootDiv = $('#' + divId);
     html = '<fieldset data-role="controlgroup" data-type="horizontal" class="egov-align-center">';
     arr = ['map', 'chart'];
     arrText = ['맵', '차트'];
@@ -180,48 +153,52 @@ OGDSM.eGovFrameUI.prototype.visualTypeRadio = function (divName, mapEnable) {
             console.log('test');
         }
     });
-    this.setVisualType();
     return $('input[name=visualType]');
 };
-/*
- *
- *
+/**
+ * User Interface Create about visualization type (Date Input).
+ * @method DateInput
+ * @param {String} divId - div id about HTML tag attribute
+ * @return {jQuery Object} User Interface Date Input Object (Date YYYY/MM/DD)
  */
-OGDSM.eGovFrameUI.prototype.dateInput = function (divName) {
+OGDSM.eGovFrameUI.prototype.dateInput = function (divId) {
     'use strict';
     var rootDiv, html;
-    rootDiv = $('#' + divName);
+    rootDiv = $('#' + divId);
     html = '<label for="dateValue">날짜 : </label>' +
 			'<input type="date" id="dateValue"/>';
     rootDiv.append(html);
     rootDiv.trigger("create");
-    this.setDateInput();
     return $('#dateValue');
 };
-/*
- *
- *
+/**
+ * User Interface Create about time input (Time Input).
+ * @method timeInput
+ * @param {String} divId - div id about HTML tag attribute
+ * @return {jQuery Object} User Interface Time Input Object (Time)
  */
-OGDSM.eGovFrameUI.prototype.timeInput = function (divName) {
+OGDSM.eGovFrameUI.prototype.timeInput = function (divId) {
     'use strict';
     var rootDiv, html;
-    rootDiv = $('#' + divName);
+    rootDiv = $('#' + divId);
     html =  '<label for="timeValue">시간 : </label>' +
 			'<input type="time" id="timeValue">';
     rootDiv.append(html);
     rootDiv.trigger("create");
-    this.setTimeInput();
     return $('#timeValue');
 };
-/*
- *
- *
+/**
+ * User Interface Create about Environment Type (Radio Button).
+ * @method envTypeRadio
+ * @param {String} divId - div id about HTML tag attribute
+ * @param {String} provider - public data provider ('seoul' or 'public') (default : seoul)
+ * @return {jQuery Object} User Interface Radio Button Object (Environment Type)
  */
-OGDSM.eGovFrameUI.prototype.envTypeRadio = function (divName, provider) {
+OGDSM.eGovFrameUI.prototype.envTypeRadio = function (divId, provider) {
     'use strict';
     provider = (typeof (provider) !== 'undefined') ? provider : "seoul";
     var rootDiv, html, envTypes, envTypeValues, i;
-    rootDiv = $('#' + divName);
+    rootDiv = $('#' + divId);
 
     html = '<label for="envValue">환경정보:</label>' +
 		   '<fieldset data-role="controlgroup" data-type="horizontal" class="egov-align-center">';
@@ -244,17 +221,18 @@ OGDSM.eGovFrameUI.prototype.envTypeRadio = function (divName, provider) {
     }
     rootDiv.append(html);
     rootDiv.trigger("create");
-    this.setEnvType();
     return $('input[name=envTypeRadio]');
 };
-/*
- *
- *
+/**
+ * User Interface Create about Area Type (Radio Button).
+ * @method areaTypeRadio
+ * @param {String} divId - div id about HTML tag attribute
+ * @return {jQuery Object} User Interface Radio Button Object (Area Type)
  */
-OGDSM.eGovFrameUI.prototype.areaTypeRadio = function (divName) {
+OGDSM.eGovFrameUI.prototype.areaTypeRadio = function (divId) {
     'use strict';
     var rootDiv, html, areaTypes, i;
-    rootDiv = $('#' + divName);
+    rootDiv = $('#' + divId);
     html = '<label for="areaValue">지역:</label>' +
         '<fieldset data-role="controlgroup" data-type="horizontal" class="egov-align-center">';
     areaTypes =
@@ -271,17 +249,18 @@ OGDSM.eGovFrameUI.prototype.areaTypeRadio = function (divName) {
     html += '</fieldset>';
     rootDiv.append(html);
     rootDiv.trigger("create");
-    this.setAreaType();
     return $('input[name=areaTypeRadio]');
 };
-/*
- *
- *
+/**
+ * User Interface Create about Process (Button).
+ * @method processButton
+ * @param {String} divId - div id about HTML tag attribute
+ * @return {jQuery Object} User Interface Button Object (Process)
  */
-OGDSM.eGovFrameUI.prototype.processBtn = function (divName) {
+OGDSM.eGovFrameUI.prototype.processButton = function (divId) {
     'use strict';
     var rootDiv, html;
-    rootDiv = $('#' + divName);
+    rootDiv = $('#' + divId);
     html = '<a href="#" id="processBtn" data-role="button">시각화</a>';
 /*
 '<a href="#" data-role="button" data-provider="'+provider+'" data-serivce="'+serviceName+'" '+
