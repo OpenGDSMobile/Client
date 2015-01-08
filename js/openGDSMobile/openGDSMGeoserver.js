@@ -1,4 +1,4 @@
-/**
+/*
  * Geoserver Setting // web.xml
  * <context-param>
  * <param-name>ENABLE_JSONP</param-name>

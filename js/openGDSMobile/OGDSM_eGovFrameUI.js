@@ -26,24 +26,8 @@ OGDSM.eGovFrameUI = (function (OGDSM) {
  */
 OGDSM.eGovFrameUI.prototype.vworldWMSCheck = function (divId) {
     'use strict';
-    var obj, rootDiv, html, styles, stylesText, i, btnObj, OGDSM, preProcess;
-    preProcess = function () {
-        var styles, checkedData;
-        styles = "";
-        checkedData = $("input[name='vworldWMS']:checkbox");
-        checkedData.each(function (i) {
-            if ($(this).is(':checked')) {
-                styles += $(this).attr('value');
-                styles += ',';
-            }
-        });
-        styles = styles.slice(0, -1);
-        console.log(OGDSM.getMap());
-        console.log(obj.getVWorldDomain());
-        console.log(styles);
-    };
+    var rootDiv, html, styles, stylesText, i, btnObj, OGDSM, preProcess;
     OGDSM = this.OGDSM;
-    obj = this;
     rootDiv = $('#' + divId);
     html =
         '<fieldset data-role="controlgroup" data-type="horizontal" class="egov-align-center">';
@@ -106,18 +90,9 @@ OGDSM.eGovFrameUI.prototype.vworldWMSCheck = function (divId) {
     *Limilt 5
     */
     html += '</fieldset>';
-//            '<a href="#" id=VWorldWMSButton data-role="button" ' +
-//            'onclick=this.makeData("' + this.VWorldKey + '","vworldWMS")>지도 추가</a>';
-//            '>지도 추가</a>';
     rootDiv.html(html);
     rootDiv.trigger("create");
-    /*
-     *
-     */
-//    btnObj = $('#VWorldWMSButton').click(function () {
-//        preProcess();
-//    });
-    return $('input[name=vworldWMSChk]');
+    return $("input[name='vworldWMSChk']:checkbox");
 };
 /**
  * User Interface Create about visualization type (Radio Button).

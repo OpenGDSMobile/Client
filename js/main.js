@@ -80,7 +80,6 @@ WEBAPP.prototype.updateLayout = function () {
 	beforeProcess.popupSize("#vworldList", "300px");
 	$('#layersList').css('height', $(window).height());
 	$('#layersList').css("overflow-y", "auto");
-    console.log("layout update");
 };
 
 
@@ -162,10 +161,7 @@ $(document).ready(function (e) {
     var webAppObj,
 
         openGDSMObj,
-        VWorldUI,
-        seoulAreaEnvUI,
-        seoulRoadEnvUI,
-        publicEnvUI,
+        uiObj,
 
         vworldList,
         vworldProcessBtn,
@@ -183,7 +179,9 @@ $(document).ready(function (e) {
         publicEnvVis,
         publicEnvArea,
         publicEnvType,
-        publicEnvProcessBtn;
+        publicEnvProcessBtn,
+
+        externalServer;
 
     //webAppObj = new WEBAPP('map');
     webAppObj = new WEBAPP();
@@ -204,37 +202,62 @@ $(document).ready(function (e) {
         openGDSMObj.changeBaseMap(style);
     };
 
-    VWorldUI = new OGDSM.eGovFrameUI();
-    seoulAreaEnvUI = new OGDSM.eGovFrameUI();
-    seoulRoadEnvUI = new OGDSM.eGovFrameUI();
-    publicEnvUI = new OGDSM.eGovFrameUI();
+    uiObj = new OGDSM.eGovFrameUI();
     this.createVWorldUI = function () {
-        vworldList = VWorldUI.vworldWMSCheck('vworldList');
-        vworldProcessBtn = VWorldUI.processButton('vworldList');
+        var selectedData = "", VWorldWMSData;
+        vworldList = uiObj.vworldWMSCheck('vworldList');
+        vworldProcessBtn = uiObj.processButton('vworldList');
+        vworldProcessBtn.click(function () {
+            vworldList.each(function (i) {
+                if ($(this).is(":checked")) {
+                    selectedData += $(this).attr("value");
+                    selectedData += ",";
+                }
+            });
+            selectedData = selectedData.slice(0, -1);
+            externalServer = new OGDSM.externalConnection('vworldWMS');
+            externalServer.setData("9E21E5EE-67D4-36B9-85BB-E153321EEE65", "http://localhost", selectedData);
+            VWorldWMSData = externalServer.dataLoad();
+
+            webAppObj.getMap().addLayer(VWorldWMSData);
+        });
     };
 
     this.createSeoulPublicAreaEnvUI = function () {
         $('#setting').empty();
-        seoulEnvVis = seoulAreaEnvUI.visTypeRadio("setting");
-        seoulEnvDate = seoulAreaEnvUI.dateInput("setting");
-        seoulEnvTime = seoulAreaEnvUI.timeInput("setting");
-        seoulEnvType = seoulAreaEnvUI.envTypeRadio("setting");
-        seoulEnvProcessBtn = seoulAreaEnvUI.processButton("setting");
+        seoulEnvVis = uiObj.visTypeRadio("setting");
+        seoulEnvDate = uiObj.dateInput("setting");
+        seoulEnvTime = uiObj.timeInput("setting");
+        seoulEnvType = uiObj.envTypeRadio("setting");
+        seoulEnvProcessBtn = uiObj.processButton("setting");
     };
     this.createSeoulPublicRoadEnvUI = function () {
         $('#setting').empty();
-        seoulEnvRoadVis = seoulRoadEnvUI.visTypeRadio("setting", false);
-        seoulEnvRoadType = seoulRoadEnvUI.envTypeRadio("setting");
-        seoulEnvRoadProcessBtn = seoulRoadEnvUI.processButton("setting");
+        seoulEnvRoadVis = uiObj.visTypeRadio("setting", false);
+        seoulEnvRoadType = uiObj.envTypeRadio("setting");
+        seoulEnvRoadProcessBtn = uiObj.processButton("setting");
     };
     this.createPublicPortalUI = function () {
         $('#setting').empty();
-        publicEnvVis = publicEnvUI.visTypeRadio("setting");
-        publicEnvArea = publicEnvUI.areaTypeRadio("setting");
-        publicEnvType = publicEnvUI.envTypeRadio("setting", "public");
-        publicEnvProcessBtn = publicEnvUI.processButton("setting");
+        publicEnvVis = uiObj.visTypeRadio("setting");
+        publicEnvArea = uiObj.areaTypeRadio("setting");
+        publicEnvType = uiObj.envTypeRadio("setting", "public");
+        publicEnvProcessBtn = uiObj.processButton("setting");
     };
-
+/*
+		makeData = function(apiKey, chkName){
+			var selectedData = "";
+			var vworldChk = $("input[name='vworldWMS']:checkbox");
+			vworldChk.each(function(i){
+				if($(this).is(":checked")){
+					selectedData+=$(this).attr("value");
+					selectedData+=",";
+				}
+			});
+			selectedData = selectedData.slice(0,-1);
+			openGDSM.vWorld.wmsAPI(olMap, apiKey, domain, selectedData);
+		};
+        */
         //VWorldUI.setVWorldKey('9E21E5EE-67D4-36B9-85BB-E153321EEE65');
         //VWorldUI.setVWorldDomain('http://localhost');
         //openGDSM.wmsMapUI.vworld('vworldList',vWorldKey,'http://localhost',Map.map);
