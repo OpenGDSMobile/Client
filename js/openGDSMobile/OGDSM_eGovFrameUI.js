@@ -1,18 +1,16 @@
 /*jslint devel: true */
 /*global $, jQuery, ol, OGDSM*/
 
-/**
-* e-Goverement Framework User Interface Automatic Create.
-* @class OGDSM.eGovFramUI
-* @constructor
-*/
 OGDSM.namesapce('eGovFrameUI');
-OGDSM.eGovFrameUI = (function (OGDSM) {
+(function (OGDSM) {
     'use strict';
 
-    OGDSM.eGovFrameUI = function () {
-
-    };
+    /**
+    * e-Goverement Framework User Interface Automatic Create.
+    * @class OGDSM.eGovFramUI
+    * @constructor
+    */
+    OGDSM.eGovFrameUI = function () {};
     OGDSM.eGovFrameUI.prototype = {
         constructor : OGDSM.eGovFrameUI
     };

@@ -1,15 +1,15 @@
 /*jslint devel: true */
-/*global $, jQuery, ol*/
-OGDSM.namesapce('olMap');
+/*global $, jQuery, ol, OGDSM*/
 /**
 * OpenLayers3 Map Control Class
 * @class OGDSM.olMap
 * @constructor
 * @param {ol.Map} map
 */
-OGDSM.olMap = (function (ol) {
+
+OGDSM.namesapce('olMap');
+(function (ol, OGDSM) {
     "use strict";
-    var map;
     /**
      * OGDSM Constructor OpenLayers3
      */
@@ -21,7 +21,7 @@ OGDSM.olMap = (function (ol) {
         version : "1.0"
     };
     return OGDSM.olMap;
-}(ol));
+}(ol, OGDSM));
 /**
  * changeBaseMap Method is base map Change.
  * @method changeBaseMap

@@ -203,8 +203,10 @@ $(document).ready(function (e) {
     };
 
     uiObj = new OGDSM.eGovFrameUI();
+    externalServer = new OGDSM.externalConnection('vworldWMS');
     this.createVWorldUI = function () {
         var selectedData = "", VWorldWMSData;
+        externalServer.changeServer("vworldWMS");
         vworldList = uiObj.vworldWMSCheck('vworldList');
         vworldProcessBtn = uiObj.processButton('vworldList');
         vworldProcessBtn.click(function () {
@@ -215,12 +217,21 @@ $(document).ready(function (e) {
                 }
             });
             selectedData = selectedData.slice(0, -1);
-            externalServer = new OGDSM.externalConnection('vworldWMS');
             externalServer.setData("9E21E5EE-67D4-36B9-85BB-E153321EEE65", "http://localhost", selectedData);
             VWorldWMSData = externalServer.dataLoad();
 
             webAppObj.getMap().addLayer(VWorldWMSData);
         });
+    };
+
+ //       externalServer.changeServer("geoServer", "http://61.106.96.92:8080/mobile/getLayerNames.do");
+    this.viewWFSMap = function (str) {
+        var test;
+        externalServer.changeServer("geoServer", "http://113.198.80.60/");
+        externalServer.setSubName("WFS");
+        externalServer.setData("opengds", str);
+        test = externalServer.dataLoad();
+        webAppObj.getMap().addLayer(test);
     };
 
     this.createSeoulPublicAreaEnvUI = function () {
@@ -244,21 +255,4 @@ $(document).ready(function (e) {
         publicEnvType = uiObj.envTypeRadio("setting", "public");
         publicEnvProcessBtn = uiObj.processButton("setting");
     };
-/*
-		makeData = function(apiKey, chkName){
-			var selectedData = "";
-			var vworldChk = $("input[name='vworldWMS']:checkbox");
-			vworldChk.each(function(i){
-				if($(this).is(":checked")){
-					selectedData+=$(this).attr("value");
-					selectedData+=",";
-				}
-			});
-			selectedData = selectedData.slice(0,-1);
-			openGDSM.vWorld.wmsAPI(olMap, apiKey, domain, selectedData);
-		};
-        */
-        //VWorldUI.setVWorldKey('9E21E5EE-67D4-36B9-85BB-E153321EEE65');
-        //VWorldUI.setVWorldDomain('http://localhost');
-        //openGDSM.wmsMapUI.vworld('vworldList',vWorldKey,'http://localhost',Map.map);
 });

@@ -2,15 +2,12 @@
 /*jslint devel: true */
 /*global $, jQuery, ol, OGDSM*/
 OGDSM.namesapce('externalConnection');
-/**
-* Comming Soon...
-* @class OGDSM.externalConnection
-*/
-OGDSM.externalConnection = (function (OGDSM) {
+(function (OGDSM) {
     'use strict';
-    var serverName, baseAddr, values = [], setVWorld, setFunc;
+    var values = [], setVWorld, loadFeatures;
     /**
-     * externalConnection Class constructor
+     * externalConnection Class
+     * @class OGDSM.externalConnection
      * @constructor
      * @param {String} serverName - External Server Name (vworldWMS/geoServer/publicData)
      */
@@ -30,10 +27,25 @@ OGDSM.externalConnection = (function (OGDSM) {
         },
         setValues : function (arr) {
             values = arr;
+        },
+        setSubName : function (name) {
+            this.subName = name;
         }
     };
     return OGDSM.externalConnection;
 }(OGDSM));
+
+/**
+ *
+ *
+ *
+ */
+OGDSM.externalConnection.prototype.changeServer = function (name, addr) {
+    'use strict';
+    addr = (typeof (addr) !== 'undefined') ? addr : 'undefined';
+    this.serverName = name;
+    this.baseAddr = addr;
+};
 /**
  *
  *
@@ -56,74 +68,91 @@ OGDSM.externalConnection.prototype.setData = function () {
  */
 OGDSM.externalConnection.prototype.dataLoad = function () {
     'use strict';
-    var resultData, values;
+    var resultData,
+        values,
+        jsonData,
+        vectorSource,
+        loadFeatures,
+        addr = this.baseAddr;
     values = this.getValues();
     if (this.serverName === 'vworldWMS') {
-        resultData = new ol.layer.Tile({
-            source : new ol.source.TileWMS(({
+        if (values.length === 3) {
+            resultData = new ol.layer.Tile({
+                source : new ol.source.TileWMS(({
+                    url : this.baseAddr,
+                    params : {
+                        apiKey : values[0],
+                        domain : values[1],
+                        LAYERS : values[2],
+                        STYLES : values[2],
+                        FORMAT : 'image/png',
+                        CRS : 'EPSG:900913',
+                        EXCEPTIONS : 'text/xml',
+                        TRANSPARENT : true
+                    }
+                }))
+            });
+        } else {
+            console.log("Not check out data values");
+        }
+    } else if (this.serverName === 'geoServer') {
+        if (this.subName === 'undefined') {
+            console.log('Please setting subName');
+            return -1;
+        } else if (this.subName === 'getLayers') {
+            console.log("getLayers");
+            jsonData = {WorkspaceName : values[0] };
+            console.log(jsonData);
+            $.ajax({
+                type : 'POST',
                 url : this.baseAddr,
-                params : {
-                    apiKey : values[0],
-                    domain : values[1],
-                    LAYERS : values[2],
-                    STYLES : values[2],
-                    FORMAT : 'image/png',
-                    CRS : 'EPSG:900913',
-                    EXCEPTIONS : 'text/xml',
-                    TRANSPARENT : true
+                data : JSON.stringify(jsonData),
+                contentType : "application/json;charset=UTF-8",
+                dataType : 'json',
+                success : function (msg) {
+                    resultData = msg;
+                    console.log(resultData);
+                },
+                error : function (e) {
+                    console.log(e);
                 }
-            }))
-        });
-        return resultData;
-    }
-};
-/*
 
-openGDSM.openGDSMGeoserver = {
-	mapLayers : [],
-    getLayers : function(){
-         data = {WorkspaceName:'opengds'};
-		 if(this.mapLayers){
-			 $.ajax({
-					type:'POST',
-					url:serverURL+serverFolder+'getLayerNames.do',
-					data: JSON.stringify(data),
-					contentType : "application/json;charset=UTF-8",
-					dataType : 'json',
-					success:function(msg){
-						openGDSM.openGDSMGeoserver.mapLayers = msg.data;
-					},
-					error:function(){
-						console.log("err");
-					}
-			});
-		 }
-    },
-    wfs : function(olmap,url,workspace,layername,color,width,epsg){
-        color = (typeof(color) !== 'undefined') ? color : "rgba(255,255,255,0.5)";
-        width = (typeof(width) !== 'undefined') ? width : "1";
-        epsg = (typeof(espg) !== 'undefined') ? epsg : "EPSG:900913";
-        vectorSource = new ol.source.ServerVector({
-                    format: new ol.format.GeoJSON(),
-                    loader: function(extent, resolution, projection){
-                        var urls = url+'geoserver/wfs?service=WFS&' +
+            });
+
+        } else if (this.subName === 'WFS') {//workspace, layerName
+            console.log("WFS");
+            vectorSource = new ol.source.ServerVector({
+                format: new ol.format.GeoJSON(),
+                loader: function (extent, resolution, projection) {
+                    var fullAddr = addr + 'geoserver/wfs?service=WFS&' +
                         'version=1.1.0&request=GetFeature' +
-                        '&typeNames='+workspace+':'+layername+
-                        '&outputFormat=text/javascript&format_options=callback:loadFeatures' +
-                        '&srsname='+epsg+'&bbox=' + extent.join(',') + ','+epsg;
-                        $.ajax({
-                            url : urls,
-                            dataType: 'jsonp'
-                        });
-                    },
-                    strategy: ol.loadingstrategy.createTile(new ol.tilegrid.XYZ({
-                        maxZoom: 19
-                    })),
-                    projection: epsg
-                });
-                loadFeatures = function(response){
-                    vectorSource.addFeatures(vectorSource.readFeatures(response));
-                };
+                        '&typeNames=' + values[0] + ':' + values[1] +
+                        '&outputFormat=text/javascript&format_options=callback:loadFeatures1' +
+                        '&srsname=' + 'EPSG:900913' + '&bbox=' + extent.join(',') + ',' + 'EPSG:900913';
+                    $.ajax({
+                        url : fullAddr,
+                        dataType: 'jsonp'
+                    });
+                },
+                strategy: ol.loadingstrategy.createTile(new ol.tilegrid.XYZ({
+                    maxZoom: 19
+                })),
+                projection: 'EPSG:900913'
+            });
+            loadFeatures = function (response) {
+                vectorSource.addFeatures(vectorSource.readFeatures(response));
+            };
+            resultData = new ol.layer.Vector({
+                title:values[1],
+                source: vectorSource
+              });
+        }
+    }
+
+    return resultData;
+};
+
+/*
         var styles = [
                     new ol.style.Style({
                       fill: new ol.style.Fill({

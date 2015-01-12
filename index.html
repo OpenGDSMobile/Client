@@ -85,7 +85,7 @@
     }
 	</script>
 </head>
-<body>
+<body onload="createSeoulPublicUI()">
 <div data-role="page" id="mapview">
 <!-- d3And Map div -->
 		<div id="interpolationMap">
@@ -187,25 +187,25 @@
                     <ul data-role="listview" id="layersList">
                             <li data-theme="g" data-icon="delete" style="height: 2.8em;"><a href="#" data-rel="close" style="color:rgb(255, 255, 255);">Close menu</a></li>
                                   <li data-theme="z" data-role="list-divider">기본 제공 데이터</li>
-                                                <li><a href="#" onclick="openGDSM.wfsMap.geoserver('City_gu')">전국(구 단위)</a></li>
-                                                <li><a href="#" onclick="openGDSM.wfsMap.geoserver('Seoul_si')">서울특별시(구 단위)</a></li>
-                                                <li><a href="#" onclick="openGDSM.wfsMap.geoserver('Seoul_dong')">서울특별시(동 단위)</a></li>
-                                                <li><a href="#" onclick="openGDSM.wfsMap.geoserver('Incheon_dong')">인천광역시(동 단위)</a></li>
-                                                <li><a href="#" onclick="openGDSM.wfsMap.geoserver('Sejong_dong')">세종시(동 단위)</a></li>
-                                                <li><a href="#" onclick="openGDSM.wfsMap.geoserver('Daejeon_dong')">대전광역시(동 단위)</a></li>
-                                                <li><a href="#" onclick="openGDSM.wfsMap.geoserver('Daegu_dong')">대구광역시(동 단위)</a></li>
-                                                <li><a href="#" onclick="openGDSM.wfsMap.geoserver('Ulsan_dong')">울산광역시(동 단위)</a></li>
-                                                <li><a href="#" onclick="openGDSM.wfsMap.geoserver('Gwangju_dong')">광주광역시(동 단위)</a></li>
-                                                <li><a href="#" onclick="openGDSM.wfsMap.geoserver('Busan_dong')">부산광역시(동 단위)</a></li>
-                                                <li><a href="#" onclick="openGDSM.wfsMap.geoserver('Chungcheongbuk_dong')">충청북도(동 단위)</a></li>
-                                                <li><a href="#" onclick="openGDSM.wfsMap.geoserver('Chungcheongnam_dong')">충청남도(동 단위)</a></li>
-                                                <li><a href="#" onclick="openGDSM.wfsMap.geoserver('Gangwon_dong')">강원도(동 단위)</a></li>
-                                                <li><a href="#" onclick="openGDSM.wfsMap.geoserver('Gyeonggi_dong')">경기도(동 단위)</a></li>
-                                                <li><a href="#" onclick="openGDSM.wfsMap.geoserver('Gyeongsangbuk_dong')">경상북도(동 단위)</a></li>
-                                                <li><a href="#" onclick="openGDSM.wfsMap.geoserver('Gyeongsangnam_dong')">경상남도(동 단위)</a></li>
-                                                <li><a href="#" onclick="openGDSM.wfsMap.geoserver('Jeju_dong')">제주도(동 단위)</a></li>
-                                                <li><a href="#" onclick="openGDSM.wfsMap.geoserver('Jellanam_dong')">전라남도(동 단위)</a></li>
-                                                <li><a href="#" onclick="openGDSM.wfsMap.geoserver('Jeollabuk_dong')">전라북도(동 단위)</a></li>
+                                                <li><a href="#" onclick="viewWFSMap('City_gu')">전국(구 단위)</a></li>
+                                                <li><a href="#" onclick="viewWFSMap('Seoul_si')">서울특별시(구 단위)</a></li>
+                                                <li><a href="#" onclick="viewWFSMap('Seoul_dong')">서울특별시(동 단위)</a></li>
+                                                <li><a href="#" onclick="viewWFSMap('Incheon_dong')">인천광역시(동 단위)</a></li>
+                                                <li><a href="#" onclick="viewWFSMap('Sejong_dong')">세종시(동 단위)</a></li>
+                                                <li><a href="#" onclick="viewWFSMap('Daejeon_dong')">대전광역시(동 단위)</a></li>
+                                                <li><a href="#" onclick="viewWFSMap('Daegu_dong')">대구광역시(동 단위)</a></li>
+                                                <li><a href="#" onclick="viewWFSMap('Ulsan_dong')">울산광역시(동 단위)</a></li>
+                                                <li><a href="#" onclick="viewWFSMap('Gwangju_dong')">광주광역시(동 단위)</a></li>
+                                                <li><a href="#" onclick="viewWFSMap('Busan_dong')">부산광역시(동 단위)</a></li>
+                                                <li><a href="#" onclick="viewWFSMap('Chungcheongbuk_dong')">충청북도(동 단위)</a></li>
+                                                <li><a href="#" onclick="viewWFSMap('Chungcheongnam_dong')">충청남도(동 단위)</a></li>
+                                                <li><a href="#" onclick="viewWFSMap('Gangwon_dong')">강원도(동 단위)</a></li>
+                                                <li><a href="#" onclick="viewWFSMap('Gyeonggi_dong')">경기도(동 단위)</a></li>
+                                                <li><a href="#" onclick="viewWFSMap('Gyeongsangbuk_dong')">경상북도(동 단위)</a></li>
+                                                <li><a href="#" onclick="viewWFSMap('Gyeongsangnam_dong')">경상남도(동 단위)</a></li>
+                                                <li><a href="#" onclick="viewWFSMap('Jeju_dong')">제주도(동 단위)</a></li>
+                                                <li><a href="#" onclick="viewWFSMap('Jellanam_dong')">전라남도(동 단위)</a></li>
+                                                <li><a href="#" onclick="viewWFSMap('Jeollabuk_dong')">전라북도(동 단위)</a></li>
                                 </ul>
                 </div>
 	<!-- List Panel -->
