@@ -233,7 +233,6 @@ $(document).ready(function (e) {
         test = externalServer.dataLoad();
         webAppObj.getMap().addLayer(test);
     };
-
     this.createSeoulPublicAreaEnvUI = function () {
         $('#setting').empty();
         seoulEnvVis = uiObj.visTypeRadio("setting");

@@ -2,9 +2,10 @@
 /*jslint devel: true */
 /*global $, jQuery, ol, OGDSM*/
 OGDSM.namesapce('externalConnection');
+OGDSM.namesapce('externalConnection.geoServerWFS');
 (function (OGDSM) {
     'use strict';
-    var values = [], setVWorld, loadFeatures;
+    var values = [], setVWorld, vectorSource;
     /**
      * externalConnection Class
      * @class OGDSM.externalConnection
@@ -19,6 +20,7 @@ OGDSM.namesapce('externalConnection');
         } else {
             this.baseAddr = addr;
         }
+ //       this.vectorSource = null;
     };
     OGDSM.externalConnection.prototype = {
         constructor : OGDSM.externalConnection,
@@ -31,6 +33,18 @@ OGDSM.namesapce('externalConnection');
         setSubName : function (name) {
             this.subName = name;
         }
+        /*,
+        getVS : function () {
+            return vectorSource;
+        },
+        setVS : function (vs) {
+            vectorSource = vs;
+        },
+        loadFeatures : function (response) {
+            console.log(vectorSource);
+            this.getVS().addFeatures(this.getVS().readFeatures(response));
+        }
+        */
     };
     return OGDSM.externalConnection;
 }(OGDSM));
@@ -66,14 +80,21 @@ OGDSM.externalConnection.prototype.setData = function () {
  *
  *
  */
+/*
+OGDSM.externalConnection.loadFeatures = function (response) {
+    console.log(OGDSM.externalConnection.vectorSource);
+    this.vectorSource.addFeatures(this.vectorSource.readFeatures(response));
+};
+*/
 OGDSM.externalConnection.prototype.dataLoad = function () {
     'use strict';
     var resultData,
         values,
         jsonData,
         vectorSource,
-        loadFeatures,
-        addr = this.baseAddr;
+        loadFeatures = this.loadFeatures,
+        addr = this.baseAddr,
+        geoServerObj;
     values = this.getValues();
     if (this.serverName === 'vworldWMS') {
         if (values.length === 3) {
@@ -120,61 +141,48 @@ OGDSM.externalConnection.prototype.dataLoad = function () {
             });
 
         } else if (this.subName === 'WFS') {//workspace, layerName
-            console.log("WFS");
-            vectorSource = new ol.source.ServerVector({
-                format: new ol.format.GeoJSON(),
-                loader: function (extent, resolution, projection) {
-                    var fullAddr = addr + 'geoserver/wfs?service=WFS&' +
-                        'version=1.1.0&request=GetFeature' +
-                        '&typeNames=' + values[0] + ':' + values[1] +
-                        '&outputFormat=text/javascript&format_options=callback:loadFeatures1' +
-                        '&srsname=' + 'EPSG:900913' + '&bbox=' + extent.join(',') + ',' + 'EPSG:900913';
-                    $.ajax({
-                        url : fullAddr,
-                        dataType: 'jsonp'
-                    });
-                },
-                strategy: ol.loadingstrategy.createTile(new ol.tilegrid.XYZ({
-                    maxZoom: 19
-                })),
-                projection: 'EPSG:900913'
-            });
-            loadFeatures = function (response) {
-                vectorSource.addFeatures(vectorSource.readFeatures(response));
-            };
-            resultData = new ol.layer.Vector({
-                title:values[1],
-                source: vectorSource
-              });
+            resultData = OGDSM.externalConnection.geoServerWFS(addr, values[0], values[1]);
         }
     }
-
     return resultData;
 };
-
-/*
+OGDSM.externalConnection.geoServerWFS = function (addr, ws, name) {
+        var vectorSource = new ol.source.ServerVector({
+            format: new ol.format.GeoJSON(),
+            loader: function (extent, resolution, projection) {
+                var fullAddr = addr + 'geoserver/wfs?service=WFS&' +
+                    'version=1.1.0&request=GetFeature' +
+                    '&typeNames=' + ws + ':' + name +
+                    '&outputFormat=text/javascript&format_options=callback:loadFeatures' +
+                    '&srsname=' + 'EPSG:900913' + '&bbox=' + extent.join(',') + ',' + 'EPSG:900913';
+                $.ajax({
+                    url : fullAddr,
+                    dataType: 'jsonp'
+                });
+            },
+            strategy: ol.loadingstrategy.createTile(new ol.tilegrid.XYZ({
+                maxZoom: 19
+            })),
+            projection: 'EPSG:900913'
+        });
         var styles = [
-                    new ol.style.Style({
-                      fill: new ol.style.Fill({
-                        color: color,
-                      }),
-                      stroke: new ol.style.Stroke({
-                        color: '#000000',
-                        width: 1
-                      })
-                    })];
-        var curLayers = olmap.getLayers().getArray();
-        for(var i=0; i<curLayers.length; i++){
-            if( curLayers[i].get('title') == layername){
-                olmap.removeLayer(curLayers[i]);
-            }
-        }
-        var vectorTemp = new ol.layer.Vector({
-            title:layername,
-            source: vectorSource,
+            new ol.style.Style({
+                fill: new ol.style.Fill({
+                    color: '#ff0000'
+                }),
+                stroke: new ol.style.Stroke({
+                    color: '#000000',
+                    width: 1
+                })
+            })];
+        loadFeatures = function (response) {
+            console.log("egegeg");
+            vectorSource.addFeatures(vectorSource.readFeatures(response));
+        };
+        var resultData = new ol.layer.Vector({
+            title : name,
+            source : vectorSource,
             style: styles
-          });
-        olmap.addLayer(vectorTemp);
-    }
+        });
+        return resultData;
 };
-*/
