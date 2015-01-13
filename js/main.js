@@ -159,6 +159,7 @@ var styleChange = function (obj) {
 $(document).ready(function (e) {
     'use strict';
     var webAppObj,
+        layersArr,
 
         openGDSMObj,
         uiObj,
@@ -166,6 +167,8 @@ $(document).ready(function (e) {
         vworldList,
         vworldProcessBtn,
 
+        mapList,
+        
         seoulEnvVis,
         seoulEnvDate,
         seoulEnvTime,
@@ -227,16 +230,15 @@ $(document).ready(function (e) {
     this.getLayers = function () {
         var layersArr,
             addr = 'http://113.198.80.9/OpenGDSMobileApplicationServer1.0';
-        externalServer.changeServer("geoServer", addr+"/getLayerNames.do");
+        externalServer.changeServer("geoServer", addr + "/getLayerNames.do");
         externalServer.setSubName("getLayers");
         externalServer.setData("opengds");
-        layersArr = externalServer.dataLoad();
-        console.log(layersArr);
+        externalServer.dataLoad();
     };
     this.getLayers();
     this.viewWFSMap = function (str) {
         var wfsData;
-        externalServer.changeServer("geoServer", "http://113.198.80.60/");
+        externalServer.changeServer("geoServer", "http://113.198.80.9/");
         externalServer.setSubName("WFS");
         externalServer.setData("opengds", str);
         wfsData = externalServer.dataLoad();
@@ -245,6 +247,15 @@ $(document).ready(function (e) {
     this.createSeoulPublicAreaEnvUI = function () {
         $('#setting').empty();
         seoulEnvVis = uiObj.visTypeRadio("setting");
+        mapList = uiObj.mapListSelect("setting", externalServer.getLayers());
+        seoulEnvVis.change(function () {
+            if ($(this).val() === 'chart') {
+                console.log("Chart");
+            } else if ($(this).val() === 'map') {
+                console.log("Map");
+                
+            }
+        });
         seoulEnvDate = uiObj.dateInput("setting");
         seoulEnvTime = uiObj.timeInput("setting");
         seoulEnvType = uiObj.envTypeRadio("setting");

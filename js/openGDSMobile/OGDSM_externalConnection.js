@@ -2,21 +2,24 @@
 /*jslint devel: true */
 /*global $, jQuery, ol, OGDSM*/
 OGDSM.namesapce('externalConnection');
-OGDSM.namesapce('externalConnection.geoServerWFS');
 (function (OGDSM) {
     'use strict';
-    var values = [];
+    var values = [], geoServerLayers = [];
     /**
      * externalConnection Class
      * @class OGDSM.externalConnection
      * @constructor
-     * @param {String} serverName - External Server Name (vworldWMS/geoServer/publicData)
+     * @param {String} serverName - External Server Name (vworldWMS/geoServer/seoulOpen/airKorea)
      */
     OGDSM.externalConnection = function (name, addr) {
         addr = (typeof (addr) !== 'undefined') ? addr : 'undefined';
         this.serverName = name;
         if (name === 'vworldWMS') {
             this.baseAddr = "http://map.vworld.kr/js/wms.do";
+        } else if (name === 'seoulOpen') {
+            this.baseAddr = "http://openAPI.seoul.go.kr:8088";
+        } else if (name === 'airKorea') {
+            this.baseAddr = "http://openAPI.airkorea.or.kr";
         } else {
             this.baseAddr = addr;
         }
@@ -31,6 +34,12 @@ OGDSM.namesapce('externalConnection.geoServerWFS');
         },
         removeValues : function () {
             values = [];
+        },
+        getLayers : function () {
+            return geoServerLayers;
+        },
+        setLayers : function (arr) {
+            geoServerLayers = arr;
         },
         setSubName : function (name) {
             this.subName = name;
@@ -77,6 +86,7 @@ OGDSM.externalConnection.prototype.dataLoad = function () {
         jsonData = null,
         values = this.getValues(),
         addr = this.baseAddr,
+        setLayers = this.setLayers,
         geoServerWFSfuc = this.geoServerWFS;
     if (this.serverName === 'vworldWMS') {
         if (values.length === 3) {
@@ -104,7 +114,6 @@ OGDSM.externalConnection.prototype.dataLoad = function () {
             return -1;
         } else if (this.subName === 'getLayers') {
             jsonData = {WorkspaceName : values[0] };
-            console.log(jsonData);
             $.ajax({
                 type : 'POST',
                 url : this.baseAddr,
@@ -114,7 +123,7 @@ OGDSM.externalConnection.prototype.dataLoad = function () {
                 dataType : 'json',
                 success : function (msg) {
                     resultData = msg;
-                    console.log(resultData);
+                    setLayers(resultData.data);
                 },
                 error : function (e) {
                     console.log(e);
@@ -124,11 +133,15 @@ OGDSM.externalConnection.prototype.dataLoad = function () {
         } else if (this.subName === 'WFS') {//workspace, layerName
             console.log(values[0] + ', ' + values[1]);
             resultData = geoServerWFSfuc(addr, values[0], values[1]);
+            return resultData;
         }
+    } else if (this.serverName === 'seoulOpen') {
+        console.log('seoulOpen');
     }
+    
     //return resultData;
 };
-/*
+/**
  *
  *
  *
@@ -173,6 +186,12 @@ OGDSM.externalConnection.prototype.geoServerWFS = function (addr, ws, name) {
     });
     return resultData;
 };
+/**
+ *
+ *
+ *
+ */
+
 
 
 OGDSM.externalConnection.prototype.publicData = function () {

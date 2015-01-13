@@ -113,19 +113,14 @@ OGDSM.eGovFrameUI.prototype.visTypeRadio = function (divId, mapEnable) {
 		if (mapEnable === false && arr[i] !== 'chart') {
             html += 'disabled ';
         }
-        if (i === 0) {
+        /*if (i === 0) {
             html += 'checked';
-        }
+        }*/
         //html += ' onclick="openGDSM.PublicDataUI.mapSelect($(this))"/>' +
         html += '>' + '<label for="id-' + arr[i] + '">' + arrText[i] + '</label>';
     }
     rootDiv.append(html);
     rootDiv.trigger("create");
-    $('input[name=visualType]').change(function () {
-        if ($(this).val() === 'chart') {
-            console.log('test');
-        }
-    });
     return $('input[name=visualType]');
 };
 /**
@@ -223,6 +218,29 @@ OGDSM.eGovFrameUI.prototype.areaTypeRadio = function (divId) {
     rootDiv.append(html);
     rootDiv.trigger("create");
     return $('input[name=areaTypeRadio]');
+};
+/**
+ * User Interface Create about Map List (Select).
+ * @method mapListSelect
+ * @param {String} divId - div id about HTML tag attribute
+ * @param {Array} arr - Select Box Option List
+ */
+OGDSM.eGovFrameUI.prototype.mapListSelect = function (divId, arr) {
+    'use strict';
+    var html, i,
+        rootDiv = $('#' + divId);
+    console.log(arr);
+    html = '<div data-role="fieldcontain">' +
+        '<select name="geoServerMapSelect" id="geoServerSelectBox">' +
+        '<option value=""></option>';
+    for (i = 0; i < arr.length; i += 1) {
+        html += '<option value="' + arr[i] + '">' +
+            arr[i] + '</option>';
+    }
+    html += '</select>';
+    rootDiv.append(html);
+    rootDiv.trigger("create");
+    return $('#geoServerSelectBox');
 };
 /**
  * User Interface Create about Process (Button).
