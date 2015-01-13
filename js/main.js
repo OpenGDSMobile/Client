@@ -203,7 +203,6 @@ $(document).ready(function (e) {
     };
 
     uiObj = new OGDSM.eGovFrameUI();
-    externalServer = new OGDSM.externalConnection('vworldWMS');
     this.createVWorldUI = function () {
         var selectedData = "", VWorldWMSData;
         externalServer.changeServer("vworldWMS");
@@ -223,15 +222,25 @@ $(document).ready(function (e) {
             webAppObj.getMap().addLayer(VWorldWMSData);
         });
     };
-
- //       externalServer.changeServer("geoServer", "http://61.106.96.92:8080/mobile/getLayerNames.do");
+    //113.198.80.60/OpenGDSMobileApplicationServer1.0/
+    externalServer = new OGDSM.externalConnection('vworldWMS');
+    this.getLayers = function () {
+        var layersArr,
+            addr = 'http://113.198.80.9/OpenGDSMobileApplicationServer1.0';
+        externalServer.changeServer("geoServer", addr+"/getLayerNames.do");
+        externalServer.setSubName("getLayers");
+        externalServer.setData("opengds");
+        layersArr = externalServer.dataLoad();
+        console.log(layersArr);
+    };
+    this.getLayers();
     this.viewWFSMap = function (str) {
-        var test;
+        var wfsData;
         externalServer.changeServer("geoServer", "http://113.198.80.60/");
         externalServer.setSubName("WFS");
         externalServer.setData("opengds", str);
-        test = externalServer.dataLoad();
-        webAppObj.getMap().addLayer(test);
+        wfsData = externalServer.dataLoad();
+        webAppObj.getMap().addLayer(wfsData);
     };
     this.createSeoulPublicAreaEnvUI = function () {
         $('#setting').empty();

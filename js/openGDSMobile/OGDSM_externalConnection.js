@@ -5,7 +5,7 @@ OGDSM.namesapce('externalConnection');
 OGDSM.namesapce('externalConnection.geoServerWFS');
 (function (OGDSM) {
     'use strict';
-    var values = [], setVWorld, vectorSource;
+    var values = [];
     /**
      * externalConnection Class
      * @class OGDSM.externalConnection
@@ -20,7 +20,6 @@ OGDSM.namesapce('externalConnection.geoServerWFS');
         } else {
             this.baseAddr = addr;
         }
- //       this.vectorSource = null;
     };
     OGDSM.externalConnection.prototype = {
         constructor : OGDSM.externalConnection,
@@ -30,21 +29,12 @@ OGDSM.namesapce('externalConnection.geoServerWFS');
         setValues : function (arr) {
             values = arr;
         },
+        removeValues : function () {
+            values = [];
+        },
         setSubName : function (name) {
             this.subName = name;
         }
-        /*,
-        getVS : function () {
-            return vectorSource;
-        },
-        setVS : function (vs) {
-            vectorSource = vs;
-        },
-        loadFeatures : function (response) {
-            console.log(vectorSource);
-            this.getVS().addFeatures(this.getVS().readFeatures(response));
-        }
-        */
     };
     return OGDSM.externalConnection;
 }(OGDSM));
@@ -69,6 +59,7 @@ OGDSM.externalConnection.prototype.setData = function () {
     'use strict';
     var parm, i, values;
     parm = arguments;
+    this.removeValues();
     values = this.getValues();
     for (i = 0; i < parm.length; i += 1) {
         values.push(parm[i]);
@@ -80,22 +71,13 @@ OGDSM.externalConnection.prototype.setData = function () {
  *
  *
  */
-/*
-OGDSM.externalConnection.loadFeatures = function (response) {
-    console.log(OGDSM.externalConnection.vectorSource);
-    this.vectorSource.addFeatures(this.vectorSource.readFeatures(response));
-};
-*/
 OGDSM.externalConnection.prototype.dataLoad = function () {
     'use strict';
-    var resultData,
-        values,
-        jsonData,
-        vectorSource,
-        loadFeatures = this.loadFeatures,
+    var resultData = null,
+        jsonData = null,
+        values = this.getValues(),
         addr = this.baseAddr,
-        geoServerObj;
-    values = this.getValues();
+        geoServerWFSfuc = this.geoServerWFS;
     if (this.serverName === 'vworldWMS') {
         if (values.length === 3) {
             resultData = new ol.layer.Tile({
@@ -121,12 +103,12 @@ OGDSM.externalConnection.prototype.dataLoad = function () {
             console.log('Please setting subName');
             return -1;
         } else if (this.subName === 'getLayers') {
-            console.log("getLayers");
             jsonData = {WorkspaceName : values[0] };
             console.log(jsonData);
             $.ajax({
                 type : 'POST',
                 url : this.baseAddr,
+                crossDomain: true,
                 data : JSON.stringify(jsonData),
                 contentType : "application/json;charset=UTF-8",
                 dataType : 'json',
@@ -137,52 +119,63 @@ OGDSM.externalConnection.prototype.dataLoad = function () {
                 error : function (e) {
                     console.log(e);
                 }
-
             });
 
         } else if (this.subName === 'WFS') {//workspace, layerName
-            resultData = OGDSM.externalConnection.geoServerWFS(addr, values[0], values[1]);
+            console.log(values[0] + ', ' + values[1]);
+            resultData = geoServerWFSfuc(addr, values[0], values[1]);
         }
     }
+    //return resultData;
+};
+/*
+ *
+ *
+ *
+ */
+OGDSM.externalConnection.prototype.geoServerWFS = function (addr, ws, name) {
+    var vectorSource, styles, resultData;
+    vectorSource = new ol.source.ServerVector({
+        format: new ol.format.GeoJSON(),
+        loader: function (extent, resolution, projection) {
+            var fullAddr = addr + 'geoserver/wfs?service=WFS&' +
+                'version=1.1.0&request=GetFeature' +
+                '&typeNames=' + ws + ':' + name +
+                '&outputFormat=text/javascript&format_options=callback:loadFeatures' +
+                '&srsname=' + 'EPSG:900913' + '&bbox=' + extent.join(',') + ',' + 'EPSG:900913';
+            $.ajax({
+                url : fullAddr,
+                dataType: 'jsonp'
+            });
+        },
+        strategy: ol.loadingstrategy.createTile(new ol.tilegrid.XYZ({
+            maxZoom: 19
+        })),
+        projection: 'EPSG:900913'
+    });
+    styles = [
+        new ol.style.Style({
+            fill: new ol.style.Fill({
+                color: '#ff0000'
+            }),
+            stroke: new ol.style.Stroke({
+                color: '#000000',
+                width: 1
+            })
+        })];
+    loadFeatures = function (response) {
+        vectorSource.addFeatures(vectorSource.readFeatures(response));
+    };
+    resultData = new ol.layer.Vector({
+        title : name,
+        source : vectorSource,
+        style: styles
+    });
     return resultData;
 };
-OGDSM.externalConnection.geoServerWFS = function (addr, ws, name) {
-        var vectorSource = new ol.source.ServerVector({
-            format: new ol.format.GeoJSON(),
-            loader: function (extent, resolution, projection) {
-                var fullAddr = addr + 'geoserver/wfs?service=WFS&' +
-                    'version=1.1.0&request=GetFeature' +
-                    '&typeNames=' + ws + ':' + name +
-                    '&outputFormat=text/javascript&format_options=callback:loadFeatures' +
-                    '&srsname=' + 'EPSG:900913' + '&bbox=' + extent.join(',') + ',' + 'EPSG:900913';
-                $.ajax({
-                    url : fullAddr,
-                    dataType: 'jsonp'
-                });
-            },
-            strategy: ol.loadingstrategy.createTile(new ol.tilegrid.XYZ({
-                maxZoom: 19
-            })),
-            projection: 'EPSG:900913'
-        });
-        var styles = [
-            new ol.style.Style({
-                fill: new ol.style.Fill({
-                    color: '#ff0000'
-                }),
-                stroke: new ol.style.Stroke({
-                    color: '#000000',
-                    width: 1
-                })
-            })];
-        loadFeatures = function (response) {
-            console.log("egegeg");
-            vectorSource.addFeatures(vectorSource.readFeatures(response));
-        };
-        var resultData = new ol.layer.Vector({
-            title : name,
-            source : vectorSource,
-            style: styles
-        });
-        return resultData;
+
+
+OGDSM.externalConnection.prototype.publicData = function () {
+    'use strict';
+
 };
