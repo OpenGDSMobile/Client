@@ -156,10 +156,13 @@ var styleChange = function (obj) {
     'use strict';
 	$('#wmsButton').attr('data-layer', $(obj).attr('value'));
 };
+//            addr = 'http://113.198.80.9/OpenGDSMobileApplicationServer1.0';
+//            addr = 'http://61.102.113.183:8080/mobile';
 $(document).ready(function (e) {
     'use strict';
     var webAppObj,
         layersArr,
+        addr = 'http://61.102.113.183:8080/mobile',
 
         openGDSMObj,
         uiObj,
@@ -185,6 +188,7 @@ $(document).ready(function (e) {
         publicEnvProcessBtn,
 
         externalServer;
+
 
     //webAppObj = new WEBAPP('map');
     webAppObj = new WEBAPP();
@@ -228,8 +232,6 @@ $(document).ready(function (e) {
     //113.198.80.60/OpenGDSMobileApplicationServer1.0/
     externalServer = new OGDSM.externalConnection('vworldWMS');
     this.getLayers = function () {
-        var layersArr,
-            addr = 'http://113.198.80.9/OpenGDSMobileApplicationServer1.0';
         externalServer.changeServer("geoServer", addr + "/getLayerNames.do");
         externalServer.setSubName("getLayers");
         externalServer.setData("opengds");
@@ -247,25 +249,46 @@ $(document).ready(function (e) {
     this.createSeoulPublicAreaEnvUI = function () {
         $('#setting').empty();
         seoulEnvVis = uiObj.visTypeRadio("setting");
-        mapList = uiObj.mapListSelect("setting", externalServer.getLayers());
-        seoulEnvVis.change(function () {
+        mapList = uiObj.mapListSelect("setting", externalServer.getResponseData());
+      /*  seoulEnvVis.change(function () {
             if ($(this).val() === 'chart') {
                 console.log("Chart");
+
             } else if ($(this).val() === 'map') {
                 console.log("Map");
                 
             }
-        });
+        });*/
         seoulEnvDate = uiObj.dateInput("setting");
         seoulEnvTime = uiObj.timeInput("setting");
         seoulEnvType = uiObj.envTypeRadio("setting");
         seoulEnvProcessBtn = uiObj.processButton("setting");
+        seoulEnvProcessBtn.click(function () {
+            var apikey = "6473565a72696e7438326262524174",
+
+                visType = $('input[name=' + seoulEnvVis + ']:checked').val(),
+                mapName = "",
+                date = seoulEnvDate.val(),
+                time = seoulEnvTime.val(),
+                envType = $('input[name=' + seoulEnvType + ']:checked').val();
+            if (visType === 'map') {
+                mapName = $('#' + mapList + ' option:selected').text();
+            }
+            externalServer.changeServer("publicData", addr + '/SeoulOpenData.do');
+            externalServer.setSubName("TimeAverageAirQuality");
+            externalServer.setData(apikey, envType, date, time);
+            externalServer.dataLoad();
+            console.log(externalServer.getResponseData());
+        });
     };
     this.createSeoulPublicRoadEnvUI = function () {
         $('#setting').empty();
         seoulEnvRoadVis = uiObj.visTypeRadio("setting", false);
         seoulEnvRoadType = uiObj.envTypeRadio("setting");
         seoulEnvRoadProcessBtn = uiObj.processButton("setting");
+        seoulEnvRoadProcessBtn.click(function () {
+            console.log("test");
+        });
     };
     this.createPublicPortalUI = function () {
         $('#setting').empty();
@@ -273,5 +296,16 @@ $(document).ready(function (e) {
         publicEnvArea = uiObj.areaTypeRadio("setting");
         publicEnvType = uiObj.envTypeRadio("setting", "public");
         publicEnvProcessBtn = uiObj.processButton("setting");
+        publicEnvProcessBtn.click(function () {
+            var apikey = 'kCxEhXiTf1qmDBlQFOOmw%2BemcPSxQXn5V5%2Fx8EthoHdbSojIdQvwX%2BHtWFyuJaIco0nUJtu12e%2F9acb7HeRRRA%3D%3D',
+                visType = $('input[name=' + publicEnvVis + ']:checked').val(),
+                areaType = $('input[name=' + publicEnvArea + ']:checked').val(),
+                envType = $('input[name=' + publicEnvType + ']:checked').val();
+            externalServer.changeServer("publicData", addr + '/PublicDataPortal.do');
+            externalServer.setSubName("ArpltnInforInqireSvc");
+            externalServer.setData(apikey, envType, areaType);
+            externalServer.dataLoad();
+            console.log(externalServer.getResponseData());
+        });
     };
 });

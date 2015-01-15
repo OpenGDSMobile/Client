@@ -97,7 +97,7 @@ OGDSM.eGovFrameUI.prototype.vworldWMSCheck = function (divId) {
  * @method visTypeRadio
  * @param {String} divId - div id about HTML tag attribute
  * @param {Boolean} mapEnable - Map visualization enable/disable
- * @return {jQuery Object} User Interface Radio Button Object (Visuliaztion type)
+ * @return {String} User Interface Radio Button Name (Visuliaztion type)
  */
 OGDSM.eGovFrameUI.prototype.visTypeRadio = function (divId, mapEnable) {
     'use strict';
@@ -121,7 +121,8 @@ OGDSM.eGovFrameUI.prototype.visTypeRadio = function (divId, mapEnable) {
     }
     rootDiv.append(html);
     rootDiv.trigger("create");
-    return $('input[name=visualType]');
+    //return $('input[name=visualType]');
+    return 'visualType';
 };
 /**
  * User Interface Create about visualization type (Date Input).
@@ -160,7 +161,7 @@ OGDSM.eGovFrameUI.prototype.timeInput = function (divId) {
  * @method envTypeRadio
  * @param {String} divId - div id about HTML tag attribute
  * @param {String} provider - public data provider ('seoul' or 'public') (default : seoul)
- * @return {jQuery Object} User Interface Radio Button Object (Environment Type)
+ * @return {String} User Interface Radio Button Name (Environment Type)
  */
 OGDSM.eGovFrameUI.prototype.envTypeRadio = function (divId, provider) {
     'use strict';
@@ -177,7 +178,7 @@ OGDSM.eGovFrameUI.prototype.envTypeRadio = function (divId, provider) {
         envTypeValues = ['pm10Value', 'pm25Value', 'so2Value', 'o3Value', 'no2Value', 'coValue'];
     }
     for (i = 0; i < envTypes.length; i += 1) {
-        html += '<input type="radio" name="envradio" class="custom" ' +
+        html += '<input type="radio" name="envTypeRadio" class="custom" ' +
             ' id="id-' + envTypeValues[i] + '" value="' + envTypeValues[i] + '"/>' +
             '<label for="id-' + envTypeValues[i] + '">' +
             '<img src="images/' + envTypes[i] + '.png" width=30>' +
@@ -189,13 +190,14 @@ OGDSM.eGovFrameUI.prototype.envTypeRadio = function (divId, provider) {
     }
     rootDiv.append(html);
     rootDiv.trigger("create");
-    return $('input[name=envTypeRadio]');
+  //  return $('input[name=envTypeRadio]');
+    return 'envTypeRadio';
 };
 /**
  * User Interface Create about Area Type (Radio Button).
  * @method areaTypeRadio
  * @param {String} divId - div id about HTML tag attribute
- * @return {jQuery Object} User Interface Radio Button Object (Area Type)
+ * @return {jQuery Object} User Interface Radio Button Attribute Name Value (Area Type)
  */
 OGDSM.eGovFrameUI.prototype.areaTypeRadio = function (divId) {
     'use strict';
@@ -206,7 +208,7 @@ OGDSM.eGovFrameUI.prototype.areaTypeRadio = function (divId) {
     areaTypes =
         ['서울', '부산', '대구', '대전', '광주', '울산', '인천', '전남', '전북', '경남', '경북', '강원', '경기', '제주'];//Values
     for (i = 0; i < areaTypes.length; i += 1) {
-        html += '<input type="radio" name="arearadio" class="custom" ' +
+        html += '<input type="radio" name="areaTypeRadio" class="custom" ' +
             ' id="id-' + areaTypes[i] + '" value="' + areaTypes[i] + '"/>' +
             '<label for="id-' + areaTypes[i] + '">' + areaTypes[i] + '</label>';
         if (i !== 0 && (i + 1) % 3 === 0) {
@@ -217,13 +219,14 @@ OGDSM.eGovFrameUI.prototype.areaTypeRadio = function (divId) {
     html += '</fieldset>';
     rootDiv.append(html);
     rootDiv.trigger("create");
-    return $('input[name=areaTypeRadio]');
+    return 'areaTypeRadio';
 };
 /**
  * User Interface Create about Map List (Select).
  * @method mapListSelect
  * @param {String} divId - div id about HTML tag attribute
  * @param {Array} arr - Select Box Option List
+ * @return {String} Select Box Id Value
  */
 OGDSM.eGovFrameUI.prototype.mapListSelect = function (divId, arr) {
     'use strict';
@@ -240,7 +243,7 @@ OGDSM.eGovFrameUI.prototype.mapListSelect = function (divId, arr) {
     html += '</select>';
     rootDiv.append(html);
     rootDiv.trigger("create");
-    return $('#geoServerSelectBox');
+    return 'geoServerSelectBox';
 };
 /**
  * User Interface Create about Process (Button).

@@ -4,7 +4,7 @@
 OGDSM.namesapce('externalConnection');
 (function (OGDSM) {
     'use strict';
-    var values = [], geoServerLayers = [];
+    var values = [], responseData = [], serviceFunc = null;
     /**
      * externalConnection Class
      * @class OGDSM.externalConnection
@@ -16,13 +16,10 @@ OGDSM.namesapce('externalConnection');
         this.serverName = name;
         if (name === 'vworldWMS') {
             this.baseAddr = "http://map.vworld.kr/js/wms.do";
-        } else if (name === 'seoulOpen') {
-            this.baseAddr = "http://openAPI.seoul.go.kr:8088";
-        } else if (name === 'airKorea') {
-            this.baseAddr = "http://openAPI.airkorea.or.kr";
         } else {
             this.baseAddr = addr;
         }
+
     };
     OGDSM.externalConnection.prototype = {
         constructor : OGDSM.externalConnection,
@@ -35,11 +32,11 @@ OGDSM.namesapce('externalConnection');
         removeValues : function () {
             values = [];
         },
-        getLayers : function () {
-            return geoServerLayers;
+        getResponseData : function () {
+            return responseData;
         },
-        setLayers : function (arr) {
-            geoServerLayers = arr;
+        setResponseData : function (arr) {
+            responseData = arr;
         },
         setSubName : function (name) {
             this.subName = name;
@@ -85,9 +82,7 @@ OGDSM.externalConnection.prototype.dataLoad = function () {
     var resultData = null,
         jsonData = null,
         values = this.getValues(),
-        addr = this.baseAddr,
-        setLayers = this.setLayers,
-        geoServerWFSfuc = this.geoServerWFS;
+        setResponseData = this.setResponseData;
     if (this.serverName === 'vworldWMS') {
         if (values.length === 3) {
             resultData = new ol.layer.Tile({
@@ -123,7 +118,7 @@ OGDSM.externalConnection.prototype.dataLoad = function () {
                 dataType : 'json',
                 success : function (msg) {
                     resultData = msg;
-                    setLayers(resultData.data);
+                    setResponseData(resultData.data);
                 },
                 error : function (e) {
                     console.log(e);
@@ -132,11 +127,15 @@ OGDSM.externalConnection.prototype.dataLoad = function () {
 
         } else if (this.subName === 'WFS') {//workspace, layerName
             console.log(values[0] + ', ' + values[1]);
-            resultData = geoServerWFSfuc(addr, values[0], values[1]);
+            resultData = this.geoServerWFS(this.baseAddr, values[0], values[1]);
             return resultData;
         }
-    } else if (this.serverName === 'seoulOpen') {
-        console.log('seoulOpen');
+    } else if (this.serverName === 'publicData') {
+        if (this.subName === 'TimeAverageAirQuality' ||
+                this.subName === 'RealtimeRoadsideStation' ||
+                this.subName === 'ArpltnInforInqireSvc') {
+            this.publicDataEnv(values[0], values[1], values[2], values[3]);
+        }
     }
     
     //return resultData;
@@ -188,13 +187,59 @@ OGDSM.externalConnection.prototype.geoServerWFS = function (addr, ws, name) {
 };
 /**
  *
- *
+ * 1. apikey, 2, vistype, 3. .....
  *
  */
-
-
-
-OGDSM.externalConnection.prototype.publicData = function () {
+OGDSM.externalConnection.prototype.publicDataEnv = function (apikey, envType, dateOrArea, time) {
     'use strict';
+    dateOrArea = (typeof (dateOrArea) !== 'undefined') ? dateOrArea : 'undefined';
+    time = (typeof (time) !== 'undefined') ? time : 'undefined';
 
+    var colorRange =
+        ["#0090ff", "#008080", "#4cff4c", "#99ff99", "#FFFF00", "#FFFF99", "#FF9900", "#FF0000"],
+        range = [],
+        jsonData = "",
+        setResponseData = this.setResponseData;
+    /*
+    if (envType === 'PM10' || envType === 'PM25') {
+        range = [15, 30, 55, 80, 100, 120, 200];
+    } else if (envType === 'CO') {
+        range = [1, 2, 5.5, 9, 10.5, 12, 15];
+    } else if (envType === 'NO2') {
+        range = [0.015, 0.03, 0.05, 0.06, 0.1045, 0.15, 0.2];
+    } else if (envType === 'SO2') {
+        range = [0.01, 0.02, 0.035, 0.05, 0.075, 0.1, 0.15];
+    } else if (envType === 'O3') {
+        range = [0.02, 0.04, 0.06, 0.08, 0.10, 0.12, 0.3];
+    }
+    */
+    if (this.subName === 'TimeAverageAirQuality') { //envType add... server change...
+        jsonData = '{"serviceName":"' + this.subName + '",' +
+            ' "keyValue":"' + apikey + '",' +
+            '"dateValue":' + '"' + dateOrArea + '",' +
+            '"timeValue":' + '"' + time + '"}';
+
+    } else if (this.subName === 'ArpltnInforInqireSvc') {
+        jsonData = '{"serviceName":"' + this.subName + '",' +
+            ' "keyValue":"' + apikey + '",' +
+            '"areaType":' + '"' + encodeURIComponent(dateOrArea) + '",' +
+            '"envType":' + '"' + envType + '",' +
+            '"provider":' + '"' + 'airkorea' + '"}';
+    }
+    jsonData = JSON.parse(jsonData);
+    $.ajax({
+        type : 'POST',
+        url : this.baseAddr,
+        data : JSON.stringify(jsonData),
+        async : false,
+        contentType : "application/json;charset=UTF-8",
+        dataType : 'json',
+        success : function (msg) {
+            var resultData = msg;
+            setResponseData(resultData.data);
+        },
+        error : function (e) {
+            console.log(e);
+        }
+    });
 };
