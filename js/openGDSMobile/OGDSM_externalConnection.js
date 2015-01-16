@@ -4,7 +4,7 @@
 OGDSM.namesapce('externalConnection');
 (function (OGDSM) {
     'use strict';
-    var values = [], responseData = [], serviceFunc = null;
+    var values = [], responseData = null, serviceFunc = null;
     /**
      * externalConnection Class
      * @class OGDSM.externalConnection
@@ -23,21 +23,53 @@ OGDSM.namesapce('externalConnection');
     };
     OGDSM.externalConnection.prototype = {
         constructor : OGDSM.externalConnection,
+        
+        /**
+         * externalConnection Class
+         * @method
+         * @param { }     ()
+         */
         getValues : function () {
             return values;
         },
+        /**
+         * externalConnection Class
+         * @method
+         * @param { }     ()
+         */
         setValues : function (arr) {
             values = arr;
         },
+        /**
+         * externalConnection Class
+         * @method
+         * @param { }     ()
+         */
         removeValues : function () {
             values = [];
         },
+        /**
+         * externalConnection Class
+         * @method
+         * @param { }     ()
+         */
         getResponseData : function () {
             return responseData;
         },
-        setResponseData : function (arr) {
-            responseData = arr;
+        /**
+         * 
+         * @method
+         * @param { }     ()
+         */
+        setResponseData : function (obj) {
+            responseData = null;
+            responseData = obj;
         },
+        /**
+         * 
+         * @method
+         * @param { }     ()
+         */
         setSubName : function (name) {
             this.subName = name;
         }
@@ -45,10 +77,11 @@ OGDSM.namesapce('externalConnection');
     return OGDSM.externalConnection;
 }(OGDSM));
 
+
 /**
- *
- *
- *
+ * 
+ * @method
+ * @param { }     ()
  */
 OGDSM.externalConnection.prototype.changeServer = function (name, addr) {
     'use strict';
@@ -57,9 +90,9 @@ OGDSM.externalConnection.prototype.changeServer = function (name, addr) {
     this.baseAddr = addr;
 };
 /**
- *
- *
- *
+ * 
+ * @method
+ * @param { }     ()
  */
 OGDSM.externalConnection.prototype.setData = function () {
     'use strict';
@@ -73,9 +106,9 @@ OGDSM.externalConnection.prototype.setData = function () {
     this.setValues(values);
 };
 /**
- *
- *
- *
+ * 
+ * @method
+ * @param { }     ()
  */
 OGDSM.externalConnection.prototype.dataLoad = function () {
     'use strict';
@@ -100,13 +133,14 @@ OGDSM.externalConnection.prototype.dataLoad = function () {
                     }
                 }))
             });
+            setResponseData(resultData);
         } else {
             console.log("Not check out data values");
         }
     } else if (this.serverName === 'geoServer') {
         if (this.subName === 'undefined') {
             console.log('Please setting subName');
-            return -1;
+            return false;
         } else if (this.subName === 'getLayers') {
             jsonData = {WorkspaceName : values[0] };
             $.ajax({
@@ -128,7 +162,7 @@ OGDSM.externalConnection.prototype.dataLoad = function () {
         } else if (this.subName === 'WFS') {//workspace, layerName
             console.log(values[0] + ', ' + values[1]);
             resultData = this.geoServerWFS(this.baseAddr, values[0], values[1]);
-            return resultData;
+            setResponseData(resultData);
         }
     } else if (this.serverName === 'publicData') {
         if (this.subName === 'TimeAverageAirQuality' ||
@@ -138,19 +172,23 @@ OGDSM.externalConnection.prototype.dataLoad = function () {
         }
     }
     
-    //return resultData;
+    if (this.getResponseData() === null) {
+        return false;
+    } else {
+        return true;
+    }
 };
 /**
- *
- *
- *
+ * 
+ * @method
+ * @param { }     ()
  */
 OGDSM.externalConnection.prototype.geoServerWFS = function (addr, ws, name) {
     var vectorSource, styles, resultData;
     vectorSource = new ol.source.ServerVector({
         format: new ol.format.GeoJSON(),
         loader: function (extent, resolution, projection) {
-            var fullAddr = addr + 'geoserver/wfs?service=WFS&' +
+            var fullAddr = addr + '/geoserver/wfs?service=WFS&' +
                 'version=1.1.0&request=GetFeature' +
                 '&typeNames=' + ws + ':' + name +
                 '&outputFormat=text/javascript&format_options=callback:loadFeatures' +
@@ -200,19 +238,7 @@ OGDSM.externalConnection.prototype.publicDataEnv = function (apikey, envType, da
         range = [],
         jsonData = "",
         setResponseData = this.setResponseData;
-    /*
-    if (envType === 'PM10' || envType === 'PM25') {
-        range = [15, 30, 55, 80, 100, 120, 200];
-    } else if (envType === 'CO') {
-        range = [1, 2, 5.5, 9, 10.5, 12, 15];
-    } else if (envType === 'NO2') {
-        range = [0.015, 0.03, 0.05, 0.06, 0.1045, 0.15, 0.2];
-    } else if (envType === 'SO2') {
-        range = [0.01, 0.02, 0.035, 0.05, 0.075, 0.1, 0.15];
-    } else if (envType === 'O3') {
-        range = [0.02, 0.04, 0.06, 0.08, 0.10, 0.12, 0.3];
-    }
-    */
+    $("#setting").popup("close");
     if (this.subName === 'TimeAverageAirQuality') { //envType add... server change...
         jsonData = '{"serviceName":"' + this.subName + '",' +
             ' "keyValue":"' + apikey + '",' +
@@ -236,7 +262,7 @@ OGDSM.externalConnection.prototype.publicDataEnv = function (apikey, envType, da
         dataType : 'json',
         success : function (msg) {
             var resultData = msg;
-            setResponseData(resultData.data);
+            setResponseData(JSON.parse(resultData.data));
         },
         error : function (e) {
             console.log(e);

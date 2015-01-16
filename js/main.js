@@ -161,8 +161,11 @@ var styleChange = function (obj) {
 $(document).ready(function (e) {
     'use strict';
     var webAppObj,
+        checked,
         layersArr,
-        addr = 'http://61.102.113.183:8080/mobile',
+//        addr = 'http://61.102.113.183:8080/mobile',
+        addr = 'http://113.198.80.9',
+        folderName = '/OpenGDSMobileApplicationServer1.0',
 
         openGDSMObj,
         uiObj,
@@ -172,20 +175,12 @@ $(document).ready(function (e) {
 
         mapList,
         
-        seoulEnvVis,
-        seoulEnvDate,
-        seoulEnvTime,
-        seoulEnvType,
-        seoulEnvProcessBtn,
-
-        seoulEnvRoadVis,
-        seoulEnvRoadType,
-        seoulEnvRoadProcessBtn,
-
-        publicEnvVis,
-        publicEnvArea,
-        publicEnvType,
-        publicEnvProcessBtn,
+        EnvVis,
+        EnvDate,
+        EnvTime,
+        EnvType,
+        EnvArea,
+        ProcessBtn,
 
         externalServer;
 
@@ -204,7 +199,7 @@ $(document).ready(function (e) {
 	//openGDSM.openGDSMGeoserver.getLayers();
 
 
-    openGDSMObj = new OGDSM.olMap(webAppObj.getMap());
+    openGDSMObj = new OGDSM.visualization(webAppObj.getMap());
     this.baseMap = function (style) {
         openGDSMObj.changeBaseMap(style);
     };
@@ -232,10 +227,10 @@ $(document).ready(function (e) {
     //113.198.80.60/OpenGDSMobileApplicationServer1.0/
     externalServer = new OGDSM.externalConnection('vworldWMS');
     this.getLayers = function () {
-        externalServer.changeServer("geoServer", addr + "/getLayerNames.do");
+        externalServer.changeServer("geoServer", addr + folderName + "/getLayerNames.do");
         externalServer.setSubName("getLayers");
         externalServer.setData("opengds");
-        externalServer.dataLoad();
+        checked = externalServer.dataLoad();
     };
     this.getLayers();
     this.viewWFSMap = function (str) {
@@ -243,69 +238,129 @@ $(document).ready(function (e) {
         externalServer.changeServer("geoServer", "http://113.198.80.9/");
         externalServer.setSubName("WFS");
         externalServer.setData("opengds", str);
-        wfsData = externalServer.dataLoad();
-        webAppObj.getMap().addLayer(wfsData);
+        checked = externalServer.dataLoad();
+        //webAppObj.getMap().addLayer(wfsData);
+        console.log(checked);
+        if (checked === true) {
+            openGDSMObj.addMap(externalServer.getResponseData());
+        } else {
+            console.log("error");
+        }
+        
     };
     this.createSeoulPublicAreaEnvUI = function () {
         $('#setting').empty();
-        seoulEnvVis = uiObj.visTypeRadio("setting");
+        EnvVis = uiObj.visTypeRadio("setting");
         mapList = uiObj.mapListSelect("setting", externalServer.getResponseData());
-      /*  seoulEnvVis.change(function () {
+        EnvDate = uiObj.dateInput("setting");
+        EnvTime = uiObj.timeInput("setting");
+        EnvType = uiObj.envTypeRadio("setting");
+        ProcessBtn = uiObj.processButton("setting");
+        ProcessBtn.click(function () {
+            var apikey = "6473565a72696e7438326262524174",
+                visType = $('input[name=' + EnvVis + ']:checked').val(),
+                mapName = "",
+                date = EnvDate.val(),
+                time = EnvTime.val(),
+                envType = $('input[name=' + EnvType + ']:checked').val();
+            if (visType === 'map') {
+                mapName = $('#' + mapList + ' option:selected').text();
+            }
+            externalServer.changeServer("publicData", addr + folderName + '/SeoulOpenData.do');
+            externalServer.setSubName("TimeAverageAirQuality");
+            externalServer.setData(apikey, envType, date, time);
+            checked = externalServer.dataLoad();
+            if (checked === true) {
+                console.log(externalServer.getResponseData());
+            } else {
+                console.log("error");
+            }
+        });
+    };
+    this.createSeoulPublicRoadEnvUI = function () {
+        $('#setting').empty();
+        EnvVis = uiObj.visTypeRadio("setting", false);
+        EnvType = uiObj.envTypeRadio("setting");
+        ProcessBtn = uiObj.processButton("setting");
+        ProcessBtn.click(function () {
+            console.log("test");
+        });
+    };
+    this.createPublicPortalUI = function () {
+        var xyData,
+            range = null;
+        $('#setting').empty();
+        EnvVis = uiObj.visTypeRadio("setting");
+        mapList = uiObj.mapListSelect("setting", externalServer.getResponseData());
+        /*
+        $("input[name=" + EnvVis + "]:radio").change(function () {
             if ($(this).val() === 'chart') {
-                console.log("Chart");
+                console.log(mapList);
 
             } else if ($(this).val() === 'map') {
                 console.log("Map");
                 
             }
-        });*/
-        seoulEnvDate = uiObj.dateInput("setting");
-        seoulEnvTime = uiObj.timeInput("setting");
-        seoulEnvType = uiObj.envTypeRadio("setting");
-        seoulEnvProcessBtn = uiObj.processButton("setting");
-        seoulEnvProcessBtn.click(function () {
-            var apikey = "6473565a72696e7438326262524174",
-
-                visType = $('input[name=' + seoulEnvVis + ']:checked').val(),
-                mapName = "",
-                date = seoulEnvDate.val(),
-                time = seoulEnvTime.val(),
-                envType = $('input[name=' + seoulEnvType + ']:checked').val();
-            if (visType === 'map') {
-                mapName = $('#' + mapList + ' option:selected').text();
-            }
-            externalServer.changeServer("publicData", addr + '/SeoulOpenData.do');
-            externalServer.setSubName("TimeAverageAirQuality");
-            externalServer.setData(apikey, envType, date, time);
-            externalServer.dataLoad();
-            console.log(externalServer.getResponseData());
         });
-    };
-    this.createSeoulPublicRoadEnvUI = function () {
-        $('#setting').empty();
-        seoulEnvRoadVis = uiObj.visTypeRadio("setting", false);
-        seoulEnvRoadType = uiObj.envTypeRadio("setting");
-        seoulEnvRoadProcessBtn = uiObj.processButton("setting");
-        seoulEnvRoadProcessBtn.click(function () {
-            console.log("test");
-        });
-    };
-    this.createPublicPortalUI = function () {
-        $('#setting').empty();
-        publicEnvVis = uiObj.visTypeRadio("setting");
-        publicEnvArea = uiObj.areaTypeRadio("setting");
-        publicEnvType = uiObj.envTypeRadio("setting", "public");
-        publicEnvProcessBtn = uiObj.processButton("setting");
-        publicEnvProcessBtn.click(function () {
+        */
+        EnvArea = uiObj.areaTypeRadio("setting");
+        EnvType = uiObj.envTypeRadio("setting", "public");
+        ProcessBtn = uiObj.processButton("setting");
+        ProcessBtn.click(function () {
             var apikey = 'kCxEhXiTf1qmDBlQFOOmw%2BemcPSxQXn5V5%2Fx8EthoHdbSojIdQvwX%2BHtWFyuJaIco0nUJtu12e%2F9acb7HeRRRA%3D%3D',
-                visType = $('input[name=' + publicEnvVis + ']:checked').val(),
-                areaType = $('input[name=' + publicEnvArea + ']:checked').val(),
-                envType = $('input[name=' + publicEnvType + ']:checked').val();
-            externalServer.changeServer("publicData", addr + '/PublicDataPortal.do');
+                visType = $('input[name=' + EnvVis + ']:checked').val(),
+                areaType = $('input[name=' + EnvArea + ']:checked').val(),
+                envType = $('input[name=' + EnvType + ']:checked').val(),
+                mapType = $("#" + mapList + " option:selected").text(),
+                resultData = null,
+                attribute = null,
+                xyData = null,
+                /** AirKorea information **/
+                colors = ["#0090ff", "#008080", "#4cff4c", "#99ff99", "#FFFF00", "#FFFF99", "#FF9900", "#FF0000"],
+                ranges = [ [15, 30, 55, 80, 100, 120, 200],    //PM10, PM25
+                          [1, 2, 5.5, 9, 10.5, 12, 15],        //CO
+                          [0.015, 0.03, 0.05, 0.06, 0.1045, 0.15, 0.2],    //NO2
+                          [0.01, 0.02, 0.035, 0.05, 0.075, 0.1, 0.15],     //SO2
+                          [0.02, 0.04, 0.06, 0.08, 0.10, 0.12, 0.3] ];     //O3
+            $('#setting').popup("close");
+            externalServer.changeServer("publicData", addr + folderName + '/PublicDataPortal.do');
             externalServer.setSubName("ArpltnInforInqireSvc");
             externalServer.setData(apikey, envType, areaType);
-            externalServer.dataLoad();
-            console.log(externalServer.getResponseData());
+            checked = externalServer.dataLoad();
+            if (checked === true) {
+                console.log(externalServer.getResponseData());
+                xyData = OGDSM.jsonToArray(externalServer.getResponseData(), envType, 'stationName');
+                if (envType === "pm10Value" || envType === "pm25Value") {
+                    range = ranges[0];
+                } else if (envType === "coValue") {
+                    range = ranges[1];
+                } else if (envType === "no2Value") {
+                    range = ranges[2];
+                } else if (envType === "so2Value") {
+                    range = ranges[3];
+                } else if (envType === "o3Value") {
+                    range = ranges[4];
+                }
+                if (visType === 'chart') {
+                    openGDSMObj.barChart("d3View", xyData, range, colors);
+                    setTimeout(function () {
+                        $('#dataSelect').popup('open');
+                    }, 2000);
+                } else if (visType === 'map') {
+                    console.log(mapType);
+                    if (mapType === 'Seoul_si' || mapType === 'Seoul_dong') {
+                        attribute = 'SIG_KOR_NM';
+                    } else {
+                        attribute = 'EMD_KOR_NM';
+                    }
+                    resultData = externalServer.geoServerWFS(addr, "opengds", mapType);
+                    openGDSMObj.addMap(resultData);
+                    openGDSMObj.changeWFSStyle(mapType, colors, 0.6, attribute, range, xyData);
+                   // openGDSMObj.changeWFSStyle(mapType, '#ffffff', 0.5, attribute, range, xyData);
+                }
+            } else {
+                console.log("error");
+            }
         });
     };
 });

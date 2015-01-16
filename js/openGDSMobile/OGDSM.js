@@ -58,3 +58,22 @@ OGDSM.namesapce = function (ns_string) {
     }
     return parent;
 };
+/**
+ * OGDSM json to Array module 
+ * @module OGDSM.jsontoArray
+ *
+ *
+ */
+
+OGDSM.jsonToArray = function (obj, x, y) {
+    'use strict';
+    var xyAxis = [],
+        row = obj.row;
+    xyAxis[0] = [];
+	xyAxis[1] = [];
+    $.each(row, function (idx) {
+        xyAxis[0].push(row[idx][x]);
+        xyAxis[1].push(row[idx][y]);
+    });
+    return xyAxis;
+};

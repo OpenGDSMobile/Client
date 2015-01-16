@@ -234,7 +234,7 @@ OGDSM.eGovFrameUI.prototype.mapListSelect = function (divId, arr) {
         rootDiv = $('#' + divId);
     console.log(arr);
     html = '<div data-role="fieldcontain">' +
-        '<select name="geoServerMapSelect" id="geoServerSelectBox">' +
+        '<select name="geoServerSelectBox" id="geoServerSelectBox">' +
         '<option value=""></option>';
     for (i = 0; i < arr.length; i += 1) {
         html += '<option value="' + arr[i] + '">' +
