@@ -163,9 +163,11 @@ $(document).ready(function (e) {
     var webAppObj,
         checked,
         layersArr,
-//        addr = 'http://61.102.113.183:8080/mobile',
-        addr = 'http://113.198.80.9',
-        folderName = '/OpenGDSMobileApplicationServer1.0',
+        addr = 'http://113.198.80.60:8087',
+//      addr = 'http://113.198.80.9',
+        geoServerAddr = 'http://113.198.80.60/',
+        folderName = '/mobile',
+//      folderName = '/OpenGDSMobileApplicationServer1.0',
 
         openGDSMObj,
         uiObj,
@@ -235,7 +237,7 @@ $(document).ready(function (e) {
     this.getLayers();
     this.viewWFSMap = function (str) {
         var wfsData;
-        externalServer.changeServer("geoServer", "http://113.198.80.9/");
+        externalServer.changeServer("geoServer", geoServerAddr);
         externalServer.setSubName("WFS");
         externalServer.setData("opengds", str);
         checked = externalServer.dataLoad();
@@ -353,7 +355,7 @@ $(document).ready(function (e) {
                     } else {
                         attribute = 'EMD_KOR_NM';
                     }
-                    resultData = externalServer.geoServerWFS(addr, "opengds", mapType);
+                    resultData = externalServer.geoServerWFS(geoServerAddr, "opengds", mapType);
                     openGDSMObj.addMap(resultData);
                     openGDSMObj.changeWFSStyle(mapType, colors, 0.6, attribute, range, xyData);
                    // openGDSMObj.changeWFSStyle(mapType, '#ffffff', 0.5, attribute, range, xyData);

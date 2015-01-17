@@ -243,15 +243,16 @@ OGDSM.externalConnection.prototype.publicDataEnv = function (apikey, envType, da
         jsonData = '{"serviceName":"' + this.subName + '",' +
             ' "keyValue":"' + apikey + '",' +
             '"dateValue":' + '"' + dateOrArea + '",' +
+            '"envType":' + '"' + envType + '",' +
             '"timeValue":' + '"' + time + '"}';
 
     } else if (this.subName === 'ArpltnInforInqireSvc') {
         jsonData = '{"serviceName":"' + this.subName + '",' +
             ' "keyValue":"' + apikey + '",' +
             '"areaType":' + '"' + encodeURIComponent(dateOrArea) + '",' +
-            '"envType":' + '"' + envType + '",' +
-            '"provider":' + '"' + 'airkorea' + '"}';
+            '"envType":' + '"' + envType + '"}';
     }
+    console.log(jsonData);
     jsonData = JSON.parse(jsonData);
     $.ajax({
         type : 'POST',
