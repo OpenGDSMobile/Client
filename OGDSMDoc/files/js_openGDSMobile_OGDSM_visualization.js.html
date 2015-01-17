@@ -2,7 +2,7 @@
 <html lang="en" class="yui-overrride">
 <head>
     <meta charset="utf-8">
-    <title>js/openGDSMobile/OGDSM_visualization.js</title>
+    <title>js\openGDSMobile\OGDSM_visualization.js</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700' rel='stylesheet' type='text/css'>
@@ -42,11 +42,11 @@
                                 <li><a href="../classes/OGDSM.html">OGDSM</a></li>
                                 <li><a href="../classes/OGDSM.eGovFramUI.html">OGDSM.eGovFramUI</a></li>
                                 <li><a href="../classes/OGDSM.externalConnection.html">OGDSM.externalConnection</a></li>
-                                <li><a href="../classes/OGDSM.olMap.html">OGDSM.olMap</a></li>
                                 <li><a href="../classes/OGDSM.visualization.html">OGDSM.visualization</a></li>
                             </ul>
 
                             <ul id="api-modules" class="apis modules">
+                                <li><a href="../modules/OGDSM.jsontoArray.html">OGDSM.jsontoArray</a></li>
                                 <li><a href="../modules/OGDSM.namespace.html">OGDSM.namespace</a></li>
                             </ul>
                         </div>
@@ -81,19 +81,256 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1 class="file-heading">File: js/openGDSMobile/OGDSM_visualization.js</h1>
+                        <h1 class="file-heading">File: js\openGDSMobile\OGDSM_visualization.js</h1>
 
                         <div class="file">
                             <pre class="code prettyprint linenums">
-                        /** D3 / OpenLayers3 Visualization Class **/
                         /*jslint devel: true */
-                        /*global $, jQuery, ol*/
+                        /*global $, jQuery, ol, OGDSM, d3*/
+
+                        OGDSM.namesapce(&#x27;visualization&#x27;);
+                        (function (ol, OGDSM) {
+                            &quot;use strict&quot;;
+                            var mapObj;
+                            /**
+                            * OpenLayers3 Map Control Class
+                            * @class OGDSM.visualization
+                            * @constructor
+                            * @param {ol.Map} map
+                            */
+                            OGDSM.visualization = function (map) {
+                                mapObj = map;
+                            };
+                            OGDSM.visualization.prototype = {
+                                constructor : OGDSM.olMap,
+                                version : &quot;1.0&quot;,
+                                /**
+                                 * getMap Method get map object about OpenLayers3.
+                                 * @method getMap
+                                 * @return {ol.Map} Retrun is OpenLayers object.
+                                 */
+                                getMap : function () {
+                                    return mapObj;
+                                },
+                                /**
+                                 * Current Layers Check about OpenLayers3.
+                                 * @method layerCheck
+                                 * @param {String} layerName - Search layer name
+                                 * @return {OpenLayer3 Layer Object} Retrun is OpenLayers object.
+                                 */
+                                layerCheck : function (layerName) {
+                                    var i,
+                                        maps = this.getMap().getLayers().getArray();
+                                    for (i = 0; i &lt; maps.length; i += 1) {
+                                        if (maps[i].get(&#x27;title&#x27;) === layerName) {
+                                            return maps[i];
+                                        }
+                                    }
+                                    return false;
+                                }
+
+                            };
+                            return OGDSM.visualization;
+                        }(ol, OGDSM));
 
                         /**
-                        * Comming Soon...
-                        * @class OGDSM.visualization
-                        * @constructor
-                        */
+                         * changeBaseMap Method is base map Change.
+                         * @method changeBaseMap
+                         * @param {String} mapStyle (&#x27;VWorld&#x27; or &#x27;OSM&#x27;)
+                         */
+                        OGDSM.visualization.prototype.changeBaseMap = function (mapStyle) {
+                            &quot;use strict&quot;;
+                            var TMS,
+                                map = this.map,
+                                maplayers = map.getLayers();
+
+                            maplayers.forEach(function (obj, i) {
+                                var layerTitle = obj.get(&#x27;title&#x27;);
+                                if (layerTitle === &#x27;basemap&#x27;) {
+                                    map.removeLayer(obj);
+                                }
+                            });
+                            if (mapStyle === &#x27;OSM&#x27;) {
+                                TMS = new ol.source.OSM();
+                            } else if (mapStyle === &#x27;VWorld&#x27;) {
+                                TMS = new ol.source.XYZ(({
+                                    url : &quot;http://xdworld.vworld.kr:8080/2d/Base/201310/{z}/{x}/{y}.png&quot;
+                                }));
+                            } else {
+                                console.log(&#x27;Not Map Style&#x27;);
+                            }
+                            map.addLayer(new ol.layer.Tile({
+                                title : &#x27;basemap&#x27;,
+                                source : TMS
+                            }));
+                        };
+                        /**
+                         * WMS/WFS Map Add
+                         * @method addMap
+                         * @param {ol Map Object} data (OpenLayers WMS/WFS/ Object)
+                         */
+                        OGDSM.visualization.prototype.addMap = function (data) {
+                            &#x27;use strict&#x27;;
+                            this.getMap().addLayer(data);
+                        };
+                        /**
+                         *
+                         *
+                         */
+                        OGDSM.visualization.prototype.removeMap = function (layerName) {
+                            &#x27;use strict&#x27;;
+                            var obj = this.layerCheck(layerName);
+                            this.getMap().removeLayer(obj);
+                        };
+                        /**
+                         * WFS style change
+                         * @method changeWFSStyle
+                         * @param {String} layerName (OpenLayers layer name)
+                         * @param {String or Array} Map color
+                         * @param {Number} Opacity number
+                         * @param {String} Map attribute name - option
+                         */
+                        OGDSM.visualization.prototype.changeWFSStyle = function (layerName, colors, opt, attr, range, xyData) {
+                            &#x27;use strict&#x27;;
+                            attr = (typeof (attr) !== &#x27;undefined&#x27;) ? attr : null;
+                            range = (typeof (attr) !== &#x27;undefined&#x27;) ? range : null;
+                            xyData = (typeof (attr) !== &#x27;undefined&#x27;) ? xyData : null;
+                            var i = null,
+                                map = this.layerCheck(layerName),
+                                styleCache = {};
+
+                            if (map === false) {
+                                return -1;
+                            }
+                            if (typeof colors.isArray === &#x27;undefined&#x27;) {
+                                map.setOpacity(opt);
+                            }
+                            map.setStyle(function (f, r) {
+                                var i,
+                                    j,
+                                    color = &#x27;rgba(255, 255, 255, &#x27; + opt + &#x27;)&#x27;,
+                                    text = r &lt; 5000 ? f.get(attr) : &#x27;&#x27;;
+                                if (!styleCache[text]) {
+                                    for (i = 0; i &lt; xyData[1].length; i += 1) {
+                                        if (text === xyData[1][i]) {
+                                            for (j = 0; j &lt; range.length; j += 1) {
+                                                if (xyData[0][i] &lt;= range[j]) {
+                                                    color = colors[j];
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                    }
+                                    styleCache[text] = [new ol.style.Style({
+                                        fill : new ol.style.Fill({
+                                            color : color
+                                        }),
+                                        stroke : new ol.style.Stroke({
+                                            color : &#x27;#00000&#x27;,
+                                            width : 1
+                                        }),
+                                        text : new ol.style.Text({
+                                            font : &#x27;9px Calibri,sans-serif&#x27;,
+                                            text : text,
+                                            fill : new ol.style.Fill({
+                                                color : &#x27;#000000&#x27;
+                                            })
+                                        })
+                                    })];
+                                }
+                                return styleCache[text];
+                            });
+                        };
+                        /**
+                         * Bar Chart Visualization based on D3.js
+                         * range length = color length
+                         * @method barChart
+                         * @param {String} divId (Div name to visualize)
+                         * @param {Array} data (2 dim array about x, y - data is null 0 or -)
+                         * @param {Array} range (1 dim array about bar range) - option based )
+                         * @param {Array} color (1 dun array about bar fill color of range  - option [&#x27;#00000&#x27;])
+                         */
+                        OGDSM.visualization.prototype.barChart = function (divId, data, range, color) {
+                            &#x27;use strict&#x27;;
+                            range = (typeof (range) !== &#x27;undefined&#x27;) ? range : [];
+                            color = (typeof (color) !== &#x27;undefined&#x27;) ? color : [&#x27;#000000&#x27;];
+                            var barHeight = 18,
+                                minusWidth = 0,
+                                rootDiv = $(&#x27;#&#x27; + divId),
+                                maxData = d3.max(data[0]),
+                                barChartDiv = null,
+                                x = null,
+                                y = null,
+                                z = null;
+                            rootDiv.empty();
+                            barChartDiv = d3.select(&quot;#&quot; + divId).append(&#x27;svg&#x27;)
+                                .attr(&#x27;id&#x27;, &#x27;barchart&#x27;)
+                                .attr(&#x27;width&#x27;, rootDiv.width())
+                                .attr(&#x27;height&#x27;, barHeight * data[0].length);
+                            x = d3.scale.linear().domain([0, maxData]).range([0, rootDiv.width() - 50]);
+                            barChartDiv.selectAll(&quot;rect&quot;).data(data[0]).enter()
+                                .append(&quot;rect&quot;)
+                                .attr(&quot;x&quot;, 0)
+                                .attr(&quot;y&quot;, function (d, i) {
+                                    return i * barHeight;
+                                })
+                                .attr(&#x27;width&#x27;, function (d) {
+                                    if (d === &#x27;-&#x27; || d === &#x27;0&#x27;) {
+                                        return x(20);
+                                    }
+                        			return x(d) - minusWidth;
+                                })
+                                .attr(&#x27;height&#x27;, barHeight - 2)
+                        		.attr(&#x27;fill&#x27;, function (d, i) {
+                                    if (d === &#x27;-&#x27; || d === &#x27;0&#x27;) {
+                                        return &#x27;#AAAAAA&#x27;;
+                                    }
+                                    if (range.length !== 0) {
+                                        for (z = 0; z &lt; range.length; z += 1) {
+                                            if (data[0][i] &lt;= range[z]) {
+                                                return color[z];
+                                            }
+                                        }
+                                    }
+                                    return color[color.length];
+                                });
+
+                            barChartDiv.selectAll(&#x27;g&#x27;).data(data[1])
+                                .enter()
+                                .append(&#x27;text&#x27;)
+                                .attr(&#x27;x&#x27;, 0)
+                                .attr(&#x27;y&#x27;, function (d, i) {
+                                    return i * barHeight + barHeight - 5;
+                                })
+                                .attr(&#x27;font-weight&#x27;, &#x27;bold&#x27;)
+                                .attr(&#x27;font-size&#x27;, &#x27;0.8em&#x27;)
+                                .text(function (d) {
+                                    return d;
+                                });
+
+                        	barChartDiv.selectAll(&#x27;g&#x27;).data(data[0])
+                                .enter()
+                                .append(&#x27;text&#x27;)
+                                .attr(&#x27;x&#x27;, function (d) {
+                                    if (d === &#x27;-&#x27; || d === &#x27;0&#x27;) {
+                                        return x(10);
+                                    }
+                        			return x(d) - minusWidth;
+                                })
+                                .attr(&#x27;y&#x27;, function (d, i) {
+                                    return i * barHeight + barHeight - 5;
+                                })
+                                .attr(&#x27;dy&#x27;, &#x27;.15em&#x27;)
+                                .attr(&#x27;fill&#x27;, &#x27;black&#x27;)
+                                .attr(&#x27;font-size&#x27;, &#x27;0.8em&#x27;)
+                                .attr(&#x27;font-weight&#x27;, &#x27;bold&#x27;)
+                                .text(function (d) {
+                                    if (d === &#x27;-&#x27; || d === &#x27;0&#x27;) {
+                                        return &#x27;점검중&#x27;;
+                                    }
+                                    return d;
+                                });
+                        };
                             </pre>
                         </div>
                     </div>

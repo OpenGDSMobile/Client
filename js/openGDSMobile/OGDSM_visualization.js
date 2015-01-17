@@ -1,18 +1,16 @@
 /*jslint devel: true */
 /*global $, jQuery, ol, OGDSM, d3*/
-/**
-* OpenLayers3 Map Control Class
-* @class OGDSM.visualization
-* @constructor
-* @param {ol.Map} map
-*/
+
 OGDSM.namesapce('visualization');
 (function (ol, OGDSM) {
     "use strict";
     var mapObj;
     /**
-     * OGDSM Constructor OpenLayers3
-     */
+    * OpenLayers3 Map Control Class
+    * @class OGDSM.visualization
+    * @constructor
+    * @param {ol.Map} map
+    */
     OGDSM.visualization = function (map) {
         mapObj = map;
     };
@@ -27,6 +25,12 @@ OGDSM.namesapce('visualization');
         getMap : function () {
             return mapObj;
         },
+        /**
+         * Current Layers Check about OpenLayers3.
+         * @method layerCheck
+         * @param {String} layerName - Search layer name
+         * @return {OpenLayer3 Layer Object} Retrun is OpenLayers object.
+         */
         layerCheck : function (layerName) {
             var i,
                 maps = this.getMap().getLayers().getArray();
@@ -88,7 +92,8 @@ OGDSM.visualization.prototype.addMap = function (data) {
  */
 OGDSM.visualization.prototype.removeMap = function (layerName) {
     'use strict';
-    
+    var obj = this.layerCheck(layerName);
+    this.getMap().removeLayer(obj);
 };
 /**
  * WFS style change

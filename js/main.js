@@ -163,7 +163,8 @@ $(document).ready(function (e) {
     var webAppObj,
         checked,
         layersArr,
-        addr = 'http://113.198.80.60:8087',
+        addr = 'http://61.106.113.122:8080',
+//        addr = 'http://113.198.80.60:8087',
 //      addr = 'http://113.198.80.9',
         geoServerAddr = 'http://113.198.80.60/',
         folderName = '/mobile',
@@ -261,19 +262,60 @@ $(document).ready(function (e) {
         ProcessBtn.click(function () {
             var apikey = "6473565a72696e7438326262524174",
                 visType = $('input[name=' + EnvVis + ']:checked').val(),
-                mapName = "",
+                envType = $('input[name=' + EnvType + ']:checked').val(),
+                mapType = $("#" + mapList + " option:selected").text(),
                 date = EnvDate.val(),
                 time = EnvTime.val(),
-                envType = $('input[name=' + EnvType + ']:checked').val();
+                mapName = "",
+                resultData = null,
+                attribute = null,
+                xyData = null,
+                range = null,
+                /** AirKorea information **/
+                colors = ["#0090ff", "#008080", "#4cff4c", "#99ff99", "#FFFF00", "#FFFF99", "#FF9900", "#FF0000"],
+                ranges = [ [15, 30, 55, 80, 100, 120, 200],    //PM10, PM25
+                          [1, 2, 5.5, 9, 10.5, 12, 15],        //CO
+                          [0.015, 0.03, 0.05, 0.06, 0.1045, 0.15, 0.2],    //NO2
+                          [0.01, 0.02, 0.035, 0.05, 0.075, 0.1, 0.15],     //SO2
+                          [0.02, 0.04, 0.06, 0.08, 0.10, 0.12, 0.3] ];     //O3
             if (visType === 'map') {
                 mapName = $('#' + mapList + ' option:selected').text();
             }
+            $('#setting').popup("close");
             externalServer.changeServer("publicData", addr + folderName + '/SeoulOpenData.do');
             externalServer.setSubName("TimeAverageAirQuality");
             externalServer.setData(apikey, envType, date, time);
             checked = externalServer.dataLoad();
             if (checked === true) {
                 console.log(externalServer.getResponseData());
+                xyData = OGDSM.jsonToArray(externalServer.getResponseData(), envType, 'MSRSTE_NM');
+                if (envType === "PM10" || envType === "PM25") {
+                    range = ranges[0];
+                } else if (envType === "CO") {
+                    range = ranges[1];
+                } else if (envType === "NO2") {
+                    range = ranges[2];
+                } else if (envType === "SO2") {
+                    range = ranges[3];
+                } else if (envType === "O3") {
+                    range = ranges[4];
+                }
+                if (visType === 'chart') {
+                    openGDSMObj.barChart("d3View", xyData, range, colors);
+                    setTimeout(function () {
+                        $('#dataSelect').popup('open');
+                    }, 2000);
+                } else if (visType === 'map') {
+                    console.log(mapType);
+                    if (mapType === 'Seoul_si' || mapType === 'Seoul_dong') {
+                        attribute = 'SIG_KOR_NM';
+                    } else {
+                        attribute = 'EMD_KOR_NM';
+                    }
+                    resultData = externalServer.geoServerWFS(geoServerAddr, "opengds", mapType);
+                    openGDSMObj.addMap(resultData);
+                    openGDSMObj.changeWFSStyle(mapType, colors, 0.6, attribute, range, xyData);
+                }
             } else {
                 console.log("error");
             }
@@ -294,17 +336,6 @@ $(document).ready(function (e) {
         $('#setting').empty();
         EnvVis = uiObj.visTypeRadio("setting");
         mapList = uiObj.mapListSelect("setting", externalServer.getResponseData());
-        /*
-        $("input[name=" + EnvVis + "]:radio").change(function () {
-            if ($(this).val() === 'chart') {
-                console.log(mapList);
-
-            } else if ($(this).val() === 'map') {
-                console.log("Map");
-                
-            }
-        });
-        */
         EnvArea = uiObj.areaTypeRadio("setting");
         EnvType = uiObj.envTypeRadio("setting", "public");
         ProcessBtn = uiObj.processButton("setting");

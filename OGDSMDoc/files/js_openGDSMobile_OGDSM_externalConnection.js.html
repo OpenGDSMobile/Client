@@ -2,7 +2,7 @@
 <html lang="en" class="yui-overrride">
 <head>
     <meta charset="utf-8">
-    <title>js/openGDSMobile/OGDSM_externalConnection.js</title>
+    <title>js\openGDSMobile\OGDSM_externalConnection.js</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700' rel='stylesheet' type='text/css'>
@@ -42,11 +42,11 @@
                                 <li><a href="../classes/OGDSM.html">OGDSM</a></li>
                                 <li><a href="../classes/OGDSM.eGovFramUI.html">OGDSM.eGovFramUI</a></li>
                                 <li><a href="../classes/OGDSM.externalConnection.html">OGDSM.externalConnection</a></li>
-                                <li><a href="../classes/OGDSM.olMap.html">OGDSM.olMap</a></li>
                                 <li><a href="../classes/OGDSM.visualization.html">OGDSM.visualization</a></li>
                             </ul>
 
                             <ul id="api-modules" class="apis modules">
+                                <li><a href="../modules/OGDSM.jsontoArray.html">OGDSM.jsontoArray</a></li>
                                 <li><a href="../modules/OGDSM.namespace.html">OGDSM.namespace</a></li>
                             </ul>
                         </div>
@@ -81,19 +81,293 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1 class="file-heading">File: js/openGDSMobile/OGDSM_externalConnection.js</h1>
+                        <h1 class="file-heading">File: js\openGDSMobile\OGDSM_externalConnection.js</h1>
 
                         <div class="file">
                             <pre class="code prettyprint linenums">
                         /** GeoServer, Public data, VWorld Connect Class **/
                         /*jslint devel: true */
                         /*global $, jQuery, ol, OGDSM*/
+                        OGDSM.namesapce(&#x27;externalConnection&#x27;);
+                        (function (OGDSM) {
+                            &#x27;use strict&#x27;;
+                            var values = [], responseData = null, serviceFunc = null;
+                            /**
+                             * externalConnection Class
+                             * vworldWMS address http://map.vworld.kr/js/wms.do
+                             * @class OGDSM.externalConnection
+                             * @constructor
+                             * @param {String} serverName - External Server Name (vworldWMS/geoServer/publicData/airKorea)
+                             * @param {String} addr option(default: null) - External Server Address
+                             */
+                            OGDSM.externalConnection = function (name, addr) {
+                                addr = (typeof (addr) !== &#x27;undefined&#x27;) ? addr : &#x27;null&#x27;;
+                                this.serverName = name;
+                                if (name === &#x27;vworldWMS&#x27;) {
+                                    this.baseAddr = &quot;http://map.vworld.kr/js/wms.do&quot;;
+                                } else {
+                                    this.baseAddr = addr;
+                                }
 
+                            };
+                            OGDSM.externalConnection.prototype = {
+                                constructor : OGDSM.externalConnection,
+                                /**
+                                 * Get external server parameter
+                                 * @method getValues
+                                 * @return {Array} values
+                                 */
+                                getValues : function () {
+                                    return values;
+                                },
+                                /**
+                                 * Set external server parameter
+                                 * @method setValues
+                                 * @param {Array} data values
+                                 */
+                                setValues : function (arr) {
+                                    values = arr;
+                                },
+                                /**
+                                 * Remove external server parameter
+                                 * @method removeValues
+                                 */
+                                removeValues : function () {
+                                    values = [];
+                                },
+                                /**
+                                 * Get external server ajax result value
+                                 * @method getResponseData
+                                 * @return {JSON or Array} responseData
+                                 */
+                                getResponseData : function () {
+                                    return responseData;
+                                },
+                                /**
+                                 * Set external server ajax result value
+                                 * @method setResponseData
+                                 * @param {JSON or Array} obj
+                                 */
+                                setResponseData : function (obj) {
+                                    responseData = null;
+                                    responseData = obj;
+                                },
+                                /**
+                                 * Set external server sub name
+                                 * @method setSubName
+                                 * @param {String} name
+                                 */
+                                setSubName : function (name) {
+                                    this.subName = name;
+                                }
+                            };
+                            return OGDSM.externalConnection;
+                        }(OGDSM));
                         /**
-                        * Comming Soon...
-                        * @class OGDSM.externalConnection
-                        * @constructor
-                        */
+                         * Change external server name and address
+                         * @method changeServer
+                         * @param {String} serverName - External Server Name (vworldWMS/geoServer/publicData/airKorea)
+                         * @param {String} addr option(default: null) - External Server Address
+                         */
+                        OGDSM.externalConnection.prototype.changeServer = function (name, addr) {
+                            &#x27;use strict&#x27;;
+                            addr = (typeof (addr) !== &#x27;undefined&#x27;) ? addr : &#x27;undefined&#x27;;
+                            this.serverName = name;
+                            if (name === &#x27;vworldWMS&#x27;) {
+                                this.baseAddr = &quot;http://map.vworld.kr/js/wms.do&quot;;
+                            } else {
+                                this.baseAddr = addr;
+                            }
+                        };
+                        /**
+                         * Setting data for connection
+                         * @method setData
+                         * @param {Array} arguments
+                         */
+                        OGDSM.externalConnection.prototype.setData = function () {
+                            &#x27;use strict&#x27;;
+                            var parm, i, values;
+                            parm = arguments;
+                            this.removeValues();
+                            values = this.getValues();
+                            for (i = 0; i &lt; parm.length; i += 1) {
+                                values.push(parm[i]);
+                            }
+                            this.setValues(values);
+                        };
+                        /**
+                         * vworldWMS, geoServer(getLayers, WFS), publicData(environment) data loading
+                         * @method dataLoad
+                         * @return {JSON or Array} save values(responseData) through setResponseData()
+                         */
+                        OGDSM.externalConnection.prototype.dataLoad = function () {
+                            &#x27;use strict&#x27;;
+                            var resultData = null,
+                                jsonData = null,
+                                values = this.getValues(),
+                                setResponseData = this.setResponseData;
+                            if (this.serverName === &#x27;vworldWMS&#x27;) {
+                                if (values.length === 3) {
+                                    resultData = new ol.layer.Tile({
+                                        source : new ol.source.TileWMS(({
+                                            url : this.baseAddr,
+                                            params : {
+                                                apiKey : values[0],
+                                                domain : values[1],
+                                                LAYERS : values[2],
+                                                STYLES : values[2],
+                                                FORMAT : &#x27;image/png&#x27;,
+                                                CRS : &#x27;EPSG:900913&#x27;,
+                                                EXCEPTIONS : &#x27;text/xml&#x27;,
+                                                TRANSPARENT : true
+                                            }
+                                        }))
+                                    });
+                                    setResponseData(resultData);
+                                } else {
+                                    console.log(&quot;Not check out data values&quot;);
+                                }
+                            } else if (this.serverName === &#x27;geoServer&#x27;) {
+                                if (this.subName === &#x27;undefined&#x27;) {
+                                    console.log(&#x27;Please setting subName&#x27;);
+                                    return false;
+                                } else if (this.subName === &#x27;getLayers&#x27;) {
+                                    jsonData = {WorkspaceName : values[0] };
+                                    $.ajax({
+                                        type : &#x27;POST&#x27;,
+                                        url : this.baseAddr,
+                                        crossDomain: true,
+                                        data : JSON.stringify(jsonData),
+                                        contentType : &quot;application/json;charset=UTF-8&quot;,
+                                        dataType : &#x27;json&#x27;,
+                                        success : function (msg) {
+                                            resultData = msg;
+                                            setResponseData(resultData.data);
+                                        },
+                                        error : function (e) {
+                                            console.log(e);
+                                        }
+                                    });
+
+                                } else if (this.subName === &#x27;WFS&#x27;) {//workspace, layerName
+                                    console.log(values[0] + &#x27;, &#x27; + values[1]);
+                                    resultData = this.geoServerWFS(this.baseAddr, values[0], values[1]);
+                                    setResponseData(resultData);
+                                }
+                            } else if (this.serverName === &#x27;publicData&#x27;) {
+                                if (this.subName === &#x27;TimeAverageAirQuality&#x27; ||
+                                        this.subName === &#x27;RealtimeRoadsideStation&#x27; ||
+                                        this.subName === &#x27;ArpltnInforInqireSvc&#x27;) {
+                                    this.publicDataEnv(values[0], values[1], values[2], values[3]);
+                                }
+                            }
+
+                            if (this.getResponseData() === null) {
+                                return false;
+                            } else {
+                                return true;
+                            }
+                        };
+                        /**
+                         * GeoServer WFS data load (OpenLayers3 ol.source.ServerVector)
+                         * @method geoServerWFS
+                         * @param {String} addr - GeoServer Address
+                         * @param {String} ws - GeoServer Workspace
+                         * @param {String} name - GeoServer Layer Name
+                         * @return {ol.source.ServerVector} vectorSource - OpenLayers3 Vector Object
+                         */
+                        OGDSM.externalConnection.prototype.geoServerWFS = function (addr, ws, name) {
+                            var vectorSource, styles, resultData;
+                            vectorSource = new ol.source.ServerVector({
+                                format: new ol.format.GeoJSON(),
+                                loader: function (extent, resolution, projection) {
+                                    var fullAddr = addr + &#x27;/geoserver/wfs?service=WFS&amp;&#x27; +
+                                        &#x27;version=1.1.0&amp;request=GetFeature&#x27; +
+                                        &#x27;&amp;typeNames=&#x27; + ws + &#x27;:&#x27; + name +
+                                        &#x27;&amp;outputFormat=text/javascript&amp;format_options=callback:loadFeatures&#x27; +
+                                        &#x27;&amp;srsname=&#x27; + &#x27;EPSG:900913&#x27; + &#x27;&amp;bbox=&#x27; + extent.join(&#x27;,&#x27;) + &#x27;,&#x27; + &#x27;EPSG:900913&#x27;;
+                                    $.ajax({
+                                        url : fullAddr,
+                                        dataType: &#x27;jsonp&#x27;
+                                    });
+                                },
+                                strategy: ol.loadingstrategy.createTile(new ol.tilegrid.XYZ({
+                                    maxZoom: 19
+                                })),
+                                projection: &#x27;EPSG:900913&#x27;
+                            });
+                            styles = [
+                                new ol.style.Style({
+                                    fill: new ol.style.Fill({
+                                        color: &#x27;#ff0000&#x27;
+                                    }),
+                                    stroke: new ol.style.Stroke({
+                                        color: &#x27;#000000&#x27;,
+                                        width: 1
+                                    })
+                                })];
+                            loadFeatures = function (response) {
+                                vectorSource.addFeatures(vectorSource.readFeatures(response));
+                            };
+                            resultData = new ol.layer.Vector({
+                                title : name,
+                                source : vectorSource,
+                                style: styles
+                            });
+                            return resultData;
+                        };
+                        /**
+                         * Get Environment Data (Seoul Open Data and Public Data Portal)
+                         * @method publicDataEnv
+                         * @param {String} apikey - Key Value
+                         * @param {String} envType - Environment Value (Seoul : PM10, PM25, CO, NO2, O3, SO2   Public : pm10value, covalue, no2value, o3value, so2value
+                         * @param {String} dateOrArea (option) - environment date or area
+                         * @param {String} time (option) - environment time
+                         * @return {JSON} save values(responseData) through setResponseData()
+                         */
+                        OGDSM.externalConnection.prototype.publicDataEnv = function (apikey, envType, dateOrArea, time) {
+                            &#x27;use strict&#x27;;
+                            dateOrArea = (typeof (dateOrArea) !== &#x27;undefined&#x27;) ? dateOrArea : &#x27;null&#x27;;
+                            time = (typeof (time) !== &#x27;undefined&#x27;) ? time : &#x27;null&#x27;;
+
+                            var colorRange =
+                                [&quot;#0090ff&quot;, &quot;#008080&quot;, &quot;#4cff4c&quot;, &quot;#99ff99&quot;, &quot;#FFFF00&quot;, &quot;#FFFF99&quot;, &quot;#FF9900&quot;, &quot;#FF0000&quot;],
+                                range = [],
+                                jsonData = &quot;&quot;,
+                                setResponseData = this.setResponseData;
+                            $(&quot;#setting&quot;).popup(&quot;close&quot;);
+                            if (this.subName === &#x27;TimeAverageAirQuality&#x27;) { //envType add... server change...
+                                jsonData = &#x27;{&quot;serviceName&quot;:&quot;&#x27; + this.subName + &#x27;&quot;,&#x27; +
+                                    &#x27; &quot;keyValue&quot;:&quot;&#x27; + apikey + &#x27;&quot;,&#x27; +
+                                    &#x27;&quot;dateValue&quot;:&#x27; + &#x27;&quot;&#x27; + dateOrArea + &#x27;&quot;,&#x27; +
+                                    &#x27;&quot;envType&quot;:&#x27; + &#x27;&quot;&#x27; + envType + &#x27;&quot;,&#x27; +
+                                    &#x27;&quot;timeValue&quot;:&#x27; + &#x27;&quot;&#x27; + time + &#x27;&quot;}&#x27;;
+
+                            } else if (this.subName === &#x27;ArpltnInforInqireSvc&#x27;) {
+                                jsonData = &#x27;{&quot;serviceName&quot;:&quot;&#x27; + this.subName + &#x27;&quot;,&#x27; +
+                                    &#x27; &quot;keyValue&quot;:&quot;&#x27; + apikey + &#x27;&quot;,&#x27; +
+                                    &#x27;&quot;areaType&quot;:&#x27; + &#x27;&quot;&#x27; + encodeURIComponent(dateOrArea) + &#x27;&quot;,&#x27; +
+                                    &#x27;&quot;envType&quot;:&#x27; + &#x27;&quot;&#x27; + envType + &#x27;&quot;}&#x27;;
+                            }
+                            console.log(jsonData);
+                            jsonData = JSON.parse(jsonData);
+                            $.ajax({
+                                type : &#x27;POST&#x27;,
+                                url : this.baseAddr,
+                                data : JSON.stringify(jsonData),
+                                async : false,
+                                contentType : &quot;application/json;charset=UTF-8&quot;,
+                                dataType : &#x27;json&#x27;,
+                                success : function (msg) {
+                                    var resultData = msg;
+                                    setResponseData(JSON.parse(resultData.data));
+                                },
+                                error : function (e) {
+                                    console.log(e);
+                                }
+                            });
+                        };
+
                             </pre>
                         </div>
                     </div>

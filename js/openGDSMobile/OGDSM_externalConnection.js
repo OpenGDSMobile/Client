@@ -7,12 +7,14 @@ OGDSM.namesapce('externalConnection');
     var values = [], responseData = null, serviceFunc = null;
     /**
      * externalConnection Class
+     * vworldWMS address http://map.vworld.kr/js/wms.do
      * @class OGDSM.externalConnection
      * @constructor
-     * @param {String} serverName - External Server Name (vworldWMS/geoServer/seoulOpen/airKorea)
+     * @param {String} serverName - External Server Name (vworldWMS/geoServer/publicData/airKorea)
+     * @param {String} addr option(default: null) - External Server Address
      */
     OGDSM.externalConnection = function (name, addr) {
-        addr = (typeof (addr) !== 'undefined') ? addr : 'undefined';
+        addr = (typeof (addr) !== 'undefined') ? addr : 'null';
         this.serverName = name;
         if (name === 'vworldWMS') {
             this.baseAddr = "http://map.vworld.kr/js/wms.do";
@@ -23,52 +25,50 @@ OGDSM.namesapce('externalConnection');
     };
     OGDSM.externalConnection.prototype = {
         constructor : OGDSM.externalConnection,
-        
         /**
-         * externalConnection Class
-         * @method
-         * @param { }     ()
+         * Get external server parameter
+         * @method getValues
+         * @return {Array} values
          */
         getValues : function () {
             return values;
         },
         /**
-         * externalConnection Class
-         * @method
-         * @param { }     ()
+         * Set external server parameter
+         * @method setValues
+         * @param {Array} data values
          */
         setValues : function (arr) {
             values = arr;
         },
         /**
-         * externalConnection Class
-         * @method
-         * @param { }     ()
+         * Remove external server parameter
+         * @method removeValues
          */
         removeValues : function () {
             values = [];
         },
         /**
-         * externalConnection Class
-         * @method
-         * @param { }     ()
+         * Get external server ajax result value
+         * @method getResponseData
+         * @return {JSON or Array} responseData
          */
         getResponseData : function () {
             return responseData;
         },
         /**
-         * 
-         * @method
-         * @param { }     ()
+         * Set external server ajax result value
+         * @method setResponseData
+         * @param {JSON or Array} obj
          */
         setResponseData : function (obj) {
             responseData = null;
             responseData = obj;
         },
         /**
-         * 
-         * @method
-         * @param { }     ()
+         * Set external server sub name
+         * @method setSubName
+         * @param {String} name
          */
         setSubName : function (name) {
             this.subName = name;
@@ -76,23 +76,26 @@ OGDSM.namesapce('externalConnection');
     };
     return OGDSM.externalConnection;
 }(OGDSM));
-
-
 /**
- * 
- * @method
- * @param { }     ()
+ * Change external server name and address
+ * @method changeServer
+ * @param {String} serverName - External Server Name (vworldWMS/geoServer/publicData/airKorea)
+ * @param {String} addr option(default: null) - External Server Address
  */
 OGDSM.externalConnection.prototype.changeServer = function (name, addr) {
     'use strict';
     addr = (typeof (addr) !== 'undefined') ? addr : 'undefined';
     this.serverName = name;
-    this.baseAddr = addr;
+    if (name === 'vworldWMS') {
+        this.baseAddr = "http://map.vworld.kr/js/wms.do";
+    } else {
+        this.baseAddr = addr;
+    }
 };
 /**
- * 
- * @method
- * @param { }     ()
+ * Setting data for connection
+ * @method setData
+ * @param {Array} arguments
  */
 OGDSM.externalConnection.prototype.setData = function () {
     'use strict';
@@ -106,9 +109,9 @@ OGDSM.externalConnection.prototype.setData = function () {
     this.setValues(values);
 };
 /**
- * 
- * @method
- * @param { }     ()
+ * vworldWMS, geoServer(getLayers, WFS), publicData(environment) data loading
+ * @method dataLoad
+ * @return {JSON or Array} save values(responseData) through setResponseData()
  */
 OGDSM.externalConnection.prototype.dataLoad = function () {
     'use strict';
@@ -179,9 +182,12 @@ OGDSM.externalConnection.prototype.dataLoad = function () {
     }
 };
 /**
- * 
- * @method
- * @param { }     ()
+ * GeoServer WFS data load (OpenLayers3 ol.source.ServerVector)
+ * @method geoServerWFS
+ * @param {String} addr - GeoServer Address
+ * @param {String} ws - GeoServer Workspace
+ * @param {String} name - GeoServer Layer Name
+ * @return {ol.source.ServerVector} vectorSource - OpenLayers3 Vector Object
  */
 OGDSM.externalConnection.prototype.geoServerWFS = function (addr, ws, name) {
     var vectorSource, styles, resultData;
@@ -224,14 +230,18 @@ OGDSM.externalConnection.prototype.geoServerWFS = function (addr, ws, name) {
     return resultData;
 };
 /**
- *
- * 1. apikey, 2, vistype, 3. .....
- *
+ * Get Environment Data (Seoul Open Data and Public Data Portal)
+ * @method publicDataEnv
+ * @param {String} apikey - Key Value
+ * @param {String} envType - Environment Value (Seoul : PM10, PM25, CO, NO2, O3, SO2   Public : pm10value, covalue, no2value, o3value, so2value
+ * @param {String} dateOrArea (option) - environment date or area
+ * @param {String} time (option) - environment time
+ * @return {JSON} save values(responseData) through setResponseData()
  */
 OGDSM.externalConnection.prototype.publicDataEnv = function (apikey, envType, dateOrArea, time) {
     'use strict';
-    dateOrArea = (typeof (dateOrArea) !== 'undefined') ? dateOrArea : 'undefined';
-    time = (typeof (time) !== 'undefined') ? time : 'undefined';
+    dateOrArea = (typeof (dateOrArea) !== 'undefined') ? dateOrArea : 'null';
+    time = (typeof (time) !== 'undefined') ? time : 'null';
 
     var colorRange =
         ["#0090ff", "#008080", "#4cff4c", "#99ff99", "#FFFF00", "#FFFF99", "#FF9900", "#FF0000"],

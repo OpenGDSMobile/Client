@@ -32,7 +32,6 @@ OGDSM = (function (window, $) {
 * - Use
 *       OGDSM.namesace('example');
 * - Developer
-*
 *       OGDSM.example=(function(){
 *         //Source Code
 *       }());
@@ -60,9 +59,10 @@ OGDSM.namesapce = function (ns_string) {
 };
 /**
  * OGDSM json to Array module 
+ * - Use
+ *       OGDSM.jsonToArray(jsonData, array[0], array[1]);
+ *
  * @module OGDSM.jsontoArray
- *
- *
  */
 
 OGDSM.jsonToArray = function (obj, x, y) {

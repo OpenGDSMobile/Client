@@ -2,7 +2,7 @@
 <html lang="en" class="yui-overrride">
 <head>
     <meta charset="utf-8">
-    <title>js/openGDSMobile/OGDSM_eGovFrameUI.js</title>
+    <title>js\openGDSMobile\OGDSM_eGovFrameUI.js</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700' rel='stylesheet' type='text/css'>
@@ -42,11 +42,11 @@
                                 <li><a href="../classes/OGDSM.html">OGDSM</a></li>
                                 <li><a href="../classes/OGDSM.eGovFramUI.html">OGDSM.eGovFramUI</a></li>
                                 <li><a href="../classes/OGDSM.externalConnection.html">OGDSM.externalConnection</a></li>
-                                <li><a href="../classes/OGDSM.olMap.html">OGDSM.olMap</a></li>
                                 <li><a href="../classes/OGDSM.visualization.html">OGDSM.visualization</a></li>
                             </ul>
 
                             <ul id="api-modules" class="apis modules">
+                                <li><a href="../modules/OGDSM.jsontoArray.html">OGDSM.jsontoArray</a></li>
                                 <li><a href="../modules/OGDSM.namespace.html">OGDSM.namespace</a></li>
                             </ul>
                         </div>
@@ -81,25 +81,23 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1 class="file-heading">File: js/openGDSMobile/OGDSM_eGovFrameUI.js</h1>
+                        <h1 class="file-heading">File: js\openGDSMobile\OGDSM_eGovFrameUI.js</h1>
 
                         <div class="file">
                             <pre class="code prettyprint linenums">
                         /*jslint devel: true */
                         /*global $, jQuery, ol, OGDSM*/
 
-                        /**
-                        * e-Goverement Framework User Interface Automatic Create.
-                        * @class OGDSM.eGovFramUI
-                        * @constructor
-                        */
                         OGDSM.namesapce(&#x27;eGovFrameUI&#x27;);
-                        OGDSM.eGovFrameUI = (function (OGDSM) {
+                        (function (OGDSM) {
                             &#x27;use strict&#x27;;
 
-                            OGDSM.eGovFrameUI = function () {
-
-                            };
+                            /**
+                            * e-Goverement Framework User Interface Automatic Create.
+                            * @class OGDSM.eGovFramUI
+                            * @constructor
+                            */
+                            OGDSM.eGovFrameUI = function () {};
                             OGDSM.eGovFrameUI.prototype = {
                                 constructor : OGDSM.eGovFrameUI
                             };
@@ -113,24 +111,8 @@
                          */
                         OGDSM.eGovFrameUI.prototype.vworldWMSCheck = function (divId) {
                             &#x27;use strict&#x27;;
-                            var obj, rootDiv, html, styles, stylesText, i, btnObj, OGDSM, preProcess;
-                            preProcess = function () {
-                                var styles, checkedData;
-                                styles = &quot;&quot;;
-                                checkedData = $(&quot;input[name=&#x27;vworldWMS&#x27;]:checkbox&quot;);
-                                checkedData.each(function (i) {
-                                    if ($(this).is(&#x27;:checked&#x27;)) {
-                                        styles += $(this).attr(&#x27;value&#x27;);
-                                        styles += &#x27;,&#x27;;
-                                    }
-                                });
-                                styles = styles.slice(0, -1);
-                                console.log(OGDSM.getMap());
-                                console.log(obj.getVWorldDomain());
-                                console.log(styles);
-                            };
+                            var rootDiv, html, styles, stylesText, i, btnObj, OGDSM, preProcess;
                             OGDSM = this.OGDSM;
-                            obj = this;
                             rootDiv = $(&#x27;#&#x27; + divId);
                             html =
                                 &#x27;&lt;fieldset data-role=&quot;controlgroup&quot; data-type=&quot;horizontal&quot; class=&quot;egov-align-center&quot;&gt;&#x27;;
@@ -193,25 +175,16 @@
                             *Limilt 5
                             */
                             html += &#x27;&lt;/fieldset&gt;&#x27;;
-                        //            &#x27;&lt;a href=&quot;#&quot; id=VWorldWMSButton data-role=&quot;button&quot; &#x27; +
-                        //            &#x27;onclick=this.makeData(&quot;&#x27; + this.VWorldKey + &#x27;&quot;,&quot;vworldWMS&quot;)&gt;지도 추가&lt;/a&gt;&#x27;;
-                        //            &#x27;&gt;지도 추가&lt;/a&gt;&#x27;;
                             rootDiv.html(html);
                             rootDiv.trigger(&quot;create&quot;);
-                            /*
-                             *
-                             */
-                        //    btnObj = $(&#x27;#VWorldWMSButton&#x27;).click(function () {
-                        //        preProcess();
-                        //    });
-                            return $(&#x27;input[name=vworldWMSChk]&#x27;);
+                            return $(&quot;input[name=&#x27;vworldWMSChk&#x27;]:checkbox&quot;);
                         };
                         /**
                          * User Interface Create about visualization type (Radio Button).
                          * @method visTypeRadio
                          * @param {String} divId - div id about HTML tag attribute
                          * @param {Boolean} mapEnable - Map visualization enable/disable
-                         * @return {jQuery Object} User Interface Radio Button Object (Visuliaztion type)
+                         * @return {String} User Interface Radio Button Name (Visuliaztion type)
                          */
                         OGDSM.eGovFrameUI.prototype.visTypeRadio = function (divId, mapEnable) {
                             &#x27;use strict&#x27;;
@@ -227,20 +200,16 @@
                         		if (mapEnable === false &amp;&amp; arr[i] !== &#x27;chart&#x27;) {
                                     html += &#x27;disabled &#x27;;
                                 }
-                                if (i === 0) {
+                                /*if (i === 0) {
                                     html += &#x27;checked&#x27;;
-                                }
+                                }*/
                                 //html += &#x27; onclick=&quot;openGDSM.PublicDataUI.mapSelect($(this))&quot;/&gt;&#x27; +
                                 html += &#x27;&gt;&#x27; + &#x27;&lt;label for=&quot;id-&#x27; + arr[i] + &#x27;&quot;&gt;&#x27; + arrText[i] + &#x27;&lt;/label&gt;&#x27;;
                             }
                             rootDiv.append(html);
                             rootDiv.trigger(&quot;create&quot;);
-                            $(&#x27;input[name=visualType]&#x27;).change(function () {
-                                if ($(this).val() === &#x27;chart&#x27;) {
-                                    console.log(&#x27;test&#x27;);
-                                }
-                            });
-                            return $(&#x27;input[name=visualType]&#x27;);
+                            //return $(&#x27;input[name=visualType]&#x27;);
+                            return &#x27;visualType&#x27;;
                         };
                         /**
                          * User Interface Create about visualization type (Date Input).
@@ -279,7 +248,7 @@
                          * @method envTypeRadio
                          * @param {String} divId - div id about HTML tag attribute
                          * @param {String} provider - public data provider (&#x27;seoul&#x27; or &#x27;public&#x27;) (default : seoul)
-                         * @return {jQuery Object} User Interface Radio Button Object (Environment Type)
+                         * @return {String} User Interface Radio Button Name (Environment Type)
                          */
                         OGDSM.eGovFrameUI.prototype.envTypeRadio = function (divId, provider) {
                             &#x27;use strict&#x27;;
@@ -296,7 +265,7 @@
                                 envTypeValues = [&#x27;pm10Value&#x27;, &#x27;pm25Value&#x27;, &#x27;so2Value&#x27;, &#x27;o3Value&#x27;, &#x27;no2Value&#x27;, &#x27;coValue&#x27;];
                             }
                             for (i = 0; i &lt; envTypes.length; i += 1) {
-                                html += &#x27;&lt;input type=&quot;radio&quot; name=&quot;envradio&quot; class=&quot;custom&quot; &#x27; +
+                                html += &#x27;&lt;input type=&quot;radio&quot; name=&quot;envTypeRadio&quot; class=&quot;custom&quot; &#x27; +
                                     &#x27; id=&quot;id-&#x27; + envTypeValues[i] + &#x27;&quot; value=&quot;&#x27; + envTypeValues[i] + &#x27;&quot;/&gt;&#x27; +
                                     &#x27;&lt;label for=&quot;id-&#x27; + envTypeValues[i] + &#x27;&quot;&gt;&#x27; +
                                     &#x27;&lt;img src=&quot;images/&#x27; + envTypes[i] + &#x27;.png&quot; width=30&gt;&#x27; +
@@ -308,13 +277,14 @@
                             }
                             rootDiv.append(html);
                             rootDiv.trigger(&quot;create&quot;);
-                            return $(&#x27;input[name=envTypeRadio]&#x27;);
+                          //  return $(&#x27;input[name=envTypeRadio]&#x27;);
+                            return &#x27;envTypeRadio&#x27;;
                         };
                         /**
                          * User Interface Create about Area Type (Radio Button).
                          * @method areaTypeRadio
                          * @param {String} divId - div id about HTML tag attribute
-                         * @return {jQuery Object} User Interface Radio Button Object (Area Type)
+                         * @return {jQuery Object} User Interface Radio Button Attribute Name Value (Area Type)
                          */
                         OGDSM.eGovFrameUI.prototype.areaTypeRadio = function (divId) {
                             &#x27;use strict&#x27;;
@@ -325,7 +295,7 @@
                             areaTypes =
                                 [&#x27;서울&#x27;, &#x27;부산&#x27;, &#x27;대구&#x27;, &#x27;대전&#x27;, &#x27;광주&#x27;, &#x27;울산&#x27;, &#x27;인천&#x27;, &#x27;전남&#x27;, &#x27;전북&#x27;, &#x27;경남&#x27;, &#x27;경북&#x27;, &#x27;강원&#x27;, &#x27;경기&#x27;, &#x27;제주&#x27;];//Values
                             for (i = 0; i &lt; areaTypes.length; i += 1) {
-                                html += &#x27;&lt;input type=&quot;radio&quot; name=&quot;arearadio&quot; class=&quot;custom&quot; &#x27; +
+                                html += &#x27;&lt;input type=&quot;radio&quot; name=&quot;areaTypeRadio&quot; class=&quot;custom&quot; &#x27; +
                                     &#x27; id=&quot;id-&#x27; + areaTypes[i] + &#x27;&quot; value=&quot;&#x27; + areaTypes[i] + &#x27;&quot;/&gt;&#x27; +
                                     &#x27;&lt;label for=&quot;id-&#x27; + areaTypes[i] + &#x27;&quot;&gt;&#x27; + areaTypes[i] + &#x27;&lt;/label&gt;&#x27;;
                                 if (i !== 0 &amp;&amp; (i + 1) % 3 === 0) {
@@ -336,7 +306,31 @@
                             html += &#x27;&lt;/fieldset&gt;&#x27;;
                             rootDiv.append(html);
                             rootDiv.trigger(&quot;create&quot;);
-                            return $(&#x27;input[name=areaTypeRadio]&#x27;);
+                            return &#x27;areaTypeRadio&#x27;;
+                        };
+                        /**
+                         * User Interface Create about Map List (Select).
+                         * @method mapListSelect
+                         * @param {String} divId - div id about HTML tag attribute
+                         * @param {Array} arr - Select Box Option List
+                         * @return {String} Select Box Id Value
+                         */
+                        OGDSM.eGovFrameUI.prototype.mapListSelect = function (divId, arr) {
+                            &#x27;use strict&#x27;;
+                            var html, i,
+                                rootDiv = $(&#x27;#&#x27; + divId);
+                            console.log(arr);
+                            html = &#x27;&lt;div data-role=&quot;fieldcontain&quot;&gt;&#x27; +
+                                &#x27;&lt;select name=&quot;geoServerSelectBox&quot; id=&quot;geoServerSelectBox&quot;&gt;&#x27; +
+                                &#x27;&lt;option value=&quot;&quot;&gt;&lt;/option&gt;&#x27;;
+                            for (i = 0; i &lt; arr.length; i += 1) {
+                                html += &#x27;&lt;option value=&quot;&#x27; + arr[i] + &#x27;&quot;&gt;&#x27; +
+                                    arr[i] + &#x27;&lt;/option&gt;&#x27;;
+                            }
+                            html += &#x27;&lt;/select&gt;&#x27;;
+                            rootDiv.append(html);
+                            rootDiv.trigger(&quot;create&quot;);
+                            return &#x27;geoServerSelectBox&#x27;;
                         };
                         /**
                          * User Interface Create about Process (Button).
