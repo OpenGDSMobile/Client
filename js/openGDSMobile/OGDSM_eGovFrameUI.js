@@ -10,7 +10,15 @@ OGDSM.namesapce('eGovFrameUI');
     * @class OGDSM.eGovFramUI
     * @constructor
     */
-    OGDSM.eGovFrameUI = function () {};
+    OGDSM.eGovFrameUI = function (theme) {
+        theme = (typeof (theme) !== 'undefined') ? theme : null;
+        if (theme !== null) {
+            this.dataTheme = theme;
+        } else {
+            this.dataTheme = "c";
+        }
+
+    };
     OGDSM.eGovFrameUI.prototype = {
         constructor : OGDSM.eGovFrameUI
     };
@@ -76,7 +84,7 @@ OGDSM.eGovFrameUI.prototype.vworldWMSCheck = function (divId) {
         '시계비행로', '시계비행보고지점',
         '한강회랑', '헬기장'];
     for (i = 0; i < styles.length; i += 1) {
-        html += '<input type="checkbox" name="vworldWMSChk" class="custom" ' +
+        html += '<input type="checkbox" name="vworldWMSChk" class="custom" data-theme=' + this.dataTheme +
                 ' id="id-' + styles[i] + '" value="' + styles[i] + '" />' +
 				'<label for="id-' + styles[i] + '">' + stylesText[i] + '</label>';
         if (i !== 0 && (i + 1) % 2 === 0) {
@@ -108,7 +116,7 @@ OGDSM.eGovFrameUI.prototype.visTypeRadio = function (divId, mapEnable) {
     arr = ['map', 'chart'];
     arrText = ['맵', '차트'];
     for (i = 0; i < arr.length; i += 1) {
-        html += '<input type="radio" name="visualType" class="custom" ' +
+        html += '<input type="radio" name="visualType" class="custom" data-theme=' + this.dataTheme +
 								' id="id-' + arr[i] + '" value="' + arr[i] + '" ';//+\
 		if (mapEnable === false && arr[i] !== 'chart') {
             html += 'disabled ';
@@ -178,10 +186,10 @@ OGDSM.eGovFrameUI.prototype.envTypeRadio = function (divId, provider) {
         envTypeValues = ['pm10Value', 'pm25Value', 'so2Value', 'o3Value', 'no2Value', 'coValue'];
     }
     for (i = 0; i < envTypes.length; i += 1) {
-        html += '<input type="radio" name="envTypeRadio" class="custom" ' +
+        html += '<input type="radio" name="envTypeRadio" class="custom" data-theme=' + this.dataTheme +
             ' id="id-' + envTypeValues[i] + '" value="' + envTypeValues[i] + '"/>' +
             '<label for="id-' + envTypeValues[i] + '">' +
-            '<img src="images/' + envTypes[i] + '.png" width=30>' +
+            '<img src="images/input_bt_' + envTypes[i] + '.png" width=30>' +
             '</label>';
         if (i !== 0 && (i + 1) % 3 === 0) {
             html += '</fieldset>' +
@@ -208,7 +216,7 @@ OGDSM.eGovFrameUI.prototype.areaTypeRadio = function (divId) {
     areaTypes =
         ['서울', '부산', '대구', '대전', '광주', '울산', '인천', '전남', '전북', '경남', '경북', '강원', '경기', '제주'];//Values
     for (i = 0; i < areaTypes.length; i += 1) {
-        html += '<input type="radio" name="areaTypeRadio" class="custom" ' +
+        html += '<input type="radio" name="areaTypeRadio" class="custom" data-theme=' + this.dataTheme +
             ' id="id-' + areaTypes[i] + '" value="' + areaTypes[i] + '"/>' +
             '<label for="id-' + areaTypes[i] + '">' + areaTypes[i] + '</label>';
         if (i !== 0 && (i + 1) % 3 === 0) {
@@ -234,7 +242,7 @@ OGDSM.eGovFrameUI.prototype.mapListSelect = function (divId, arr) {
         rootDiv = $('#' + divId);
     console.log(arr);
     html = '<div data-role="fieldcontain">' +
-        '<select name="geoServerSelectBox" id="geoServerSelectBox">' +
+        '<select name="geoServerSelectBox" id="geoServerSelectBox" data-theme=' + this.dataTheme + '>' +
         '<option value=""></option>';
     for (i = 0; i < arr.length; i += 1) {
         html += '<option value="' + arr[i] + '">' +
@@ -255,7 +263,7 @@ OGDSM.eGovFrameUI.prototype.processButton = function (divId) {
     'use strict';
     var rootDiv, html;
     rootDiv = $('#' + divId);
-    html = '<a href="#" id="processBtn" data-role="button">시각화</a>';
+    html = '<a href="#" id="processBtn" data-role="button" data-theme=' + this.dataTheme + '>시각화</a>';
 /*
 '<a href="#" data-role="button" data-provider="'+provider+'" data-serivce="'+serviceName+'" '+
 'onclick="openGDSM.'+obj+'.makeData($(this))">시각화</a>';

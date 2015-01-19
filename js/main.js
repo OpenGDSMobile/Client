@@ -187,8 +187,6 @@ $(document).ready(function (e) {
 
         externalServer;
 
-
-    //webAppObj = new WEBAPP('map');
     webAppObj = new WEBAPP();
     webAppObj.initViewer();
     /*
