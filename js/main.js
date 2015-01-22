@@ -46,8 +46,12 @@ WEBAPP.prototype.mapInit = function (divName) {
             projection : ol.proj.get('EPSG:900913'),
             center : [0, 0],
             zoom : 10
-        })
+        }),
+        controls: []
     });
+    
+    
+    
     return map;
 };
 WEBAPP.prototype.getMap = function () {
@@ -78,7 +82,7 @@ WEBAPP.prototype.updateLayout = function () {
 	$('#interpolationMap').css('top', $(window).height() - 600);
 	beforeProcess.popupSize("#dataSelect");
 	beforeProcess.popupSize("#vworldList", "300px");
-	$('#layersList').css('height', $(window).height());
+	$('#layersList').css('height', $(window).height() - 400);
 	$('#layersList').css("overflow-y", "auto");
 };
 
@@ -163,12 +167,13 @@ $(document).ready(function (e) {
     var webAppObj,
         checked,
         layersArr,
-        addr = 'http://61.106.113.122:8080',
+//        addr = 'http://61.106.113.122:8080',
 //        addr = 'http://113.198.80.60:8087',
-//      addr = 'http://113.198.80.9',
-        geoServerAddr = 'http://113.198.80.60/',
-        folderName = '/mobile',
-//      folderName = '/OpenGDSMobileApplicationServer1.0',
+        addr = 'http://113.198.80.9',
+//        geoServerAddr = 'http://113.198.80.60/',
+        geoServerAddr = 'http://113.198.80.9',
+//        folderName = '/mobile',
+        folderName = '/OpenGDSMobileApplicationServer1.0',
 
         openGDSMObj,
         uiObj,
@@ -220,9 +225,8 @@ $(document).ready(function (e) {
             });
             selectedData = selectedData.slice(0, -1);
             externalServer.setData("9E21E5EE-67D4-36B9-85BB-E153321EEE65", "http://localhost", selectedData);
-            VWorldWMSData = externalServer.dataLoad();
-
-            webAppObj.getMap().addLayer(VWorldWMSData);
+            externalServer.dataLoad();
+            openGDSMObj.addMap(externalServer.getResponseData());
         });
     };
     //113.198.80.60/OpenGDSMobileApplicationServer1.0/
@@ -233,17 +237,26 @@ $(document).ready(function (e) {
         externalServer.setData("opengds");
         checked = externalServer.dataLoad();
     };
-    this.getLayers();
     this.viewWFSMap = function (str) {
-        var wfsData;
+        var wfsData,
+			r = Math.floor(Math.random() * 256),
+			g = Math.floor(Math.random() * 256),
+			b = Math.floor(Math.random() * 256),
+            color = 'rgb(' + r + ',' + g + ',' + b + ')',
+            attr = null;
+        if (str.indexOf("sig") !== -1) {
+            attr = "sig_kor_nm";
+        } else if (str.indexOf("emd") !== -1) {
+            attr = "emd_kor_nm";
+        }
         externalServer.changeServer("geoServer", geoServerAddr);
         externalServer.setSubName("WFS");
         externalServer.setData("opengds", str);
         checked = externalServer.dataLoad();
         //webAppObj.getMap().addLayer(wfsData);
-        console.log(checked);
         if (checked === true) {
             openGDSMObj.addMap(externalServer.getResponseData());
+            openGDSMObj.changeWFSStyle(str, color, 0.7, attr);
         } else {
             console.log("error");
         }
@@ -251,8 +264,22 @@ $(document).ready(function (e) {
     };
     this.createSeoulPublicAreaEnvUI = function () {
         $('#setting').empty();
+        var getLayers = this.getLayers();
         EnvVis = uiObj.visTypeRadio("setting");
-        mapList = uiObj.mapListSelect("setting", externalServer.getResponseData());
+        $('input[name=' + EnvVis + ']').change(function () {
+            if ($(this).val() === 'map') {
+                console.log("map");
+                externalServer.changeServer("geoServer", addr + folderName + "/getLayerNames.do");
+                externalServer.setSubName("getLayers");
+                externalServer.setData("opengds");
+                checked = externalServer.dataLoad();
+                mapList = uiObj.mapListSelect("geomapList", externalServer.getResponseData());
+            } else {
+                $("#geomapList").empty();
+            }
+        });
+        $('#setting').append('<div id="geomapList"></div>');
+        $('#setting').trigger("create");
         EnvDate = uiObj.dateInput("setting");
         EnvTime = uiObj.timeInput("setting");
         EnvType = uiObj.envTypeRadio("setting");
@@ -305,10 +332,10 @@ $(document).ready(function (e) {
                     }, 2000);
                 } else if (visType === 'map') {
                     console.log(mapType);
-                    if (mapType === 'Seoul_si' || mapType === 'Seoul_dong') {
-                        attribute = 'SIG_KOR_NM';
+                    if (mapType === 'seoul_sig' || mapType === 'seoul_emd') {
+                        attribute = 'sig_kor_nm';
                     } else {
-                        attribute = 'EMD_KOR_NM';
+                        attribute = 'emd_kor_nm';
                     }
                     resultData = externalServer.geoServerWFS(geoServerAddr, "opengds", mapType);
                     openGDSMObj.addMap(resultData);
@@ -333,7 +360,20 @@ $(document).ready(function (e) {
             range = null;
         $('#setting').empty();
         EnvVis = uiObj.visTypeRadio("setting");
-        mapList = uiObj.mapListSelect("setting", externalServer.getResponseData());
+        $('input[name=' + EnvVis + ']').change(function () {
+            if ($(this).val() === 'map') {
+                console.log("map");
+                externalServer.changeServer("geoServer", addr + folderName + "/getLayerNames.do");
+                externalServer.setSubName("getLayers");
+                externalServer.setData("opengds");
+                checked = externalServer.dataLoad();
+                mapList = uiObj.mapListSelect("geomapList", externalServer.getResponseData());
+            } else {
+                $("#geomapList").empty();
+            }
+        });
+        $('#setting').append('<div id="geomapList"></div>');
+        $('#setting').trigger("create");
         EnvArea = uiObj.areaTypeRadio("setting");
         EnvType = uiObj.envTypeRadio("setting", "public");
         ProcessBtn = uiObj.processButton("setting");
@@ -379,15 +419,14 @@ $(document).ready(function (e) {
                     }, 2000);
                 } else if (visType === 'map') {
                     console.log(mapType);
-                    if (mapType === 'Seoul_si' || mapType === 'Seoul_dong') {
-                        attribute = 'SIG_KOR_NM';
+                    if (mapType === 'seoul_sig' || mapType === 'seoul_emd') {
+                        attribute = 'sig_kor_nm';
                     } else {
-                        attribute = 'EMD_KOR_NM';
+                        attribute = 'emd_kor_nm';
                     }
                     resultData = externalServer.geoServerWFS(geoServerAddr, "opengds", mapType);
                     openGDSMObj.addMap(resultData);
                     openGDSMObj.changeWFSStyle(mapType, colors, 0.6, attribute, range, xyData);
-                   // openGDSMObj.changeWFSStyle(mapType, '#ffffff', 0.5, attribute, range, xyData);
                 }
             } else {
                 console.log("error");
