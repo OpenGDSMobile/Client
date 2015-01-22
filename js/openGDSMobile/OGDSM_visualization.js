@@ -54,7 +54,7 @@ OGDSM.namesapce('visualization');
 OGDSM.visualization.prototype.changeBaseMap = function (mapStyle) {
     "use strict";
     var TMS,
-        map = this.map,
+        map = this.getMap(),
         maplayers = map.getLayers();
 
     maplayers.forEach(function (obj, i) {
@@ -84,6 +84,11 @@ OGDSM.visualization.prototype.changeBaseMap = function (mapStyle) {
  */
 OGDSM.visualization.prototype.addMap = function (data) {
     'use strict';
+    var chkData = this.layerCheck(data.get('title'));
+    console.log(data.get('title'));
+    if (chkData !== null) {
+        this.getMap().removeLayer(chkData);
+    }
     this.getMap().addLayer(data);
 };
 /**
@@ -105,34 +110,38 @@ OGDSM.visualization.prototype.removeMap = function (layerName) {
  */
 OGDSM.visualization.prototype.changeWFSStyle = function (layerName, colors, opt, attr, range, xyData) {
     'use strict';
+    colors = (typeof (colors) !== 'undefined') ? colors : null;
+    opt = (typeof (opt) !== 'undefined') ? opt : 0.5;
     attr = (typeof (attr) !== 'undefined') ? attr : null;
     range = (typeof (attr) !== 'undefined') ? range : null;
     xyData = (typeof (attr) !== 'undefined') ? xyData : null;
     var i = null,
         map = this.layerCheck(layerName),
-        styleCache = {};
+        styleCache = {},
+        style = null;
 
     if (map === false) {
         return -1;
     }
-    if (typeof colors.isArray === 'undefined') {
-        map.setOpacity(opt);
-    }
     map.setStyle(function (f, r) {
         var i,
             j,
-            color = 'rgba(255, 255, 255, ' + opt + ')',
+            color = '#FFFFFF',
             text = r < 5000 ? f.get(attr) : '';
         if (!styleCache[text]) {
-            for (i = 0; i < xyData[1].length; i += 1) {
-                if (text === xyData[1][i]) {
-                    for (j = 0; j < range.length; j += 1) {
-                        if (xyData[0][i] <= range[j]) {
-                            color = colors[j];
-                            break;
+            if (Array.isArray(colors)) {
+                for (i = 0; i < xyData[1].length; i += 1) {
+                    if (text === xyData[1][i]) {
+                        for (j = 0; j < range.length; j += 1) {
+                            if (xyData[0][i] <= range[j]) {
+                                color = colors[j];
+                                break;
+                            }
                         }
                     }
                 }
+            } else {
+                color = colors;
             }
             styleCache[text] = [new ol.style.Style({
                 fill : new ol.style.Fill({
@@ -153,6 +162,7 @@ OGDSM.visualization.prototype.changeWFSStyle = function (layerName, colors, opt,
         }
         return styleCache[text];
     });
+    map.setOpacity(opt);
 };
 /**
  * Bar Chart Visualization based on D3.js

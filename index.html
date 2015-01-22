@@ -160,67 +160,60 @@
 			<div id="d3View"> </div>
 		</div>
 	<!-- Public Data PopUp -->
-		<div data-role="popup" id="select">
-			<ul data-role="listview">
-				<li><a href="#mapList">지도 목록</a></li>
-				<li><a href="#layerList">공간정보데이터 목록</a></li>
-				<li><a href="#opendataList">공공오픈데이터 목록</a></li>
-			</ul>
-		</div>
-	<!-- List Panel -->
-		<div data-role="panel" data-display="overlay" id="mapList" style="padding:0;">
-				<ul data-role="listview">
-					<li data-theme="g" data-icon="delete" style="height: 2.8em;">
-					  <a href="#" data-rel="close" style="color:rgb(255, 255, 255);">Close menu</a>
-					</li>
-					<li data-theme="z" data-role="list-divider">배경 지도</li>
-					<li><a href="#"  onclick="baseMap('OSM')">OpenStreetMap</a></li>
-					<li><a href="#"  onclick="baseMap('VWorld')">VWorld</a></li>
-					<li data-theme="z" data-role="list-divider">VWorld 데이터 API</li>
-					<li><a href="#vworldList"  data-rel="popup" data-position-to="window"
-					     onclick="createVWorldUI()" >VWorld</a></li>
-					<!-- <li><a href="#vworldList"  data-rel="popup" data-position-to="window" >V-World</a></li>-->
+    <div data-role="popup" id="select">
+        <ul data-role="listview">
+            <li><a href="#mapList" data-transition="slidedown" data-rel="popup">배경지도/VWorld</a></li>
+            <li><a href="#vworldList" data-rel="popup" data-position-to="window" onclick="createVWorldUI()" data-inline="true">VWorld 데이터 API</a></li>
+            <li><a href="#WFSList" data-rel="popup" data-transition="slidedown">행정구역 벡터데이터</a></li>
+            <li><a href="#opendataList" data-rel="popup" data-transition="slidedown">공공데이터</a></li>
+        </ul>
+    </div>
+    <!--Base Map PopUp -->
+    <div data-role="popup" id="mapList">
+        <ul data-role="listview">
+            <li data-theme="z" data-role="list-divider">배경지도</li>
+            <li><a onclick="baseMap('OSM')">OpenStreetMap</a></li>
+            <li><a onclick="baseMap('VWorld')">VWorld</a></li>
+        </ul>
+    </div>
+    <!--WFS PopUp-->
+    <div data-role="popup" id="WFSList">
+        <ul data-role="listview" id="layersList">
+            <li data-theme="z" data-role="list-divider">행정구역 데이터</li>
+            <li><a href="#" onclick="viewWFSMap('seoul_sig')">서울특별시(구 단위)</a></li>
+            <li><a href="#" onclick="viewWFSMap('seoul_emd')">서울특별시(동 단위)</a></li>
+            <li><a href="#" onclick="viewWFSMap('incheon_emd')">인천광역시(동 단위)</a></li>
+            <li><a href="#" onclick="viewWFSMap('sejong_emd')">세종시(동 단위)</a></li>
+            <li><a href="#" onclick="viewWFSMap('daejeon_emd')">대전광역시(동 단위)</a></li>
+            <li><a href="#" onclick="viewWFSMap('daegu_emd')">대구광역시(동 단위)</a></li>
+            <li><a href="#" onclick="viewWFSMap('ulsan_emd')">울산광역시(동 단위)</a></li>
+            <li><a href="#" onclick="viewWFSMap('gwangju_emd')">광주광역시(동 단위)</a></li>
+            <li><a href="#" onclick="viewWFSMap('busan_emd')">부산광역시(동 단위)</a></li>
+            <li><a href="#" onclick="viewWFSMap('chungbuk_sig')">충청북도(구 단위)</a></li>
+            <li><a href="#" onclick="viewWFSMap('chungnam_sig')">충청남도(구 단위)</a></li>
+            <li><a href="#" onclick="viewWFSMap('gangwon_sig')">강원도(구 단위)</a></li>
+            <li><a href="#" onclick="viewWFSMap('gyeonggi_sig')">경기도(구 단위)</a></li>
+            <li><a href="#" onclick="viewWFSMap('Gyeongsangbuk_sig')">경상북도(구 단위)</a></li>
+            <li><a href="#" onclick="viewWFSMap('Gyeongsangnam_sig')">경상남도(구 단위)</a></li>
+            <li><a href="#" onclick="viewWFSMap('Jeju_sig')">제주도(구 단위)</a></li>
+            <li><a href="#" onclick="viewWFSMap('Jellanam_sig')">전라남도(구 단위)</a></li>
+            <li><a href="#" onclick="viewWFSMap('Jeollabuk_sig')">전라북도(구 단위)</a></li>
+        </ul>
+    </div>
+    <!--Open Data PopUp-->
+    <div data-role="popup" id="opendataList">
+        <ul data-role="listview">
+            <li data-theme="z" data-role="list-divider">서울열린데이터</li>
+            <li><a href="#setting" data-rel="popup" data-position-to="window" 
+                   onclick="createSeoulPublicAreaEnvUI()">실시간 대기환경</a></li>
+            <!--<li><a href="#setting" data-rel="popup" data-position-to="window" onclick="createSeoulPublicRoadEnvUI()">
+            도로변 측정소별 실시간 대기환경</a></li>-->
+            <li data-theme="z" data-role="list-divider">공공데이터포털</li>
+            <li><a href="#setting" data-rel="popup" data-position-to="window" 
+                   onclick="createPublicPortalUI()">실시간 대기환경(에어코리아)</a></li>
 				</ul>
-		</div>
-	<!-- List Panel -->
-                <div data-role="panel" data-display="overlay" id="layerList" style="padding:0;">
-                    <ul data-role="listview" id="layersList">
-                            <li data-theme="g" data-icon="delete" style="height: 2.8em;"><a href="#" data-rel="close" style="color:rgb(255, 255, 255);">Close menu</a></li>
-                                  <li data-theme="z" data-role="list-divider">기본 제공 데이터</li>
-                                                <li><a href="#" onclick="viewWFSMap('City_gu')">전국(구 단위)</a></li>
-                                                <li><a href="#" onclick="viewWFSMap('Seoul_si')">서울특별시(구 단위)</a></li>
-                                                <li><a href="#" onclick="viewWFSMap('Seoul_dong')">서울특별시(동 단위)</a></li>
-                                                <li><a href="#" onclick="viewWFSMap('Incheon_dong')">인천광역시(동 단위)</a></li>
-                                                <li><a href="#" onclick="viewWFSMap('Sejong_dong')">세종시(동 단위)</a></li>
-                                                <li><a href="#" onclick="viewWFSMap('Daejeon_dong')">대전광역시(동 단위)</a></li>
-                                                <li><a href="#" onclick="viewWFSMap('Daegu_dong')">대구광역시(동 단위)</a></li>
-                                                <li><a href="#" onclick="viewWFSMap('Ulsan_dong')">울산광역시(동 단위)</a></li>
-                                                <li><a href="#" onclick="viewWFSMap('Gwangju_dong')">광주광역시(동 단위)</a></li>
-                                                <li><a href="#" onclick="viewWFSMap('Busan_dong')">부산광역시(동 단위)</a></li>
-                                                <li><a href="#" onclick="viewWFSMap('Chungcheongbuk_dong')">충청북도(동 단위)</a></li>
-                                                <li><a href="#" onclick="viewWFSMap('Chungcheongnam_dong')">충청남도(동 단위)</a></li>
-                                                <li><a href="#" onclick="viewWFSMap('Gangwon_dong')">강원도(동 단위)</a></li>
-                                                <li><a href="#" onclick="viewWFSMap('Gyeonggi_dong')">경기도(동 단위)</a></li>
-                                                <li><a href="#" onclick="viewWFSMap('Gyeongsangbuk_dong')">경상북도(동 단위)</a></li>
-                                                <li><a href="#" onclick="viewWFSMap('Gyeongsangnam_dong')">경상남도(동 단위)</a></li>
-                                                <li><a href="#" onclick="viewWFSMap('Jeju_dong')">제주도(동 단위)</a></li>
-                                                <li><a href="#" onclick="viewWFSMap('Jellanam_dong')">전라남도(동 단위)</a></li>
-                                                <li><a href="#" onclick="viewWFSMap('Jeollabuk_dong')">전라북도(동 단위)</a></li>
-                                </ul>
-                </div>
-	<!-- List Panel -->
-		<div data-role="panel" data-display="overlay" id="opendataList" style="padding:0;">
-				<ul data-role="listview">
-					<li data-theme="g" data-icon="delete" style="height: 2.8em;"><a href="#" data-rel="close" style="color:rgb(255, 255, 255);">Close menu</a></li>
-					<li data-theme="z" data-role="list-divider">서울공공오픈데이터</li>
-					<li><a href="#setting" data-rel="popup" data-position-to="window" onclick="createSeoulPublicAreaEnvUI()">실시간 서울 대기환경</a></li>
-					<li><a href="#setting" data-rel="popup" data-position-to="window" onclick="createSeoulPublicRoadEnvUI()">
-					도로변 측정소별 실시간 대기환경</a></li>
-					<li data-theme="z" data-role="list-divider">공공데이터포털</li>
-					<li><a href="#setting" data-rel="popup" data-position-to="window" onclick="createPublicPortalUI()">실시간 대기환경(에어코리아)</a></li>
-				</ul>
-		</div>
-	<div data-role="header" class="ui-body-g center" data-position="inline" >
+    </div>
+	<div data-role="header" class="ui-body-g center" data-position="inline">
  	 	<a href="#select" data-role="button" data-rel="popup"  data-transition="slidedown" data-theme="g">메뉴</a>
 		<h4>지도 시각화</h4>
 		<!-- <a href="logout.do" data-role="button" data-theme="g" >로그아웃</a> -->

@@ -16,6 +16,7 @@ OGDSM.namesapce('externalConnection');
     OGDSM.externalConnection = function (name, addr) {
         addr = (typeof (addr) !== 'undefined') ? addr : 'null';
         this.serverName = name;
+        this.asyncValue = false;
         if (name === 'vworldWMS') {
             this.baseAddr = "http://map.vworld.kr/js/wms.do";
         } else {
@@ -122,6 +123,7 @@ OGDSM.externalConnection.prototype.dataLoad = function () {
     if (this.serverName === 'vworldWMS') {
         if (values.length === 3) {
             resultData = new ol.layer.Tile({
+                title : this.serverName,
                 source : new ol.source.TileWMS(({
                     url : this.baseAddr,
                     params : {
@@ -150,6 +152,7 @@ OGDSM.externalConnection.prototype.dataLoad = function () {
                 type : 'POST',
                 url : this.baseAddr,
                 crossDomain: true,
+                async : this.asyncValue,
                 data : JSON.stringify(jsonData),
                 contentType : "application/json;charset=UTF-8",
                 dataType : 'json',
@@ -268,7 +271,7 @@ OGDSM.externalConnection.prototype.publicDataEnv = function (apikey, envType, da
         type : 'POST',
         url : this.baseAddr,
         data : JSON.stringify(jsonData),
-        async : false,
+        async : this.asyncValue,
         contentType : "application/json;charset=UTF-8",
         dataType : 'json',
         success : function (msg) {
