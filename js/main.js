@@ -268,13 +268,17 @@ $(document).ready(function (e) {
         $('#setting').empty();
         var getLayers = this.getLayers();
         EnvVis = uiObj.visTypeRadio("setting");
+        externalServer.changeServer("geoServer", addr + folderName + "/getLayerNames.do");
+        externalServer.setSubName("getLayers");
+        externalServer.setData("opengds");
+        checked = externalServer.dataLoad();
         $('input[name=' + EnvVis + ']').change(function () {
             if ($(this).val() === 'map') {
                 console.log("map");
-                externalServer.changeServer("geoServer", addr + folderName + "/getLayerNames.do");
-                externalServer.setSubName("getLayers");
-                externalServer.setData("opengds");
-                checked = externalServer.dataLoad();
+    //            externalServer.changeServer("geoServer", addr + folderName + "/getLayerNames.do");
+    //            externalServer.setSubName("getLayers");
+    //            externalServer.setData("opengds");
+    //            checked = externalServer.dataLoad();
                 mapList = uiObj.mapListSelect("geomapList", externalServer.getResponseData());
             } else {
                 $("#geomapList").empty();
@@ -334,6 +338,9 @@ $(document).ready(function (e) {
                     }, 2000);
                 } else if (visType === 'map') {
                     console.log(mapType);
+                    $('#d3viewonMap').show();
+                    $("#d3viewonMap").height(50);
+                    $('#d3viewonMap').css('top', $(window).height() - 50);
                     if (mapType === 'seoul_sig' || mapType === 'seoul_emd') {
                         attribute = 'sig_kor_nm';
                     } else {
@@ -362,13 +369,17 @@ $(document).ready(function (e) {
             range = null;
         $('#setting').empty();
         EnvVis = uiObj.visTypeRadio("setting");
+        externalServer.changeServer("geoServer", addr + folderName + "/getLayerNames.do");
+        externalServer.setSubName("getLayers");
+        externalServer.setData("opengds");
+        checked = externalServer.dataLoad();
         $('input[name=' + EnvVis + ']').change(function () {
             if ($(this).val() === 'map') {
                 console.log("map");
-                externalServer.changeServer("geoServer", addr + folderName + "/getLayerNames.do");
+             /*   externalServer.changeServer("geoServer", addr + folderName + "/getLayerNames.do");
                 externalServer.setSubName("getLayers");
                 externalServer.setData("opengds");
-                checked = externalServer.dataLoad();
+                checked = externalServer.dataLoad();*/
                 mapList = uiObj.mapListSelect("geomapList", externalServer.getResponseData());
             } else {
                 $("#geomapList").empty();
@@ -421,6 +432,10 @@ $(document).ready(function (e) {
                     }, 2000);
                 } else if (visType === 'map') {
                     console.log(mapType);
+                    
+                    $('#d3viewonMap').show();
+                    $("#d3viewonMap").height(50);
+                    $('#d3viewonMap').css('top', $(window).height() - 50);
                     if (mapType === 'seoul_sig' || mapType === 'seoul_emd') {
                         attribute = 'sig_kor_nm';
                     } else {

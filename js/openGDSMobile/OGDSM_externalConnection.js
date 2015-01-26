@@ -152,7 +152,7 @@ OGDSM.externalConnection.prototype.dataLoad = function () {
                 type : 'POST',
                 url : this.baseAddr,
                 crossDomain: true,
-                async : this.asyncValue,
+    //            async : this.asyncValue,
                 data : JSON.stringify(jsonData),
                 contentType : "application/json;charset=UTF-8",
                 dataType : 'json',
