@@ -9,6 +9,7 @@ OGDSM.namesapce('eGovFrameUI');
     * e-Goverement Framework User Interface Automatic Create.
     * @class OGDSM.eGovFramUI
     * @constructor
+    * @param {String} theme - eGovframework theme a~g
     */
     OGDSM.eGovFrameUI = function (theme) {
         theme = (typeof (theme) !== 'undefined') ? theme : null;
