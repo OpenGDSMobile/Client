@@ -2,7 +2,7 @@
 <html lang="en" class="yui-overrride">
 <head>
     <meta charset="utf-8">
-    <title>js\openGDSMobile\OGDSM_visualization.js</title>
+    <title>js/openGDSMobile/OGDSM_visualization.js</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700' rel='stylesheet' type='text/css'>
@@ -18,7 +18,7 @@
             <h1 class="blue-main-title"></h1>
         </div>
         <div class="yui3-u-1-4 version project-version">
-            API Docs for:
+            API Docs for: 
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -32,11 +32,11 @@
                             <li><a href="#api-classes">Classes</a></li>
                             <li><a href="#api-modules">Modules</a></li>
                         </ul>
-
+                
                         <div id="api-tabview-filter">
                             <input type="search" id="api-filter" placeholder="Type to filter APIs">
                         </div>
-
+                
                         <div id="api-tabview-panel">
                             <ul id="api-classes" class="apis classes">
                                 <li><a href="../classes/OGDSM.html">OGDSM</a></li>
@@ -44,7 +44,7 @@
                                 <li><a href="../classes/OGDSM.externalConnection.html">OGDSM.externalConnection</a></li>
                                 <li><a href="../classes/OGDSM.visualization.html">OGDSM.visualization</a></li>
                             </ul>
-
+                
                             <ul id="api-modules" class="apis modules">
                                 <li><a href="../modules/OGDSM.jsontoArray.html">OGDSM.jsontoArray</a></li>
                                 <li><a href="../modules/OGDSM.namespace.html">OGDSM.namespace</a></li>
@@ -61,12 +61,12 @@
                         <input type="checkbox" id="api-show-inherited" checked>
                         Inherited
                     </label>
-
+            
                     <label for="api-show-protected">
                         <input type="checkbox" id="api-show-protected">
                         Protected
                     </label>
-
+            
                     <label for="api-show-private">
                         <input type="checkbox" id="api-show-private">
                         Private
@@ -75,19 +75,19 @@
                         <input type="checkbox" id="api-show-deprecated">
                         Deprecated
                     </label>
-
+            
                 </div>
-
+            
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1 class="file-heading">File: js\openGDSMobile\OGDSM_visualization.js</h1>
-
+                        <h1 class="file-heading">File: js/openGDSMobile/OGDSM_visualization.js</h1>
+                        
                         <div class="file">
                             <pre class="code prettyprint linenums">
                         /*jslint devel: true */
                         /*global $, jQuery, ol, OGDSM, d3*/
-
+                        
                         OGDSM.namesapce(&#x27;visualization&#x27;);
                         (function (ol, OGDSM) {
                             &quot;use strict&quot;;
@@ -128,11 +128,11 @@
                                     }
                                     return false;
                                 }
-
+                                
                             };
                             return OGDSM.visualization;
                         }(ol, OGDSM));
-
+                        
                         /**
                          * changeBaseMap Method is base map Change.
                          * @method changeBaseMap
@@ -141,9 +141,9 @@
                         OGDSM.visualization.prototype.changeBaseMap = function (mapStyle) {
                             &quot;use strict&quot;;
                             var TMS,
-                                map = this.map,
+                                map = this.getMap(),
                                 maplayers = map.getLayers();
-
+                        
                             maplayers.forEach(function (obj, i) {
                                 var layerTitle = obj.get(&#x27;title&#x27;);
                                 if (layerTitle === &#x27;basemap&#x27;) {
@@ -171,6 +171,10 @@
                          */
                         OGDSM.visualization.prototype.addMap = function (data) {
                             &#x27;use strict&#x27;;
+                            var chkData = this.layerCheck(data.get(&#x27;title&#x27;));
+                            if (chkData !== null) {
+                                this.getMap().removeLayer(chkData);
+                            }
                             this.getMap().addLayer(data);
                         };
                         /**
@@ -192,34 +196,38 @@
                          */
                         OGDSM.visualization.prototype.changeWFSStyle = function (layerName, colors, opt, attr, range, xyData) {
                             &#x27;use strict&#x27;;
+                            colors = (typeof (colors) !== &#x27;undefined&#x27;) ? colors : null;
+                            opt = (typeof (opt) !== &#x27;undefined&#x27;) ? opt : 0.5;
                             attr = (typeof (attr) !== &#x27;undefined&#x27;) ? attr : null;
                             range = (typeof (attr) !== &#x27;undefined&#x27;) ? range : null;
                             xyData = (typeof (attr) !== &#x27;undefined&#x27;) ? xyData : null;
                             var i = null,
                                 map = this.layerCheck(layerName),
-                                styleCache = {};
-
+                                styleCache = {},
+                                style = null;
+                        
                             if (map === false) {
                                 return -1;
-                            }
-                            if (typeof colors.isArray === &#x27;undefined&#x27;) {
-                                map.setOpacity(opt);
                             }
                             map.setStyle(function (f, r) {
                                 var i,
                                     j,
-                                    color = &#x27;rgba(255, 255, 255, &#x27; + opt + &#x27;)&#x27;,
+                                    color = &#x27;#FFFFFF&#x27;,
                                     text = r &lt; 5000 ? f.get(attr) : &#x27;&#x27;;
                                 if (!styleCache[text]) {
-                                    for (i = 0; i &lt; xyData[1].length; i += 1) {
-                                        if (text === xyData[1][i]) {
-                                            for (j = 0; j &lt; range.length; j += 1) {
-                                                if (xyData[0][i] &lt;= range[j]) {
-                                                    color = colors[j];
-                                                    break;
+                                    if (Array.isArray(colors)) {
+                                        for (i = 0; i &lt; xyData[1].length; i += 1) {
+                                            if (text === xyData[1][i]) {
+                                                for (j = 0; j &lt; range.length; j += 1) {
+                                                    if (xyData[0][i] &lt;= range[j]) {
+                                                        color = colors[j];
+                                                        break;
+                                                    }
                                                 }
                                             }
                                         }
+                                    } else {
+                                        color = colors;
                                     }
                                     styleCache[text] = [new ol.style.Style({
                                         fill : new ol.style.Fill({
@@ -240,6 +248,7 @@
                                 }
                                 return styleCache[text];
                             });
+                            map.setOpacity(opt);
                         };
                         /**
                          * Bar Chart Visualization based on D3.js
@@ -294,7 +303,7 @@
                                     }
                                     return color[color.length];
                                 });
-
+                            
                             barChartDiv.selectAll(&#x27;g&#x27;).data(data[1])
                                 .enter()
                                 .append(&#x27;text&#x27;)
@@ -307,7 +316,7 @@
                                 .text(function (d) {
                                     return d;
                                 });
-
+                            
                         	barChartDiv.selectAll(&#x27;g&#x27;).data(data[0])
                                 .enter()
                                 .append(&#x27;text&#x27;)
@@ -331,6 +340,7 @@
                                     return d;
                                 });
                         };
+                        
                             </pre>
                         </div>
                     </div>

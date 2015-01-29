@@ -1,22 +1,22 @@
 {
     "project": {},
     "files": {
-        "js\\openGDSMobile\\MapGui.js": {
-            "name": "js\\openGDSMobile\\MapGui.js",
+        "js/openGDSMobile/MapGui.js": {
+            "name": "js/openGDSMobile/MapGui.js",
             "modules": {},
             "classes": {},
             "fors": {},
             "namespaces": {}
         },
-        "js\\openGDSMobile\\MapSetting.js": {
-            "name": "js\\openGDSMobile\\MapSetting.js",
+        "js/openGDSMobile/MapSetting.js": {
+            "name": "js/openGDSMobile/MapSetting.js",
             "modules": {},
             "classes": {},
             "fors": {},
             "namespaces": {}
         },
-        "js\\openGDSMobile\\OGDSM.js": {
-            "name": "js\\openGDSMobile\\OGDSM.js",
+        "js/openGDSMobile/OGDSM.js": {
+            "name": "js/openGDSMobile/OGDSM.js",
             "modules": {
                 "OGDSM.namespace": 1,
                 "OGDSM.jsontoArray": 1
@@ -27,8 +27,8 @@
             "fors": {},
             "namespaces": {}
         },
-        "js\\openGDSMobile\\OGDSM_eGovFrameUI.js": {
-            "name": "js\\openGDSMobile\\OGDSM_eGovFrameUI.js",
+        "js/openGDSMobile/OGDSM_eGovFrameUI.js": {
+            "name": "js/openGDSMobile/OGDSM_eGovFrameUI.js",
             "modules": {},
             "classes": {
                 "OGDSM.eGovFramUI": 1
@@ -36,8 +36,8 @@
             "fors": {},
             "namespaces": {}
         },
-        "js\\openGDSMobile\\OGDSM_externalConnection.js": {
-            "name": "js\\openGDSMobile\\OGDSM_externalConnection.js",
+        "js/openGDSMobile/OGDSM_externalConnection.js": {
+            "name": "js/openGDSMobile/OGDSM_externalConnection.js",
             "modules": {},
             "classes": {
                 "OGDSM.externalConnection": 1
@@ -45,8 +45,8 @@
             "fors": {},
             "namespaces": {}
         },
-        "js\\openGDSMobile\\OGDSM_visualization.js": {
-            "name": "js\\openGDSMobile\\OGDSM_visualization.js",
+        "js/openGDSMobile/OGDSM_visualization.js": {
+            "name": "js/openGDSMobile/OGDSM_visualization.js",
             "modules": {},
             "classes": {
                 "OGDSM.visualization": 1
@@ -63,7 +63,7 @@
             "fors": {},
             "namespaces": {},
             "tag": "module",
-            "file": "js\\openGDSMobile\\OGDSM.js",
+            "file": "js/openGDSMobile/OGDSM.js",
             "line": 29,
             "description": "OGDSM 'namespace' module(Create New Object)\n\n- Use\n      OGDSM.namesace('example');\n- Developer\n      OGDSM.example=(function(){\n        //Source Code\n      }());"
         },
@@ -79,7 +79,7 @@
             "fors": {},
             "namespaces": {},
             "tag": "module",
-            "file": "js\\openGDSMobile\\OGDSM_visualization.js",
+            "file": "js/openGDSMobile/OGDSM_visualization.js",
             "line": 8,
             "description": "OGDSM json to Array module \n- Use\n      OGDSM.jsonToArray(jsonData, array[0], array[1]);"
         }
@@ -94,7 +94,7 @@
             "plugin_for": [],
             "extension_for": [],
             "module": "OGDSM.jsontoArray",
-            "file": "js\\openGDSMobile\\OGDSM.js",
+            "file": "js/openGDSMobile/OGDSM.js",
             "line": 9,
             "description": "OGDSM Super Class.<br>\n--\nClasses\n - eGovFrameUI\n - externalConnection\n - olMap\n - visulaization"
         },
@@ -108,10 +108,17 @@
             "extension_for": [],
             "module": "OGDSM.jsontoArray",
             "namespace": "",
-            "file": "js\\openGDSMobile\\OGDSM_eGovFrameUI.js",
+            "file": "js/openGDSMobile/OGDSM_eGovFrameUI.js",
             "line": 8,
             "description": "e-Goverement Framework User Interface Automatic Create.",
-            "is_constructor": 1
+            "is_constructor": 1,
+            "params": [
+                {
+                    "name": "theme",
+                    "description": "- eGovframework theme a~g",
+                    "type": "String"
+                }
+            ]
         },
         "OGDSM.externalConnection": {
             "name": "OGDSM.externalConnection",
@@ -123,7 +130,7 @@
             "extension_for": [],
             "module": "OGDSM.jsontoArray",
             "namespace": "",
-            "file": "js\\openGDSMobile\\OGDSM_externalConnection.js",
+            "file": "js/openGDSMobile/OGDSM_externalConnection.js",
             "line": 8,
             "description": "externalConnection Class\nvworldWMS address http://map.vworld.kr/js/wms.do",
             "is_constructor": 1,
@@ -150,7 +157,7 @@
             "extension_for": [],
             "module": "OGDSM.jsontoArray",
             "namespace": "",
-            "file": "js\\openGDSMobile\\OGDSM_visualization.js",
+            "file": "js/openGDSMobile/OGDSM_visualization.js",
             "line": 8,
             "description": "OpenLayers3 Map Control Class",
             "is_constructor": 1,
@@ -165,44 +172,44 @@
     },
     "classitems": [
         {
-            "file": "js\\openGDSMobile\\MapGui.js",
+            "file": "js/openGDSMobile/MapGui.js",
             "line": 32,
             "description": "Vworld Projection",
             "class": "OGDSM"
         },
         {
-            "file": "js\\openGDSMobile\\MapGui.js",
+            "file": "js/openGDSMobile/MapGui.js",
             "line": 42,
             "description": "parameter",
             "class": "OGDSM"
         },
         {
-            "file": "js\\openGDSMobile\\MapGui.js",
+            "file": "js/openGDSMobile/MapGui.js",
             "line": 48,
             "description": "Geolocation Event(Set Center)",
             "class": "OGDSM"
         },
         {
-            "file": "js\\openGDSMobile\\MapGui.js",
+            "file": "js/openGDSMobile/MapGui.js",
             "line": 55,
             "description": "Layers Event",
             "class": "OGDSM"
         },
         {
-            "file": "js\\openGDSMobile\\MapSetting.js",
+            "file": "js/openGDSMobile/MapSetting.js",
             "line": 12,
             "description": "Create Base Map based on OL3 \nparameter : div-> Map div Name , mapStyle -> map style(new ol.source.*)",
             "class": "OGDSM"
         },
         {
-            "file": "js\\openGDSMobile\\MapSetting.js",
+            "file": "js/openGDSMobile/MapSetting.js",
             "line": 82,
             "description": "GeoLocation",
             "class": "OGDSM"
         },
         {
-            "file": "js\\openGDSMobile\\OGDSM_eGovFrameUI.js",
-            "line": 19,
+            "file": "js/openGDSMobile/OGDSM_eGovFrameUI.js",
+            "line": 28,
             "description": "User Interface Create about VWorld WMS API List (CheckBox).",
             "itemtype": "method",
             "name": "vworldWMSCheck",
@@ -211,18 +218,23 @@
                     "name": "divId",
                     "description": "- div id about HTML tag attribute",
                     "type": "String"
+                },
+                {
+                    "name": "theme",
+                    "description": "- eGovframework theme a~g (default constructor)",
+                    "type": "String"
                 }
             ],
             "return": {
-                "description": "User Interface CheckBox Object (VWorld WMS API list)",
-                "type": "JQuery Object"
+                "description": "User Interface selectbox Name, id array ('vworldWMSChk_1', 'vworldWMSChk_2', 'vworldWMSChk_3', 'vworldWMSChk_4', 'vworldWMSChk_5')",
+                "type": "Array"
             },
             "class": "OGDSM.eGovFramUI",
             "module": "OGDSM.jsontoArray"
         },
         {
-            "file": "js\\openGDSMobile\\OGDSM_eGovFrameUI.js",
-            "line": 95,
+            "file": "js/openGDSMobile/OGDSM_eGovFrameUI.js",
+            "line": 225,
             "description": "User Interface Create about visualization type (Radio Button).",
             "itemtype": "method",
             "name": "visTypeRadio",
@@ -233,21 +245,21 @@
                     "type": "String"
                 },
                 {
-                    "name": "mapEnable",
-                    "description": "- Map visualization enable/disable",
-                    "type": "Boolean"
+                    "name": "theme",
+                    "description": "- eGovframework theme a~g (default constructor)",
+                    "type": "String"
                 }
             ],
             "return": {
-                "description": "User Interface Radio Button Name (Visuliaztion type)",
+                "description": "User Interface Radio Button Name (visualType)",
                 "type": "String"
             },
             "class": "OGDSM.eGovFramUI",
             "module": "OGDSM.jsontoArray"
         },
         {
-            "file": "js\\openGDSMobile\\OGDSM_eGovFrameUI.js",
-            "line": 127,
+            "file": "js/openGDSMobile/OGDSM_eGovFrameUI.js",
+            "line": 249,
             "description": "User Interface Create about visualization type (Date Input).",
             "itemtype": "method",
             "name": "DateInput",
@@ -266,8 +278,8 @@
             "module": "OGDSM.jsontoArray"
         },
         {
-            "file": "js\\openGDSMobile\\OGDSM_eGovFrameUI.js",
-            "line": 143,
+            "file": "js/openGDSMobile/OGDSM_eGovFrameUI.js",
+            "line": 265,
             "description": "User Interface Create about time input (Time Input).",
             "itemtype": "method",
             "name": "timeInput",
@@ -286,8 +298,8 @@
             "module": "OGDSM.jsontoArray"
         },
         {
-            "file": "js\\openGDSMobile\\OGDSM_eGovFrameUI.js",
-            "line": 159,
+            "file": "js/openGDSMobile/OGDSM_eGovFrameUI.js",
+            "line": 281,
             "description": "User Interface Create about Environment Type (Radio Button).",
             "itemtype": "method",
             "name": "envTypeRadio",
@@ -301,18 +313,23 @@
                     "name": "provider",
                     "description": "- public data provider ('seoul' or 'public') (default : seoul)",
                     "type": "String"
+                },
+                {
+                    "name": "theme",
+                    "description": "- eGovframework theme a~g (default constructor)",
+                    "type": "String"
                 }
             ],
             "return": {
-                "description": "User Interface Radio Button Name (Environment Type)",
+                "description": "User Interface Radio Button Name (envTypeRadio)",
                 "type": "String"
             },
             "class": "OGDSM.eGovFramUI",
             "module": "OGDSM.jsontoArray"
         },
         {
-            "file": "js\\openGDSMobile\\OGDSM_eGovFrameUI.js",
-            "line": 196,
+            "file": "js/openGDSMobile/OGDSM_eGovFrameUI.js",
+            "line": 319,
             "description": "User Interface Create about Area Type (Radio Button).",
             "itemtype": "method",
             "name": "areaTypeRadio",
@@ -321,18 +338,23 @@
                     "name": "divId",
                     "description": "- div id about HTML tag attribute",
                     "type": "String"
+                },
+                {
+                    "name": "theme",
+                    "description": "- eGovframework theme a~g (default constructor)",
+                    "type": "String"
                 }
             ],
             "return": {
-                "description": "User Interface Radio Button Attribute Name Value (Area Type)",
-                "type": "JQuery Object"
+                "description": "User Interface Radio Button Attribute Name Value (areaTypeRadio)",
+                "type": "String"
             },
             "class": "OGDSM.eGovFramUI",
             "module": "OGDSM.jsontoArray"
         },
         {
-            "file": "js\\openGDSMobile\\OGDSM_eGovFrameUI.js",
-            "line": 224,
+            "file": "js/openGDSMobile/OGDSM_eGovFrameUI.js",
+            "line": 348,
             "description": "User Interface Create about Map List (Select).",
             "itemtype": "method",
             "name": "mapListSelect",
@@ -356,8 +378,8 @@
             "module": "OGDSM.jsontoArray"
         },
         {
-            "file": "js\\openGDSMobile\\OGDSM_eGovFrameUI.js",
-            "line": 248,
+            "file": "js/openGDSMobile/OGDSM_eGovFrameUI.js",
+            "line": 372,
             "description": "User Interface Create about Process (Button).",
             "itemtype": "method",
             "name": "processButton",
@@ -365,6 +387,11 @@
                 {
                     "name": "divId",
                     "description": "- div id about HTML tag attribute",
+                    "type": "String"
+                },
+                {
+                    "name": "theme",
+                    "description": "- eGovframework theme a~g (default constructor)",
                     "type": "String"
                 }
             ],
@@ -376,14 +403,14 @@
             "module": "OGDSM.jsontoArray"
         },
         {
-            "file": "js\\openGDSMobile\\OGDSM_externalConnection.js",
+            "file": "js/openGDSMobile/OGDSM_externalConnection.js",
             "line": 1,
             "class": "OGDSM.externalConnection",
             "module": "OGDSM.jsontoArray"
         },
         {
-            "file": "js\\openGDSMobile\\OGDSM_externalConnection.js",
-            "line": 28,
+            "file": "js/openGDSMobile/OGDSM_externalConnection.js",
+            "line": 29,
             "description": "Get external server parameter",
             "itemtype": "method",
             "name": "getValues",
@@ -395,8 +422,8 @@
             "module": "OGDSM.jsontoArray"
         },
         {
-            "file": "js\\openGDSMobile\\OGDSM_externalConnection.js",
-            "line": 36,
+            "file": "js/openGDSMobile/OGDSM_externalConnection.js",
+            "line": 37,
             "description": "Set external server parameter",
             "itemtype": "method",
             "name": "setValues",
@@ -411,8 +438,8 @@
             "module": "OGDSM.jsontoArray"
         },
         {
-            "file": "js\\openGDSMobile\\OGDSM_externalConnection.js",
-            "line": 44,
+            "file": "js/openGDSMobile/OGDSM_externalConnection.js",
+            "line": 45,
             "description": "Remove external server parameter",
             "itemtype": "method",
             "name": "removeValues",
@@ -420,8 +447,8 @@
             "module": "OGDSM.jsontoArray"
         },
         {
-            "file": "js\\openGDSMobile\\OGDSM_externalConnection.js",
-            "line": 51,
+            "file": "js/openGDSMobile/OGDSM_externalConnection.js",
+            "line": 52,
             "description": "Get external server ajax result value",
             "itemtype": "method",
             "name": "getResponseData",
@@ -433,8 +460,8 @@
             "module": "OGDSM.jsontoArray"
         },
         {
-            "file": "js\\openGDSMobile\\OGDSM_externalConnection.js",
-            "line": 59,
+            "file": "js/openGDSMobile/OGDSM_externalConnection.js",
+            "line": 60,
             "description": "Set external server ajax result value",
             "itemtype": "method",
             "name": "setResponseData",
@@ -449,8 +476,8 @@
             "module": "OGDSM.jsontoArray"
         },
         {
-            "file": "js\\openGDSMobile\\OGDSM_externalConnection.js",
-            "line": 68,
+            "file": "js/openGDSMobile/OGDSM_externalConnection.js",
+            "line": 69,
             "description": "Set external server sub name",
             "itemtype": "method",
             "name": "setSubName",
@@ -465,8 +492,8 @@
             "module": "OGDSM.jsontoArray"
         },
         {
-            "file": "js\\openGDSMobile\\OGDSM_externalConnection.js",
-            "line": 79,
+            "file": "js/openGDSMobile/OGDSM_externalConnection.js",
+            "line": 80,
             "description": "Change external server name and address",
             "itemtype": "method",
             "name": "changeServer",
@@ -486,8 +513,8 @@
             "module": "OGDSM.jsontoArray"
         },
         {
-            "file": "js\\openGDSMobile\\OGDSM_externalConnection.js",
-            "line": 95,
+            "file": "js/openGDSMobile/OGDSM_externalConnection.js",
+            "line": 96,
             "description": "Setting data for connection",
             "itemtype": "method",
             "name": "setData",
@@ -502,8 +529,8 @@
             "module": "OGDSM.jsontoArray"
         },
         {
-            "file": "js\\openGDSMobile\\OGDSM_externalConnection.js",
-            "line": 111,
+            "file": "js/openGDSMobile/OGDSM_externalConnection.js",
+            "line": 112,
             "description": "vworldWMS, geoServer(getLayers, WFS), publicData(environment) data loading",
             "itemtype": "method",
             "name": "dataLoad",
@@ -515,8 +542,8 @@
             "module": "OGDSM.jsontoArray"
         },
         {
-            "file": "js\\openGDSMobile\\OGDSM_externalConnection.js",
-            "line": 184,
+            "file": "js/openGDSMobile/OGDSM_externalConnection.js",
+            "line": 187,
             "description": "GeoServer WFS data load (OpenLayers3 ol.source.ServerVector)",
             "itemtype": "method",
             "name": "geoServerWFS",
@@ -545,8 +572,8 @@
             "module": "OGDSM.jsontoArray"
         },
         {
-            "file": "js\\openGDSMobile\\OGDSM_externalConnection.js",
-            "line": 232,
+            "file": "js/openGDSMobile/OGDSM_externalConnection.js",
+            "line": 235,
             "description": "Get Environment Data (Seoul Open Data and Public Data Portal)",
             "itemtype": "method",
             "name": "publicDataEnv",
@@ -580,7 +607,7 @@
             "module": "OGDSM.jsontoArray"
         },
         {
-            "file": "js\\openGDSMobile\\OGDSM_visualization.js",
+            "file": "js/openGDSMobile/OGDSM_visualization.js",
             "line": 20,
             "description": "getMap Method get map object about OpenLayers3.",
             "itemtype": "method",
@@ -593,7 +620,7 @@
             "module": "OGDSM.jsontoArray"
         },
         {
-            "file": "js\\openGDSMobile\\OGDSM_visualization.js",
+            "file": "js/openGDSMobile/OGDSM_visualization.js",
             "line": 28,
             "description": "Current Layers Check about OpenLayers3.",
             "itemtype": "method",
@@ -613,7 +640,7 @@
             "module": "OGDSM.jsontoArray"
         },
         {
-            "file": "js\\openGDSMobile\\OGDSM_visualization.js",
+            "file": "js/openGDSMobile/OGDSM_visualization.js",
             "line": 49,
             "description": "changeBaseMap Method is base map Change.",
             "itemtype": "method",
@@ -629,7 +656,7 @@
             "module": "OGDSM.jsontoArray"
         },
         {
-            "file": "js\\openGDSMobile\\OGDSM_visualization.js",
+            "file": "js/openGDSMobile/OGDSM_visualization.js",
             "line": 80,
             "description": "WMS/WFS Map Add",
             "itemtype": "method",
@@ -645,14 +672,14 @@
             "module": "OGDSM.jsontoArray"
         },
         {
-            "file": "js\\openGDSMobile\\OGDSM_visualization.js",
-            "line": 89,
+            "file": "js/openGDSMobile/OGDSM_visualization.js",
+            "line": 93,
             "class": "OGDSM.visualization",
             "module": "OGDSM.jsontoArray"
         },
         {
-            "file": "js\\openGDSMobile\\OGDSM_visualization.js",
-            "line": 98,
+            "file": "js/openGDSMobile/OGDSM_visualization.js",
+            "line": 102,
             "description": "WFS style change",
             "itemtype": "method",
             "name": "changeWFSStyle",
@@ -682,8 +709,8 @@
             "module": "OGDSM.jsontoArray"
         },
         {
-            "file": "js\\openGDSMobile\\OGDSM_visualization.js",
-            "line": 157,
+            "file": "js/openGDSMobile/OGDSM_visualization.js",
+            "line": 166,
             "description": "Bar Chart Visualization based on D3.js\nrange length = color length",
             "itemtype": "method",
             "name": "barChart",
@@ -716,35 +743,35 @@
     "warnings": [
         {
             "message": "Missing item type\nVworld Projection",
-            "line": " js\\openGDSMobile\\MapGui.js:32"
+            "line": " js/openGDSMobile/MapGui.js:32"
         },
         {
             "message": "Missing item type\nparameter",
-            "line": " js\\openGDSMobile\\MapGui.js:42"
+            "line": " js/openGDSMobile/MapGui.js:42"
         },
         {
             "message": "Missing item type\nGeolocation Event(Set Center)",
-            "line": " js\\openGDSMobile\\MapGui.js:48"
+            "line": " js/openGDSMobile/MapGui.js:48"
         },
         {
             "message": "Missing item type\nLayers Event",
-            "line": " js\\openGDSMobile\\MapGui.js:55"
+            "line": " js/openGDSMobile/MapGui.js:55"
         },
         {
             "message": "Missing item type\nCreate Base Map based on OL3 \nparameter : div-> Map div Name , mapStyle -> map style(new ol.source.*)",
-            "line": " js\\openGDSMobile\\MapSetting.js:12"
+            "line": " js/openGDSMobile/MapSetting.js:12"
         },
         {
             "message": "Missing item type\nGeoLocation",
-            "line": " js\\openGDSMobile\\MapSetting.js:82"
+            "line": " js/openGDSMobile/MapSetting.js:82"
         },
         {
             "message": "Missing item type",
-            "line": " js\\openGDSMobile\\OGDSM_externalConnection.js:1"
+            "line": " js/openGDSMobile/OGDSM_externalConnection.js:1"
         },
         {
             "message": "Missing item type",
-            "line": " js\\openGDSMobile\\OGDSM_visualization.js:89"
+            "line": " js/openGDSMobile/OGDSM_visualization.js:93"
         }
     ]
 }

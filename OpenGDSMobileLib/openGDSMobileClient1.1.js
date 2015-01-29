@@ -165,7 +165,6 @@ OGDSM.visualization.prototype.changeBaseMap = function (mapStyle) {
 OGDSM.visualization.prototype.addMap = function (data) {
     'use strict';
     var chkData = this.layerCheck(data.get('title'));
-    console.log(data.get('title'));
     if (chkData !== null) {
         this.getMap().removeLayer(chkData);
     }

@@ -2,7 +2,7 @@
 <html lang="en" class="yui-overrride">
 <head>
     <meta charset="utf-8">
-    <title>js\openGDSMobile\OGDSM_externalConnection.js</title>
+    <title>js/openGDSMobile/OGDSM_externalConnection.js</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700' rel='stylesheet' type='text/css'>
@@ -18,7 +18,7 @@
             <h1 class="blue-main-title"></h1>
         </div>
         <div class="yui3-u-1-4 version project-version">
-            API Docs for:
+            API Docs for: 
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -32,11 +32,11 @@
                             <li><a href="#api-classes">Classes</a></li>
                             <li><a href="#api-modules">Modules</a></li>
                         </ul>
-
+                
                         <div id="api-tabview-filter">
                             <input type="search" id="api-filter" placeholder="Type to filter APIs">
                         </div>
-
+                
                         <div id="api-tabview-panel">
                             <ul id="api-classes" class="apis classes">
                                 <li><a href="../classes/OGDSM.html">OGDSM</a></li>
@@ -44,7 +44,7 @@
                                 <li><a href="../classes/OGDSM.externalConnection.html">OGDSM.externalConnection</a></li>
                                 <li><a href="../classes/OGDSM.visualization.html">OGDSM.visualization</a></li>
                             </ul>
-
+                
                             <ul id="api-modules" class="apis modules">
                                 <li><a href="../modules/OGDSM.jsontoArray.html">OGDSM.jsontoArray</a></li>
                                 <li><a href="../modules/OGDSM.namespace.html">OGDSM.namespace</a></li>
@@ -61,12 +61,12 @@
                         <input type="checkbox" id="api-show-inherited" checked>
                         Inherited
                     </label>
-
+            
                     <label for="api-show-protected">
                         <input type="checkbox" id="api-show-protected">
                         Protected
                     </label>
-
+            
                     <label for="api-show-private">
                         <input type="checkbox" id="api-show-private">
                         Private
@@ -75,14 +75,14 @@
                         <input type="checkbox" id="api-show-deprecated">
                         Deprecated
                     </label>
-
+            
                 </div>
-
+            
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1 class="file-heading">File: js\openGDSMobile\OGDSM_externalConnection.js</h1>
-
+                        <h1 class="file-heading">File: js/openGDSMobile/OGDSM_externalConnection.js</h1>
+                        
                         <div class="file">
                             <pre class="code prettyprint linenums">
                         /** GeoServer, Public data, VWorld Connect Class **/
@@ -103,12 +103,13 @@
                             OGDSM.externalConnection = function (name, addr) {
                                 addr = (typeof (addr) !== &#x27;undefined&#x27;) ? addr : &#x27;null&#x27;;
                                 this.serverName = name;
+                                this.asyncValue = false;
                                 if (name === &#x27;vworldWMS&#x27;) {
                                     this.baseAddr = &quot;http://map.vworld.kr/js/wms.do&quot;;
                                 } else {
                                     this.baseAddr = addr;
                                 }
-
+                        
                             };
                             OGDSM.externalConnection.prototype = {
                                 constructor : OGDSM.externalConnection,
@@ -209,6 +210,7 @@
                             if (this.serverName === &#x27;vworldWMS&#x27;) {
                                 if (values.length === 3) {
                                     resultData = new ol.layer.Tile({
+                                        title : this.serverName,
                                         source : new ol.source.TileWMS(({
                                             url : this.baseAddr,
                                             params : {
@@ -237,6 +239,7 @@
                                         type : &#x27;POST&#x27;,
                                         url : this.baseAddr,
                                         crossDomain: true,
+                            //            async : this.asyncValue,
                                         data : JSON.stringify(jsonData),
                                         contentType : &quot;application/json;charset=UTF-8&quot;,
                                         dataType : &#x27;json&#x27;,
@@ -248,7 +251,7 @@
                                             console.log(e);
                                         }
                                     });
-
+                        
                                 } else if (this.subName === &#x27;WFS&#x27;) {//workspace, layerName
                                     console.log(values[0] + &#x27;, &#x27; + values[1]);
                                     resultData = this.geoServerWFS(this.baseAddr, values[0], values[1]);
@@ -261,7 +264,7 @@
                                     this.publicDataEnv(values[0], values[1], values[2], values[3]);
                                 }
                             }
-
+                            
                             if (this.getResponseData() === null) {
                                 return false;
                             } else {
@@ -329,7 +332,7 @@
                             &#x27;use strict&#x27;;
                             dateOrArea = (typeof (dateOrArea) !== &#x27;undefined&#x27;) ? dateOrArea : &#x27;null&#x27;;
                             time = (typeof (time) !== &#x27;undefined&#x27;) ? time : &#x27;null&#x27;;
-
+                        
                             var colorRange =
                                 [&quot;#0090ff&quot;, &quot;#008080&quot;, &quot;#4cff4c&quot;, &quot;#99ff99&quot;, &quot;#FFFF00&quot;, &quot;#FFFF99&quot;, &quot;#FF9900&quot;, &quot;#FF0000&quot;],
                                 range = [],
@@ -342,7 +345,7 @@
                                     &#x27;&quot;dateValue&quot;:&#x27; + &#x27;&quot;&#x27; + dateOrArea + &#x27;&quot;,&#x27; +
                                     &#x27;&quot;envType&quot;:&#x27; + &#x27;&quot;&#x27; + envType + &#x27;&quot;,&#x27; +
                                     &#x27;&quot;timeValue&quot;:&#x27; + &#x27;&quot;&#x27; + time + &#x27;&quot;}&#x27;;
-
+                        
                             } else if (this.subName === &#x27;ArpltnInforInqireSvc&#x27;) {
                                 jsonData = &#x27;{&quot;serviceName&quot;:&quot;&#x27; + this.subName + &#x27;&quot;,&#x27; +
                                     &#x27; &quot;keyValue&quot;:&quot;&#x27; + apikey + &#x27;&quot;,&#x27; +
@@ -355,7 +358,7 @@
                                 type : &#x27;POST&#x27;,
                                 url : this.baseAddr,
                                 data : JSON.stringify(jsonData),
-                                async : false,
+                                async : this.asyncValue,
                                 contentType : &quot;application/json;charset=UTF-8&quot;,
                                 dataType : &#x27;json&#x27;,
                                 success : function (msg) {
@@ -367,7 +370,7 @@
                                 }
                             });
                         };
-
+                        
                             </pre>
                         </div>
                     </div>

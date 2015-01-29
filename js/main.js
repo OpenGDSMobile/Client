@@ -191,7 +191,7 @@ $(document).ready(function (e) {
         ProcessBtn,
 
         externalServer;
-
+    
     webAppObj = new WEBAPP();
     webAppObj.initViewer();
     /*
@@ -202,9 +202,6 @@ $(document).ready(function (e) {
         $.mobile.loader.prototype.options.html = "";
     });
     */
-	//openGDSM.openGDSMGeoserver.getLayers();
-
-
     openGDSMObj = new OGDSM.visualization(webAppObj.getMap());
     this.baseMap = function (style) {
         openGDSMObj.changeBaseMap(style);
@@ -212,17 +209,18 @@ $(document).ready(function (e) {
 
     uiObj = new OGDSM.eGovFrameUI();
     this.createVWorldUI = function () {
-        var selectedData = "", VWorldWMSData;
+        var selectedData = "", VWorldWMSData, i, tmp;
         externalServer.changeServer("vworldWMS");
         vworldList = uiObj.vworldWMSCheck('vworldList');
-        vworldProcessBtn = uiObj.processButton('vworldList');
+        vworldProcessBtn = uiObj.processButton('vworldList', 'e');
         vworldProcessBtn.click(function () {
-            vworldList.each(function (i) {
-                if ($(this).is(":checked")) {
-                    selectedData += $(this).attr("value");
+            for (i = 0; i < vworldList.length; i += 1) {
+                tmp = $('#' + vworldList[i] + ' option:selected').val();
+                if (tmp !== "") {
+                    selectedData += $('#' + vworldList[i] + ' option:selected').val();
                     selectedData += ",";
                 }
-            });
+            }
             selectedData = selectedData.slice(0, -1);
             externalServer.setData("9E21E5EE-67D4-36B9-85BB-E153321EEE65", "http://localhost", selectedData);
             externalServer.dataLoad();
@@ -266,28 +264,25 @@ $(document).ready(function (e) {
         $('#setting').empty();
         var getLayers = this.getLayers();
         EnvVis = uiObj.visTypeRadio("setting");
-        externalServer.changeServer("geoServer", addr + folderName + "/getLayerNames.do");
+        //externalServer.changeServer("geoServer", addr + folderName + "/getLayerNames.do");
         externalServer.setSubName("getLayers");
         externalServer.setData("opengds");
         checked = externalServer.dataLoad();
+        /*
         $('input[name=' + EnvVis + ']').change(function () {
             if ($(this).val() === 'map') {
-                console.log("map");
-    //            externalServer.changeServer("geoServer", addr + folderName + "/getLayerNames.do");
-    //            externalServer.setSubName("getLayers");
-    //            externalServer.setData("opengds");
-    //            checked = externalServer.dataLoad();
                 mapList = uiObj.mapListSelect("geomapList", externalServer.getResponseData());
             } else {
                 $("#geomapList").empty();
             }
         });
-        $('#setting').append('<div id="geomapList"></div>');
-        $('#setting').trigger("create");
+        */
+        //$('#setting').append('<div id="geomapList"></div>');
+        //$('#setting').trigger("create");
         EnvDate = uiObj.dateInput("setting");
         EnvTime = uiObj.timeInput("setting");
         EnvType = uiObj.envTypeRadio("setting");
-        ProcessBtn = uiObj.processButton("setting");
+        ProcessBtn = uiObj.processButton("setting", 'e');
         ProcessBtn.click(function () {
             var apikey = "6473565a72696e7438326262524174",
                 visType = $('input[name=' + EnvVis + ']:checked').val(),
@@ -295,7 +290,7 @@ $(document).ready(function (e) {
                 mapType = $("#" + mapList + " option:selected").text(),
                 date = EnvDate.val(),
                 time = EnvTime.val(),
-                mapName = "",
+            //    mapName = "",
                 resultData = null,
                 attribute = null,
                 xyData = null,
@@ -307,9 +302,10 @@ $(document).ready(function (e) {
                           [0.015, 0.03, 0.05, 0.06, 0.1045, 0.15, 0.2],    //NO2
                           [0.01, 0.02, 0.035, 0.05, 0.075, 0.1, 0.15],     //SO2
                           [0.02, 0.04, 0.06, 0.08, 0.10, 0.12, 0.3] ];     //O3
-            if (visType === 'map') {
+          /*  if (visType === 'map') {
                 mapName = $('#' + mapList + ' option:selected').text();
             }
+            */
             $('#setting').popup("close");
             externalServer.changeServer("publicData", addr + folderName + '/SeoulOpenData.do');
             externalServer.setSubName("TimeAverageAirQuality");
@@ -338,15 +334,17 @@ $(document).ready(function (e) {
                     console.log(mapType);
                     $('#d3viewonMap').show();
                     $("#d3viewonMap").height(50);
-                    $('#d3viewonMap').css('top', $(window).height() - 50);
+                    $('#d3viewonMap').css('top', $(window).height() - 50);/*
                     if (mapType === 'seoul_sig' || mapType === 'seoul_emd') {
                         attribute = 'sig_kor_nm';
                     } else {
                         attribute = 'emd_kor_nm';
                     }
-                    resultData = externalServer.geoServerWFS(geoServerAddr, "opengds", mapType);
+                    */
+                    //resultData = externalServer.geoServerWFS(geoServerAddr, "opengds", mapType);
+                    resultData = externalServer.geoServerWFS(geoServerAddr, "opengds", "seoul_sig");
                     openGDSMObj.addMap(resultData);
-                    openGDSMObj.changeWFSStyle(mapType, colors, 0.6, attribute, range, xyData);
+                    openGDSMObj.changeWFSStyle("seoul_sig", colors, 0.6, "sig_kor_nm", range, xyData);
                 }
             } else {
                 console.log("error");
@@ -363,37 +361,45 @@ $(document).ready(function (e) {
         });
     };
     this.createPublicPortalUI = function () {
-        var xyData,
-            range = null;
+        var xyData, i,
+            range = null,
+            areaName = ['인천', '서울', '경기', '강원',
+                        '충남', '세종', '충북',
+                        '대전', '경북',
+                        '전북', '대구', '울산',
+                        '전남', '광주', '경남', '부산',
+                        '제주'],
+            geoServerName = ['incheon', 'seoul', 'gyeonggi', 'gangwon',
+                             'chungnam', 'sejong', 'chungbuk',
+                             'daejong', 'gyeongbuk',
+                             'jeonbuk', 'daegu', 'ulsan',
+                             'jeonnam', 'gwangju', 'gyeongnam', 'busan',
+                             'jeju'];
         $('#setting').empty();
         EnvVis = uiObj.visTypeRadio("setting");
         externalServer.changeServer("geoServer", addr + folderName + "/getLayerNames.do");
         externalServer.setSubName("getLayers");
         externalServer.setData("opengds");
-        checked = externalServer.dataLoad();
+        checked = externalServer.dataLoad();/*
         $('input[name=' + EnvVis + ']').change(function () {
             if ($(this).val() === 'map') {
-                console.log("map");
-             /*   externalServer.changeServer("geoServer", addr + folderName + "/getLayerNames.do");
-                externalServer.setSubName("getLayers");
-                externalServer.setData("opengds");
-                checked = externalServer.dataLoad();*/
                 mapList = uiObj.mapListSelect("geomapList", externalServer.getResponseData());
             } else {
                 $("#geomapList").empty();
             }
-        });
-        $('#setting').append('<div id="geomapList"></div>');
-        $('#setting').trigger("create");
+        });*/
+        //$('#setting').append('<div id="geomapList"></div>');
+        //$('#setting').trigger("create");
         EnvArea = uiObj.areaTypeRadio("setting");
         EnvType = uiObj.envTypeRadio("setting", "public");
-        ProcessBtn = uiObj.processButton("setting");
+        ProcessBtn = uiObj.processButton("setting", 'e');
         ProcessBtn.click(function () {
             var apikey = 'kCxEhXiTf1qmDBlQFOOmw%2BemcPSxQXn5V5%2Fx8EthoHdbSojIdQvwX%2BHtWFyuJaIco0nUJtu12e%2F9acb7HeRRRA%3D%3D',
                 visType = $('input[name=' + EnvVis + ']:checked').val(),
                 areaType = $('input[name=' + EnvArea + ']:checked').val(),
                 envType = $('input[name=' + EnvType + ']:checked').val(),
-                mapType = $("#" + mapList + " option:selected").text(),
+                //mapType = $("#" + mapList + " option:selected").text(),
+                mapType,
                 resultData = null,
                 attribute = null,
                 xyData = null,
@@ -429,8 +435,15 @@ $(document).ready(function (e) {
                         $('#dataSelect').popup('open');
                     }, 2000);
                 } else if (visType === 'map') {
-                    console.log(mapType);
-                    
+                    for (i = 0; i < areaName.length; i += 1) {
+                        if (areaType === areaName[i]) {
+                            if (areaType === '서울') {
+                                mapType = geoServerName[i] + '_sig';
+                            } else {
+                                mapType = geoServerName[i] + '_emd';
+                            }
+                        }
+                    }
                     $('#d3viewonMap').show();
                     $("#d3viewonMap").height(50);
                     $('#d3viewonMap').css('top', $(window).height() - 50);

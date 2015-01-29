@@ -1,4 +1,4 @@
-/*jslint devel: true */
+/*jslint devel: true*/
 /*global $, jQuery, ol, OGDSM*/
 
 OGDSM.namesapce('eGovFrameUI');
@@ -29,15 +29,24 @@ OGDSM.namesapce('eGovFrameUI');
  * User Interface Create about VWorld WMS API List (CheckBox).
  * @method vworldWMSCheck
  * @param {String} divId - div id about HTML tag attribute
- * @return {jQuery Object} User Interface CheckBox Object (VWorld WMS API list)
+ * @param {String} theme - eGovframework theme a~g (default constructor)
+ * @return {Array} User Interface selectbox Name, id array ('vworldWMSChk_1', 'vworldWMSChk_2', 'vworldWMSChk_3', 'vworldWMSChk_4', 'vworldWMSChk_5')
  */
-OGDSM.eGovFrameUI.prototype.vworldWMSCheck = function (divId) {
+OGDSM.eGovFrameUI.prototype.vworldWMSCheck = function (divId, theme) {
     'use strict';
-    var rootDiv, html, styles, stylesText, i, btnObj, OGDSM, preProcess;
-    OGDSM = this.OGDSM;
-    rootDiv = $('#' + divId);
-    html =
-        '<fieldset data-role="controlgroup" data-type="horizontal" class="egov-align-center">';
+    
+    var selectTheme = (typeof (theme) !== 'undefined') ? theme : this.dataTheme,
+        rootDiv = $('#' + divId),
+        html = '<fieldset data-role="controlgroup">',
+        OGDSM = this.OGDSM,
+        selectName = ['vworldWMSChk_1', 'vworldWMSChk_2', 'vworldWMSChk_3', 'vworldWMSChk_4', 'vworldWMSChk_5'],
+        selectState = [0, 0, 0, 0, 0],
+        styles,
+        stylesText,
+        i,
+        j,
+        btnObj;
+    
     styles = [
         'LP_PA_CBND_BUBUN,LP_PA_CBND_BONBUN',
         'LT_C_UQ111', 'LT_C_UQ112', 'LT_C_UQ113', 'LT_C_UQ114',
@@ -84,53 +93,157 @@ OGDSM.eGovFrameUI.prototype.vworldWMSCheck = function (divId) {
         '접근관제구역', '훈련구역', '건물군(40층이상)', '수색비행장비행구역',
         '시계비행로', '시계비행보고지점',
         '한강회랑', '헬기장'];
-    for (i = 0; i < styles.length; i += 1) {
-        html += '<input type="checkbox" name="vworldWMSChk" class="custom" data-theme=' + this.dataTheme +
-                ' id="id-' + styles[i] + '" value="' + styles[i] + '" />' +
-				'<label for="id-' + styles[i] + '">' + stylesText[i] + '</label>';
-        if (i !== 0 && (i + 1) % 2 === 0) {
-            html += '</fieldset>' +
-                    '<fieldset data-role="controlgroup" data-type="horizontal" class="egov-align-center">';
+    for (j = 0; j < selectName.length; j += 1) {
+        html += '<select name="' + selectName[j] + '" id="' + selectName[j] + '" data-theme=' + selectTheme + '>';
+        html += '<option value="">' + (j + 1) + '번째 레이어 선택 </option>';
+        for (i = 0; i < styles.length; i += 1) {
+            html += '<option value="' + styles[i] + '">' + stylesText[i] + '</option>';
         }
+        html += '</select>';
     }
-    /*
-    *Limilt 5
-    */
     html += '</fieldset>';
-    rootDiv.html(html);
+    rootDiv.append(html);
     rootDiv.trigger("create");
-    return $("input[name='vworldWMSChk']:checkbox");
+    
+    $("#" + selectName[0]).change(function () {
+        selectState[0] = this.selectedIndex;
+        $("#" + selectName[0] + ' option').each(function () {
+            $(this).removeAttr('disabled');
+        });
+        $("#" + selectName[1] + ' option').each(function () {
+            $(this).removeAttr('disabled');
+        });
+        $("#" + selectName[2] + ' option').each(function () {
+            $(this).removeAttr('disabled');
+        });
+        $("#" + selectName[3] + ' option').each(function () {
+            $(this).removeAttr('disabled');
+        });
+        $("#" + selectName[4] + ' option').each(function () {
+            $(this).removeAttr('disabled');
+        });
+        for (j = 0; j < selectState.length; j += 1) {
+            for (i = 0; i < selectName.length; i += 1) {
+                $("#" + selectName[i] + ' option:eq(' + selectState[j] + ')').attr("disabled", "disabled");
+            }
+        }
+    });
+    $("#" + selectName[1]).change(function () {
+        selectState[1] = this.selectedIndex;
+        $("#" + selectName[0] + ' option').each(function () {
+            $(this).removeAttr('disabled');
+        });
+        $("#" + selectName[1] + ' option').each(function () {
+            $(this).removeAttr('disabled');
+        });
+        $("#" + selectName[2] + ' option').each(function () {
+            $(this).removeAttr('disabled');
+        });
+        $("#" + selectName[3] + ' option').each(function () {
+            $(this).removeAttr('disabled');
+        });
+        $("#" + selectName[4] + ' option').each(function () {
+            $(this).removeAttr('disabled');
+        });
+        for (j = 0; j < selectState.length; j += 1) {
+            for (i = 0; i < selectName.length; i += 1) {
+                $("#" + selectName[i] + ' option:eq(' + selectState[j] + ')').attr("disabled", "disabled");
+            }
+        }
+    });
+    $("#" + selectName[2]).change(function () {
+        selectState[2] = this.selectedIndex;
+        $("#" + selectName[0] + ' option').each(function () {
+            $(this).removeAttr('disabled');
+        });
+        $("#" + selectName[1] + ' option').each(function () {
+            $(this).removeAttr('disabled');
+        });
+        $("#" + selectName[2] + ' option').each(function () {
+            $(this).removeAttr('disabled');
+        });
+        $("#" + selectName[3] + ' option').each(function () {
+            $(this).removeAttr('disabled');
+        });
+        $("#" + selectName[4] + ' option').each(function () {
+            $(this).removeAttr('disabled');
+        });
+        for (j = 0; j < selectState.length; j += 1) {
+            for (i = 0; i < selectName.length; i += 1) {
+                $("#" + selectName[i] + ' option:eq(' + selectState[j] + ')').attr("disabled", "disabled");
+            }
+        }
+    });
+    $("#" + selectName[3]).change(function () {
+        selectState[3] = this.selectedIndex;
+        $("#" + selectName[0] + ' option').each(function () {
+            $(this).removeAttr('disabled');
+        });
+        $("#" + selectName[1] + ' option').each(function () {
+            $(this).removeAttr('disabled');
+        });
+        $("#" + selectName[2] + ' option').each(function () {
+            $(this).removeAttr('disabled');
+        });
+        $("#" + selectName[3] + ' option').each(function () {
+            $(this).removeAttr('disabled');
+        });
+        $("#" + selectName[4] + ' option').each(function () {
+            $(this).removeAttr('disabled');
+        });
+        for (j = 0; j < selectState.length; j += 1) {
+            for (i = 0; i < selectName.length; i += 1) {
+                $("#" + selectName[i] + ' option:eq(' + selectState[j] + ')').attr("disabled", "disabled");
+            }
+        }
+    });
+    $("#" + selectName[4]).change(function () {
+        selectState[4] = this.selectedIndex;
+        $("#" + selectName[0] + ' option').each(function () {
+            $(this).removeAttr('disabled');
+        });
+        $("#" + selectName[1] + ' option').each(function () {
+            $(this).removeAttr('disabled');
+        });
+        $("#" + selectName[2] + ' option').each(function () {
+            $(this).removeAttr('disabled');
+        });
+        $("#" + selectName[3] + ' option').each(function () {
+            $(this).removeAttr('disabled');
+        });
+        $("#" + selectName[4] + ' option').each(function () {
+            $(this).removeAttr('disabled');
+        });
+        for (j = 0; j < selectState.length; j += 1) {
+            for (i = 0; i < selectName.length; i += 1) {
+                $("#" + selectName[i] + ' option:eq(' + selectState[j] + ')').attr("disabled", "disabled");
+            }
+        }
+    });
+    return selectName;
 };
 /**
  * User Interface Create about visualization type (Radio Button).
  * @method visTypeRadio
  * @param {String} divId - div id about HTML tag attribute
- * @param {Boolean} mapEnable - Map visualization enable/disable
- * @return {String} User Interface Radio Button Name (Visuliaztion type)
+ * @param {String} theme - eGovframework theme a~g (default constructor)
+ * @return {String} User Interface Radio Button Name (visualType)
  */
-OGDSM.eGovFrameUI.prototype.visTypeRadio = function (divId, mapEnable) {
+OGDSM.eGovFrameUI.prototype.visTypeRadio = function (divId, theme) {
     'use strict';
-    mapEnable = (typeof (mapEnable) !== 'undefined') ? mapEnable : true;
-    var rootDiv, html, arr, arrText, i;
-    rootDiv = $('#' + divId);
-    html = '<fieldset data-role="controlgroup" data-type="horizontal" class="egov-align-center">';
-    arr = ['map', 'chart'];
-    arrText = ['맵', '차트'];
+    var radioTheme = (typeof (theme) !== 'undefined') ? theme : this.dataTheme,
+        rootDiv = $('#' + divId),
+        html = '<fieldset data-role="controlgroup" data-type="horizontal" class="egov-align-center">',
+        arr = ['map', 'chart'],
+        arrText = ['맵', '차트'],
+        i;
     for (i = 0; i < arr.length; i += 1) {
-        html += '<input type="radio" name="visualType" class="custom" data-theme=' + this.dataTheme +
-								' id="id-' + arr[i] + '" value="' + arr[i] + '" ';//+\
-		if (mapEnable === false && arr[i] !== 'chart') {
-            html += 'disabled ';
-        }
-        /*if (i === 0) {
-            html += 'checked';
-        }*/
-        //html += ' onclick="openGDSM.PublicDataUI.mapSelect($(this))"/>' +
+        html += '<input type="radio" name="visualType" class="custom" data-theme=' + radioTheme +
+								' id="id-' + arr[i] + '" value="' + arr[i] + '" ';
         html += '>' + '<label for="id-' + arr[i] + '">' + arrText[i] + '</label>';
     }
     rootDiv.append(html);
     rootDiv.trigger("create");
-    //return $('input[name=visualType]');
     return 'visualType';
 };
 /**
@@ -170,24 +283,26 @@ OGDSM.eGovFrameUI.prototype.timeInput = function (divId) {
  * @method envTypeRadio
  * @param {String} divId - div id about HTML tag attribute
  * @param {String} provider - public data provider ('seoul' or 'public') (default : seoul)
- * @return {String} User Interface Radio Button Name (Environment Type)
+ * @param {String} theme - eGovframework theme a~g (default constructor)
+ * @return {String} User Interface Radio Button Name (envTypeRadio)
  */
-OGDSM.eGovFrameUI.prototype.envTypeRadio = function (divId, provider) {
+OGDSM.eGovFrameUI.prototype.envTypeRadio = function (divId, prov, theme) {
     'use strict';
-    provider = (typeof (provider) !== 'undefined') ? provider : "seoul";
-    var rootDiv, html, envTypes, envTypeValues, i;
-    rootDiv = $('#' + divId);
-
-    html = '<label for="envValue">환경정보:</label>' +
-		   '<fieldset data-role="controlgroup" data-type="horizontal" class="egov-align-center">';
-    envTypes = ['pm10', 'pm25', 'so2', 'o3', 'no2', 'co'];
+    var provider = (typeof (prov) !== 'undefined') ? prov : "seoul",
+        radioTheme = (typeof (theme) !== 'undefined') ? theme : this.dataTheme,
+        rootDiv = $('#' + divId),
+        html = '<label for="envValue">환경정보:</label>' +
+            '<fieldset data-role="controlgroup" data-type="horizontal" class="egov-align-center">',
+        envTypes = ['pm10', 'pm25', 'so2', 'o3', 'no2', 'co'],
+        envTypeValues,
+        i;
     if (provider === 'seoul') {
         envTypeValues = ['PM10', 'PM25', 'SO2', 'O3', 'NO2', 'CO'];
     } else if (provider === 'public') {
         envTypeValues = ['pm10Value', 'pm25Value', 'so2Value', 'o3Value', 'no2Value', 'coValue'];
     }
     for (i = 0; i < envTypes.length; i += 1) {
-        html += '<input type="radio" name="envTypeRadio" class="custom" data-theme=' + this.dataTheme +
+        html += '<input type="radio" name="envTypeRadio" class="custom" data-theme=' + radioTheme +
             ' id="id-' + envTypeValues[i] + '" value="' + envTypeValues[i] + '"/>' +
             '<label for="id-' + envTypeValues[i] + '">' +
             '<img src="images/input_bt_' + envTypes[i] + '.png" width=30>' +
@@ -199,23 +314,23 @@ OGDSM.eGovFrameUI.prototype.envTypeRadio = function (divId, provider) {
     }
     rootDiv.append(html);
     rootDiv.trigger("create");
-  //  return $('input[name=envTypeRadio]');
     return 'envTypeRadio';
 };
 /**
  * User Interface Create about Area Type (Radio Button).
  * @method areaTypeRadio
  * @param {String} divId - div id about HTML tag attribute
- * @return {jQuery Object} User Interface Radio Button Attribute Name Value (Area Type)
+ * @param {String} theme - eGovframework theme a~g (default constructor)
+ * @return {String} User Interface Radio Button Attribute Name Value (areaTypeRadio)
  */
-OGDSM.eGovFrameUI.prototype.areaTypeRadio = function (divId) {
+OGDSM.eGovFrameUI.prototype.areaTypeRadio = function (divId, theme) {
     'use strict';
-    var rootDiv, html, areaTypes, i;
-    rootDiv = $('#' + divId);
-    html = '<label for="areaValue">지역:</label>' +
-        '<fieldset data-role="controlgroup" data-type="horizontal" class="egov-align-center">';
-    areaTypes =
-        ['서울', '부산', '대구', '대전', '광주', '울산', '인천', '전남', '전북', '경남', '경북', '강원', '경기', '제주'];//Values
+    var radioTheme = (typeof (theme) !== 'undefined') ? theme : this.dataTheme,
+        rootDiv = $('#' + divId),
+        html = '<label for="areaValue">지역:</label>' +
+            '<fieldset data-role="controlgroup" data-type="horizontal" class="egov-align-center">',
+        areaTypes = ['인천', '서울', '경기', '강원', '충남', '세종', '충북', '대전', '경북', '전북', '대구', '울산', '전남', '광주', '경남', '부산', '제주'],
+        i;
     for (i = 0; i < areaTypes.length; i += 1) {
         html += '<input type="radio" name="areaTypeRadio" class="custom" data-theme=' + this.dataTheme +
             ' id="id-' + areaTypes[i] + '" value="' + areaTypes[i] + '"/>' +
@@ -242,7 +357,7 @@ OGDSM.eGovFrameUI.prototype.mapListSelect = function (divId, arr) {
     var html, i,
         rootDiv = $('#' + divId);
     console.log(arr);
-    html = '<div data-role="fieldcontain">' +
+    html =
         '<select name="geoServerSelectBox" id="geoServerSelectBox" data-theme=' + this.dataTheme + '>' +
         '<option value=""></option>';
     for (i = 0; i < arr.length; i += 1) {
@@ -258,17 +373,16 @@ OGDSM.eGovFrameUI.prototype.mapListSelect = function (divId, arr) {
  * User Interface Create about Process (Button).
  * @method processButton
  * @param {String} divId - div id about HTML tag attribute
+ * @param {String} theme - eGovframework theme a~g (default constructor)
  * @return {jQuery Object} User Interface Button Object (Process)
  */
-OGDSM.eGovFrameUI.prototype.processButton = function (divId) {
+OGDSM.eGovFrameUI.prototype.processButton = function (divId, theme) {
     'use strict';
-    var rootDiv, html;
+    var butTheme = (typeof (theme) !== 'undefined') ? theme : this.dataTheme,
+        rootDiv,
+        html;
     rootDiv = $('#' + divId);
-    html = '<a href="#" id="processBtn" data-role="button" data-theme=' + this.dataTheme + '>시각화</a>';
-/*
-'<a href="#" data-role="button" data-provider="'+provider+'" data-serivce="'+serviceName+'" '+
-'onclick="openGDSM.'+obj+'.makeData($(this))">시각화</a>';
-*/
+    html = '<a href="#" id="processBtn" data-role="button" data-theme="' + butTheme + '">시각화</a>';
     rootDiv.append(html);
     rootDiv.trigger("create");
     return $('#processBtn');

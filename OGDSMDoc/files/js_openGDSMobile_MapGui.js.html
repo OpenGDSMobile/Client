@@ -2,7 +2,7 @@
 <html lang="en" class="yui-overrride">
 <head>
     <meta charset="utf-8">
-    <title>js\openGDSMobile\MapGui.js</title>
+    <title>js/openGDSMobile/MapGui.js</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700' rel='stylesheet' type='text/css'>
@@ -18,7 +18,7 @@
             <h1 class="blue-main-title"></h1>
         </div>
         <div class="yui3-u-1-4 version project-version">
-            API Docs for:
+            API Docs for: 
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -32,11 +32,11 @@
                             <li><a href="#api-classes">Classes</a></li>
                             <li><a href="#api-modules">Modules</a></li>
                         </ul>
-
+                
                         <div id="api-tabview-filter">
                             <input type="search" id="api-filter" placeholder="Type to filter APIs">
                         </div>
-
+                
                         <div id="api-tabview-panel">
                             <ul id="api-classes" class="apis classes">
                                 <li><a href="../classes/OGDSM.html">OGDSM</a></li>
@@ -44,7 +44,7 @@
                                 <li><a href="../classes/OGDSM.externalConnection.html">OGDSM.externalConnection</a></li>
                                 <li><a href="../classes/OGDSM.visualization.html">OGDSM.visualization</a></li>
                             </ul>
-
+                
                             <ul id="api-modules" class="apis modules">
                                 <li><a href="../modules/OGDSM.jsontoArray.html">OGDSM.jsontoArray</a></li>
                                 <li><a href="../modules/OGDSM.namespace.html">OGDSM.namespace</a></li>
@@ -61,12 +61,12 @@
                         <input type="checkbox" id="api-show-inherited" checked>
                         Inherited
                     </label>
-
+            
                     <label for="api-show-protected">
                         <input type="checkbox" id="api-show-protected">
                         Protected
                     </label>
-
+            
                     <label for="api-show-private">
                         <input type="checkbox" id="api-show-private">
                         Private
@@ -75,26 +75,26 @@
                         <input type="checkbox" id="api-show-deprecated">
                         Deprecated
                     </label>
-
+            
                 </div>
-
+            
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1 class="file-heading">File: js\openGDSMobile\MapGui.js</h1>
-
+                        <h1 class="file-heading">File: js/openGDSMobile/MapGui.js</h1>
+                        
                         <div class="file">
                             <pre class="code prettyprint linenums">
                         var Gui = {};
-
+                        
                         Gui.initialLoad = true;
                         Gui.selectedLayer = null;
                         Gui.tracking = true;
                         /*
-                        Gui.updateLayout = function(){
+                        Gui.updateLayout = function(){ 
                         	var footer = $(&quot;div[data-role=&#x27;footer&#x27;]:visible&quot;),
                         	header = $(&quot;div[data-role=&#x27;header&#x27;]:visible&quot;),
-                            content = $(&quot;div[data-role=&#x27;content&#x27;]:visible:visible&quot;),
+                            content = $(&quot;div[data-role=&#x27;content&#x27;]:visible:visible&quot;), 
                             viewHeight = $(window).height(),
                             contentHeight = viewHeight - (footer.outerHeight()+header.outerHeight() );
                         	if ((content.outerHeight() + footer.outerHeight()) !== viewHeight) {
@@ -105,17 +105,17 @@
                             $(&quot;#map&quot;).height( contentHeight   );
                         };
                         */
-
+                        
                         //Default Projection : EPSG:900913
                         Gui.initViewer = function(){
-                        	Gui.updateLayout();
+                        	Gui.updateLayout(); 
                         	$(window).on(&#x27;resize&#x27;,function(){
                         		Gui.updateLayout();
-                        	});
+                        	}); 
                         	$(window).on(&#x27;orientationchange&#x27;, function(e) {
                         	    Map.setWindowOrientation(window.orientation);
-                        	});
-
+                        	});   
+                        
                         	/**
                         	 * Vworld Projection
                         	 */
@@ -124,35 +124,35 @@
                         		extent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
                         		units : &#x27;m&#x27;
                         	});
-                        	ol.proj.addProjection(projection);
-
+                        	ol.proj.addProjection(projection);  
+                        
                         	/**
                         	 * parameter
                         	 */
-                        	openGDSM.baseMap(&#x27;map&#x27;,&#x27;osm&#x27;);
-                        	Map.centerOnLocation();
-
+                        	openGDSM.baseMap(&#x27;map&#x27;,&#x27;osm&#x27;); 
+                        	Map.centerOnLocation();   
+                        
                         	/**
                         	 * Geolocation Event(Set Center)
                         	 **/
                         	Map.geolocation.once(&#x27;change:position&#x27;,function(){
                         		Map.map.getView().setCenter(Map.geolocation.getPosition());
-                        	});
-
+                        	}); 
+                        
                         	/**
                         	 * Layers Event
                         	 **/
                         	$(Map.map.getViewport()).bind(&#x27;tap&#x27;,function(evt){
                         		var pixel = Map.map.getEventPixel(evt.originalEvent);
                         	//	Layer.displayFeatureInfo(pixel);
-                        	});
+                        	}); 
                         	Gui.updateLayout();
                         };
-
+                        
                         $(document).ready(function(e){
-                        	Gui.initViewer();
+                        	Gui.initViewer();  
                         });
-
+                        
                             </pre>
                         </div>
                     </div>
