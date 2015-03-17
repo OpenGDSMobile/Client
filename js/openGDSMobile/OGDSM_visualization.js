@@ -16,7 +16,6 @@ OGDSM.namesapce('visualization');
     };
     OGDSM.visualization.prototype = {
         constructor : OGDSM.olMap,
-        version : "1.0",
         /**
          * getMap Method get map object about OpenLayers3.
          * @method getMap
@@ -53,29 +52,52 @@ OGDSM.namesapce('visualization');
  */
 OGDSM.visualization.prototype.changeBaseMap = function (mapStyle) {
     "use strict";
-    var TMS,
+    var TMS = null,
+        view = null,
+        baseLayer = null,
         map = this.getMap(),
-        maplayers = map.getLayers();
+        maplayers = map.getLayers(),
+        mapCenter = map.getView().getCenter(),
+        mapZoom = map.getView().getZoom(),
+        mapProj = map.getView().getProjection();
 
     maplayers.forEach(function (obj, i) {
         var layerTitle = obj.get('title');
         if (layerTitle === 'basemap') {
-            map.removeLayer(obj);
+            //map.removeLayer(obj);
+            baseLayer = obj;
         }
     });
     if (mapStyle === 'OSM') {
         TMS = new ol.source.OSM();
+        view = new ol.View({
+            projection : mapProj,
+            center : mapCenter,
+            zoom : mapZoom
+        });
     } else if (mapStyle === 'VWorld') {
         TMS = new ol.source.XYZ(({
             url : "http://xdworld.vworld.kr:8080/2d/Base/201310/{z}/{x}/{y}.png"
         }));
+        view = new ol.View({
+            projection : mapProj,
+            center : mapCenter,
+            zoom : mapZoom
+        });
     } else {
         console.log('Not Map Style');
     }
+    console.log(TMS);
+    if (baseLayer !== null) {
+        map.setView(view);
+        baseLayer.setSource(TMS);
+    }
+    /*
     map.addLayer(new ol.layer.Tile({
         title : 'basemap',
         source : TMS
     }));
+    */
 };
 /**
  * WMS/WFS Map Add
@@ -103,13 +125,15 @@ OGDSM.visualization.prototype.removeMap = function (layerName) {
  * WFS style change
  * @method changeWFSStyle
  * @param {String} layerName (OpenLayers layer name)
- * @param {String or Array} Map color
- * @param {Number} Opacity number
- * @param {String} Map attribute name - option
+ * @param {Hex Color, String or Array} colors ( Hex color )
+ * @param {String} type (Vector type)
+ * @param {Number} opt (Opacity number) - option, Default value : 0.5
+ * @param {String} attr (Map attribute name) - option, Default value : null
+ * @param {String} range (Colors range) - option, Default value : null
+ * @param {String} xyData (attr value data) - option, Default value : null
  */
-OGDSM.visualization.prototype.changeWFSStyle = function (layerName, colors, opt, attr, range, xyData) {
+OGDSM.visualization.prototype.changeWFSStyle = function (layerName, colors, type, opt, attr, range, xyData) {
     'use strict';
-    colors = (typeof (colors) !== 'undefined') ? colors : null;
     opt = (typeof (opt) !== 'undefined') ? opt : 0.5;
     attr = (typeof (attr) !== 'undefined') ? attr : null;
     range = (typeof (attr) !== 'undefined') ? range : null;
@@ -142,22 +166,39 @@ OGDSM.visualization.prototype.changeWFSStyle = function (layerName, colors, opt,
             } else {
                 color = colors;
             }
-            styleCache[text] = [new ol.style.Style({
-                fill : new ol.style.Fill({
-                    color : color
-                }),
-                stroke : new ol.style.Stroke({
-                    color : '#00000',
-                    width : 1
-                }),
-                text : new ol.style.Text({
-                    font : '9px Calibri,sans-serif',
-                    text : text,
+            if (type === 'polygon') {
+                styleCache[text] = [new ol.style.Style({
                     fill : new ol.style.Fill({
-                        color : '#000000'
+                        color : color
+                    }),
+                    stroke : new ol.style.Stroke({
+                        color : '#00000',
+                        width : 1
+                    }),
+                    text : new ol.style.Text({
+                        font : '9px Calibri,sans-serif',
+                        text : text,
+                        fill : new ol.style.Fill({
+                            color : '#000000'
+                        })
                     })
-                })
-            })];
+                })];
+            } else if (type === 'point') {
+                styleCache[text] = [new ol.style.Style({
+                    image : new ol.style.Circle({
+                        radius : 5,
+                        fill : new ol.style.Fill({
+                            color : color
+                        }),
+                        stroke : new ol.style.Stroke({
+                            color : '#000000',
+                            width : 1
+                        })
+                    })
+                })];
+            }
+
+
         }
         return styleCache[text];
     });
@@ -252,4 +293,31 @@ OGDSM.visualization.prototype.barChart = function (divId, data, range, color) {
             }
             return d;
         });
+};
+
+/**
+ * Image Layer Visualization based on OpenLayers3
+ * @method imageLayer
+ * @param {String} imgURL (Image URL)
+ * @param {String} imgTitle (Image title)
+ * @param {Array} imgSize (Image size [width, height] )
+ * @param {Array} imgExtent (Image extent [lower left lon, lower left lat, upper right lon, upper right lat] or [left, bottom, right, top])
+ */
+OGDSM.visualization.prototype.imageLayer = function (imgURL, imgTitle, imgSize, imgExtent) {
+    'use strict';
+    var imgLayer = null,
+        title = imgTitle;
+
+    imgLayer = new ol.layer.Image({
+        opacity : 1.0,
+        title : title,
+        source : new ol.source.ImageStatic({
+            url : imgURL + '?' + Math.random(),
+            imageSize : imgSize,
+            projection : new ol.proj.Projection({code : 'EPSG:3857'}),
+            imageExtent : imgExtent
+
+        })
+    });
+    this.getMap().addLayer(imgLayer);
 };

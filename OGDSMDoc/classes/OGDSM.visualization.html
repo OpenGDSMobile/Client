@@ -198,6 +198,10 @@
                         
                                                     </li>
                                                     <li class="index-item method">
+                                                        <a href="#method_imageLayer">imageLayer</a>
+
+                                                    </li>
+                                                    <li class="index-item method">
                                                         <a href="#method_layerCheck">layerCheck</a>
                         
                                                     </li>
@@ -217,7 +221,7 @@
                                               <div class="meta method-meta">
                                                   <p>
                                                       Defined in
-                                                  <a href="../files/js_openGDSMobile_OGDSM_visualization.js.html#l80"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_visualization.js:80</code></a>
+                                                  <a href="../files/js_openGDSMobile_OGDSM_visualization.js.html#l102"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_visualization.js:102</code></a>
                                               </p>
                                             
                                             
@@ -277,7 +281,7 @@
                                               <div class="meta method-meta">
                                                   <p>
                                                       Defined in
-                                                  <a href="../files/js_openGDSMobile_OGDSM_visualization.js.html#l166"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_visualization.js:166</code></a>
+                                                  <a href="../files/js_openGDSMobile_OGDSM_visualization.js.html#l207"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_visualization.js:207</code></a>
                                               </p>
                                             
                                             
@@ -380,7 +384,7 @@
                                               <div class="meta method-meta">
                                                   <p>
                                                       Defined in
-                                                  <a href="../files/js_openGDSMobile_OGDSM_visualization.js.html#l49"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_visualization.js:49</code></a>
+                                                  <a href="../files/js_openGDSMobile_OGDSM_visualization.js.html#l48"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_visualization.js:48</code></a>
                                               </p>
                                             
                                             
@@ -440,7 +444,7 @@
                                               <div class="meta method-meta">
                                                   <p>
                                                       Defined in
-                                                  <a href="../files/js_openGDSMobile_OGDSM_visualization.js.html#l102"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_visualization.js:102</code></a>
+                                                  <a href="../files/js_openGDSMobile_OGDSM_visualization.js.html#l124"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_visualization.js:124</code></a>
                                               </p>
                                             
                                             
@@ -457,13 +461,22 @@
                                                                     <code>layerName</code>
                                                             </li>
                                                             <li class="arg">
-                                                                    <code>Map</code>
+                                                                    <code>colors</code>
                                                             </li>
                                                             <li class="arg">
-                                                                    <code>Opacity</code>
+                                                                    <code>type</code>
                                                             </li>
                                                             <li class="arg">
-                                                                    <code>Map</code>
+                                                                    <code>opt</code>
+                                                            </li>
+                                                            <li class="arg">
+                                                                    <code>attr</code>
+                                                            </li>
+                                                            <li class="arg">
+                                                                    <code>range</code>
+                                                            </li>
+                                                            <li class="arg">
+                                                                    <code>xyData</code>
                                                             </li>
                                                         </ul><span class="paren">)</span>
                                                     </div>
@@ -498,34 +511,67 @@
                                             
                                                             </li>
                                                             <li class="param">
-                                                                    <code class="param-name">Map</code>
-                                                                    <span class="type">String or Array</span>
-                                            
-                                            
+                                                                    <code class="param-name">colors</code>
+                                                                    <span class="type">Hex Color, String or Array</span>
+
+
                                                                 <div class="param-description">
-                                                                    <p>color</p>
-                                            
+                                                                    <p>( Hex color )</p>
+
                                                                 </div>
-                                            
+
                                                             </li>
                                                             <li class="param">
-                                                                    <code class="param-name">Opacity</code>
-                                                                    <span class="type">Number</span>
-                                            
-                                            
-                                                                <div class="param-description">
-                                                                    <p>number</p>
-                                            
-                                                                </div>
-                                            
-                                                            </li>
-                                                            <li class="param">
-                                                                    <code class="param-name">Map</code>
+                                                                    <code class="param-name">type</code>
                                                                     <span class="type">String</span>
                                             
                                             
                                                                 <div class="param-description">
-                                                                    <p>attribute name - option</p>
+                                                                    <p>(Vector type)</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                            <li class="param">
+                                                                    <code class="param-name">opt</code>
+                                                                    <span class="type">Number</span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>(Opacity number) - option, Default value : 0.5</p>
+
+                                                                </div>
+
+                                                            </li>
+                                                            <li class="param">
+                                                                    <code class="param-name">attr</code>
+                                                                    <span class="type">String</span>
+
+
+                                                                <div class="param-description">
+                                                                    <p>(Map attribute name) - option, Default value : null</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                            <li class="param">
+                                                                    <code class="param-name">range</code>
+                                                                    <span class="type">String</span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>(Colors range) - option, Default value : null</p>
+
+                                                                </div>
+
+                                                            </li>
+                                                            <li class="param">
+                                                                    <code class="param-name">xyData</code>
+                                                                    <span class="type">String</span>
+
+
+                                                                <div class="param-description">
+                                                                    <p>(attr value data) - option, Default value : null</p>
                                             
                                                                 </div>
                                             
@@ -542,7 +588,7 @@
                                               <div class="meta method-meta">
                                                   <p>
                                                       Defined in
-                                                  <a href="../files/js_openGDSMobile_OGDSM_visualization.js.html#l20"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_visualization.js:20</code></a>
+                                                  <a href="../files/js_openGDSMobile_OGDSM_visualization.js.html#l19"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_visualization.js:19</code></a>
                                               </p>
                                             
                                             
@@ -589,13 +635,115 @@
                                             
                                             
                                             </div>
+                                            <div id="method_imageLayer" class="method item">
+                                              <h3 class="blue-method-name">imageLayer</h3>
+
+                                              <div class="meta method-meta">
+                                                  <p>
+                                                      Defined in
+                                                  <a href="../files/js_openGDSMobile_OGDSM_visualization.js.html#l298"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_visualization.js:298</code></a>
+                                              </p>
+
+
+
+                                              </div>
+
+                                              <h3>Syntax</h3>
+                                              <div class="blue-method-syntax">
+                                              <h3 class="name"><code>imageLayer</code></h3>
+
+                                                    <div class="args">
+                                                        <span class="paren">(</span><ul class="args-list inline commas">
+                                                            <li class="arg">
+                                                                    <code>imgURL</code>
+                                                            </li>
+                                                            <li class="arg">
+                                                                    <code>imgTitle</code>
+                                                            </li>
+                                                            <li class="arg">
+                                                                    <code>imgSize</code>
+                                                            </li>
+                                                            <li class="arg">
+                                                                    <code>imgExtent</code>
+                                                            </li>
+                                                        </ul><span class="paren">)</span>
+                                                    </div>
+
+
+
+
+
+
+
+
+                                              </div>
+                                                <div class="description">
+                                                  <h3>Summary</h3>
+                                                    <p>Image Layer Visualization based on OpenLayers3</p>
+
+                                                </div>
+
+                                                    <div class="params">
+                                                        <h4>Parameters:</h4>
+
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">imgURL</code>
+                                                                    <span class="type">String</span>
+
+
+                                                                <div class="param-description">
+                                                                    <p>(Image URL)</p>
+
+                                                                </div>
+
+                                                            </li>
+                                                            <li class="param">
+                                                                    <code class="param-name">imgTitle</code>
+                                                                    <span class="type">String</span>
+
+
+                                                                <div class="param-description">
+                                                                    <p>(Image title)</p>
+
+                                                                </div>
+
+                                                            </li>
+                                                            <li class="param">
+                                                                    <code class="param-name">imgSize</code>
+                                                                    <span class="type">Array</span>
+
+
+                                                                <div class="param-description">
+                                                                    <p>(Image size [width, height] )</p>
+
+                                                                </div>
+
+                                                            </li>
+                                                            <li class="param">
+                                                                    <code class="param-name">imgExtent</code>
+                                                                    <span class="type">Array</span>
+
+
+                                                                <div class="param-description">
+                                                                    <p>(Image extent [lower left lon, lower left lat, upper right lon, upper right lat] or [left, bottom, right, top])</p>
+
+                                                                </div>
+
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+
+
+
+                                            </div>
                                             <div id="method_layerCheck" class="method item">
                                               <h3 class="blue-method-name">layerCheck</h3>
                                             
                                               <div class="meta method-meta">
                                                   <p>
                                                       Defined in
-                                                  <a href="../files/js_openGDSMobile_OGDSM_visualization.js.html#l28"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_visualization.js:28</code></a>
+                                                  <a href="../files/js_openGDSMobile_OGDSM_visualization.js.html#l27"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_visualization.js:27</code></a>
                                               </p>
                                             
                                             

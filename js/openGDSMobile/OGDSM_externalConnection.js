@@ -132,7 +132,8 @@ OGDSM.externalConnection.prototype.dataLoad = function () {
                         LAYERS : values[2],
                         STYLES : values[2],
                         FORMAT : 'image/png',
-                        CRS : 'EPSG:900913',
+                        //CRS : 'EPSG:900913',
+                        CRS : 'EPSG:3857',
                         EXCEPTIONS : 'text/xml',
                         TRANSPARENT : true
                     }
@@ -166,8 +167,8 @@ OGDSM.externalConnection.prototype.dataLoad = function () {
             });
 
         } else if (this.subName === 'WFS') {//workspace, layerName
-            console.log(values[0] + ', ' + values[1]);
-            resultData = this.geoServerWFS(this.baseAddr, values[0], values[1]);
+            console.log(values[0] + ', ' + values[1] + ',' + values[2]);
+            resultData = this.geoServerWFS(this.baseAddr, values[0], values[1], values[2]);
             setResponseData(resultData);
         }
     } else if (this.serverName === 'publicData') {
@@ -190,9 +191,11 @@ OGDSM.externalConnection.prototype.dataLoad = function () {
  * @param {String} addr - GeoServer Address
  * @param {String} ws - GeoServer Workspace
  * @param {String} name - GeoServer Layer Name
+ * @param {String} type - GeoServer Layer Type (Default : polygon)
  * @return {ol.source.ServerVector} vectorSource - OpenLayers3 Vector Object
  */
-OGDSM.externalConnection.prototype.geoServerWFS = function (addr, ws, name) {
+OGDSM.externalConnection.prototype.geoServerWFS = function (addr, ws, name, type) {
+    type = (typeof (type) !== 'undefined') ? type : 'polygon';
     var vectorSource, styles, resultData;
     vectorSource = new ol.source.ServerVector({
         format: new ol.format.GeoJSON(),
@@ -201,7 +204,7 @@ OGDSM.externalConnection.prototype.geoServerWFS = function (addr, ws, name) {
                 'version=1.1.0&request=GetFeature' +
                 '&typeNames=' + ws + ':' + name +
                 '&outputFormat=text/javascript&format_options=callback:loadFeatures' +
-                '&srsname=' + 'EPSG:900913' + '&bbox=' + extent.join(',') + ',' + 'EPSG:900913';
+                '&srsname=' + 'EPSG:3857' + '&bbox=' + extent.join(',') + ',' + 'EPSG:3857';
             $.ajax({
                 url : fullAddr,
                 dataType: 'jsonp'
@@ -210,18 +213,31 @@ OGDSM.externalConnection.prototype.geoServerWFS = function (addr, ws, name) {
         strategy: ol.loadingstrategy.createTile(new ol.tilegrid.XYZ({
             maxZoom: 19
         })),
-        projection: 'EPSG:900913'
+        projection: 'EPSG:3857'
     });
-    styles = [
-        new ol.style.Style({
-            fill: new ol.style.Fill({
-                color: '#ff0000'
-            }),
-            stroke: new ol.style.Stroke({
-                color: '#000000',
-                width: 1
+    if (type === 'polygon') {
+        styles = [
+            new ol.style.Style({
+                fill: new ol.style.Fill({
+                    color: '#ff0000'
+                }),
+                stroke: new ol.style.Stroke({
+                    color: '#000000',
+                    width: 1
+                })
             })
-        })];
+        ];
+    } else if (type === 'point') {
+        styles = [
+            new ol.style.Style({
+                image : new ol.style.Circle({
+                    radius : 5,
+                    fill : new ol.style.Fill({color : '#ff0000'}),
+                    stroke : new ol.style.Stroke({color : '#ff0000', width : 1})
+                })
+            })
+        ];
+    }
     loadFeatures = function (response) {
         vectorSource.addFeatures(vectorSource.readFeatures(response));
     };
@@ -265,7 +281,7 @@ OGDSM.externalConnection.prototype.publicDataEnv = function (apikey, envType, da
             '"areaType":' + '"' + encodeURIComponent(dateOrArea) + '",' +
             '"envType":' + '"' + envType + '"}';
     }
-    console.log(jsonData);
+    console.log(this.baseAddr);
     jsonData = JSON.parse(jsonData);
     $.ajax({
         type : 'POST',

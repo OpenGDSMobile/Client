@@ -87,16 +87,14 @@
                             <pre class="code prettyprint linenums">
                         /*jslint devel: true*/
                         /*global $, jQuery, ol, OGDSM*/
-                        
                         OGDSM.namesapce(&#x27;eGovFrameUI&#x27;);
                         (function (OGDSM) {
                             &#x27;use strict&#x27;;
-                        
                             /**
-                            * e-Goverement Framework User Interface Automatic Create.
+                            * e-Goverement Framework UX Component Automatic Create.
                             * @class OGDSM.eGovFramUI
                             * @constructor
-                            * @param {String} theme - eGovframework theme a~g
+                            * @param {String} theme - eGovframework theme a~g (default c)
                             */
                             OGDSM.eGovFrameUI = function (theme) {
                                 theme = (typeof (theme) !== &#x27;undefined&#x27;) ? theme : null;
@@ -113,7 +111,7 @@
                             return OGDSM.eGovFrameUI;
                         }(OGDSM));
                         /**
-                         * User Interface Create about VWorld WMS API List (CheckBox).
+                         * VWorld WMS API List (CheckBox).
                          * @method vworldWMSCheck
                          * @param {String} divId - div id about HTML tag attribute
                          * @param {String} theme - eGovframework theme a~g (default constructor)
@@ -121,7 +119,6 @@
                          */
                         OGDSM.eGovFrameUI.prototype.vworldWMSCheck = function (divId, theme) {
                             &#x27;use strict&#x27;;
-                            
                             var selectTheme = (typeof (theme) !== &#x27;undefined&#x27;) ? theme : this.dataTheme,
                                 rootDiv = $(&#x27;#&#x27; + divId),
                                 html = &#x27;&lt;fieldset data-role=&quot;controlgroup&quot;&gt;&#x27;,
@@ -475,6 +472,41 @@
                             return $(&#x27;#processBtn&#x27;);
                         };
                         
+                        /**
+                         * User Interface Create about SelectBox
+                         * @method selectBox
+                         * @param {String} divId - div id about HTML tag attribute
+                         * @param {String} name - selectbox name about HTML tag attribute
+                         * @param {String} id - selectbox id about HTML tag attribute
+                         * @param {Array} data - selectbox option data
+                         * @param {String} theme - eGovframework theme a~g (default constructor)
+                         * @return {jQuery Object} div id Object
+                         */
+                        OGDSM.eGovFrameUI.prototype.selectBox = function (divId, name, id, data, theme) {
+                            &#x27;use strict&#x27;;
+                            var selectTheme = (typeof (theme) !== &#x27;undefined&#x27;) ? theme : this.dataTheme,
+                                rootDiv = $(&#x27;#&#x27; + divId),
+                                html = &#x27;&lt;fieldset data-role=&quot;controlgroup&quot;&gt;&#x27;,
+                                OGDSM = this.OGDSM,
+                                styles,
+                                stylesText,
+                                i,
+                                j,
+                                btnObj;
+
+                            html += &#x27;&lt;select name=&quot;&#x27; + name + &#x27;&quot; id=&quot;&#x27; + id + &#x27;&quot; data-theme=&#x27; + selectTheme + &#x27;&gt;&#x27;;
+                            html += &#x27;&lt;option value=&quot;&quot;&gt;  &lt;/option&gt;&#x27;;
+                            for (i = 0; i &lt; data.length; i += 1) {
+                                html += &#x27;&lt;option value=&quot;&#x27; + data[i] + &#x27;&quot;&gt;&#x27; + data[i] + &#x27;&lt;/option&gt;&#x27;;
+                            }
+                            html += &#x27;&lt;/select&gt;&#x27;;
+                            html += &#x27;&lt;/fieldset&gt;&#x27;;
+                            rootDiv.append(html);
+                            rootDiv.trigger(&quot;create&quot;);
+                            return $(&quot;#&quot; + id);
+                        };
+
+
                             </pre>
                         </div>
                     </div>

@@ -1,15 +1,13 @@
 /*jslint devel: true*/
 /*global $, jQuery, ol, OGDSM*/
-
 OGDSM.namesapce('eGovFrameUI');
 (function (OGDSM) {
     'use strict';
-
     /**
-    * e-Goverement Framework User Interface Automatic Create.
+    * e-Goverement Framework UX Component Automatic Create.
     * @class OGDSM.eGovFramUI
     * @constructor
-    * @param {String} theme - eGovframework theme a~g
+    * @param {String} theme - eGovframework theme a~g (default c)
     */
     OGDSM.eGovFrameUI = function (theme) {
         theme = (typeof (theme) !== 'undefined') ? theme : null;
@@ -26,7 +24,7 @@ OGDSM.namesapce('eGovFrameUI');
     return OGDSM.eGovFrameUI;
 }(OGDSM));
 /**
- * User Interface Create about VWorld WMS API List (CheckBox).
+ * VWorld WMS API List (CheckBox).
  * @method vworldWMSCheck
  * @param {String} divId - div id about HTML tag attribute
  * @param {String} theme - eGovframework theme a~g (default constructor)
@@ -34,7 +32,6 @@ OGDSM.namesapce('eGovFrameUI');
  */
 OGDSM.eGovFrameUI.prototype.vworldWMSCheck = function (divId, theme) {
     'use strict';
-    
     var selectTheme = (typeof (theme) !== 'undefined') ? theme : this.dataTheme,
         rootDiv = $('#' + divId),
         html = '<fieldset data-role="controlgroup">',
@@ -387,3 +384,38 @@ OGDSM.eGovFrameUI.prototype.processButton = function (divId, theme) {
     rootDiv.trigger("create");
     return $('#processBtn');
 };
+
+/**
+ * User Interface Create about SelectBox
+ * @method selectBox
+ * @param {String} divId - div id about HTML tag attribute
+ * @param {String} name - selectbox name about HTML tag attribute
+ * @param {String} id - selectbox id about HTML tag attribute
+ * @param {Array} data - selectbox option data
+ * @param {String} theme - eGovframework theme a~g (default constructor)
+ * @return {jQuery Object} div id Object
+ */
+OGDSM.eGovFrameUI.prototype.selectBox = function (divId, name, id, data, theme) {
+    'use strict';
+    var selectTheme = (typeof (theme) !== 'undefined') ? theme : this.dataTheme,
+        rootDiv = $('#' + divId),
+        html = '<fieldset data-role="controlgroup">',
+        OGDSM = this.OGDSM,
+        styles,
+        stylesText,
+        i,
+        j,
+        btnObj;
+
+    html += '<select name="' + name + '" id="' + id + '" data-theme=' + selectTheme + '>';
+    html += '<option value="">  </option>';
+    for (i = 0; i < data.length; i += 1) {
+        html += '<option value="' + data[i] + '">' + data[i] + '</option>';
+    }
+    html += '</select>';
+    html += '</fieldset>';
+    rootDiv.append(html);
+    rootDiv.trigger("create");
+    return $("#" + id);
+};
+

@@ -219,7 +219,8 @@
                                                 LAYERS : values[2],
                                                 STYLES : values[2],
                                                 FORMAT : &#x27;image/png&#x27;,
-                                                CRS : &#x27;EPSG:900913&#x27;,
+                                                //CRS : &#x27;EPSG:900913&#x27;,
+                                                CRS : &#x27;EPSG:3857&#x27;,
                                                 EXCEPTIONS : &#x27;text/xml&#x27;,
                                                 TRANSPARENT : true
                                             }
@@ -253,8 +254,8 @@
                                     });
                         
                                 } else if (this.subName === &#x27;WFS&#x27;) {//workspace, layerName
-                                    console.log(values[0] + &#x27;, &#x27; + values[1]);
-                                    resultData = this.geoServerWFS(this.baseAddr, values[0], values[1]);
+                                    console.log(values[0] + &#x27;, &#x27; + values[1] + &#x27;,&#x27; + values[2]);
+                                    resultData = this.geoServerWFS(this.baseAddr, values[0], values[1], values[2]);
                                     setResponseData(resultData);
                                 }
                             } else if (this.serverName === &#x27;publicData&#x27;) {
@@ -277,9 +278,11 @@
                          * @param {String} addr - GeoServer Address
                          * @param {String} ws - GeoServer Workspace
                          * @param {String} name - GeoServer Layer Name
+                         * @param {String} type - GeoServer Layer Type (Default : polygon)
                          * @return {ol.source.ServerVector} vectorSource - OpenLayers3 Vector Object
                          */
-                        OGDSM.externalConnection.prototype.geoServerWFS = function (addr, ws, name) {
+                        OGDSM.externalConnection.prototype.geoServerWFS = function (addr, ws, name, type) {
+                            type = (typeof (type) !== &#x27;undefined&#x27;) ? type : &#x27;polygon&#x27;;
                             var vectorSource, styles, resultData;
                             vectorSource = new ol.source.ServerVector({
                                 format: new ol.format.GeoJSON(),
@@ -288,7 +291,7 @@
                                         &#x27;version=1.1.0&amp;request=GetFeature&#x27; +
                                         &#x27;&amp;typeNames=&#x27; + ws + &#x27;:&#x27; + name +
                                         &#x27;&amp;outputFormat=text/javascript&amp;format_options=callback:loadFeatures&#x27; +
-                                        &#x27;&amp;srsname=&#x27; + &#x27;EPSG:900913&#x27; + &#x27;&amp;bbox=&#x27; + extent.join(&#x27;,&#x27;) + &#x27;,&#x27; + &#x27;EPSG:900913&#x27;;
+                                        &#x27;&amp;srsname=&#x27; + &#x27;EPSG:3857&#x27; + &#x27;&amp;bbox=&#x27; + extent.join(&#x27;,&#x27;) + &#x27;,&#x27; + &#x27;EPSG:3857&#x27;;
                                     $.ajax({
                                         url : fullAddr,
                                         dataType: &#x27;jsonp&#x27;
@@ -297,18 +300,31 @@
                                 strategy: ol.loadingstrategy.createTile(new ol.tilegrid.XYZ({
                                     maxZoom: 19
                                 })),
-                                projection: &#x27;EPSG:900913&#x27;
+                                projection: &#x27;EPSG:3857&#x27;
                             });
-                            styles = [
-                                new ol.style.Style({
-                                    fill: new ol.style.Fill({
-                                        color: &#x27;#ff0000&#x27;
-                                    }),
-                                    stroke: new ol.style.Stroke({
-                                        color: &#x27;#000000&#x27;,
-                                        width: 1
+                            if (type === &#x27;polygon&#x27;) {
+                                styles = [
+                                    new ol.style.Style({
+                                        fill: new ol.style.Fill({
+                                            color: &#x27;#ff0000&#x27;
+                                        }),
+                                        stroke: new ol.style.Stroke({
+                                            color: &#x27;#000000&#x27;,
+                                            width: 1
+                                        })
                                     })
-                                })];
+                                ];
+                            } else if (type === &#x27;point&#x27;) {
+                                styles = [
+                                    new ol.style.Style({
+                                        image : new ol.style.Circle({
+                                            radius : 5,
+                                            fill : new ol.style.Fill({color : &#x27;#ff0000&#x27;}),
+                                            stroke : new ol.style.Stroke({color : &#x27;#ff0000&#x27;, width : 1})
+                                        })
+                                    })
+                                ];
+                            }
                             loadFeatures = function (response) {
                                 vectorSource.addFeatures(vectorSource.readFeatures(response));
                             };

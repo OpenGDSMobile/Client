@@ -109,13 +109,13 @@
             "module": "OGDSM.jsontoArray",
             "namespace": "",
             "file": "js/openGDSMobile/OGDSM_eGovFrameUI.js",
-            "line": 8,
-            "description": "e-Goverement Framework User Interface Automatic Create.",
+            "line": 6,
+            "description": "e-Goverement Framework UX Component Automatic Create.",
             "is_constructor": 1,
             "params": [
                 {
                     "name": "theme",
-                    "description": "- eGovframework theme a~g",
+                    "description": "- eGovframework theme a~g (default c)",
                     "type": "String"
                 }
             ]
@@ -209,8 +209,8 @@
         },
         {
             "file": "js/openGDSMobile/OGDSM_eGovFrameUI.js",
-            "line": 28,
-            "description": "User Interface Create about VWorld WMS API List (CheckBox).",
+            "line": 26,
+            "description": "VWorld WMS API List (CheckBox).",
             "itemtype": "method",
             "name": "vworldWMSCheck",
             "params": [
@@ -234,7 +234,7 @@
         },
         {
             "file": "js/openGDSMobile/OGDSM_eGovFrameUI.js",
-            "line": 225,
+            "line": 222,
             "description": "User Interface Create about visualization type (Radio Button).",
             "itemtype": "method",
             "name": "visTypeRadio",
@@ -259,7 +259,7 @@
         },
         {
             "file": "js/openGDSMobile/OGDSM_eGovFrameUI.js",
-            "line": 249,
+            "line": 246,
             "description": "User Interface Create about visualization type (Date Input).",
             "itemtype": "method",
             "name": "DateInput",
@@ -279,7 +279,7 @@
         },
         {
             "file": "js/openGDSMobile/OGDSM_eGovFrameUI.js",
-            "line": 265,
+            "line": 262,
             "description": "User Interface Create about time input (Time Input).",
             "itemtype": "method",
             "name": "timeInput",
@@ -299,7 +299,7 @@
         },
         {
             "file": "js/openGDSMobile/OGDSM_eGovFrameUI.js",
-            "line": 281,
+            "line": 278,
             "description": "User Interface Create about Environment Type (Radio Button).",
             "itemtype": "method",
             "name": "envTypeRadio",
@@ -329,7 +329,7 @@
         },
         {
             "file": "js/openGDSMobile/OGDSM_eGovFrameUI.js",
-            "line": 319,
+            "line": 316,
             "description": "User Interface Create about Area Type (Radio Button).",
             "itemtype": "method",
             "name": "areaTypeRadio",
@@ -354,7 +354,7 @@
         },
         {
             "file": "js/openGDSMobile/OGDSM_eGovFrameUI.js",
-            "line": 348,
+            "line": 345,
             "description": "User Interface Create about Map List (Select).",
             "itemtype": "method",
             "name": "mapListSelect",
@@ -379,7 +379,7 @@
         },
         {
             "file": "js/openGDSMobile/OGDSM_eGovFrameUI.js",
-            "line": 372,
+            "line": 369,
             "description": "User Interface Create about Process (Button).",
             "itemtype": "method",
             "name": "processButton",
@@ -397,6 +397,46 @@
             ],
             "return": {
                 "description": "User Interface Button Object (Process)",
+                "type": "JQuery Object"
+            },
+            "class": "OGDSM.eGovFramUI",
+            "module": "OGDSM.jsontoArray"
+        },
+        {
+            "file": "js/openGDSMobile/OGDSM_eGovFrameUI.js",
+            "line": 388,
+            "description": "User Interface Create about SelectBox",
+            "itemtype": "method",
+            "name": "selectBox",
+            "params": [
+                {
+                    "name": "divId",
+                    "description": "- div id about HTML tag attribute",
+                    "type": "String"
+                },
+                {
+                    "name": "name",
+                    "description": "- selectbox name about HTML tag attribute",
+                    "type": "String"
+                },
+                {
+                    "name": "id",
+                    "description": "- selectbox id about HTML tag attribute",
+                    "type": "String"
+                },
+                {
+                    "name": "data",
+                    "description": "- selectbox option data",
+                    "type": "Array"
+                },
+                {
+                    "name": "theme",
+                    "description": "- eGovframework theme a~g (default constructor)",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "div id Object",
                 "type": "JQuery Object"
             },
             "class": "OGDSM.eGovFramUI",
@@ -543,7 +583,7 @@
         },
         {
             "file": "js/openGDSMobile/OGDSM_externalConnection.js",
-            "line": 187,
+            "line": 188,
             "description": "GeoServer WFS data load (OpenLayers3 ol.source.ServerVector)",
             "itemtype": "method",
             "name": "geoServerWFS",
@@ -562,6 +602,11 @@
                     "name": "name",
                     "description": "- GeoServer Layer Name",
                     "type": "String"
+                },
+                {
+                    "name": "type",
+                    "description": "- GeoServer Layer Type (Default : polygon)",
+                    "type": "String"
                 }
             ],
             "return": {
@@ -573,7 +618,7 @@
         },
         {
             "file": "js/openGDSMobile/OGDSM_externalConnection.js",
-            "line": 235,
+            "line": 251,
             "description": "Get Environment Data (Seoul Open Data and Public Data Portal)",
             "itemtype": "method",
             "name": "publicDataEnv",
@@ -608,7 +653,7 @@
         },
         {
             "file": "js/openGDSMobile/OGDSM_visualization.js",
-            "line": 20,
+            "line": 19,
             "description": "getMap Method get map object about OpenLayers3.",
             "itemtype": "method",
             "name": "getMap",
@@ -621,7 +666,7 @@
         },
         {
             "file": "js/openGDSMobile/OGDSM_visualization.js",
-            "line": 28,
+            "line": 27,
             "description": "Current Layers Check about OpenLayers3.",
             "itemtype": "method",
             "name": "layerCheck",
@@ -641,7 +686,7 @@
         },
         {
             "file": "js/openGDSMobile/OGDSM_visualization.js",
-            "line": 49,
+            "line": 48,
             "description": "changeBaseMap Method is base map Change.",
             "itemtype": "method",
             "name": "changeBaseMap",
@@ -657,7 +702,7 @@
         },
         {
             "file": "js/openGDSMobile/OGDSM_visualization.js",
-            "line": 80,
+            "line": 102,
             "description": "WMS/WFS Map Add",
             "itemtype": "method",
             "name": "addMap",
@@ -673,13 +718,13 @@
         },
         {
             "file": "js/openGDSMobile/OGDSM_visualization.js",
-            "line": 93,
+            "line": 115,
             "class": "OGDSM.visualization",
             "module": "OGDSM.jsontoArray"
         },
         {
             "file": "js/openGDSMobile/OGDSM_visualization.js",
-            "line": 102,
+            "line": 124,
             "description": "WFS style change",
             "itemtype": "method",
             "name": "changeWFSStyle",
@@ -690,18 +735,33 @@
                     "type": "String"
                 },
                 {
-                    "name": "Map",
-                    "description": "color",
-                    "type": "String or Array"
+                    "name": "colors",
+                    "description": "( Hex color )",
+                    "type": "Hex Color, String or Array"
                 },
                 {
-                    "name": "Opacity",
-                    "description": "number",
+                    "name": "type",
+                    "description": "(Vector type)",
+                    "type": "String"
+                },
+                {
+                    "name": "opt",
+                    "description": "(Opacity number) - option, Default value : 0.5",
                     "type": "Number"
                 },
                 {
-                    "name": "Map",
-                    "description": "attribute name - option",
+                    "name": "attr",
+                    "description": "(Map attribute name) - option, Default value : null",
+                    "type": "String"
+                },
+                {
+                    "name": "range",
+                    "description": "(Colors range) - option, Default value : null",
+                    "type": "String"
+                },
+                {
+                    "name": "xyData",
+                    "description": "(attr value data) - option, Default value : null",
                     "type": "String"
                 }
             ],
@@ -710,7 +770,7 @@
         },
         {
             "file": "js/openGDSMobile/OGDSM_visualization.js",
-            "line": 166,
+            "line": 207,
             "description": "Bar Chart Visualization based on D3.js\nrange length = color length",
             "itemtype": "method",
             "name": "barChart",
@@ -733,6 +793,37 @@
                 {
                     "name": "color",
                     "description": "(1 dun array about bar fill color of range  - option ['#00000'])",
+                    "type": "Array"
+                }
+            ],
+            "class": "OGDSM.visualization",
+            "module": "OGDSM.jsontoArray"
+        },
+        {
+            "file": "js/openGDSMobile/OGDSM_visualization.js",
+            "line": 298,
+            "description": "Image Layer Visualization based on OpenLayers3",
+            "itemtype": "method",
+            "name": "imageLayer",
+            "params": [
+                {
+                    "name": "imgURL",
+                    "description": "(Image URL)",
+                    "type": "String"
+                },
+                {
+                    "name": "imgTitle",
+                    "description": "(Image title)",
+                    "type": "String"
+                },
+                {
+                    "name": "imgSize",
+                    "description": "(Image size [width, height] )",
+                    "type": "Array"
+                },
+                {
+                    "name": "imgExtent",
+                    "description": "(Image extent [lower left lon, lower left lat, upper right lon, upper right lat] or [left, bottom, right, top])",
                     "type": "Array"
                 }
             ],
@@ -771,7 +862,7 @@
         },
         {
             "message": "Missing item type",
-            "line": " js/openGDSMobile/OGDSM_visualization.js:93"
+            "line": " js/openGDSMobile/OGDSM_visualization.js:115"
         }
     ]
 }

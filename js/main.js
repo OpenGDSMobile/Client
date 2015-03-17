@@ -43,7 +43,7 @@ WEBAPP.prototype.mapInit = function (divName) {
             })
         ],
         view: new ol.View({
-            projection : ol.proj.get('EPSG:900913'),
+            projection : ol.proj.get('EPSG:3857'),
             center : [0, 0],
             zoom : 10
         }),
@@ -169,7 +169,7 @@ $(document).ready(function (e) {
         layersArr,
 //        addr = 'http://61.106.113.122:8080',
 //        addr = 'http://113.198.80.60:8087',
-        addr = 'http://113.198.80.9',
+        addr = 'http://113.198.80.60',
 //        geoServerAddr = 'http://113.198.80.60/',
         geoServerAddr = 'http://113.198.80.9',
 //        folderName = '/mobile',
@@ -254,7 +254,7 @@ $(document).ready(function (e) {
         //webAppObj.getMap().addLayer(wfsData);
         if (checked === true) {
             openGDSMObj.addMap(externalServer.getResponseData());
-            openGDSMObj.changeWFSStyle(str, color, 0.7, attr);
+            openGDSMObj.changeWFSStyle(str, color, 'polygon', 0.7, attr);
         } else {
             console.log("error");
         }
@@ -344,7 +344,7 @@ $(document).ready(function (e) {
                     //resultData = externalServer.geoServerWFS(geoServerAddr, "opengds", mapType);
                     resultData = externalServer.geoServerWFS(geoServerAddr, "opengds", "seoul_sig");
                     openGDSMObj.addMap(resultData);
-                    openGDSMObj.changeWFSStyle("seoul_sig", colors, 0.6, "sig_kor_nm", range, xyData);
+                    openGDSMObj.changeWFSStyle("seoul_sig", colors, 'polygon', 0.6, "sig_kor_nm", range, xyData);
                 }
             } else {
                 console.log("error");
@@ -454,7 +454,7 @@ $(document).ready(function (e) {
                     }
                     resultData = externalServer.geoServerWFS(geoServerAddr, "opengds", mapType);
                     openGDSMObj.addMap(resultData);
-                    openGDSMObj.changeWFSStyle(mapType, colors, 0.6, attribute, range, xyData);
+                    openGDSMObj.changeWFSStyle(mapType, colors, 'polygon', 0.6, attribute, range, xyData);
                 }
             } else {
                 console.log("error");

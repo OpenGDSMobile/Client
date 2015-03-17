@@ -1,0 +1,5 @@
+{
+    "jscodehints.detectedExclusions": [
+        "/var/www/html/2_study/openGDSMobileClient/js/ol3/backup/ol.js"
+    ]
+}

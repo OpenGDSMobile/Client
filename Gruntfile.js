@@ -16,7 +16,7 @@ module.exports = function (grunt) {
         //concat setting
         concat : {
             basic: {
-                src: ['js/openGDSMobile/OGDSM.js', 'js/openGDSMobile/OGDSM_visualization.js', 'OGDSM_externalConnection.js', 'OGDSM_eGovFrameUI.js'], //concat src
+                src: ['js/openGDSMobile/OGDSM.js', 'js/openGDSMobile/OGDSM_visualization.js', 'js/openGDSMobile/OGDSM_externalConnection.js', 'js/openGDSMobile/OGDSM_eGovFrameUI.js'], //concat src
                 dest: 'OpenGDSMobileLib/openGDSMobileClient1.1.js' //concat dest
             }
         }
