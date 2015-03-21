@@ -1,4 +1,4 @@
-/*jslint devel: true */
+/*jslint devel: true*/
 /*global $, jQuery, ol, OGDSM*/
 var WEBAPP = WEBAPP || {};
 WEBAPP = (function ($) {
@@ -191,17 +191,10 @@ $(document).ready(function (e) {
         ProcessBtn,
 
         externalServer;
-    
+   /*
     webAppObj = new WEBAPP();
     webAppObj.initViewer();
-    /*
-    $(document).on("pageinit", function () {
-        $.mobile.loader.prototype.options.text = "loading";
-        $.mobile.loader.prototype.options.textVisible = false;
-        $.mobile.loader.prototype.options.theme = "a";
-        $.mobile.loader.prototype.options.html = "";
-    });
-    */
+
     openGDSMObj = new OGDSM.visualization(webAppObj.getMap());
     this.baseMap = function (style) {
         openGDSMObj.changeBaseMap(style);
@@ -268,15 +261,6 @@ $(document).ready(function (e) {
         externalServer.setSubName("getLayers");
         externalServer.setData("opengds");
         checked = externalServer.dataLoad();
-        /*
-        $('input[name=' + EnvVis + ']').change(function () {
-            if ($(this).val() === 'map') {
-                mapList = uiObj.mapListSelect("geomapList", externalServer.getResponseData());
-            } else {
-                $("#geomapList").empty();
-            }
-        });
-        */
         //$('#setting').append('<div id="geomapList"></div>');
         //$('#setting').trigger("create");
         EnvDate = uiObj.dateInput("setting");
@@ -295,17 +279,13 @@ $(document).ready(function (e) {
                 attribute = null,
                 xyData = null,
                 range = null,
-                /** AirKorea information **/
+                // AirKorea information
                 colors = ["#0090ff", "#008080", "#4cff4c", "#99ff99", "#FFFF00", "#FFFF99", "#FF9900", "#FF0000"],
                 ranges = [ [15, 30, 55, 80, 100, 120, 200],    //PM10, PM25
                           [1, 2, 5.5, 9, 10.5, 12, 15],        //CO
                           [0.015, 0.03, 0.05, 0.06, 0.1045, 0.15, 0.2],    //NO2
                           [0.01, 0.02, 0.035, 0.05, 0.075, 0.1, 0.15],     //SO2
                           [0.02, 0.04, 0.06, 0.08, 0.10, 0.12, 0.3] ];     //O3
-          /*  if (visType === 'map') {
-                mapName = $('#' + mapList + ' option:selected').text();
-            }
-            */
             $('#setting').popup("close");
             externalServer.changeServer("publicData", addr + folderName + '/SeoulOpenData.do');
             externalServer.setSubName("TimeAverageAirQuality");
@@ -334,13 +314,7 @@ $(document).ready(function (e) {
                     console.log(mapType);
                     $('#d3viewonMap').show();
                     $("#d3viewonMap").height(50);
-                    $('#d3viewonMap').css('top', $(window).height() - 50);/*
-                    if (mapType === 'seoul_sig' || mapType === 'seoul_emd') {
-                        attribute = 'sig_kor_nm';
-                    } else {
-                        attribute = 'emd_kor_nm';
-                    }
-                    */
+                    $('#d3viewonMap').css('top', $(window).height() - 50);
                     //resultData = externalServer.geoServerWFS(geoServerAddr, "opengds", mapType);
                     resultData = externalServer.geoServerWFS(geoServerAddr, "opengds", "seoul_sig");
                     openGDSMObj.addMap(resultData);
@@ -380,14 +354,7 @@ $(document).ready(function (e) {
         externalServer.changeServer("geoServer", addr + folderName + "/getLayerNames.do");
         externalServer.setSubName("getLayers");
         externalServer.setData("opengds");
-        checked = externalServer.dataLoad();/*
-        $('input[name=' + EnvVis + ']').change(function () {
-            if ($(this).val() === 'map') {
-                mapList = uiObj.mapListSelect("geomapList", externalServer.getResponseData());
-            } else {
-                $("#geomapList").empty();
-            }
-        });*/
+        checked = externalServer.dataLoad();
         //$('#setting').append('<div id="geomapList"></div>');
         //$('#setting').trigger("create");
         EnvArea = uiObj.areaTypeRadio("setting");
@@ -403,7 +370,7 @@ $(document).ready(function (e) {
                 resultData = null,
                 attribute = null,
                 xyData = null,
-                /** AirKorea information **/
+                ////// AirKorea information
                 colors = ["#0090ff", "#008080", "#4cff4c", "#99ff99", "#FFFF00", "#FFFF99", "#FF9900", "#FF0000"],
                 ranges = [ [15, 30, 55, 80, 100, 120, 200],    //PM10, PM25
                           [1, 2, 5.5, 9, 10.5, 12, 15],        //CO
@@ -461,4 +428,5 @@ $(document).ready(function (e) {
             }
         });
     };
+    */
 });

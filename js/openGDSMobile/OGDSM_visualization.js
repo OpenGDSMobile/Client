@@ -64,7 +64,6 @@ OGDSM.visualization.prototype.changeBaseMap = function (mapStyle) {
     maplayers.forEach(function (obj, i) {
         var layerTitle = obj.get('title');
         if (layerTitle === 'basemap') {
-            //map.removeLayer(obj);
             baseLayer = obj;
         }
     });
@@ -85,9 +84,9 @@ OGDSM.visualization.prototype.changeBaseMap = function (mapStyle) {
             zoom : mapZoom
         });
     } else {
-        console.log('Not Map Style');
+        console.error('Not Map Style "OSM" | "VWorld"');
+        return null;
     }
-    console.log(TMS);
     if (baseLayer !== null) {
         map.setView(view);
         baseLayer.setSource(TMS);

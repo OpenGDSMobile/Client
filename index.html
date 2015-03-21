@@ -56,11 +56,30 @@
             top : 0px;
             left : 10px;
         }
+        .OGDSPosTopRight{
+            position : absolute;
+            z-index : 1000;
+            top : 8px;
+            left : auto;
+            right : 10px;
+        }
 	</style>
     <script>
         $(function(){
-            var uiTest = new OGDSM.eGovFrameUI();
             /*uiTest.autoButton('test','testid','in','','테스트버튼', ['a', '', '', 'true']);*/
+            /*uiTest.autoCheckBox('test','test', 'testName', ['1','2','3','4'], ['1','2','3','4']);*/
+            /*uiTest.autoRadioBox('test','test', 'testName', ['1','2','3','4'], ['1','2','3','4'], ['h']);*/
+            /*uiTest.autoSelect('test','test','testName',['1','2','3'],['1','2','3'], ['c','false','true']);*/
+            /*uiTest.autoSwitch('test', 'testid', 'testName', ['a','e']);*/
+
+            var webAppObj = new WEBAPP();
+            webAppObj.initViewer();
+            var openGDSMObj = new OGDSM.visualization(webAppObj.getMap());
+            var uiTest = new OGDSM.eGovFrameUI();
+            var mapRadioNameObj = uiTest.autoRadioBox('mapSelect','mapType', 'radioMap', ['OSM','VWorld'], ['OSM','VWorld'], ['h']);
+            mapRadioNameObj.change(function () {
+                openGDSMObj.changeBaseMap($(this).val());
+            });
         });
 
     </script>
@@ -81,6 +100,7 @@
  	 	<a id="mainMenu" class="OGDSMPosTopLeft"
            data-role="button" data-rel="popup" data-transition="slidedown" data-theme="c" data-mini="true"
            href="#select">메뉴</a>
+        <div id="mapSelect" class="OGDSPosTopRight"></div>
 		<div id="map" style="padding:0; margin:0;"></div>
 	</div>
     <!--footer-->
@@ -169,13 +189,14 @@
 	<!-- Public Data PopUp -->
     <div data-role="popup" id="select">
         <ul data-role="listview">
-            <li><a href="#mapList" data-transition="slidedown" data-rel="popup">배경지도/VWorld</a></li>
+            <!--<li><a href="#mapList" data-transition="slidedown" data-rel="popup">배경지도/VWorld</a></li>-->
             <li><a href="#vworldList" data-rel="popup" data-position-to="window" onclick="createVWorldUI()" data-inline="true">VWorld 데이터 API</a></li>
             <li><a href="#WFSList" data-rel="popup" data-transition="slidedown">행정구역 벡터데이터</a></li>
             <li><a href="#opendataList" data-rel="popup" data-transition="slidedown">공공데이터</a></li>
         </ul>
     </div>
     <!--Base Map PopUp -->
+<!--
     <div data-role="popup" id="mapList">
         <ul data-role="listview">
             <li data-theme="z" data-role="list-divider">배경지도</li>
@@ -183,6 +204,7 @@
             <li><a onclick="baseMap('VWorld')">VWorld</a></li>
         </ul>
     </div>
+-->
     <!--WFS PopUp-->
     <div data-role="popup" id="WFSList">
         <ul data-role="listview" id="layersList">
