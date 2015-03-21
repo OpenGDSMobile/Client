@@ -1,42 +1,34 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<title>Mobile Web Application for Geospatial Data Using OpenGDS Mobile</title>
 	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-	<!-- 	jQuery -->
-	<script type="text/javascript" src="js/egovframework/mbl/cmm/jquery-1.9.1.min.js"></script>
+    <!-- dependency library CSS-->
+	<link rel="stylesheet" href="css/egovframework/mbl/cmm/jquery.mobile-1.3.2.css">   <!-- jQuery Mobile -->
+	<link rel="stylesheet" href="css/egovframework/mbl/cmm/EgovMobile-1.3.2.css">      <!-- eGov Mobile -->
+    <link type="text/css" rel="stylesheet" href="css/ol3/ol.css">                      <!-- OpenLayers 3 -->
 
-	<!-- jQuery Mobile -->
-	<script type="text/javascript" src="js/egovframework/mbl/cmm/jquery.mobile-1.3.2.min.js"></script>
-	<link rel="stylesheet" href="css/egovframework/mbl/cmm/jquery.mobile-1.3.2.css">
+    <!-- dependency library JS-->
+    <!-- egovFramework  KOREA-->
+	<script type="text/javascript" src="js/egovframework/mbl/cmm/jquery-1.9.1.min.js"></script>      <!-- jQuery -->
+	<script type="text/javascript" src="js/egovframework/mbl/cmm/jquery.mobile-1.3.2.min.js"></script> <!-- jQuery Mobile -->
+    <script type="text/javascript" src="js/egovframework/mbl/cmm/EgovMobile-1.3.2.js"></script>      <!-- eGov Mobile -->
+    <!-- Proj, OpenLayers3, D3 -->
+    <script type="text/javascript" src="js/proj4js/2.2.2/proj4.js"></script>                         <!-- Proj4js -->
+    <script type="text/javascript" src="js/ol3/ol.js"></script>                                      <!-- OpenLayers 3 -->
+    <script type="text/javascript" src="js/d3/d3.js"></script>                                       <!-- D3.js -->
 
-	<!-- eGov Mobile -->
-	<script type="text/javascript" src="js/egovframework/mbl/cmm/EgovMobile-1.3.2.js"></script>
-	<link rel="stylesheet" href="css/egovframework/mbl/cmm/EgovMobile-1.3.2.css">
-
-
-	<!-- Proj4js -->
-	<script type="text/javascript" src="js/proj4js/2.2.2/proj4.js"></script>
-
-	<!-- OpenLayers 3 -->
-	<script type="text/javascript" src="js/ol3/ol.js"></script>
-	<link type="text/css" rel="stylesheet" href="css/ol3/ol.css">
-
-	<!-- D3.js -->
-	<script type="text/javascript" src="js/d3/d3.js"></script>
-
-    <!-- openGDSMobileClient1.0-->
-<!--  <script type="text/javascript" src="OpenGDSMobileLib/openGDSMobileClient1.1.js"></script>-->
-
+    <!-- openGDSMobileClient1.1 development version-->
     <script src="js/openGDSMobile/OGDSM.js"></script>
     <script src="js/openGDSMobile/OGDSM_visualization.js"></script>
     <script src="js/openGDSMobile/OGDSM_eGovFrameUI.js"></script>
     <script src="js/openGDSMobile/OGDSM_externalConnection.js"></script>
+<!--  <script type="text/javascript" src="OpenGDSMobileLib/openGDSMobileClient1.1.js"></script>-->
 
     <script type="text/javascript" src="js/main.js"></script>
 
-	<title>Map Select</title>
 	<style>
 		#d3viewonMap{
 			z-index:10;
@@ -57,12 +49,52 @@
 		.font{
 			font-size:70%;
 		}
+        /* openGDS Mobile CSS */
+        .OGDSMPosTopLeft{
+            position : absolute;
+            z-index : 1000;
+            top : 0px;
+            left : 10px;
+        }
 	</style>
+    <script>
+        $(function(){
+            var uiTest = new OGDSM.eGovFrameUI();
+            /*uiTest.autoButton('test','testid','in','','테스트버튼', ['a', '', '', 'true']);*/
+        });
+
+    </script>
 </head>
 <body>
-<div data-role="page" id="mapview">
-<!-- d3And Map div -->
-		<div id="interpolationMap">
+
+<div data-role="page" data-fullscreen="true">
+<div id="test">
+</div>
+    <!--header-->
+    <!--
+	<div data-role="header" data-position="fixed" class="ui-body-d center">
+		<h4>Mobile Web Application for Geospatial Data</h4>
+	</div>
+    -->
+    <!--Content-->
+	<div data-role="content" style="padding:0; margin:0;">
+ 	 	<a id="mainMenu" class="OGDSMPosTopLeft"
+           data-role="button" data-rel="popup" data-transition="slidedown" data-theme="c" data-mini="true"
+           href="#select">메뉴</a>
+		<div id="map" style="padding:0; margin:0;"></div>
+	</div>
+    <!--footer-->
+    <!--
+	<div data-role="footer" data-position="fixed" class="ui-body-d center">
+		<h4></h4>
+	</div>
+    -->
+
+
+
+    <!---custom div-->
+    <!-- d3And Map div -->
+    <div id="interpolationMap">
 		<a href="#" data-role="button"
 		     data-theme="a" data-icon="delete"
 		     data-iconpos="notext" class="ui-btn-right" onclick="$('#interpolationMap').hide()"> Close</a><br>
@@ -188,21 +220,7 @@
                    onclick="createPublicPortalUI()">실시간 대기환경(에어코리아)</a></li>
 				</ul>
     </div>
-	<div data-role="header" class="ui-body-g center" data-position="inline">
- 	 	<a href="#select" data-role="button" data-rel="popup"  data-transition="slidedown" data-theme="g">메뉴</a>
-		<h4>지도 시각화</h4>
-		<!-- <a href="logout.do" data-role="button" data-theme="g" >로그아웃</a> -->
-		<!-- <a href="#publicDataView" data-role="button" data-theme="g" >공공오픈데이터</a> -->
-	</div>
 
-	<!-- Map Div -->
-	<div data-role="content" style="padding:0; margin:0;">
-		<div id="map" style="padding:0; margin:0;">
-		</div>
-	</div>
-	<div data-role="footer" class="ui-body-g center" data-position="inline"  data-tap-toggle="false" >
-		<h4></h4>
-	</div>
 </div>
 </body>
 </html>

@@ -16,13 +16,93 @@ OGDSM.namesapce('eGovFrameUI');
         } else {
             this.dataTheme = "c";
         }
-
     };
     OGDSM.eGovFrameUI.prototype = {
         constructor : OGDSM.eGovFrameUI
     };
     return OGDSM.eGovFrameUI;
 }(OGDSM));
+
+
+/**
+ * 버튼 자동 생성
+ * Auto Create about Button.
+ * @method autoButton
+ * @param {String} divId - root div id about HTML tag attribute [상위 DIV 아이디]
+ * @param {String} linkId - link a id about HTML tag attribute  [생성될 버튼 아이디]
+ * @param {String} linkType - link type (in|domain_ex|ex) [버튼 타입]
+ * @param {String} url - link url (internal : "#?????", domain_external : "/???/???/...", external : "http://???") [링크 주소]
+ * @param {String} buttonTitle - button title [버튼 이름]
+ * @param {Array} options (option) - theme (0), corners (1), inline (2), mini (3) setting
+                                     (defaults : global value(dataTheme), true | false, true | false, true | false)
+                                     Not Change = ''
+                                     [ 배열인자 옵션: 테마(0), 코너(1), 인라인(2), 작은 버튼(3) ]
+ * @return {jQuery Object} user interface button object [제이쿼리 아이디 객체]
+ */
+OGDSM.eGovFrameUI.prototype.autoButton = function (rootDivId, linkId, linkType, url, buttonTitle, options) {
+    'use strict';
+    options = (typeof (options) !== 'undefined') ? options : null;
+    var rootDiv = $('#' + rootDivId),
+        html = '<a data-role="button" id="' + linkId + '" href=',
+        optionName = ['data-theme', 'data-corners', 'data-inline', 'data-mini'],
+        optionData = [this.dataTheme, 'true', 'false', 'false'],
+        i = 0;
+
+    if (linkType === 'in') {
+        html += '"#' + url + '" ';
+    } else if (linkType === 'domain_ex' || linkType === 'ex') {
+        html += '"' + url + '" ';
+    } else {
+        console.error('link type write "in|domain_ex|ex"');
+        return null;
+    }
+    html += '>' + buttonTitle + '</a>';
+    rootDiv.append(html);
+    if (options !== null) {
+        for (i = 0; i < options.length; i += 1) {
+            if (options[i] !== '') {
+                if (i === 0) {
+                    if (options[i] < 'a' || options[i] > 'g') {
+                        console.error('eGovframework Mobile UX/UI theme string range is "a~g"');
+                        return null;
+                    }
+                } else {
+                    if (options[i] !== 'true' && options[i] !== 'false') {
+                        console.error('eGovframework Mobile UX/UI string option ' + i + ' is "true" or "false"');
+                        return null;
+                    }
+                }
+            }
+            $("#" + linkId).attr(optionName[i], options[i]);
+        }
+    }
+    rootDiv.trigger("create");
+    return $("#" + linkId);
+};
+
+
+
+/**
+ * User Interface Create about Process (Button).
+ * @method processButton
+ * @param {String} divId - div id about HTML tag attribute
+ * @param {String} theme - eGovframework theme a~g (default constructor)
+ * @return {jQuery Object} User Interface Button Object (Process)
+ */
+OGDSM.eGovFrameUI.prototype.processButton = function (divId, theme) {
+    'use strict';
+    var butTheme = (typeof (theme) !== 'undefined') ? theme : this.dataTheme,
+        rootDiv,
+        html;
+    rootDiv = $('#' + divId);
+    html = '<a href="#" id="processBtn" data-role="button" data-theme="' + butTheme + '">시각화</a>';
+    rootDiv.append(html);
+    rootDiv.trigger("create");
+    return $('#processBtn');
+};
+
+
+
 /**
  * VWorld WMS API List (CheckBox).
  * @method vworldWMSCheck
@@ -366,24 +446,10 @@ OGDSM.eGovFrameUI.prototype.mapListSelect = function (divId, arr) {
     rootDiv.trigger("create");
     return 'geoServerSelectBox';
 };
-/**
- * User Interface Create about Process (Button).
- * @method processButton
- * @param {String} divId - div id about HTML tag attribute
- * @param {String} theme - eGovframework theme a~g (default constructor)
- * @return {jQuery Object} User Interface Button Object (Process)
- */
-OGDSM.eGovFrameUI.prototype.processButton = function (divId, theme) {
-    'use strict';
-    var butTheme = (typeof (theme) !== 'undefined') ? theme : this.dataTheme,
-        rootDiv,
-        html;
-    rootDiv = $('#' + divId);
-    html = '<a href="#" id="processBtn" data-role="button" data-theme="' + butTheme + '">시각화</a>';
-    rootDiv.append(html);
-    rootDiv.trigger("create");
-    return $('#processBtn');
-};
+
+
+
+
 
 /**
  * User Interface Create about SelectBox
