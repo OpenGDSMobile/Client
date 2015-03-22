@@ -1,5 +1,5 @@
 /** GeoServer, Public data, VWorld Connect Class **/
-/*jslint devel: true */
+/*jslint devel: true, vars : true */
 /*global $, jQuery, ol, OGDSM*/
 OGDSM.namesapce('externalConnection');
 (function (OGDSM) {

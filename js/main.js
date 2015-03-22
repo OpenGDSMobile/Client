@@ -126,11 +126,13 @@ WEBAPP.prototype.initViewer = function () {
         obj.setWindowOrientation(window.orientation);
 	});
     */
-	projection = new ol.proj.Projection({
+/*
+    projection = new ol.proj.Projection({
 		extent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
 		units : 'm'
 	});
 	ol.proj.addProjection(projection);
+*/
 
     map = this.mapInit('map');
     this.map = map;

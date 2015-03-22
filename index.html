@@ -71,15 +71,18 @@
             /*uiTest.autoRadioBox('test','test', 'testName', ['1','2','3','4'], ['1','2','3','4'], ['h']);*/
             /*uiTest.autoSelect('test','test','testName',['1','2','3'],['1','2','3'], ['c','false','true']);*/
             /*uiTest.autoSwitch('test', 'testid', 'testName', ['a','e']);*/
-            console.log("layerUI");
-            var webAppObj = new WEBAPP();
-            webAppObj.initViewer();
-            var openGDSMObj = new OGDSM.visualization(webAppObj.getMap());
-            var uiTest = new OGDSM.eGovFrameUI();
-            var mapRadioNameObj = uiTest.autoRadioBox('mapSelect','mapType', 'radioMap', ['OSM','VWorld'], ['OSM','VWorld'], ['h']);
-            mapRadioNameObj.change(function () {
-                openGDSMObj.changeBaseMap($(this).val());
-            });
+            //var webAppObj = new WEBAPP();
+            //webAppObj.initViewer();
+            var testObj = new OGDSM('map');
+            var map = testObj.olMapView([127.010031, 37.582200]);
+            testObj.trackingGeoLocation(map);
+            //var openGDSMObj = new OGDSM.visualization(webAppObj.getMap());
+            //var openGDSMObj = new OGDSM.visualization(map);
+            //var uiTest = new OGDSM.eGovFrameUI();
+            //var mapRadioNameObj = uiTest.autoRadioBox('mapSelect','mapType', 'radioMap', ['OSM','VWorld'], ['OSM','VWorld'], ['h']);
+            //mapRadioNameObj.change(function () {
+            //    openGDSMObj.changeBaseMap($(this).val());
+            //});
         });
 
     </script>

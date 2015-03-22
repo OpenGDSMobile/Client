@@ -1,4 +1,4 @@
-/*jslint devel: true*/
+/*jslint devel: true, vars : true */
 /*global $, jQuery, ol, OGDSM*/
 OGDSM.namesapce('eGovFrameUI');
 (function (OGDSM) {
