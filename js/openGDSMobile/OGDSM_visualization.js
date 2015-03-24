@@ -1,8 +1,7 @@
 /*jslint devel: true, vars : true */
 /*global $, jQuery, ol, OGDSM, d3*/
-
 OGDSM.namesapce('visualization');
-(function (ol, OGDSM) {
+(function (OGDSM) {
     "use strict";
     var mapObj;
     /**
@@ -11,11 +10,19 @@ OGDSM.namesapce('visualization');
     * @constructor
     * @param {ol.Map} map
     */
-    OGDSM.visualization = function (map) {
-        mapObj = map;
+    OGDSM.visualization = function (mapDiv) {
+//      mapObj = map;
+        this.updateLayoutSetting(mapDiv);
+        this.mapDiv = mapDiv;
+        this.geoLocation = null;
+        OGDSM.visualization = this;
+        $(window).on('resize', function () {
+            OGDSM.visualization.updateLayoutSetting();
+        });
+        // Orientation...
     };
     OGDSM.visualization.prototype = {
-        constructor : OGDSM.olMap,
+        constructor : OGDSM.visualization,
         /**
          * getMap Method get map object about OpenLayers3.
          * @method getMap
@@ -40,10 +47,113 @@ OGDSM.namesapce('visualization');
             }
             return false;
         }
-        
     };
     return OGDSM.visualization;
-}(ol, OGDSM));
+}(OGDSM));
+
+/**
+ * OGDSM Mobile Map View
+ * @method olMapView
+ * @param {Array}  latlng   - Map init center latitude, longitude (option) [default : [37.582200, 127.010031] ]
+ * @param {String} baseProj - Background map (option) [default : 'OSM']
+ * @param {String} mapType  - Map base projection (option) [default : 'EPSG:3857']
+ *
+ */
+OGDSM.visualization.prototype.olMapView = function (latlng, baseProj, mapType) {
+    'use strict';
+    latlng = (typeof (latlng) !== 'undefined') ? latlng : [37.582200, 127.010031];
+    mapType = (typeof (mapType) !== 'undefined') ? mapType : 'OSM';
+    baseProj = (typeof (baseProj) !== 'undefined') ? baseProj : 'EPSG:3857';
+    var map = null, baseMapLayer = null, geolocation;
+    if (mapType === 'OSM') {
+        baseMapLayer = new ol.source.OSM();
+    } else if (mapType === 'VWorld') {
+        baseMapLayer = new ol.source.XYZ(({
+            url : "http://xdworld.vworld.kr:8080/2d/Base/201310/{z}/{x}/{y}.png"
+        }));
+    } else {
+        console.error('Not Map Style "OSM" | "VWorld"');
+        return null;
+    }
+    map = new ol.Map({
+        target : this.mapDiv,
+        layers : [
+            new ol.layer.Tile({
+                title : 'basemap',
+                source : baseMapLayer
+            })
+        ],
+        view : new ol.View({
+            projection : ol.proj.get(baseProj),
+            center : ol.proj.transform(latlng, 'EPSG:4326', baseProj),
+            zoom : 15
+        }),
+        controls: []
+    });
+    this.mapObj = map;
+    return map;
+};
+/**
+ * Map GeoLocation Tracking
+ * @method trackingGeoLocation
+ * @param {boolean} sw
+ *
+ **/
+OGDSM.visualization.prototype.trackingGeoLocation = function (sw) {
+    'use strict';
+    var geolocation = this.geoLocation, mapObj = this.mapObj;
+    if (typeof (this.mapObj) === 'undefined') {
+        console.error('Not Create Map!!');
+        return null;
+    }
+    console.log(geolocation);
+    if (geolocation === null) {
+        geolocation = new ol.Geolocation({
+            projection:	mapObj.getView().getProjection(),
+            tracking : true
+        });
+    }
+
+    if (sw === true) {
+        geolocation.once('change:position', function () {
+            mapObj.getView().setCenter(geolocation.getPosition());
+        });
+    }
+};
+/**
+ * OGDSM Mobile Screen Update Layout
+ * @method updateLayoutSetting
+ * @param {String}
+ * @return {Array}
+ *
+ **/
+OGDSM.visualization.prototype.updateLayoutSetting = function (mapDiv) {
+    'use strict';
+    mapDiv = (typeof (mapDiv) !== 'undefined') ? mapDiv : this.mapDiv;
+    $('#' + mapDiv).width(window.innerWidth);
+    $('#' + mapDiv).height(window.innerHeight);
+    if (typeof (this.mapObj) !== 'undefined') {
+        this.mapObj.updateSize();
+    }
+
+    /*******************/
+    $("#d3View").attr('width', $(window).width() - 100);
+	$('#d3viewonMap').hide();
+	$("#d3viewonMap").attr('width', $(window).width() - 50);
+	$('#d3viewonMap').css('top', $(window).height() - 300);
+
+	$('#interpolationMap').hide();
+	$("#interpolationMap").attr('width', $(window).width() - 50);
+	$('#interpolationMap').css('top', $(window).height() - 600);
+	//beforeProcess.popupSize("#dataSelect");
+	//beforeProcess.popupSize("#vworldList", "300px");
+	$('#layersList').css('height', $(window).height() - 400);
+	$('#layersList').css("overflow-y", "auto");
+    /********************/
+};
+
+
+
 
 /**
  * changeBaseMap Method is base map Change.
@@ -55,7 +165,7 @@ OGDSM.visualization.prototype.changeBaseMap = function (mapStyle) {
     var TMS = null,
         view = null,
         baseLayer = null,
-        map = this.getMap(),
+        map = this.mapObj,
         maplayers = map.getLayers(),
         mapCenter = map.getView().getCenter(),
         mapZoom = map.getView().getZoom(),

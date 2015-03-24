@@ -294,6 +294,32 @@ OGDSM.eGovFrameUI.prototype.dateInput = function (divId) {
     return $('#dateValue');
 };
 
+/**
+ * 배경 맵 선택 사용자 인터페이스 자동 생성
+ * Auto Create about Map Type User Interface.
+ * @method baseMapCheckBox
+ * @param {OGDSM Object} OGDSMObj - OpenGDS Mobile Visualization Object [OpenGDS모바일 시각화 객체]
+ * @param {String}       rootDiv - Root div id [상위 DIV 아이디]
+ * @param {Array}        options - Map type to support [제공할 지도 타입]
+ * @return {jQuery Object} User Interface Date Input Object (Date YYYY/MM/DD)
+ */
+OGDSM.eGovFrameUI.prototype.baseMapCheckBox = function (OGDSMObj, rootDiv, options) {
+//var mapRadioNameObj = uiTest.autoRadioBox('mapSelect','mapType', 'radioMap', ['OSM','VWorld'], ['OSM','VWorld'], ['h']);
+    'use strict';
+    options = (typeof (options) !== 'undefined') ? options : null;
+    var mapRadioNameObj,
+        supportMap;
+
+    if (options !== null) {
+        supportMap = options.split(' ');
+    }
+    mapRadioNameObj = this.autoRadioBox(rootDiv, 'mapType', 'radioMapType', supportMap, supportMap, ['h']);
+
+    mapRadioNameObj.change(function () {
+        OGDSMObj.changeBaseMap($(this).val());
+    });
+};
+
 
 /**
  * VWorld WMS API List (Using autoSelect).
