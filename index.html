@@ -74,12 +74,12 @@
             //testObj.trackingGeoLocation(map);
             //var openGDSMObj = new OGDSM.visualization(webAppObj.getMap());
             //var openGDSMObj = new OGDSM.visualization(map);
-
+            Proj4js.defs["EPSG:5181"] = "+proj=tmerc +lat_0=38 +lon_0=127 +k=1 +x_0=200000 +y_0=500000 +ellps=GRS80 +units=m +no_defs";
             var openGDSMObj = new OGDSM.visualization('map');
-            openGDSMObj.olMapView([127.010031, 37.582200]);
+            openGDSMObj.olMapView([127.010031, 37.582200], 'Daum');
             openGDSMObj.trackingGeoLocation(true);
             var ui = new OGDSM.eGovFrameUI();
-            ui.baseMapCheckBox(openGDSMObj, 'mapSelect', 'OSM VWorld Naver');
+            ui.baseMapCheckBox(openGDSMObj, 'mapSelect', 'OSM VWorld Naver'); //현재.... 데이터 체크...
             //var mapRadioNameObj = uiTest.autoRadioBox('mapSelect','mapType', 'radioMap', ['OSM','VWorld'], ['OSM','VWorld'], ['h']);
             //mapRadioNameObj.change(function () {
             //    openGDSMObj.changeBaseMap($(this).val());
