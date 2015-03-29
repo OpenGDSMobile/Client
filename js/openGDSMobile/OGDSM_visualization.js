@@ -65,6 +65,25 @@ OGDSM.visualization.prototype.olMapView = function (latlng, mapType, baseProj) {
     mapType = (typeof (mapType) !== 'undefined') ? mapType : 'OSM';
     baseProj = (typeof (baseProj) !== 'undefined') ? baseProj : 'EPSG:3857';
     var map = null, baseMapLayer = null, geolocation;
+    var epsg5181 = new ol.proj.Projection({
+        code : 'EPSG:5181',
+        extent : [-219825.99, -535028.96, 819486.07, 777525.22],
+        units : 'm'
+    });
+    var epsg5179 = new ol.proj.Projection({
+        code : 'EPSG:5179',
+        extent : [531371.84, 967246.47, 1576674.68, 2274021.31],
+        units : 'm'
+    });
+    ol.proj.addProjection(epsg5181);
+    ol.proj.addProjection(epsg5179);
+    var baseView = new ol.View({
+        projection : ol.proj.get(baseProj),
+        center : ol.proj.transform(latlng, 'EPSG:4326', baseProj),
+        zoom : 1
+    });
+
+
     if (mapType === 'OSM') {
         baseMapLayer = new ol.source.OSM();
     } else if (mapType === 'VWorld') {
@@ -78,10 +97,16 @@ OGDSM.visualization.prototype.olMapView = function (latlng, mapType, baseProj) {
                 'http://onetile2.map.naver.net/get/109/0/0/{z}/{x}/{-y}/bl_vc_bg/ol_vc_an',
                 'http://onetile3.map.naver.net/get/109/0/0/{z}/{x}/{-y}/bl_vc_bg/ol_vc_an',
                 'http://onetile4.map.naver.net/get/109/0/0/{z}/{x}/{-y}/bl_vc_bg/ol_vc_an'
-            ],
-            resolutions : [2048, 1024, 512, 256, 128, 64, 32, 16, 8, 4, 2, 1, 0.5, 0.25],
-            units : 'm'
+            ]
         }));
+        baseView = new ol.View({
+            projection : ol.proj.get(baseProj),
+            center : [953920.3, 1951999.6],
+            zoom : 3,
+            maxResolution : 2048,
+            minResolution : 0.5,
+            resolutions : [2048, 1024, 512, 256, 128, 64, 32, 16, 8, 4, 2, 1, 0.5, 0.25]
+        });
     } else if (mapType === 'Daum') {
         baseMapLayer = new ol.source.XYZ(({
             urls : [
@@ -89,11 +114,7 @@ OGDSM.visualization.prototype.olMapView = function (latlng, mapType, baseProj) {
                 'http://i1.maps.daum-img.net/map/image/G03/i/2015yellow/L{z}/{y}/{x}.png',
                 'http://i2.maps.daum-img.net/map/image/G03/i/2015yellow/L{z}/{y}/{x}.png',
                 'http://i3.maps.daum-img.net/map/image/G03/i/2015yellow/L{z}/{y}/{x}.png'
-            ],
-            resolutions : [2048, 1024, 512, 256, 128, 64, 32, 16, 8, 4, 2, 1, 0.5, 0.25],
-            units : 'm',
-            projection : new ol.proj.Projection("EPSG:5181")
-
+            ]
         }));
     } else {
         console.error('Not Map Style "OSM" | "VWorld"');
@@ -107,11 +128,7 @@ OGDSM.visualization.prototype.olMapView = function (latlng, mapType, baseProj) {
                 source : baseMapLayer
             })
         ],
-        view : new ol.View({
-            projection : ol.proj.get(baseProj),
-            center : ol.proj.transform(latlng, 'EPSG:4326', baseProj),
-            zoom : 13
-        }),
+        view : baseView,
         controls: []
     });
     this.mapObj = map;
@@ -470,3 +487,4 @@ OGDSM.visualization.prototype.imageLayer = function (imgURL, imgTitle, imgSize, 
     });
     this.getMap().addLayer(imgLayer);
 };
+
