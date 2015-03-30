@@ -109,6 +109,69 @@ OGDSM.externalConnection.prototype.setData = function () {
     }
     this.setValues(values);
 };
+
+
+/**
+ * vworldWMS data loading
+ * @method vworldWMSLoad
+ * @param
+ * @param
+ * @param
+ * @return {JSON or Array} save values(responseData) through setResponseData()
+ */
+OGDSM.externalConnection.prototype.vworldWMSLoad = function (apiKey, domain, data) {
+    'use strict';
+    data = data.join(',');
+    var resultData = new ol.layer.Tile({
+        title : this.serverName,
+        source : new ol.source.TileWMS(({
+            url : this.baseAddr,
+            params : {
+                apiKey : apiKey,
+                domain : domain,
+                LAYERS : data,
+                STYLES : data,
+                FORMAT : 'image/png',
+                CRS : 'EPSG:900913',
+                EXCEPTIONS : 'text/xml',
+                TRANSPARENT : true
+            }
+        }))
+    });
+    return resultData;
+}; //SLD_BODY
+
+
+OGDSM.externalConnection.prototype.geoServerWFSLoad = function (obj, addr, workspace, name, type, color) {
+    'use strict';
+    var fullAddr = addr + '/geoserver/wfs?service=WFS&version=1.1.0&request=GetFeature&typeNames=' + workspace + ':' + name +
+        '&outputFormat=json&srsname=EPSG:3857';
+    $.ajax({
+        type : 'POST',
+        url : fullAddr,
+        crossDomain: true,
+        dataType : 'json',
+        success : function (msg) {
+            console.log(obj);
+            console.log(msg);
+            var wfsLayer = new ol.layer.Vector({
+                title : name,
+                source : new ol.source.GeoJSON({
+                    object: msg
+                })
+            });
+            obj.addMap(wfsLayer);
+        },
+        error : function (e) {
+            console.log(e);
+        }
+    });
+
+    /*
+    http://113.198.80.9/geoserver/wfs?service=WFS&version=1.1.0&request=GetFeature&typeNames=opengds:seoul_emd&outputFormat=json
+    */
+};
+
 /**
  * vworldWMS, geoServer(getLayers, WFS), publicData(environment) data loading
  * @method dataLoad

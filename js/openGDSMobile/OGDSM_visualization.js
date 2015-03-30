@@ -29,7 +29,7 @@ OGDSM.namesapce('visualization');
          * @return {ol.Map} Retrun is OpenLayers object.
          */
         getMap : function () {
-            return mapObj;
+            return this.mapObj;
         },
         /**
          * Current Layers Check about OpenLayers3.
@@ -80,7 +80,7 @@ OGDSM.visualization.prototype.olMapView = function (latlng, mapType, baseProj) {
     var baseView = new ol.View({
         projection : ol.proj.get(baseProj),
         center : ol.proj.transform(latlng, 'EPSG:4326', baseProj),
-        zoom : 1
+        zoom : 12
     });
 
 
@@ -88,8 +88,15 @@ OGDSM.visualization.prototype.olMapView = function (latlng, mapType, baseProj) {
         baseMapLayer = new ol.source.OSM();
     } else if (mapType === 'VWorld') {
         baseMapLayer = new ol.source.XYZ(({
-            url : "http://xdworld.vworld.kr:8080/2d/Base/201310/{z}/{x}/{y}.png"
+            url : "http://xdworld.vworld.kr:8080/2d/Base/201411/{z}/{x}/{y}.png"
         }));
+        baseView = new ol.View({
+            projection : ol.proj.get(baseProj),
+            center : ol.proj.transform(latlng, 'EPSG:4326', baseProj),
+            zoom : 12,
+            maxZoom : 18,
+            minZoom : 6
+        });
     } else if (mapType === 'Naver') {
         baseMapLayer = new ol.source.XYZ(({
             urls : [
@@ -147,7 +154,6 @@ OGDSM.visualization.prototype.trackingGeoLocation = function (sw) {
         console.error('Not Create Map!!');
         return null;
     }
-    console.log(geolocation);
     if (geolocation === null) {
         geolocation = new ol.Geolocation({
             projection:	mapObj.getView().getProjection(),
@@ -225,22 +231,6 @@ OGDSM.visualization.prototype.changeBaseMap = function (mapStyle) {
             center : mapCenter,
             zoom : mapZoom
         });
-    } else if (mapStyle === 'Naver') {
-        TMS = new ol.source.XYZ(({
-            urls : [
-                'http://onetile1.map.naver.net/get/109/0/0/{z}/{x}/{-y}/bl_vc_bg/ol_vc_an',
-                'http://onetile2.map.naver.net/get/109/0/0/{z}/{x}/{-y}/bl_vc_bg/ol_vc_an',
-                'http://onetile3.map.naver.net/get/109/0/0/{z}/{x}/{-y}/bl_vc_bg/ol_vc_an',
-                'http://onetile4.map.naver.net/get/109/0/0/{z}/{x}/{-y}/bl_vc_bg/ol_vc_an'
-            ],
-            resolutions : [2048, 1024, 512, 256, 128, 64, 32, 16, 8, 4, 2, 1, 0.5, 0.25],
-            units : 'm'
-        }));
-        view = new ol.View({
-            projection : mapProj,
-            center : mapCenter,
-            zoom : mapZoom
-        });
     } else if (mapStyle === 'VWorld') {
         TMS = new ol.source.XYZ(({
             url : "http://xdworld.vworld.kr:8080/2d/Base/201310/{z}/{x}/{y}.png"
@@ -248,7 +238,9 @@ OGDSM.visualization.prototype.changeBaseMap = function (mapStyle) {
         view = new ol.View({
             projection : mapProj,
             center : mapCenter,
-            zoom : mapZoom
+            zoom : mapZoom,
+            maxZoom : 18,
+            minZoom : 6
         });
     } else {
         console.error('Not Map Style "OSM" | "VWorld"');
@@ -258,12 +250,6 @@ OGDSM.visualization.prototype.changeBaseMap = function (mapStyle) {
         map.setView(view);
         baseLayer.setSource(TMS);
     }
-    /*
-    map.addLayer(new ol.layer.Tile({
-        title : 'basemap',
-        source : TMS
-    }));
-    */
 };
 /**
  * WMS/WFS Map Add

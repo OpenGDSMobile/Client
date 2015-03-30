@@ -323,12 +323,12 @@ OGDSM.eGovFrameUI.prototype.baseMapCheckBox = function (OGDSMObj, rootDiv, optio
 
 /**
  * VWorld WMS API List (Using autoSelect).
- * @method vworldWMSCheck
+ * @method vworldWMSList
  * @param {String} divId - div id about HTML tag attribute
  * @param {String} theme - eGovframework theme a~g (default constructor)
  * @return {Array} User Interface selectbox Name, id array ('vworldWMSChk_1', 'vworldWMSChk_2', 'vworldWMSChk_3', 'vworldWMSChk_4', 'vworldWMSChk_5')
  */
-OGDSM.eGovFrameUI.prototype.vworldWMSCheck = function (divId, theme) {
+OGDSM.eGovFrameUI.prototype.vworldWMSList = function (divId, theme) {
     'use strict';
     var selectTheme = (typeof (theme) !== 'undefined') ? theme : this.dataTheme,
         rootDiv = $('#' + divId),
@@ -395,7 +395,6 @@ OGDSM.eGovFrameUI.prototype.vworldWMSCheck = function (divId, theme) {
     }
     
     $("#" + selectName[0]).change(function () {
-        console.log("test");
         selectState[0] = this.selectedIndex;
         $("#" + selectName[0] + ' option').each(function () {
             $(this).removeAttr('disabled');
@@ -660,8 +659,7 @@ OGDSM.eGovFrameUI.prototype.selectBox = function (divId, name, id, data, theme) 
         styles,
         stylesText,
         i,
-        j,
-        btnObj;
+        j;
 
     html += '<select name="' + name + '" id="' + id + '" data-theme=' + selectTheme + '>';
     html += '<option value="">  </option>';
