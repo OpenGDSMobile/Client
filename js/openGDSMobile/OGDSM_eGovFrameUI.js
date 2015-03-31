@@ -140,7 +140,7 @@ OGDSM.eGovFrameUI.prototype.autoRadioBox = function (rootDivId, radioId, radioNa
     'use strict';
     options = (typeof (options) !== 'undefined') ? options : null;
     var rootDiv = $('#' + rootDivId),
-        html = '<fieldset data-role="controlgroup" style="margin:0px;"',
+        html = '<fieldset data-role="controlgroup" style="margin:0px; align:center;"',
         optionName = ['data-type', 'data-theme'],
         optionData = ['', this.dataTheme],
         i = 0;
@@ -168,6 +168,7 @@ OGDSM.eGovFrameUI.prototype.autoRadioBox = function (rootDivId, radioId, radioNa
     rootDiv.append(html);
     rootDiv.trigger('create');
     return $('input[name=' + radioName + ']:radio');
+
 };
 
 /**
@@ -287,8 +288,7 @@ OGDSM.eGovFrameUI.prototype.dateInput = function (divId) {
     'use strict';
     var rootDiv, html;
     rootDiv = $('#' + divId);
-    html = '<label for="dateValue">날짜 : </label>' +
-			'<input type="date" id="dateValue"/>';
+    html = '<input type="date" id="dateValue">';
     rootDiv.append(html);
     rootDiv.trigger("create");
     return $('#dateValue');
@@ -297,13 +297,13 @@ OGDSM.eGovFrameUI.prototype.dateInput = function (divId) {
 /**
  * 배경 맵 선택 사용자 인터페이스 자동 생성
  * Auto Create about Map Type User Interface.
- * @method baseMapCheckBox
+ * @method baseMapRadioBox
  * @param {OGDSM Object} OGDSMObj - OpenGDS Mobile Visualization Object [OpenGDS모바일 시각화 객체]
  * @param {String}       rootDiv - Root div id [상위 DIV 아이디]
  * @param {Array}        options - Map type to support [제공할 지도 타입]
  * @return {jQuery Object} User Interface Date Input Object (Date YYYY/MM/DD)
  */
-OGDSM.eGovFrameUI.prototype.baseMapCheckBox = function (OGDSMObj, rootDiv, options) {
+OGDSM.eGovFrameUI.prototype.baseMapRadioBox = function (OGDSMObj, rootDiv, options) {
 //var mapRadioNameObj = uiTest.autoRadioBox('mapSelect','mapType', 'radioMap', ['OSM','VWorld'], ['OSM','VWorld'], ['h']);
     'use strict';
     options = (typeof (options) !== 'undefined') ? options : null;
@@ -511,6 +511,28 @@ OGDSM.eGovFrameUI.prototype.vworldWMSList = function (divId, theme) {
     });
     return selectName;
 };
+
+OGDSM.eGovFrameUI.prototype.seoulEnvironment = function (divId, theme) {
+    'use strict';
+    theme = (typeof (theme) !== 'undefined') ? theme : this.dataTheme;
+    var environmentImages = [
+        '<img src="images/input_bt_pm10.png" width=30>',
+        '<img src="images/input_bt_pm25.png" width=30>',
+        '<img src="images/input_bt_so2.png" width=30>',
+        '<img src="images/input_bt_o3.png" width=30>',
+        '<img src="images/input_bt_no2.png" width=30>',
+        '<img src="images/input_bt_co.png" width=30>'
+    ],
+        environmentValues = ['PM10', 'PM25', 'SO2', 'O3', 'NO2', 'CO'];
+    var rootDiv = $('#' + divId),
+        visualType = this.autoRadioBox(divId, 'visualType', 'visualType', ['맵', '차트'], ['map', 'chart'], ['h']),
+        date = this.dateInput(divId),
+        time = this.timeInput(divId),
+        environmentType = this.autoRadioBox(divId, 'envType', 'envType', environmentImages, environmentValues, ['h']);
+    return [visualType, date, time, environmentType];
+};
+
+
 /**
  * User Interface Create about visualization type (Radio Button).
  * @method visTypeRadio

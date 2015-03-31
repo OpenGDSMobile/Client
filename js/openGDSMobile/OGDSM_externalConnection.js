@@ -111,66 +111,6 @@ OGDSM.externalConnection.prototype.setData = function () {
 };
 
 
-/**
- * vworldWMS data loading
- * @method vworldWMSLoad
- * @param
- * @param
- * @param
- * @return {JSON or Array} save values(responseData) through setResponseData()
- */
-OGDSM.externalConnection.prototype.vworldWMSLoad = function (apiKey, domain, data) {
-    'use strict';
-    data = data.join(',');
-    var resultData = new ol.layer.Tile({
-        title : this.serverName,
-        source : new ol.source.TileWMS(({
-            url : this.baseAddr,
-            params : {
-                apiKey : apiKey,
-                domain : domain,
-                LAYERS : data,
-                STYLES : data,
-                FORMAT : 'image/png',
-                CRS : 'EPSG:900913',
-                EXCEPTIONS : 'text/xml',
-                TRANSPARENT : true
-            }
-        }))
-    });
-    return resultData;
-}; //SLD_BODY
-
-
-OGDSM.externalConnection.prototype.geoServerWFSLoad = function (obj, addr, workspace, name, type, color) {
-    'use strict';
-    var fullAddr = addr + '/geoserver/wfs?service=WFS&version=1.1.0&request=GetFeature&typeNames=' + workspace + ':' + name +
-        '&outputFormat=json&srsname=EPSG:3857';
-    $.ajax({
-        type : 'POST',
-        url : fullAddr,
-        crossDomain: true,
-        dataType : 'json',
-        success : function (msg) {
-            console.log(obj);
-            console.log(msg);
-            var wfsLayer = new ol.layer.Vector({
-                title : name,
-                source : new ol.source.GeoJSON({
-                    object: msg
-                })
-            });
-            obj.addMap(wfsLayer);
-        },
-        error : function (e) {
-            console.log(e);
-        }
-    });
-
-    /*
-    http://113.198.80.9/geoserver/wfs?service=WFS&version=1.1.0&request=GetFeature&typeNames=opengds:seoul_emd&outputFormat=json
-    */
-};
 
 /**
  * vworldWMS, geoServer(getLayers, WFS), publicData(environment) data loading
@@ -356,6 +296,113 @@ OGDSM.externalConnection.prototype.publicDataEnv = function (apikey, envType, da
         success : function (msg) {
             var resultData = msg;
             setResponseData(JSON.parse(resultData.data));
+        },
+        error : function (e) {
+            console.log(e);
+        }
+    });
+};
+
+OGDSM.externalConnection.prototype.seoulEnvironmentLoad = function (addr, apiKey, envType, date, time) {
+    'use strict';
+    var parm = '{"serviceName":"TimeAverageAirQuality",' +
+        '"keyValue":' + apiKey + '",' +
+        '"dateValue":' + date + '", ' +
+        '"timeValue":' + time + '"} ';
+    parm = JSON.parse(parm);
+    console.log(parm);
+
+};
+
+
+/**
+ * vworldWMS data loading
+ * @method vworldWMSLoad
+ * @param
+ * @param
+ * @param
+ * @return {JSON or Array} save values(responseData) through setResponseData()
+ */
+OGDSM.externalConnection.prototype.vworldWMSLoad = function (apiKey, domain, data) {
+    'use strict';
+    data = data.join(',');
+    var resultData = new ol.layer.Tile({
+        title : this.serverName,
+        source : new ol.source.TileWMS(({
+            url : this.baseAddr,
+            params : {
+                apiKey : apiKey,
+                domain : domain,
+                LAYERS : data,
+                STYLES : data,
+                FORMAT : 'image/png',
+                CRS : 'EPSG:900913',
+                EXCEPTIONS : 'text/xml',
+                TRANSPARENT : true
+            }
+        }))
+    });
+    return resultData;
+}; //SLD_BODY
+
+/**
+ * GeoServer WFS data load (OpenLayers3 ol.source.GeoJSON)
+ * @method geoServerWFSLoad
+ * @param {OGDSM Obj} obj - OpenGDS Mobile visualization object
+ * @param {String} addr - GeoServer address
+ * @param {String} workspace - GeoServer workspace name
+ * @param {String} name - GeoServer WFS object name
+ * @param {String} type - Object type (polygon | point)
+ * @param {String} color - color ( rgba(0,0,0,0) )
+ */
+OGDSM.externalConnection.prototype.geoServerWFSLoad = function (obj, addr, workspace, name, type, color) {
+    'use strict';
+    color = (typeof (color) !== 'undefined') ? color : 'rgba(0, 0, 0, 0.0)';
+    var fullAddr = addr + '/geoserver/wfs?service=WFS&version=1.1.0&request=GetFeature&typeNames=' + workspace + ':' + name +
+        '&outputFormat=json&srsname=' + obj.baseProj;
+    var objStyles;
+
+    if (type === 'polygon') {
+        objStyles = [
+            new ol.style.Style({
+                fill : new ol.style.Fill({
+                    color : color
+                }),
+                stroke : new ol.style.Stroke({
+                    color : 'rgba(0, 0, 0, 1.0)',
+                    width : 1
+                })
+            })];
+    } else if (type === 'point') {
+        objStyles = [
+            new ol.style.Style({
+                image : new ol.style.Circle({
+                    radius : 5,
+                    fill : new ol.style.Fill({
+                        color : color
+                    }),
+                    stroke : new ol.style.Stroke({
+                        color : 'rgba(0, 0, 0, 1.0)',
+                        width : 1
+                    })
+                })
+            })
+        ];
+    }
+    $.ajax({
+        type : 'POST',
+        url : fullAddr,
+        crossDomain: true,
+        dataType : 'json',
+        success : function (msg) {
+            var wfsLayer = new ol.layer.Vector({
+                title : name,
+                source : new ol.source.GeoJSON({
+                    object: msg
+                }),
+                style : objStyles
+            });
+            obj.addMap(wfsLayer);
         },
         error : function (e) {
             console.log(e);

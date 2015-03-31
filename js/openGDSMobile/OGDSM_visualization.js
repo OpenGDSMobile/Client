@@ -139,6 +139,7 @@ OGDSM.visualization.prototype.olMapView = function (latlng, mapType, baseProj) {
         controls: []
     });
     this.mapObj = map;
+    this.baseProj = baseProj;
     return map;
 };
 /**

@@ -49,6 +49,7 @@
 		.font{
 			font-size:70%;
 		}
+
         /* openGDS Mobile CSS */
         .OGDSMPosTopLeft{
             position : absolute;
@@ -62,6 +63,13 @@
             top : 8px;
             left : auto;
             right : 10px;
+        }
+        .OGDSPosBottomCenter{
+            position : absolute;
+            width : 100%;
+            z-index : 1000;
+            bottom : 8px;
+            left : auto;
         }
 	</style>
     <script>
@@ -78,6 +86,21 @@
             var ui = new OGDSM.eGovFrameUI();
             ui.baseMapCheckBox(openGDSMObj, 'mapSelect', 'OSM VWorld'); //현재.... 데이터 체크...
             */
+
+            /*
+            var uiTest = new OGDSM.eGovFrameUI();
+            var obj = uiTest.autoRadioBox('tableSelect','attributeRadio', 'attributeRadio', ['1','2','3','4'], ['1','2','3','4'], ['h']);
+            obj.change(function () {
+               // $('#tableSelect').empty();
+                //uiTest.autoRadioBox('tableSelect','attributeRadio', 'attributeRadio', ['1','2','3','4','5'], ['1','2','3','4','5,'], ['h']);
+                console.log($(this).val());
+                if($(this).val() == '1'){
+                    $('#tableContent').css('display','block');
+                } else {
+                    $('#tableContent').css('display','none');
+                }
+            });
+            */
         });
 
     </script>
@@ -85,8 +108,6 @@
 <body>
 
 <div data-role="page" data-fullscreen="true">
-<div id="test">
-</div>
     <!--header-->
     <!--
 	<div data-role="header" data-position="fixed" class="ui-body-d center">
@@ -99,6 +120,13 @@
            data-role="button" data-rel="popup" data-transition="slidedown" data-theme="c" data-mini="true"
            href="#select">메뉴</a>
         <div id="mapSelect" class="OGDSPosTopRight"></div>
+        <div id="attributeTable" class="OGDSPosBottomCenter">
+            <div id="tableContent" style="background:rgba(0,0,0,1); display:none;">
+                <!-- 공간정보 시각화시 새로운 DIV 만든 후 그 안에 Table 생성... -->
+            </div>
+            <div id="tableSelect">속성정보 리스트</div>
+
+        </div>
 		<div id="map" style="padding:0; margin:0;"></div>
 	</div>
     <!--footer-->
@@ -108,6 +136,9 @@
 	</div>
     -->
 
+    <div data-role="navbar">
+
+    </div>
 
 
     <!---custom div-->
@@ -155,7 +186,7 @@
 		<div id="setting"
 		data-role="popup"
 		data-overlay-theme="a"
-		style="width:300px">
+		style="width:250px; text-align:center;">
 		</div>
 	<!-- Data Table 아직... -->
 		<div data-role="panel" data-display="overlay" data-position="right" id="publicDataView">
@@ -194,16 +225,6 @@
             <li><a href="#opendataList" data-rel="popup" data-transition="slidedown">공공데이터</a></li>
         </ul>
     </div>
-    <!--Base Map PopUp -->
-<!--
-    <div data-role="popup" id="mapList">
-        <ul data-role="listview">
-            <li data-theme="z" data-role="list-divider">배경지도</li>
-            <li><a onclick="baseMap('OSM')">OpenStreetMap</a></li>
-            <li><a onclick="baseMap('VWorld')">VWorld</a></li>
-        </ul>
-    </div>
--->
     <!--WFS PopUp-->
     <div data-role="popup" id="WFSList">
         <ul data-role="listview" id="layersList">

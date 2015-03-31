@@ -2,11 +2,14 @@
 /*global $, jQuery, ol, OGDSM*/
 
 var openGDSMObj;
+
+//배경지도 라디오 버튼 사용자 인터페이스 생성 함수
 function mapSelectUI(openGDSMObj) {
     'use strict';
     var ui = new OGDSM.eGovFrameUI();
-    ui.baseMapCheckBox(openGDSMObj, 'mapSelect', 'OSM VWorld'); //현재.... 데이터 체크...
+    ui.baseMapRadioBox(openGDSMObj, 'mapSelect', 'OSM VWorld'); //현재.... 데이터 체크...
 }
+//브이월드 WMS 데이터 선택 사용자 인터페이스 생성 / 시각화 함수
 function vworldWMSUI() {
     'use strict';
     $('#vworldSelect').empty();
@@ -22,11 +25,11 @@ function vworldWMSUI() {
                 data.push(tmpData);
             }
         }
-
         var wmsData = externalServer.vworldWMSLoad("9E21E5EE-67D4-36B9-85BB-E153321EEE65", "http://localhost", data);
         openGDSMObj.addMap(wmsData);
     });
 }
+//지오서버 WFS 데이터 시각화 함수
 function wfsLoad(str) {
     'use strict';
     var r = Math.floor(Math.random() * 256),
@@ -35,12 +38,43 @@ function wfsLoad(str) {
     var color = 'rgb(' + r + ',' + g + ',' + b + ')';
     var addr = 'http://113.198.80.9';
     var externalServer = new OGDSM.externalConnection();
-    externalServer.geoServerWFSLoad(openGDSMObj, addr, 'opengds', str);
-}
+    var ui = new OGDSM.eGovFrameUI();
 
+    externalServer.geoServerWFSLoad(openGDSMObj, addr, 'opengds', str, 'polygon', color);
+
+
+    //var obj = uiTest.autoRadioBox('tableSelect', 'attributeRadio', 'attributeRadio', ['1','2','3','4'], ['1','2','3','4'], ['h']);
+
+}
+//서울 열린데이터 광장 데이터 선택 사용자 인터페이스 생성 / 시각화 함수
+function createSeoulPublicAreaEnvUI() {
+    'use strict';
+    $('#setting').empty();
+    var ui = new OGDSM.eGovFrameUI();
+    var envIds = ui.seoulEnvironment('setting');
+    var processBtn = ui.processButton('setting', 'a');
+    var externalServer = new OGDSM.externalConnection();
+    processBtn.click(function () {
+        var apiKey = "6473565a72696e7438326262524174";
+        var visualType = $('input[name=' + envIds[0].attr('name') + ']:checked').val(),
+            environmentType = $('input[name=' + envIds[3].attr('name') + ']:checked').val(),
+            date = envIds[1].val(),
+            time = envIds[2].val();
+        var colors = ["#0090ff", "#008080", "#4cff4c", "#99ff99", "#FFFF00", "#FFFF99", "#FF9900", "#FF0000"],
+            ranges = [ [15, 30, 55, 80, 100, 120, 200],    //PM10, PM25
+                      [1, 2, 5.5, 9, 10.5, 12, 15],        //CO
+                      [0.015, 0.03, 0.05, 0.06, 0.1045, 0.15, 0.2],    //NO2
+                      [0.01, 0.02, 0.035, 0.05, 0.075, 0.1, 0.15],     //SO2
+                      [0.02, 0.04, 0.06, 0.08, 0.10, 0.12, 0.3] ];     //O3
+        //externalServer.seoulEnvironmentLoad();
+
+        //console.log(visualType + ' ' + environmentType + ' ' + date + ' ' + time);
+    });
+}
 $(function () {
     'use strict';
     openGDSMObj = new OGDSM.visualization('map');
+    //openGDSMObj.olMapView([127.010031, 37.582200], 'OSM', 'EPSG:900913'); //VWorld
     openGDSMObj.olMapView([127.010031, 37.582200], 'OSM'); //VWorld
     openGDSMObj.trackingGeoLocation(true);
     mapSelectUI(openGDSMObj);
