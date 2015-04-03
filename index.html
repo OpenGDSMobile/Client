@@ -21,10 +21,12 @@
     <script type="text/javascript" src="js/d3/d3.js"></script>                                       <!-- D3.js -->
 
     <!-- openGDSMobileClient1.1 development version-->
+    <script src="js/openGDSMobile/Sortable.js"></script>
     <script src="js/openGDSMobile/OGDSM.js"></script>
     <script src="js/openGDSMobile/OGDSM_visualization.js"></script>
     <script src="js/openGDSMobile/OGDSM_eGovFrameUI.js"></script>
     <script src="js/openGDSMobile/OGDSM_externalConnection.js"></script>
+    <script src="js/openGDSMobile/OGDSM_mapLayerList.js"></script>
 <!--  <script type="text/javascript" src="OpenGDSMobileLib/openGDSMobileClient1.1.js"></script>-->
 
     <script type="text/javascript" src="js/main.js"></script>
@@ -49,7 +51,10 @@
 		.font{
 			font-size:70%;
 		}
-
+        #wfslayersList{
+            height : 400px;
+            overflow-y: auto;
+        }
         /* openGDS Mobile CSS */
         .OGDSMPosTopLeft{
             position : absolute;
@@ -64,13 +69,23 @@
             left : auto;
             right : 10px;
         }
-        .OGDSPosBottomCenter{
+        .OGDSPosBottomRight{
             position : absolute;
             width : 100%;
             z-index : 1000;
             bottom : 8px;
             left : auto;
+            right : 10px;
+            text-align : right;
         }
+/*        .OGDSPosTopCenter{
+            position : absolute;
+            width : 10%;
+            height : 100%;
+            z-index : 999;
+            background : rgba(255, 255, 255, .5);
+
+        }*/
 	</style>
     <script>
         $(function(){
@@ -87,19 +102,44 @@
             ui.baseMapCheckBox(openGDSMObj, 'mapSelect', 'OSM VWorld'); //현재.... 데이터 체크...
             */
 
+            /*Sortable.create(document.getElementById('wfslayersList') , {
+                animation: 150,
+                store : {
+                    get: function (sortable) {
+                        var order = localStorage.getItem(sortable.options.group);
+                        return order ? order.split('|') : [];
+                    },
+                    set: function (sortable) {
+                        var order = sortable.toArray();
+                        localStorage.setItem(sortable.options.group, order.join('|'));
+                    }
+                },
+                onAdd: function (evt){ console.log('onAdd.foo:', [evt.item, evt.from]); },
+                onUpdate: function (evt){ console.log('onUpdate.foo:', [evt.item, evt.from]); },
+                onRemove: function (evt){ console.log('onRemove.foo:', [evt.item, evt.from]); },
+                onStart:function(evt){ console.log('onStart.foo:', [evt.item, evt.from]);},
+                onSort:function(evt){ console.log('onStart.foo:', [evt.item, evt.from]);},
+                onEnd: function(evt){ console.log('onEnd.foo:', [evt.item, evt.from]);}
+            });*/
             /*
-            var uiTest = new OGDSM.eGovFrameUI();
-            var obj = uiTest.autoRadioBox('tableSelect','attributeRadio', 'attributeRadio', ['1','2','3','4'], ['1','2','3','4'], ['h']);
-            obj.change(function () {
-               // $('#tableSelect').empty();
-                //uiTest.autoRadioBox('tableSelect','attributeRadio', 'attributeRadio', ['1','2','3','4','5'], ['1','2','3','4','5,'], ['h']);
-                console.log($(this).val());
-                if($(this).val() == '1'){
-                    $('#tableContent').css('display','block');
-                } else {
-                    $('#tableContent').css('display','none');
-                }
-            });
+            	// Editable list
+                var editableList = Sortable.create(byId('editable'), {
+                    animation: 150,
+                    filter: '.js-remove',
+                    onFilter: function (evt) {
+                        evt.item.parentNode.removeChild(evt.item);
+                    }
+                });
+                byId('addUser').onclick = function () {
+                    Ply.dialog('prompt', {
+                        title: 'Add',
+                        form: { name: 'name' }
+                    }).done(function (ui) {
+                        var el = document.createElement('li');
+                        el.innerHTML = ui.data.name + '<i class="js-remove">✖</i>';
+                        editableList.el.appendChild(el);
+                    });
+                };
             */
         });
 
@@ -116,18 +156,25 @@
     -->
     <!--Content-->
 	<div data-role="content" style="padding:0; margin:0;">
- 	 	<a id="mainMenu" class="OGDSMPosTopLeft"
-           data-role="button" data-rel="popup" data-transition="slidedown" data-theme="c" data-mini="true"
-           href="#select">메뉴</a>
+ 	 	<a id="mainMenu" class="OGDSMPosTopLeft" href="#select"
+           data-role="button" data-rel="popup" data-transition="slidedown" data-theme="c" data-mini="true">
+            메뉴
+        </a>
+
         <div id="mapSelect" class="OGDSPosTopRight"></div>
-        <div id="attributeTable" class="OGDSPosBottomCenter">
+
+        <div id="layerList" class="OGDSPosTopCenter"></div>
+
+        <div id="map" style="padding:0; margin:0;"></div>
+
+        <div id="attributeTable" class="OGDSPosBottomRight">
             <div id="tableContent" style="background:rgba(0,0,0,1); display:none;">
                 <!-- 공간정보 시각화시 새로운 DIV 만든 후 그 안에 Table 생성... -->
             </div>
             <div id="tableSelect">속성정보 리스트</div>
 
         </div>
-		<div id="map" style="padding:0; margin:0;"></div>
+
 	</div>
     <!--footer-->
     <!--
@@ -227,7 +274,7 @@
     </div>
     <!--WFS PopUp-->
     <div data-role="popup" id="WFSList">
-        <ul data-role="listview" id="layersList">
+        <ul data-role="listview" id="wfslayersList">
             <li data-theme="z" data-role="list-divider">행정구역 데이터</li>
             <li><a href="#" onclick="wfsLoad('seoul_sig')">서울특별시(구 단위)</a></li>
             <li><a href="#" onclick="wfsLoad('seoul_emd')">서울특별시(동 단위)</a></li>

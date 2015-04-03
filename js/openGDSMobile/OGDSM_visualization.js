@@ -10,7 +10,9 @@ OGDSM.namesapce('visualization');
     * @constructor
     * @param {ol.Map} map
     */
-    OGDSM.visualization = function (mapDiv) {
+    OGDSM.visualization = function (mapDiv, layerlistDiv) {
+        layerlistDiv = (typeof (layerlistDiv) !== 'undefined') ? layerlistDiv : null;
+
 //      mapObj = map;
         this.updateLayoutSetting(mapDiv);
         this.mapDiv = mapDiv;
@@ -19,6 +21,9 @@ OGDSM.namesapce('visualization');
         $(window).on('resize', function () {
             OGDSM.visualization.updateLayoutSetting();
         });
+        if (layerlistDiv !== null) {
+            this.layerListObj = new OGDSM.mapLayerList(this, 'layerList');
+        }
         // Orientation...
     };
     OGDSM.visualization.prototype = {
@@ -264,6 +269,7 @@ OGDSM.visualization.prototype.addMap = function (data) {
         this.getMap().removeLayer(chkData);
     }
     this.getMap().addLayer(data);
+    this.layerListObj.addList(data, data.get('title'));
 };
 /**
  *
