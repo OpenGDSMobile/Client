@@ -1,4 +1,4 @@
-/*jslint devel: true, vars : true */
+/*jslint devel: true, vars : true plusplus : true*/
 /*global $, jQuery, ol, OGDSM, d3, Sortable*/
 OGDSM.namesapce('mapLayerList');
 
@@ -13,21 +13,24 @@ OGDSM.namesapce('mapLayerList');
     */
     OGDSM.mapLayerList = function (obj, listDiv) {
         this.listDiv = listDiv;
+        this.visualizationObj = obj;
         var handleList = null,
-            listSize = 200,
+            listSize = 220,
             buttonSize = 60,
     //        element = document.createElement('div'),
             element = document.getElementById(listDiv),
             listElement = document.createElement('div'),
-            listTitleElement = document.createElement('p'),
+            listTitleElement = document.createElement('div'),
+            listContentsElement = document.createElement('div'),
             listOlElement = document.createElement('ul'),
             buttonElement = document.createElement('div'),
             btnText = '레이어<br>목록<br>보이기',
-            elementCSS = 'position : absolute; background : rgba(255,255,255,0.0); top: 0px; height : 99%;  z-index : 999;',
-            olCustomListCSS = 'float : left; padding : 1px;	background : rgba(255,255,255,0.3); height : 100%;' +
+            elementCSS = 'position : absolute; background : rgba(255,255,255,0.0); top: 0px; height : 99%;  z-index : 1;',
+            olCustomListCSS = 'float : left; padding : 1px;	background : rgba(255,255,255,0.0); height : 100%;' +
                            'width : ' + listSize + 'px;',
-            listTitleCSS = 'width : 100%; height: 20px; padding-top:8px; text-align:center; background : rgba(255,255,255,0.7);' +
-                             'font-size : 75%; font-weight : bold; color : #1c94c4;',
+            /*listTitleCSS = 'width : 100%; height: 20px; padding-top:8px; text-align:center; background : rgba(255,255,255,0.7);' +
+                             'font-size : 75%; font-weight : bold; color : #1c94c4;',*/
+            listTitleCSS = 'width: 96.5%; text-align:center;',
             listSlideHideCSS = elementCSS + ' left: ' + -(listSize + 5) + 'px; transition: left 0.1s ease;',
             listSlideShowCSS = elementCSS + ' left: 0px; transition: left 0.1s ease;',
             olCustomButtonCSS = 'cursor:pointer; position : absolute; border-radius : 2px; width:' + buttonSize + 'px; height: 8%; top:91%;',
@@ -58,17 +61,21 @@ OGDSM.namesapce('mapLayerList');
 
         element.style.cssText = listSlideHideCSS;
         //element.id = 'listControl';
-        listElement.id = listDiv + 'Div';
+        listElement.id = listDiv + 'Root';
         listElement.style.cssText = olCustomListCSS;
 
         listTitleElement.style.cssText = listTitleCSS;
-        listTitleElement.innerHTML = '레이어 목록';
+        listTitleElement.setAttribute('class', 'ui-body-a');
+        listTitleElement.innerHTML = '<h4>레이어 목록</h4>';
+
+        listContentsElement.id = listDiv + 'Div';
         listOlElement.id = listDiv + 'Contents';
         listOlElement.setAttribute('data-role', 'listview');
         listOlElement.setAttribute('data-inset', 'true');
 
         listElement.appendChild(listTitleElement);
-        listElement.appendChild(listOlElement);
+        listElement.appendChild(listContentsElement);
+        listContentsElement.appendChild(listOlElement);
 
         buttonElement.id = listDiv + 'Button';
         buttonElement.className = 'ol-unselectable';
@@ -77,25 +84,6 @@ OGDSM.namesapce('mapLayerList');
 
         element.appendChild(listElement);
         element.appendChild(buttonElement);
-        this.ulObj = Sortable.create(document.getElementById(this.listDiv + 'Contents'), {
-            animation: 150,
-            store : {
-                get: function (sortable) {
-                    var order = localStorage.getItem(sortable.options.group);
-                    return order ? order.split('|') : [];
-                },
-                set: function (sortable) {
-                    var order = sortable.toArray();
-                    localStorage.setItem(sortable.options.group, order.join('|'));
-                }
-            },
-            onAdd: function (evt) { console.log('onAdd.foo:', [evt.item, evt.from]); },
-            onUpdate: function (evt) { console.log('onUpdate.foo:', [evt.item, evt.from]); },
-            onRemove: function (evt) { console.log('onRemove.foo:', [evt.item, evt.from]); },
-            onStart: function (evt) { console.log('onStart.foo:', [evt.item, evt.from]); },
-            onSort: function (evt) { console.log('onStart.foo:', [evt.item, evt.from]); },
-            onEnd: function (evt) { console.log('onEnd.foo:', [evt.item, evt.from]); }
-        });
     };
     OGDSM.mapLayerList.prototype = {
         constructor : OGDSM.mapLayerList,
@@ -107,23 +95,31 @@ OGDSM.namesapce('mapLayerList');
         tmp : function () {
             return null;
         },
-        getLayerObjs : function () {
+        getLayersObj : function () {
             return arrlayerObjs;
         },
         setLayerObj : function (obj) {
             arrlayerObjs.push(obj);
         },
+        setLayersObj : function (objs) {
+            arrlayerObjs = objs;
+        },
         getLabels : function () {
             return arrlabels;
         },
         setLabel : function (label) {
-            arrlabels.push(label);
+        //    arrlabels.push(label);
+            arrlabels.unshift(label);
+        },
+        setLabels : function (labels) {
+            arrlabels = labels;
+        },
+        getVisualizationObj : function () {
+            return this.visualizationObj;
         }
     };
     return OGDSM.mapLayerList;
 }(OGDSM));
-
-
 /**
  * Add List.
  * @method addList
@@ -131,23 +127,117 @@ OGDSM.namesapce('mapLayerList');
  */
 OGDSM.mapLayerList.prototype.addList = function (obj, label) {
     'use strict';
-    var olObj = $('#' + this.listDiv + 'Contents');
-    $('#' + this.listDiv + 'Contents').empty();
+    var i, listRootDiv = $('#' + this.listDiv + 'Div'),
+        thisObj = this,
+        listOlElement = document.createElement('ul'),
+        labels = this.getLabels(),
+        objs = this.getLayersObj(),
+        ogdsmObj = this.visualizationObj;
+    listRootDiv.empty();
     this.setLayerObj(obj);
     this.setLabel(label);
-    var el = document.createElement('li');
-    el.innerHTML = label;
-    this.ulObj.el.appendChild(el);
-    $('#' + this.listDiv + 'Div').trigger("create");
-    /*
-    this.getLabels().forEach(function (obj, i) {
-        olObj.append('<li>' + obj + '</li>');
-      //  $('#' + this.listDiv + 'Div').trigger("create");
-    });
-    //olObj.append('<li class="ui-li ui-li-static ui-btn-up-c ui-first-child ui-last-child"> ' + label + '</li>');
+    listOlElement.id = this.listDiv + 'Contents';
+    listOlElement.setAttribute('data-role', 'listview');
+    listRootDiv.append(listOlElement);
+    var olList = $('#' + this.listDiv + 'Contents');
+    //for (i = labels.length - 1; i >= 0; i--) {
+    for (i = 0; i < labels.length; i++) {
+        var text = (labels[i].length > 7) ? labels[i].substring(0, 6) + '...' : labels[i];
+        olList.prepend('<li style="width:95%; height:40px; padding:0px; top:18px;">' +
+                      '<div data-role="controlgroup" data-type="horizontal" style="padding:0px; margin:0px;">' +
+                      '<a data-role="button" data-theme="c">' + text + '</a>' +
+                      '<a data-role="button" data-icon="arrow-d" data-iconpos="notext" data-theme="d" data-mini="true" class="layer-manager"' +
+                      'data-label="' + labels[i] + '" style="background:#7dac2c;">ONOFF</a>' +
+                      '<a data-role="button" data-icon="delete" data-iconpos="notext" data-theme="f" data-mini="true" class="layer-manager">' +
+                      labels[i] + '</a>' +
+                      '</div></li>');
+    }
+    listRootDiv.trigger("create");
+    console.log(labels);
+    this.ulObj = Sortable.create(document.getElementById(this.listDiv + 'Contents'), {
+        animation: 150,
+        filter : '.layer-manager',
+        onFilter: function (evt) {
+            var type = evt.srcElement.getAttribute('data-icon'),
+                labels = thisObj.getLabels(),
+                length = labels.length - 1,
+                objs = thisObj.getLayersObj(),
+                srcNum = Math.abs(length - evt.oldIndex);
+            if (type === 'arrow-d') {
+                var onoff = evt.srcElement.style.background;
+                var layerName = evt.srcElement.getAttribute('data-label');
+                if (onoff === 'rgb(125, 172, 44)') {
+                    evt.srcElement.style.background = 'rgb(255, 255, 255)';
+                    ogdsmObj.setVisible(layerName, false);
+                } else {
+                    evt.srcElement.style.background = 'rgb(125, 172, 44)';
+                    ogdsmObj.setVisible(layerName, true);
+                }
+            } else if (type === 'delete') {
+                ogdsmObj.removeMap(labels[srcNum]);
+                evt.item.parentNode.removeChild(evt.item);
+                labels.splice(srcNum, 1);
+                objs.splice(srcNum, 1);
+                thisObj.setLayersObj(objs);
+                thisObj.setLabels(labels);
+            }
+        },
+        onUpdate: function (evt) { console.log('onUpdate.foo:', [evt.item, evt.from]); },
+        onEnd: function (evt) {
+            var labels = thisObj.getLabels(), i,
+                objs = thisObj.getLayersObj(),
+                ogdsmObj = thisObj.getVisualizationObj(),
+                length = labels.length - 1;
+            //    srcNum = Math.abs(length - evt.oldIndex),
+            //    tarNum = Math.abs(length - evt.newIndex);
+            //    tmpLabel = labels[tarNum],
+            //    tmpObj = objs[tarNum];
+            //labels[srcNum] = labels[tarNum];
+            //labels[tarNum] = tmpLabel;
+            //objs[srcNum] = objs[tarNum];
+            //objs[tarNum] = tmpObj;
+            console.log(evt.oldIndex + ' ' + evt.newIndex);
 
-    $('#' + this.listDiv + 'Div').trigger("update");
-    //$('#' + this.listDiv + 'Contents').trigger("create");
-    */
+            console.log(labels[evt.oldIndex] + ' ' + labels[evt.newIndex]);
+            console.log(labels);
+            if (evt.oldIndex > evt.newIndex) {
+                /*labels[tarNum] = labels[srcNum];
+                var tmp = null;
+                for (i = srcNum; i <= tarNum; i++) {
+                    if (i === tarNum) {
+                        labels[i] = tmpLabel;
+                    } else {
+                        labels[i] = tmp;
+                    }
+                    tmp = labels[i];
+                }*/
+                var changeValue = labels[evt.newIndex];
+                console.log(changeValue);
+                var tmpValue = null;
+                for (i = evt.newIndex; i < evt.oldIndex; i++) {
+                    //var tmp = labels[i + 1];
+                    labels[i] = labels[i + 1];
+                }
+                labels[evt.oldIndex] = changeValue;
+            } else {
+                console.log('down');
+            }
+            console.log(labels);
+
+
+            thisObj.setLayersObj(objs);
+            thisObj.setLabels(labels);
+            /*var srcObj = ogdsmObj.layerCheck(labels[srcNum]);
+            var tarObj = ogdsmObj.layerCheck(labels[tarNum]);
+            var srcIndex = ogdsmObj.indexOf(ogdsmObj.getMap().getLayers(), srcObj);
+            var tarIndex = ogdsmObj.indexOf(ogdsmObj.getMap().getLayers(), tarObj);
+            ogdsmObj.getMap().getLayers().setAt(srcIndex, tarObj);
+            ogdsmObj.getMap().getLayers().setAt(tarIndex, srcObj);
+            for (i = 0; i < objs.length; i++) {
+                console.log(ogdsmObj.indexOf(ogdsmObj.getMap().getLayers(), ogdsmObj.layerCheck(labels[i])) + ' ' + labels[i]);
+            }
+            console.log(labels);*/
+        }
+    });
 };
 

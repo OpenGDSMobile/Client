@@ -1,4 +1,4 @@
-/*jslint devel: true, vars : true */
+/*jslint devel: true, vars : true, plusplus : true */
 /*global $, jQuery, ol, OGDSM, d3*/
 OGDSM.namesapce('visualization');
 (function (OGDSM) {
@@ -51,6 +51,15 @@ OGDSM.namesapce('visualization');
                 }
             }
             return false;
+        },
+        indexOf : function (layers, layer) {
+            var length = layers.getLength(), i;
+            for (i = 0; i < length; i++) {
+                if (layer === layers.item(i)) {
+                    return i;
+                }
+            }
+            return -1;
         }
     };
     return OGDSM.visualization;
@@ -265,11 +274,13 @@ OGDSM.visualization.prototype.changeBaseMap = function (mapStyle) {
 OGDSM.visualization.prototype.addMap = function (data) {
     'use strict';
     var chkData = this.layerCheck(data.get('title'));
-    if (chkData !== null) {
-        this.getMap().removeLayer(chkData);
+    if (chkData === false) {
+       // this.getMap().removeLayer(chkData);
+        this.getMap().addLayer(data);
+        this.layerListObj.addList(data, data.get('title'));
+    } else {
+        console.log("Layer is existence");
     }
-    this.getMap().addLayer(data);
-    this.layerListObj.addList(data, data.get('title'));
 };
 /**
  *
@@ -278,7 +289,65 @@ OGDSM.visualization.prototype.addMap = function (data) {
 OGDSM.visualization.prototype.removeMap = function (layerName) {
     'use strict';
     var obj = this.layerCheck(layerName);
-    this.getMap().removeLayer(obj);
+    if (obj !== false) {
+        this.getMap().removeLayer(obj);
+    }
+};
+/**
+ *
+ *
+ */
+OGDSM.visualization.prototype.setVisible = function (layerName, flag) {
+    'use strict';
+    var obj = this.layerCheck(layerName);
+    if (obj !== false) {
+        obj.setVisible(flag);
+    }
+};
+/**
+ *
+ *
+ */
+OGDSM.visualization.prototype.changeWFSzIndex = function (layerName, color, type, zIndex) {
+    'use strict';
+    var map = this.layerCheck(layerName);
+    if (map === false) {
+        return -1;
+    }
+
+    console.log(layerName + ' ' + zIndex);
+    map.setStyle(function (f, r) {
+        var style = null;
+        if (type === 'polygon') {
+            style = [new ol.style.Style({
+                fill : new ol.style.Fill({
+                    color : color
+                }),
+                stroke : new ol.style.Stroke({
+                    color : '#00000',
+                    width : 1
+                }),
+                zIndex : zIndex
+            })];
+
+        } else if (type === 'point') {
+            style = [new ol.style.Style({
+                image : new ol.style.Circle({
+                    radius : 5,
+                    fill : new ol.style.Fill({
+                        color : color
+                    }),
+                    stroke : new ol.style.Stroke({
+                        color : '#000000',
+                        width : 1
+                    })
+                }),
+                zIndex : zIndex
+            })];
+
+        }
+        return style;
+    });
 };
 /**
  * WFS style change
