@@ -296,22 +296,51 @@ OGDSM.externalConnection.prototype.publicDataEnv = function (apikey, envType, da
         success : function (msg) {
             var resultData = msg;
             setResponseData(JSON.parse(resultData.data));
+
+
         },
         error : function (e) {
             console.log(e);
         }
     });
 };
-
+/*
+ *
+ *
+ *
+ */
 OGDSM.externalConnection.prototype.seoulEnvironmentLoad = function (addr, apiKey, envType, date, time) {
     'use strict';
     var parm = '{"serviceName":"TimeAverageAirQuality",' +
-        '"keyValue":' + apiKey + '",' +
-        '"dateValue":' + date + '", ' +
-        '"timeValue":' + time + '"} ';
+        '"keyValue":"' + apiKey + '",' +
+        '"dateValue":"' + date + '", ' +
+        '"envType":' + '"' + envType + '",' +
+        '"timeValue":"' + time + '"} ';
+    var resultData;
     parm = JSON.parse(parm);
     console.log(parm);
-
+    $.mobile.loading('show', {
+        text : 'Loading',
+        textVisible : 'true',
+        theme : 'c',
+        textonlt : 'false'
+    });
+    $.ajax({
+        type : 'POST',
+        url : addr,
+        data : JSON.stringify(parm),
+        async : false,
+        contentType : "application/json;charset=UTF-8",
+        dataType : 'json',
+        success : function (msg) {
+            resultData = JSON.parse(msg.data);
+            $.mobile.loading('hide');
+        },
+        error : function (e) {
+            console.log(e);
+        }
+    });
+    return resultData;
 };
 
 
@@ -344,6 +373,7 @@ OGDSM.externalConnection.prototype.vworldWMSLoad = function (apiKey, domain, dat
     });
     return resultData;
 }; //SLD_BODY
+
 
 /**
  * GeoServer WFS data load (OpenLayers3 ol.source.GeoJSON)
@@ -389,6 +419,12 @@ OGDSM.externalConnection.prototype.geoServerWFSLoad = function (obj, addr, works
             })
         ];
     }
+    $.mobile.loading('show', {
+        text : 'Loading',
+        textVisible : 'true',
+        theme : 'c',
+        textonlt : 'false'
+    });
     $.ajax({
         type : 'POST',
         url : fullAddr,
@@ -403,6 +439,7 @@ OGDSM.externalConnection.prototype.geoServerWFSLoad = function (obj, addr, works
                 style : objStyles
             });
             obj.addMap(wfsLayer);
+            $.mobile.loading('hide');
         },
         error : function (e) {
             console.log(e);

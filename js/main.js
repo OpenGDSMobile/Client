@@ -54,31 +54,49 @@ function createSeoulPublicAreaEnvUI() {
     var envIds = ui.seoulEnvironment('setting');
     var processBtn = ui.processButton('setting', 'a');
     var externalServer = new OGDSM.externalConnection();
+    var colors = ['#0090ff', '#008080', '#4cff4c', '#99ff99', '#FFFF00', '#FFFF99', '#FF9900', '#FF0000'],
+        ranges = [ [15, 30, 55, 80, 100, 120, 200],    //PM10, PM25
+                  [1, 2, 5.5, 9, 10.5, 12, 15],        //CO
+                  [0.015, 0.03, 0.05, 0.06, 0.1045, 0.15, 0.2],    //NO2
+                  [0.01, 0.02, 0.035, 0.05, 0.075, 0.1, 0.15],     //SO2
+                  [0.02, 0.04, 0.06, 0.08, 0.10, 0.12, 0.3] ];     //O3
     processBtn.click(function () {
-        var apiKey = "6473565a72696e7438326262524174";
+        $('#setting').popup("close");
+        var apiKey = '6473565a72696e7438326262524174',
+            addr = 'http://113.198.80.60:8087/mobile/SeoulOpenData.do',
+            geoServerAddr = 'http://113.198.80.9';
         var visualType = $('input[name=' + envIds[0].attr('name') + ']:checked').val(),
             environmentType = $('input[name=' + envIds[3].attr('name') + ']:checked').val(),
             date = envIds[1].val(),
             time = envIds[2].val();
-        var colors = ["#0090ff", "#008080", "#4cff4c", "#99ff99", "#FFFF00", "#FFFF99", "#FF9900", "#FF0000"],
-            ranges = [ [15, 30, 55, 80, 100, 120, 200],    //PM10, PM25
-                      [1, 2, 5.5, 9, 10.5, 12, 15],        //CO
-                      [0.015, 0.03, 0.05, 0.06, 0.1045, 0.15, 0.2],    //NO2
-                      [0.01, 0.02, 0.035, 0.05, 0.075, 0.1, 0.15],     //SO2
-                      [0.02, 0.04, 0.06, 0.08, 0.10, 0.12, 0.3] ];     //O3
-        //externalServer.seoulEnvironmentLoad();
+        console.log(addr + ' ' + visualType + ' ' + environmentType + ' ' + date + ' ' + time);
+        var data = externalServer.seoulEnvironmentLoad(addr, apiKey, environmentType, date, time);
+        console.log(data);
+        var xyData = OGDSM.jsonToArray(data, environmentType, 'MSRSTE_NM');
+        console.log(xyData);
+        if (visualType === 'map') {
+            externalServer.geoServerWFSLoad(openGDSMObj, geoServerAddr, 'opengds', 'seoul_sig', 'polygon');
+            openGDSMObj.changeWFSStyle('seoul_sig', colors, 'polygon', 0.6, 'sig_kor_nm', ranges, xyData);
+        }
 
-        //console.log(visualType + ' ' + environmentType + ' ' + date + ' ' + time);
     });
 }
 $(function () {
     'use strict';
-    openGDSMObj = new OGDSM.visualization('map', 'layerList');
-    openGDSMObj.olMapView([127.010031, 37.582200], 'OSM', 'EPSG:900913'); //VWorld
-    //openGDSMObj.olMapView([127.010031, 37.582200], 'OSM'); //VWorld
+    openGDSMObj = new OGDSM.visualization('map', 'layerList'); //map div, layerList switch
+    //openGDSMObj.olMapView([127.010031, 37.582200], 'OSM', 'EPSG:900913'); //VWorld
+    openGDSMObj.olMapView([127.010031, 37.582200], 'OSM'); //VWorld
     openGDSMObj.trackingGeoLocation(true);
     mapSelectUI(openGDSMObj);
-//    var testList = new OGDSM.mapLayerList(openGDSMObj, 'layerList');
+/*
+    var externalServer = new OGDSM.externalConnection();
+    var r = Math.floor(Math.random() * 256),
+        g = Math.floor(Math.random() * 256),
+        b = Math.floor(Math.random() * 256);
+    var color = 'rgb(' + r + ',' + g + ',' + b + ')';
+    var addr = 'http://113.198.80.9';
+    externalServer.geoServerWFSLoad(openGDSMObj, addr, 'opengds', 'seoul_sig', 'polygon', color);
+*/
 });
 
 /*

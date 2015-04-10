@@ -372,6 +372,7 @@ OGDSM.visualization.prototype.changeWFSStyle = function (layerName, colors, type
         style = null;
 
     if (map === false) {
+        console.error('Not Map Layer');
         return -1;
     }
     map.setStyle(function (f, r) {

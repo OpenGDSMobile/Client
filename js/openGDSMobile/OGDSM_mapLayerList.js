@@ -15,8 +15,8 @@ OGDSM.namesapce('mapLayerList');
         this.listDiv = listDiv;
         this.visualizationObj = obj;
         var handleList = null,
-            listSize = 220,
-            buttonSize = 100,
+            listSize = 200,
+            buttonSize = 120,
     //        element = document.createElement('div'),
             element = document.getElementById(listDiv),
             listElement = document.createElement('div'),
@@ -31,12 +31,12 @@ OGDSM.namesapce('mapLayerList');
             listTitleCSS = 'width: 100%; text-align:center;',
             listSlideHideCSS = elementCSS + ' left: ' + -(listSize + 5) + 'px; transition: left 0.1s ease;',
             listSlideShowCSS = elementCSS + ' left: 0px; transition: left 0.1s ease;',
-            olCustomButtonCSS = 'cursor:pointer; position : absolute; border-radius : 2px; width:' + buttonSize + 'px; height: 4%; top:6%;',
-            buttonFontShowCSS = 'font-size : 75%; font-weight : bold; color : rgba(0, 0, 0,1.0); text-align:center; padding-top:12px;',
-            buttonFontHideCSS = 'font-size : 75%; font-weight : bold; color : rgba(255, 255, 255,.5); text-align:center; padding-top:12px;',
-            buttonSlideShowCSS = olCustomButtonCSS + 'background: rgba(0,0,0,.0); left:' + (listSize + 2) + 'px; ' +
+            olCustomButtonCSS = 'cursor:pointer; position : absolute; border-radius : 50px; width:' + buttonSize + 'px; top:8%;',
+            buttonFontShowCSS = 'font-size : 75%; font-weight : bold; color : rgba(255, 255, 255,1.0); text-align:center;',
+            buttonFontHideCSS = 'font-size : 75%; font-weight : bold; color : rgba(255, 255, 255,.5); text-align:center;',
+            buttonSlideShowCSS = olCustomButtonCSS + 'background: rgba(0, 0, 0, 1.0); left:' + (listSize + 2) + 'px; ' +
                                  'transition : background 0.1s ease, left 0.1s ease;' + buttonFontShowCSS,
-            buttonSlideHideCSS = olCustomButtonCSS + 'background: rgba(0,0,0,.0); left:' + (listSize - buttonSize) + 'px; ' +
+            buttonSlideHideCSS = olCustomButtonCSS + 'background: rgba(0, 0, 0, .0); left:' + (listSize - buttonSize) + 'px; ' +
                                  'transition : background 0.1s ease, left 0.1s ease;' + buttonFontHideCSS;
 
         handleList = function (e) {
@@ -138,36 +138,68 @@ OGDSM.mapLayerList.prototype.addList = function (obj, label) {
     listOlElement.setAttribute('data-role', 'listview');
     listRootDiv.append(listOlElement);
     var olList = $('#' + this.listDiv + 'Contents');
-    //for (i = labels.length - 1; i >= 0; i--) {
-    for (i = 0; i < labels.length; i++) {
-        var text = (labels[i].length > 7) ? labels[i].substring(0, 6) + '...' : labels[i];
-        olList.prepend('<li style="width:95%; height:40px; padding:0px; top:18px;">' +
-                      '<div data-role="controlgroup" data-type="horizontal" style="padding:0px; margin:0px;">' +
-                      '<a data-role="button" data-theme="c">' + text + '</a>' +
+    function test() {
+
+    }
+    /*
+    olList.prepend('<li style="width:95%; height:80px; padding:0px; top:18px; padding-left:5px;">' +
+                      '<div data-role="controlgroup" data-type="horizontal" style="padding:0px; margin:0px; padding-left:10px;">' +
+                      '<a data-role="button" data-theme="c" data-mini="true" >' + text + '</a>' +
                       '<a data-role="button" data-icon="arrow-d" data-iconpos="notext" data-theme="d" data-mini="true" class="layer-manager"' +
                       'data-label="' + labels[i] + '" style="background:#7dac2c;">ONOFF</a>' +
                       '<a data-role="button" data-icon="delete" data-iconpos="notext" data-theme="f" data-mini="true" class="layer-manager">' +
                       labels[i] + '</a>' +
-                      '</div></li>');
+                      '</div>' +
+                      '<div  style="padding:0px; margin:0px; padding-left:10px;">' +
+                      '<input type="range" id="' + labels[i] + 'slider" value="100" min="0" max="100" data-highlight="true">' +
+                      '</div>' +
+                      '</li>');
+                      */
+    function sliderEvent(e, u) {
+        var layerName = e.currentTarget.getAttribute('data-label'),
+            opacityValue = e.currentTarget.value,
+            layerObj = ogdsmObj.layerCheck(layerName);
+        layerObj.setOpacity(opacityValue / 100.0);
+    }
+    for (i = 0; i < labels.length; i++) {
+        var text = (labels[i].length > 9) ? labels[i].substring(0, 9) + '...' : labels[i];
+        olList.prepend('<li style="width:94%; height:72px; padding:0px; top:18px; padding-top:4px;">' +
+                      '<div data-role="controlgroup" data-type="horizontal" style="margin:0px; padding-left:18px;">' +
+                      '<a data-role="button" data-theme="c" data-mini="true" style="width:85px;">' + text + '</a>' +
+                      '<a data-role="button" data-theme="d" data-mini="true" class="layer-manager" data-value="onoff"' +
+                      'data-label="' + labels[i] + '" style="background:#7dac2c;">ON</a>' +
+                      '<a data-role="button" data-theme="f" data-mini="true" class="layer-manager" data-value="delete"' +
+                      'data-label="' + labels[i] + '">Delete</a>' +
+                      '</div>' +
+                      '<div  style="padding:0px; margin:0px; padding-left:18px;">' +
+                      '<input type="range" value="100" min="0" max="100" data-highlight="true"' +
+                      'id="' + labels[i] + 'slider" data-label="' + labels[i] + '">' +
+                      '</div>' +
+                      '</li>');
     }
     listRootDiv.trigger("create");
+    for (i = 0; i < labels.length; i++) {
+        $('#' + labels[i] + 'slider').bind('change', sliderEvent);
+    }
     this.ulObj = Sortable.create(document.getElementById(this.listDiv + 'Contents'), {
         animation: 150,
         filter : '.layer-manager',
         onFilter: function (evt) {
-            var type = evt.srcElement.getAttribute('data-icon'),
+            var type = evt.srcElement.getAttribute('data-value'),
                 labels = thisObj.getLabels(),
                 length = labels.length - 1,
                 objs = thisObj.getLayersObj(),
                 srcNum = Math.abs(length - evt.oldIndex);
-            if (type === 'arrow-d') {
+            if (type === 'onoff') {
                 var onoff = evt.srcElement.style.background;
                 var layerName = evt.srcElement.getAttribute('data-label');
                 if (onoff === 'rgb(125, 172, 44)') {
                     evt.srcElement.style.background = 'rgb(255, 255, 255)';
+                    evt.srcElement.childNodes[0].childNodes[0].innerHTML = 'OFF';
                     ogdsmObj.setVisible(layerName, false);
                 } else {
                     evt.srcElement.style.background = 'rgb(125, 172, 44)';
+                    evt.srcElement.childNodes[0].childNodes[0].innerHTML = 'ON';
                     ogdsmObj.setVisible(layerName, true);
                 }
             } else if (type === 'delete') {
