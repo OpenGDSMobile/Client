@@ -180,42 +180,40 @@ OGDSM.eGovFrameUI.prototype.autoRadioBox = function (rootDivId, radioId, radioNa
  * @param {String} selectName - radiobox name [셀렉트 이름]
  * @param {Array} text - radiobox label names [셀렉트 텍스트]
  * @param {Array) values - radiobox values [셀렉트 값]
- * @param {Array) firstText (option) - selectbox first text (default : '') [셀렉트 첫번째 텍스트 값]
- * @param {Array} options (option) - theme (0), corners (1), inline (2)  setting
-                                     [values : 'a'~'g'(default: this.dataTheme), true(default) | false, true | false(default)]
-                                     [ 배열인자 옵션: 테마(0), 코너(1), 인라인(2) ]
+ * @param {Array} options (option) - firstName, theme, corners, inline setting
+                                     [values : ''(default), 'a'~'g'(default: this.dataTheme), true(default) | false, true | false(default)]
  * @return {jQuery Object} user interface id object [제이쿼리 아이디 객체]
  */
-OGDSM.eGovFrameUI.prototype.autoSelect = function (rootDivId, selectId, selectName, text, values, firstText, options) {
+OGDSM.eGovFrameUI.prototype.autoSelect = function (rootDivId, selectId, selectName, text, values, options) {
     'use strict';
-    firstText = (typeof (firstText) !== 'undefined') ? firstText : '';
+    var firstText = '';
     options = (typeof (options) !== 'undefined') ? options : null;
-    var rootDiv = $('#' + rootDivId),
-        html = '<select name="' + selectName + '" id="' + selectId + '" ',
-        optionName = ['data-theme', 'data-corners', 'data-inline'],
-        optionData = [this.dataTheme, 'true', 'false'],
-        i = 0;
+    var rootDiv = $('#' + rootDivId), html = null, i = 0, name = null;
+    var defaults = {
+        firstName : '',
+        theme : this.dataTheme,
+        corners : true,
+        inline : false,
+        selected : 0
+    };
+    for (name in defaults) {
+        if (defaults.hasOwnProperty(name)) {
+            if (options.hasOwnProperty(name)) {
+                defaults[name] = options[name];
+            }
+        }
+	}
+    html = '<select name="' + selectName + '" id="' + selectId + '" ' +
+           'data-theme="' + defaults.theme + '" data-corners="' + defaults.corners + '" data-inline="' + defaults.inline + '">';
+    html += '<option value=""> ' + defaults.firstName + '</option>';
 
-    if (options !== null) {
-        if (typeof (options[2]) !== 'undefined') {
-            optionData[2] = options[2];
-        }
-        if (typeof (options[1]) !== 'undefined') {
-            optionData[1] = options[1];
-        }
-        optionData[0] = options[0];
-        for (i = 0; i < options.length; i += 1) {
-            html += optionName[i] + '="' + optionData[i] + '" ';
-        }
-    }
-    html += '>';
-    html += '<option value=""> ' + firstText + '</option>';
     for (i = 0; i < text.length; i += 1) {
         html += '<option value="' + values[i] + '">' + text[i] + '</option>';
     }
     html += '</select>';
     html += '</fieldset>';
     rootDiv.append(html);
+    $('#' + selectId).val(defaults.selected);
     rootDiv.trigger('create');
     return $('#' + selectId);
 };
@@ -295,13 +293,12 @@ OGDSM.eGovFrameUI.prototype.dateInput = function (divId) {
 };
 
 /**
- * 배경 맵 선택 사용자 인터페이스 자동 생성
+ * 배경 맵 선택 사용자 인터페이스 자동 생성 (라디오 박스)
  * Auto Create about Map Type User Interface.
  * @method baseMapRadioBox
  * @param {OGDSM Object} OGDSMObj - OpenGDS Mobile Visualization Object [OpenGDS모바일 시각화 객체]
  * @param {String}       rootDiv - Root div id [상위 DIV 아이디]
  * @param {Array}        options - Map type to support [제공할 지도 타입]
- * @return {jQuery Object} User Interface Date Input Object (Date YYYY/MM/DD)
  */
 OGDSM.eGovFrameUI.prototype.baseMapRadioBox = function (OGDSMObj, rootDiv, options) {
 //var mapRadioNameObj = uiTest.autoRadioBox('mapSelect','mapType', 'radioMap', ['OSM','VWorld'], ['OSM','VWorld'], ['h']);
@@ -319,7 +316,34 @@ OGDSM.eGovFrameUI.prototype.baseMapRadioBox = function (OGDSMObj, rootDiv, optio
         OGDSMObj.changeBaseMap($(this).val());
     });
 };
+/**
+ * 배경 맵 선택 사용자 인터페이스 자동 생성 (셀렉트)
+ * Auto Create about Map Type User Interface.
+ * @method baseMapSelect
+ * @param {OGDSM Object} OGDSMObj - OpenGDS Mobile Visualization Object [OpenGDS모바일 시각화 객체]
+ * @param {String}       rootDiv - Root div id [상위 DIV 아이디]
+ * @param {Array}        options - Map type to support [제공할 지도 타입]
+ */
+OGDSM.eGovFrameUI.prototype.baseMapSelect = function (OGDSMObj, rootDiv, options) {
+//var mapRadioNameObj = uiTest.autoRadioBox('mapSelect','mapType', 'radioMap', ['OSM','VWorld'], ['OSM','VWorld'], ['h']);
+    'use strict';
+    options = (typeof (options) !== 'undefined') ? options : null;
+    var mapRadioNameObj,
+        supportMap;
 
+    if (options !== null) {
+        supportMap = options.split(' ');
+    }
+    mapRadioNameObj = this.autoSelect(rootDiv, 'mapType', 'selectMapType', supportMap, supportMap, {
+        firstName : '맵 선택',
+        selected : supportMap[0],
+        inline : true
+    });
+    OGDSMObj.changeBaseMap(supportMap[0]);
+    mapRadioNameObj.change(function () {
+        OGDSMObj.changeBaseMap($(this).val());
+    });
+};
 
 /**
  * VWorld WMS API List (Using autoSelect).
@@ -391,7 +415,9 @@ OGDSM.eGovFrameUI.prototype.vworldWMSList = function (divId, theme) {
 
     rootDiv.append(html);
     for (j = 0; j < selectName.length; j += 1) {
-        this.autoSelect("vworldWMS", selectName[j], selectName[j], stylesText, styles, (j + 1) + '번째 레이어 선택');
+        this.autoSelect("vworldWMS", selectName[j], selectName[j], stylesText, styles, {
+            firstName : (j + 1) + '번째 레이어 선택'
+        });
     }
     
     $("#" + selectName[0]).change(function () {

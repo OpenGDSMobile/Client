@@ -7,7 +7,8 @@ var openGDSMObj;
 function mapSelectUI(openGDSMObj) {
     'use strict';
     var ui = new OGDSM.eGovFrameUI();
-    ui.baseMapRadioBox(openGDSMObj, 'mapSelect', 'OSM VWorld'); //현재.... 데이터 체크...
+    //ui.baseMapRadioBox(openGDSMObj, 'mapSelect', 'OSM VWorld VWorld_m VWorld_s VWorld_g'); //현재.... 데이터 체크...
+    ui.baseMapSelect(openGDSMObj, 'mapSelect', 'OSM VWorld VWorld_m VWorld_s VWorld_g'); //현재.... 데이터 체크...
 }
 //브이월드 WMS 데이터 선택 사용자 인터페이스 생성 / 시각화 함수
 function vworldWMSUI() {

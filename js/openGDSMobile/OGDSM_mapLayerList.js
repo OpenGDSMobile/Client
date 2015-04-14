@@ -31,10 +31,10 @@ OGDSM.namesapce('mapLayerList');
             listTitleCSS = 'width: 100%; text-align:center;',
             listSlideHideCSS = elementCSS + ' left: ' + -(listSize + 5) + 'px; transition: left 0.1s ease;',
             listSlideShowCSS = elementCSS + ' left: 0px; transition: left 0.1s ease;',
-            olCustomButtonCSS = 'cursor:pointer; position : absolute; border-radius : 50px; width:' + buttonSize + 'px; top:8%;',
-            buttonFontShowCSS = 'font-size : 75%; font-weight : bold; color : rgba(255, 255, 255,1.0); text-align:center;',
-            buttonFontHideCSS = 'font-size : 75%; font-weight : bold; color : rgba(255, 255, 255,.5); text-align:center;',
-            buttonSlideShowCSS = olCustomButtonCSS + 'background: rgba(0, 0, 0, 1.0); left:' + (listSize + 2) + 'px; ' +
+            olCustomButtonCSS = 'cursor:pointer; position : absolute; width:' + buttonSize + 'px; height: 50px;',
+            buttonFontShowCSS = 'font-size : 90%; font-weight : bold; color : rgba(0, 0, 0,1.0); text-align:center;',
+            buttonFontHideCSS = 'font-size : 90%; font-weight : bold; color : rgba(0, 0, 0,.5); text-align:center;',
+            buttonSlideShowCSS = olCustomButtonCSS + 'background: rgba(255, 255, 255, 0.5); left:' + (listSize + 2) + 'px; ' +
                                  'transition : background 0.1s ease, left 0.1s ease;' + buttonFontShowCSS,
             buttonSlideHideCSS = olCustomButtonCSS + 'background: rgba(0, 0, 0, .0); left:' + (listSize - buttonSize) + 'px; ' +
                                  'transition : background 0.1s ease, left 0.1s ease;' + buttonFontHideCSS;
@@ -79,6 +79,7 @@ OGDSM.namesapce('mapLayerList');
         buttonElement.className = 'ol-unselectable';
         buttonElement.style.cssText = buttonSlideShowCSS;
         buttonElement.innerHTML = btnText;
+        buttonElement.setAttribute('data-role', 'button');
 
         element.appendChild(listElement);
         element.appendChild(buttonElement);

@@ -94,53 +94,10 @@ OGDSM.visualization.prototype.olMapView = function (latlng, mapType, baseProj) {
     var baseView = new ol.View({
         projection : ol.proj.get(baseProj),
         center : ol.proj.transform(latlng, 'EPSG:4326', baseProj),
-        zoom : 12
+        zoom : 12,
+        maxZoom : 18,
+        minZoom : 6
     });
-
-
-    if (mapType === 'OSM') {
-        baseMapLayer = new ol.source.OSM();
-    } else if (mapType === 'VWorld') {
-        baseMapLayer = new ol.source.XYZ(({
-            url : "http://xdworld.vworld.kr:8080/2d/Base/201411/{z}/{x}/{y}.png"
-        }));
-        baseView = new ol.View({
-            projection : ol.proj.get(baseProj),
-            center : ol.proj.transform(latlng, 'EPSG:4326', baseProj),
-            zoom : 12,
-            maxZoom : 18,
-            minZoom : 6
-        });
-    } else if (mapType === 'Naver') {
-        baseMapLayer = new ol.source.XYZ(({
-            urls : [
-                'http://onetile1.map.naver.net/get/109/0/0/{z}/{x}/{-y}/bl_vc_bg/ol_vc_an',
-                'http://onetile2.map.naver.net/get/109/0/0/{z}/{x}/{-y}/bl_vc_bg/ol_vc_an',
-                'http://onetile3.map.naver.net/get/109/0/0/{z}/{x}/{-y}/bl_vc_bg/ol_vc_an',
-                'http://onetile4.map.naver.net/get/109/0/0/{z}/{x}/{-y}/bl_vc_bg/ol_vc_an'
-            ]
-        }));
-        baseView = new ol.View({
-            projection : ol.proj.get(baseProj),
-            center : [953920.3, 1951999.6],
-            zoom : 3,
-            maxResolution : 2048,
-            minResolution : 0.5,
-            resolutions : [2048, 1024, 512, 256, 128, 64, 32, 16, 8, 4, 2, 1, 0.5, 0.25]
-        });
-    } else if (mapType === 'Daum') {
-        baseMapLayer = new ol.source.XYZ(({
-            urls : [
-                'http://i0.maps.daum-img.net/map/image/G03/i/2015yellow/L{z}/{y}/{x}.png',
-                'http://i1.maps.daum-img.net/map/image/G03/i/2015yellow/L{z}/{y}/{x}.png',
-                'http://i2.maps.daum-img.net/map/image/G03/i/2015yellow/L{z}/{y}/{x}.png',
-                'http://i3.maps.daum-img.net/map/image/G03/i/2015yellow/L{z}/{y}/{x}.png'
-            ]
-        }));
-    } else {
-        console.error('Not Map Style "OSM" | "VWorld"');
-        return null;
-    }
     map = new ol.Map({
         target : this.mapDiv,
         layers : [
@@ -154,8 +111,97 @@ OGDSM.visualization.prototype.olMapView = function (latlng, mapType, baseProj) {
     });
     this.mapObj = map;
     this.baseProj = baseProj;
-    return map;
+    this.changeBaseMap(mapType);
+    return this.mapObj;
 };
+
+
+/**
+ * changeBaseMap Method is base map Change.
+ * @method changeBaseMap
+ * @param {String} mapStyle ('VWorld' or 'OSM')
+ */
+OGDSM.visualization.prototype.changeBaseMap = function (mapStyle) {
+    "use strict";
+    var TMS = null, view = null, baseLayer = null, map = this.mapObj, maplayers = map.getLayers(),
+        mapCenter = map.getView().getCenter(), mapZoom = map.getView().getZoom(), mapProj = map.getView().getProjection();
+
+    maplayers.forEach(function (obj, i) {
+        var layerTitle = obj.get('title');
+        if (layerTitle === 'basemap') {
+            baseLayer = obj;
+        }
+    });
+    if (mapStyle === 'OSM') {
+        TMS = new ol.source.OSM();
+        view = new ol.View({
+            projection : mapProj,
+            center : mapCenter,
+            zoom : mapZoom
+        });
+    } else if (mapStyle === 'VWorld') {
+        TMS = new ol.source.XYZ(({
+            url : "http://xdworld.vworld.kr:8080/2d/Base/201310/{z}/{x}/{y}.png"
+        }));
+        view = new ol.View({
+            projection : mapProj,
+            center : mapCenter,
+            zoom : mapZoom,
+            maxZoom : 18,
+            minZoom : 6
+        });
+    } else if (mapStyle === 'VWorld_s') {
+        TMS = new ol.source.XYZ(({
+            url : "http://xdworld.vworld.kr:8080/2d/Satellite/201301/{z}/{x}/{y}.jpeg"
+        }));
+        view = new ol.View({
+            projection : mapProj,
+            center : mapCenter,
+            zoom : mapZoom,
+            maxZoom : 18,
+            minZoom : 6
+        });
+    } else if (mapStyle === 'VWorld_g') {
+        TMS = new ol.source.XYZ(({
+            url : "http://xdworld.vworld.kr:8080/2d/gray/201411/{z}/{x}/{y}.png"
+        }));
+        view = new ol.View({
+            projection : mapProj,
+            center : mapCenter,
+            zoom : mapZoom,
+            maxZoom : 18,
+            minZoom : 6
+        });
+    } else if (mapStyle === 'VWorld_m') {
+        TMS = new ol.source.XYZ(({
+            url : "http://xdworld.vworld.kr:8080/2d/midnight/201411/{z}/{x}/{y}.png"
+        }));
+        view = new ol.View({
+            projection : mapProj,
+            center : mapCenter,
+            zoom : mapZoom,
+            maxZoom : 18,
+            minZoom : 6
+        });
+    } else if (mapStyle === '') {
+        TMS = null;
+        view = new ol.View({
+            projection : mapProj,
+            center : mapCenter,
+            zoom : mapZoom,
+            maxZoom : 18,
+            minZoom : 6
+        });
+    } else {
+        console.error('Not Map Style "OSM" | "VWorld" | "VWorld_m" | "VWorld_h"');
+        return null;
+    }
+    if (baseLayer !== null) {
+        map.setView(view);
+        baseLayer.setSource(TMS);
+    }
+};
+
 /**
  * Map GeoLocation Tracking
  * @method trackingGeoLocation
@@ -214,58 +260,6 @@ OGDSM.visualization.prototype.updateLayoutSetting = function (mapDiv) {
     /********************/
 };
 
-
-
-
-/**
- * changeBaseMap Method is base map Change.
- * @method changeBaseMap
- * @param {String} mapStyle ('VWorld' or 'OSM')
- */
-OGDSM.visualization.prototype.changeBaseMap = function (mapStyle) {
-    "use strict";
-    var TMS = null,
-        view = null,
-        baseLayer = null,
-        map = this.mapObj,
-        maplayers = map.getLayers(),
-        mapCenter = map.getView().getCenter(),
-        mapZoom = map.getView().getZoom(),
-        mapProj = map.getView().getProjection();
-
-    maplayers.forEach(function (obj, i) {
-        var layerTitle = obj.get('title');
-        if (layerTitle === 'basemap') {
-            baseLayer = obj;
-        }
-    });
-    if (mapStyle === 'OSM') {
-        TMS = new ol.source.OSM();
-        view = new ol.View({
-            projection : mapProj,
-            center : mapCenter,
-            zoom : mapZoom
-        });
-    } else if (mapStyle === 'VWorld') {
-        TMS = new ol.source.XYZ(({
-            url : "http://xdworld.vworld.kr:8080/2d/Base/201310/{z}/{x}/{y}.png"
-        }));
-        view = new ol.View({
-            projection : mapProj,
-            center : mapCenter,
-            zoom : mapZoom,
-            maxZoom : 18,
-            minZoom : 6
-        });
-    } else {
-        console.error('Not Map Style "OSM" | "VWorld"');
-        return null;
-    }
-    if (baseLayer !== null) {
-        map.setView(view);
-        baseLayer.setSource(TMS);
-    }
-};
 /**
  * WMS/WFS Map Add
  * @method addMap
