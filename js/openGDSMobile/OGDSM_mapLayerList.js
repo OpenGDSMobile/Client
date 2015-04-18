@@ -4,7 +4,7 @@ OGDSM.namesapce('mapLayerList');
 
 (function (OGDSM) {
     "use strict";
-    var arrlayerObjs = [], arrlabels = [];
+    var arrlayerObjs = [], arrlabels = [], visualChecks = [];
     /**
      * 오픈레이어 맵 레이어 목록 객체
      * OpenLayers3 Map layer list class
@@ -108,6 +108,17 @@ OGDSM.namesapce('mapLayerList');
         setLabels : function (labels) {
             arrlabels = labels;
         },
+        setCheck : function (chk, i) {
+            i = (typeof (i) !== 'undefined') ? i : null;
+            if (i === null) {
+                visualChecks.push(chk);
+            } else {
+                visualChecks[i] = chk;
+            }
+        },
+        getCheck : function (i) {
+            return visualChecks[i];
+        },
         getVisualizationObj : function () {
             return this.visualizationObj;
         }
@@ -142,15 +153,33 @@ OGDSM.mapLayerList.prototype.addList = function (obj, label) {
             layerObj = ogdsmObj.layerCheck(layerName);
         layerObj.setOpacity(opacityValue / 100.0);
     }
+    function deleteEvent(e, u) {
+        var layerName = e.currentTarget.getAttribute('data-label');
+        var labels = thisObj.getLabels();
+        var length = labels.length - 1;
+        var liNum = length - e.currentTarget.getAttribute('data-num');
+        var labelNum = e.currentTarget.getAttribute('data-num');
+        console.log(labels);  //0
+        console.log(document.getElementById(layerName + 'li'));
+        listOlElement.removeChild(document.getElementById(layerName + 'li'));
+        ogdsmObj.removeMap(layerName);
+        labels.splice(labelNum, 1);
+        objs.splice(labelNum, 1);
+        thisObj.setLayersObj(objs);
+        thisObj.setLabels(labels);
+
+//        evt.item.parentNode.removeChild(evt.item);
+    }
     function checkBoxEvent(e, u) {
-        var layerName = $(this).attr('data-label');
-        if ($(this).is(':checked')) {
+        var layerName = e.currentTarget.getAttribute('data-label');
+        var layerNum = e.currentTarget.getAttribute('data-num');
+        if (!e.currentTarget.checked) {
             ogdsmObj.setVisible(layerName, false);
+         //   thisObj.setCheck(false, layerNum);
         } else {
             ogdsmObj.setVisible(layerName, true);
+        //    thisObj.setCheck(true, layerNum);
         }
-
-
     }
     for (i = 0; i < labels.length; i++) {
         var text = (labels[i].length > 9) ? labels[i].substring(0, 9) + '...' : labels[i];
@@ -167,20 +196,33 @@ OGDSM.mapLayerList.prototype.addList = function (obj, label) {
                       'id="' + labels[i] + 'slider" data-label="' + labels[i] + '">' +
                       '</div>' +
                       '</li>');*/
-        olList.prepend('<li style="width:94%; height:72px; padding:0px; top:18px; padding-top:4px;">' +
+        olList.prepend('<li style="width:94%; height:74px; padding:0px; top:18px; padding-top:4px;" id="' + labels[i] + 'li">' +
+                       '<div data-role="popup" id="popup' + labels[i] + '" style="width:' + 200 + 'px">' +
+                       '<input type="range" value="100" min="0" max="100" data-highlight="true" class="layer-manager"' +
+                       'id="' + labels[i] + 'slider" data-label="' + labels[i] + '">' +
+                       '<a data-role="button" data-theme="f" data-mini="true"' +
+                       'id="' + labels[i] + 'delete" data-label="' + labels[i] + '" data-num="' + i + '">Delete</a>' +
+                       '</div>' +
                        '<div data-role="controlgroup"style="margin:0px; padding-left:18px;">' +
-                       '<input type="checkbox" name="listCheckBox" class="custom" id="listCheckBox' + i + '" data-label="' + labels[i] + '">' +
+                       '<input type="checkbox" name="listCheckBox"' +
+                       'id="listCheckBox' + i + '" data-label="' + labels[i] + '" data-num="' + i + '">' +
                        '<label for="listCheckBox' + i + '">' + text + '</label>' +
-                       '<a data-role="button" data-theme="f" data-mini="true" class="layer-manager" data-value="attr"' +
-                       'data-label="' + labels[i] + '">속성</a>' +
+                       '<a data-role="button" data-rel="popup" data-theme="c" data-mini="true" data-transition="pop"' +
+                       'data-label="' + labels[i] + '" href="#popup' + labels[i] + '">추가 기능</a>' +
                        '</div>' +
                        '</li>');
     }
+    //thisObj.setCheck(true);
+    /*for (i = 0; i < labels.length; i++) {
+        $('#listCheckBox' + i).attr("checked", thisObj.getCheck(i));
+    }*/
     listRootDiv.trigger("create");
     for (i = 0; i < labels.length; i++) {
         $('#' + labels[i] + 'slider').bind('change', sliderEvent);
+        $('#' + labels[i] + 'delete').bind('click', deleteEvent);
         $('input[name=listCheckBox]').bind('click', checkBoxEvent);
     }
+
     this.ulObj = Sortable.create(document.getElementById(this.listDiv + 'Contents'), {
         animation: 150,
         filter : '.layer-manager',
@@ -190,16 +232,18 @@ OGDSM.mapLayerList.prototype.addList = function (obj, label) {
                 length = labels.length - 1,
                 objs = thisObj.getLayersObj(),
                 srcNum = Math.abs(length - evt.oldIndex);
+            console.log("test");
             if (type === 'onoff') {
-                var onoff = evt.srcElement.style.background;
+//                var onoff = evt.srcElement.style.background;
                 var layerName = evt.srcElement.getAttribute('data-label');
-                if (onoff === 'rgb(125, 172, 44)') {
-                    evt.srcElement.style.background = 'rgb(255, 255, 255)';
-                    evt.srcElement.childNodes[0].childNodes[0].innerHTML = 'OFF';
+//                if (onoff === 'rgb(125, 172, 44)') {
+                if (!evt.srcElement.checked) {
+  //                  evt.srcElement.style.background = 'rgb(255, 255, 255)';
+//                    evt.srcElement.childNodes[0].childNodes[0].innerHTML = 'OFF';
                     ogdsmObj.setVisible(layerName, false);
                 } else {
-                    evt.srcElement.style.background = 'rgb(125, 172, 44)';
-                    evt.srcElement.childNodes[0].childNodes[0].innerHTML = 'ON';
+//                    evt.srcElement.style.background = 'rgb(125, 172, 44)';
+//                    evt.srcElement.childNodes[0].childNodes[0].innerHTML = 'ON';
                     ogdsmObj.setVisible(layerName, true);
                 }
             } else if (type === 'delete') {

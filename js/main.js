@@ -106,7 +106,7 @@ $(function () {
     openGDSMObj.olMapView([127.010031, 37.582200], 'OSM'); //VWorld
     openGDSMObj.trackingGeoLocation(true);
     mapSelectUI(openGDSMObj);
-    mapAttrUI();
+//    mapAttrUI();
 
     /***************************************************/
     $("#d3View").attr('width', $(window).width() - 100);
