@@ -6,18 +6,17 @@ OGDSM.namesapce('mapLayerList');
     "use strict";
     var arrlayerObjs = [], arrlabels = [];
     /**
-    * OpenLayers3 Map Layer List Class
-    * @class OGDSM.mapLayerList
-    * @constructor
-    * @param {OGDSM.visualization} OGDSM.visualization Object
-    */
+     * 오픈레이어 맵 레이어 목록 객체
+     * OpenLayers3 Map layer list class
+     * @class OGDSM.mapLayerList
+     * @constructor
+     * @param {OGDSM.visualization} obj - OGDSM visualization object
+     * @param {String} listDiv - list div name
+     */
     OGDSM.mapLayerList = function (obj, listDiv) {
         this.listDiv = listDiv;
         this.visualizationObj = obj;
-        var handleList = null,
-            listSize = 200,
-            buttonSize = 120,
-    //        element = document.createElement('div'),
+        var handleList = null, listSize = 200, buttonSize = 120,
             element = document.getElementById(listDiv),
             listElement = document.createElement('div'),
             listTitleElement = document.createElement('div'),
@@ -27,7 +26,7 @@ OGDSM.namesapce('mapLayerList');
             btnText = '레이어목록 보이기',
             elementCSS = 'position : absolute; background : rgba(255,255,255,0.0); top: 0px; height : 99%;  z-index : 1;',
             olCustomListCSS = 'float : left; padding : 1px;	background : rgba(255,255,255,0.0); height : 100%;' +
-                           'width : ' + listSize + 'px;',
+            'width : ' + listSize + 'px;',
             listTitleCSS = 'width: 100%; text-align:center;',
             listSlideHideCSS = elementCSS + ' left: ' + -(listSize + 5) + 'px; transition: left 0.1s ease;',
             listSlideShowCSS = elementCSS + ' left: 0px; transition: left 0.1s ease;',
@@ -35,9 +34,9 @@ OGDSM.namesapce('mapLayerList');
             buttonFontShowCSS = 'font-size : 90%; font-weight : bold; color : rgba(0, 0, 0,1.0); text-align:center;',
             buttonFontHideCSS = 'font-size : 90%; font-weight : bold; color : rgba(0, 0, 0,.5); text-align:center;',
             buttonSlideShowCSS = olCustomButtonCSS + 'background: rgba(255, 255, 255, 0.5); left:' + (listSize + 2) + 'px; ' +
-                                 'transition : background 0.1s ease, left 0.1s ease;' + buttonFontShowCSS,
+            'transition : background 0.1s ease, left 0.1s ease;' + buttonFontShowCSS,
             buttonSlideHideCSS = olCustomButtonCSS + 'background: rgba(0, 0, 0, .0); left:' + (listSize - buttonSize) + 'px; ' +
-                                 'transition : background 0.1s ease, left 0.1s ease;' + buttonFontHideCSS;
+            'transition : background 0.1s ease, left 0.1s ease;' + buttonFontHideCSS;
 
         handleList = function (e) {
             var listControl = document.getElementById('listControl');
@@ -58,7 +57,6 @@ OGDSM.namesapce('mapLayerList');
         buttonElement.addEventListener('touchstart', handleList, false);
 
         element.style.cssText = listSlideHideCSS;
-        //element.id = 'listControl';
         listElement.id = listDiv + 'Root';
         listElement.style.cssText = olCustomListCSS;
 
@@ -91,9 +89,6 @@ OGDSM.namesapce('mapLayerList');
          * @method getMap
          * @return {ol.Map} Retrun is OpenLayers object.
          */
-        tmp : function () {
-            return null;
-        },
         getLayersObj : function () {
             return arrlayerObjs;
         },
@@ -120,9 +115,11 @@ OGDSM.namesapce('mapLayerList');
     return OGDSM.mapLayerList;
 }(OGDSM));
 /**
- * Add List.
+ * 레이어 목록 추가 - (이름 변경 및 레이어 내용 변경...)
+ * Add list.
  * @method addList
- * @return {ol.Map} Retrun is OpenLayers object.
+ * @param {ol3 layer object} obj - openlayers3 layer object
+ * @param {String} label - list name
  */
 OGDSM.mapLayerList.prototype.addList = function (obj, label) {
     'use strict';
@@ -139,32 +136,25 @@ OGDSM.mapLayerList.prototype.addList = function (obj, label) {
     listOlElement.setAttribute('data-role', 'listview');
     listRootDiv.append(listOlElement);
     var olList = $('#' + this.listDiv + 'Contents');
-    function test() {
-
-    }
-    /*
-    olList.prepend('<li style="width:95%; height:80px; padding:0px; top:18px; padding-left:5px;">' +
-                      '<div data-role="controlgroup" data-type="horizontal" style="padding:0px; margin:0px; padding-left:10px;">' +
-                      '<a data-role="button" data-theme="c" data-mini="true" >' + text + '</a>' +
-                      '<a data-role="button" data-icon="arrow-d" data-iconpos="notext" data-theme="d" data-mini="true" class="layer-manager"' +
-                      'data-label="' + labels[i] + '" style="background:#7dac2c;">ONOFF</a>' +
-                      '<a data-role="button" data-icon="delete" data-iconpos="notext" data-theme="f" data-mini="true" class="layer-manager">' +
-                      labels[i] + '</a>' +
-                      '</div>' +
-                      '<div  style="padding:0px; margin:0px; padding-left:10px;">' +
-                      '<input type="range" id="' + labels[i] + 'slider" value="100" min="0" max="100" data-highlight="true">' +
-                      '</div>' +
-                      '</li>');
-                      */
     function sliderEvent(e, u) {
         var layerName = e.currentTarget.getAttribute('data-label'),
             opacityValue = e.currentTarget.value,
             layerObj = ogdsmObj.layerCheck(layerName);
         layerObj.setOpacity(opacityValue / 100.0);
     }
+    function checkBoxEvent(e, u) {
+        var layerName = $(this).attr('data-label');
+        if ($(this).is(':checked')) {
+            ogdsmObj.setVisible(layerName, false);
+        } else {
+            ogdsmObj.setVisible(layerName, true);
+        }
+
+
+    }
     for (i = 0; i < labels.length; i++) {
         var text = (labels[i].length > 9) ? labels[i].substring(0, 9) + '...' : labels[i];
-        olList.prepend('<li style="width:94%; height:72px; padding:0px; top:18px; padding-top:4px;">' +
+/*        olList.prepend('<li style="width:94%; height:72px; padding:0px; top:18px; padding-top:4px;">' +
                       '<div data-role="controlgroup" data-type="horizontal" style="margin:0px; padding-left:18px;">' +
                       '<a data-role="button" data-theme="c" data-mini="true" style="width:85px;">' + text + '</a>' +
                       '<a data-role="button" data-theme="d" data-mini="true" class="layer-manager" data-value="onoff"' +
@@ -176,11 +166,20 @@ OGDSM.mapLayerList.prototype.addList = function (obj, label) {
                       '<input type="range" value="100" min="0" max="100" data-highlight="true"' +
                       'id="' + labels[i] + 'slider" data-label="' + labels[i] + '">' +
                       '</div>' +
-                      '</li>');
+                      '</li>');*/
+        olList.prepend('<li style="width:94%; height:72px; padding:0px; top:18px; padding-top:4px;">' +
+                       '<div data-role="controlgroup"style="margin:0px; padding-left:18px;">' +
+                       '<input type="checkbox" name="listCheckBox" class="custom" id="listCheckBox' + i + '" data-label="' + labels[i] + '">' +
+                       '<label for="listCheckBox' + i + '">' + text + '</label>' +
+                       '<a data-role="button" data-theme="f" data-mini="true" class="layer-manager" data-value="attr"' +
+                       'data-label="' + labels[i] + '">속성</a>' +
+                       '</div>' +
+                       '</li>');
     }
     listRootDiv.trigger("create");
     for (i = 0; i < labels.length; i++) {
         $('#' + labels[i] + 'slider').bind('change', sliderEvent);
+        $('input[name=listCheckBox]').bind('click', checkBoxEvent);
     }
     this.ulObj = Sortable.create(document.getElementById(this.listDiv + 'Contents'), {
         animation: 150,
@@ -244,4 +243,3 @@ OGDSM.mapLayerList.prototype.addList = function (obj, label) {
         }
     });
 };
-

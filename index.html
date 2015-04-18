@@ -78,18 +78,46 @@
             right : 10px;
             text-align : right;
         }
+        .OGDSPosBottomCenter{
+            position : absolute;
+            width : 100%;
+            z-index : 1000;
+            bottom : 8px;
+            left : 45%;
+            right : 45%;
+        }
         .OGDSPosTopCenter{
             position : absolute;
             z-index : 999;
             width : 100%;
             top : 8px;
-            left : 70%;
+            left : 60%;
             right : 50%;
+        }
+        .OGDSPosTransTopDownHide{
+            transition: top 0.1s ease;
+            position : absolute;
+            width : 100%;
+            height : 50%;
+            background : rgba(255,255,255,.5);
+            z-index: 10001;
+            top :-70%;
+        }
+        .OGDSPosTransTopDownShow{
+            transition: top 0.1s ease;
+            position : absolute;
+            width : 100%;
+            height : 50%;
+            background : rgba(255,255,255,.5);
+            z-index: 10001;
+            top :0%;
         }
 	</style>
     <script>
         $(function(){
-            /*uiTest.autoButton('test','testid','in','','테스트버튼', ['a', '', '', 'true']);*/
+/*            var ui = new OGDSM.eGovFrameUI();
+            ui.autoButton('test','testid','in','','테스트버튼');
+            ui.autoSelect('test','test','testName',['1','2','3'],['1','2','3']);*/
             /*uiTest.autoCheckBox('test','test', 'testName', ['1','2','3','4'], ['1','2','3','4']);*/
             /*uiTest.autoRadioBox('test','test', 'testName', ['1','2','3','4'], ['1','2','3','4'], ['h']);*/
             /*uiTest.autoSelect('test','test','testName',['1','2','3'],['1','2','3'], ['c','false','true']);*/
@@ -98,7 +126,7 @@
             var openGDSMObj = new OGDSM.visualization('map');
             openGDSMObj.olMapView([127.010031, 37.582200], 'OSM'); //VWorld
             openGDSMObj.trackingGeoLocation(true);
-            var ui = new OGDSM.eGovFrameUI();
+
             ui.baseMapCheckBox(openGDSMObj, 'mapSelect', 'OSM VWorld'); //현재.... 데이터 체크...
             */
         });
@@ -116,6 +144,8 @@
     -->
     <!--Content-->
 	<div data-role="content" style="padding:0; margin:0;">
+        <div id="test"> </div>
+
         <div id="menuButton" class="OGDSPosTopCenter">
             <a href="#vworldList" data-role="button" data-rel="popup" data-mini="true" data-inline="true"
                data-position-to="window" onclick="vworldWMSUI()">브이월드 데이터 </a>
@@ -131,11 +161,15 @@
 
         <div id="map" style="padding:0; margin:0;"></div>
 
-        <div id="attributeTable" class="OGDSPosBottomRight">
-            <div id="tableContent" style="background:rgba(0,0,0,1); display:none;">
+        <div id="dataViewCheckBox" class="OGDSPosBottomCenter"></div>
+
+        <div id="attributeTable" class="OGDSPosTransTopDownHide">
+            <div id="tableSelect" style="text-align:center;">
+                <h3>속성정보</h3>
+            </div>
+            <div id="tableContent" style="background:rgba(100,100,100,1); width: 100%; height: 100%;">
                 <!-- 공간정보 시각화시 새로운 DIV 만든 후 그 안에 Table 생성... -->
             </div>
-            <div id="tableSelect">속성정보 리스트</div>
 
         </div>
 

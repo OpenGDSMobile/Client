@@ -10,6 +10,23 @@ function mapSelectUI(openGDSMObj) {
     //ui.baseMapRadioBox(openGDSMObj, 'mapSelect', 'OSM VWorld VWorld_m VWorld_s VWorld_g'); //현재.... 데이터 체크...
     ui.baseMapSelect(openGDSMObj, 'mapSelect', 'OSM VWorld VWorld_m VWorld_s VWorld_g'); //현재.... 데이터 체크...
 }
+//데이터 라디오 버튼 사용자 인터페이스 생성 함수
+function mapAttrUI() {
+    'use strict';
+    var ui = new OGDSM.eGovFrameUI();
+    var radioObj = ui.autoRadioBox('dataViewCheckBox', 'dataViewSelect', ['공간정보', '속성정보'], ['map', 'attr'], {dataType : 'h'});
+    radioObj.bind('change', function () {
+        if ($(this).val() === 'attr') {
+            $('#attributeTable').removeClass('OGDSPosTransTopDownHide');
+            $('#attributeTable').addClass('OGDSPosTransTopDownShow');
+        } else {
+            $('#attributeTable').removeClass('OGDSPosTransTopDownShow');
+            $('#attributeTable').addClass('OGDSPosTransTopDownHide');
+
+        }
+    });
+
+}
 //브이월드 WMS 데이터 선택 사용자 인터페이스 생성 / 시각화 함수
 function vworldWMSUI() {
     'use strict';
@@ -89,7 +106,19 @@ $(function () {
     openGDSMObj.olMapView([127.010031, 37.582200], 'OSM'); //VWorld
     openGDSMObj.trackingGeoLocation(true);
     mapSelectUI(openGDSMObj);
-/*
+    mapAttrUI();
+
+    /***************************************************/
+    $("#d3View").attr('width', $(window).width() - 100);
+	$('#d3viewonMap').hide();
+	$("#d3viewonMap").attr('width', $(window).width() - 50);
+	$('#d3viewonMap').css('top', $(window).height() - 300);
+
+	$('#interpolationMap').hide();
+	$("#interpolationMap").attr('width', $(window).width() - 50);
+	$('#interpolationMap').css('top', $(window).height() - 600);
+    /***************************************************/
+
     var externalServer = new OGDSM.externalConnection();
     var r = Math.floor(Math.random() * 256),
         g = Math.floor(Math.random() * 256),
@@ -97,7 +126,7 @@ $(function () {
     var color = 'rgb(' + r + ',' + g + ',' + b + ')';
     var addr = 'http://113.198.80.9';
     externalServer.geoServerWFSLoad(openGDSMObj, addr, 'opengds', 'seoul_sig', 'polygon', color);
-*/
+
 });
 
 /*
