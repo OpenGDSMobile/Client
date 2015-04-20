@@ -14,7 +14,7 @@ function mapSelectUI(openGDSMObj) {
 function mapAttrUI() {
     'use strict';
     var ui = new OGDSM.eGovFrameUI();
-    var radioObj = ui.autoRadioBox('dataViewCheckBox', 'dataViewSelect', ['공간정보', '속성정보'], ['map', 'attr'], {dataType : 'h'});
+    var radioObj = ui.autoRadioBox('dataViewCheckBox', 'dataViewSelect', ['공간정보', '속성정보'], ['map', 'attr'], {horizontal : true});
     radioObj.bind('change', function () {
         if ($(this).val() === 'attr') {
             $('#attributeTable').removeClass('OGDSPosTransTopDownHide');
@@ -34,7 +34,9 @@ function vworldWMSUI() {
     var ui = new OGDSM.eGovFrameUI();
     var externalServer = new OGDSM.externalConnection('vworldWMS');
     var wmsListIds = ui.vworldWMSList('vworldSelect');
-    var processBtn = ui.processButton('vworldSelect', 'a');
+    var processBtn = ui.autoButton('vworldSelect', 'vworldProcess', 'Process', '#', {
+        theme : 'a'
+    });
     processBtn.click(function () {
         var i, data = [];
         for (i = 0; i < wmsListIds.length; i++) {
@@ -57,12 +59,11 @@ function wfsLoad(str) {
     var addr = 'http://113.198.80.9';
     var externalServer = new OGDSM.externalConnection();
     var ui = new OGDSM.eGovFrameUI();
-
-    externalServer.geoServerWFSLoad(openGDSMObj, addr, 'opengds', str, 'polygon', color);
-
-
-    //var obj = uiTest.autoRadioBox('tableSelect', 'attributeRadio', 'attributeRadio', ['1','2','3','4'], ['1','2','3','4'], ['h']);
-
+    if (str === 'seoul_env_position') {
+        externalServer.geoServerWFSLoad(openGDSMObj, addr, 'opengds', str, 'point', color);
+    } else {
+        externalServer.geoServerWFSLoad(openGDSMObj, addr, 'opengds', str, 'polygon', color);
+    }
 }
 //서울 열린데이터 광장 데이터 선택 사용자 인터페이스 생성 / 시각화 함수
 function createSeoulPublicAreaEnvUI() {
@@ -70,7 +71,9 @@ function createSeoulPublicAreaEnvUI() {
     $('#setting').empty();
     var ui = new OGDSM.eGovFrameUI();
     var envIds = ui.seoulEnvironment('setting');
-    var processBtn = ui.processButton('setting', 'a');
+    var processBtn = ui.autoButton('setting', 'vworldProcess', 'Process', '#', {
+        theme : 'a'
+    });
     var externalServer = new OGDSM.externalConnection();
     var colors = ['#0090ff', '#008080', '#4cff4c', '#99ff99', '#FFFF00', '#FFFF99', '#FF9900', '#FF0000'],
         ranges = [ [15, 30, 55, 80, 100, 120, 200],    //PM10, PM25
@@ -102,11 +105,11 @@ function createSeoulPublicAreaEnvUI() {
 $(function () {
     'use strict';
     openGDSMObj = new OGDSM.visualization('map', 'layerList'); //map div, layerList switch
-    //openGDSMObj.olMapView([127.010031, 37.582200], 'OSM', 'EPSG:900913'); //VWorld
-    openGDSMObj.olMapView([127.010031, 37.582200], 'OSM'); //VWorld
+    openGDSMObj.olMapView([127.010031, 37.582200], 'OSM', 'EPSG:900913'); //VWorld
+    //openGDSMObj.olMapView([127.010031, 37.582200], 'OSM'); //VWorld
     openGDSMObj.trackingGeoLocation(true);
     mapSelectUI(openGDSMObj);
-//    mapAttrUI();
+    mapAttrUI();
 
     /***************************************************/
     $("#d3View").attr('width', $(window).width() - 100);

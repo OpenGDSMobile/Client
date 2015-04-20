@@ -438,7 +438,7 @@ OGDSM.externalConnection.prototype.geoServerWFSLoad = function (obj, addr, works
                 }),
                 style : objStyles
             });
-            obj.addMap(wfsLayer);
+            obj.addMap(wfsLayer, type);
             $.mobile.loading('hide');
         },
         error : function (e) {

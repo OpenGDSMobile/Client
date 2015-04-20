@@ -31,18 +31,17 @@ OGDSM.namesapce('eGovFrameUI');
  * @method autoButton
  * @param {String} divId - root div id about HTML tag attribute [상위 DIV 아이디]
  * @param {String} linkId - link a id about HTML tag attribute  [생성될 버튼 아이디]
- * @param {String} linkType - link type (in|domain_ex|ex) [버튼 타입]
- * @param {String} url - link url (internal : "#?????", domain_external : "/???/???/...", external : "http://???") [링크 주소]
  * @param {String} buttonTitle - button title [버튼 이름]
+ * @param {String} url - link url
  * @param {Array} options (option) - theme, corners, inline, mini
                                      [values : 'a'~'g'(default:this.dataTheme), true(default) | false, true | false(default), true | false(default)]
  * @return {jQuery Object} user interface id object [제이쿼리 아이디 객체]
  */
-OGDSM.eGovFrameUI.prototype.autoButton = function (rootDivId, linkId, linkType, url, buttonTitle, options) {
+OGDSM.eGovFrameUI.prototype.autoButton = function (rootDivId, linkId, buttonTitle, url, options) {
     'use strict';
     options = (typeof (options) !== 'undefined') ? options : {};
     var rootDiv = $('#' + rootDivId),
-        html = '<a data-role="button" id="' + linkId + '" href=',
+        html = '<a data-role="button" id="' + linkId + '" href="' + url + '" ',
         i = 0,
         name = null;
 
@@ -59,15 +58,6 @@ OGDSM.eGovFrameUI.prototype.autoButton = function (rootDivId, linkId, linkType, 
             }
         }
 	}
-
-    if (linkType === 'in') {
-        html += '"#' + url + '" ';
-    } else if (linkType === 'domain_ex' || linkType === 'ex') {
-        html += '"' + url + '" ';
-    } else {
-        console.error('link type write "in|domain_ex|ex"');
-        return null;
-    }
     html += 'data-theme="' + defaults.theme + '" data-corners="' + defaults.corners + '" data-inline="' + defaults.inline + '" data-mini="' + defaults.mini + '"';
     html += '>' + buttonTitle + '</a>';
     rootDiv.append(html);
@@ -76,7 +66,7 @@ OGDSM.eGovFrameUI.prototype.autoButton = function (rootDivId, linkId, linkType, 
 };
 
 /**
- * 체크박스 자동 생성 (수정)
+ * 체크박스 자동 생성
  * Auto Create about Check Box.
  * @method autoCheckBox
  * @param {String} divId - root div id about HTML tag attribute [상위 DIV 아이디]
@@ -84,46 +74,52 @@ OGDSM.eGovFrameUI.prototype.autoButton = function (rootDivId, linkId, linkType, 
  * @param {String} chkName - checkbox name [체크박스 이름]
  * @param {Array} labels - checkbox label names [체크박스 라벨 이름]
  * @param {Array) values - checkbox values [체크박스 값]
- * @param {Array} options (option) - dataType (0), theme (1), setting
-                                     [values : ''(default) | 'h', 'a'~'g'(default: this.dataTheme)]
+ * @param {Array} options (option) - theme, horizontal
+                                     [values : 'a'~'g'(default:this.dataTheme), true(default) | false(default)]
                                      [ 배열인자 옵션: 수직,수평(0), 테마(1) ]
  * @return {jQuery Object} user interface name object [제이쿼리 이름 객체]
  */
-OGDSM.eGovFrameUI.prototype.autoCheckBox = function (rootDivId, chkId, chkName, labels, values, options) {
+OGDSM.eGovFrameUI.prototype.autoCheckBox = function (rootDivId, chkId, labels, values, options) {
     'use strict';
     options = (typeof (options) !== 'undefined') ? options : null;
     var rootDiv = $('#' + rootDivId),
-        html = '<fieldset data-role="controlgroup" ',
-        optionName = ['data-type', 'data-theme'],
-        optionData = ['', this.dataTheme],
-        i = 0;
-    if (options !== null) {
-        if (options[0] !== '') {
-            html += optionName[0] + '="' + options[0] + 'orizontal">';
+        html = '',
+        i = 0,
+        name = null,
+        defaults = {
+            checkName : chkId + 'Name',
+            theme : this.dataTheme,
+            horizontal : false
+        };
+    for (name in defaults) {
+        if (defaults.hasOwnProperty(name)) {
+            if (options.hasOwnProperty(name)) {
+                defaults[name] = options[name];
+            }
         }
-        if (typeof (options[1]) !== 'undefined') {
-            optionData[1] =    options[1];
-        }
-    } else {
-        html += '>';
-    }
+	}
     html = '';
     if (Array.isArray(labels)) {
+        html += '<fieldset data-role="controlgroup" ';
+        if (defaults.horizontal) {
+            html += 'data-type="horizontal">';
+        } else {
+            html += '>';
+        }
         for (i = 0; i < labels.length; i += 1) {
-            html += '<input type="checkbox" name="' + chkName + '" id="' + chkId + i + '" value="' + values[i] + '" ';
-            html += optionName[1] + '="' + optionData[1] + '" class="custom"/>';
+            html += '<input type="checkbox" name="' + defaults.checkName + '" id="' + chkId + i + '" value="' + values[i] + '" ';
+            html += 'data-theme="' + defaults.theme + '" class="custom"/>';
             html += '<label for="' + chkId + i + '">' + labels[i] + '</label>';
         }
+        html += '</fieldset>';
     } else {
-        html += '<input type="checkbox" name="' + chkName + '" id="' + chkId + '" value="' + values[i] + '" ';
-        html += optionName[1] + '="' + optionData[1] + '" class="custom"/>';
+        html += '<input type="checkbox" name="' + defaults.checkName + '" id="' + chkId + '" value="' + values[i] + '" ';
+        html += 'data-theme="' + defaults.theme + '" class="custom"/>';
         html += '<label for="' + chkId + '">' + labels + '</label>';
     }
-
-  //  html += '</fieldset>';
     rootDiv.append(html);
     rootDiv.trigger('create');
-    return $('input[name=' + chkName + ']:checkbox');
+    return $('input[name=' + defaults.checkName + ']:checkbox');
 };
 
 /**
@@ -135,8 +131,8 @@ OGDSM.eGovFrameUI.prototype.autoCheckBox = function (rootDivId, chkId, chkName, 
  * @param {String} radioName - radiobox name [라디오박스 이름]
  * @param {Array} labels - radiobox label names [라디오박스 라벨 이름]
  * @param {Array) values - radiobox values [라디오박스 값]
- * @param {Array} options (option) - radioName, dataType, theme
-                                     [values : radioId + 'Name' (default), ''(default) | 'h', 'a'~'g'(default: this.dataTheme)]
+ * @param {Array} options (option) - radioName, horizontal, theme
+                                     [values : radioId + 'Name' (default), true| false(default), 'a'~'g'(default: this.dataTheme)]
  * @return {jQuery Object} user interface name object [제이쿼리 이름 객체]
  */
 OGDSM.eGovFrameUI.prototype.autoRadioBox = function (rootDivId, radioId, labels, values, options) {
@@ -151,7 +147,7 @@ OGDSM.eGovFrameUI.prototype.autoRadioBox = function (rootDivId, radioId, labels,
 
     var defaults = {
         radioName : radioId + 'Name',
-        dataType : '',
+        horizontal : false,
         theme : this.dataTheme
     };
     for (name in defaults) {
@@ -162,7 +158,7 @@ OGDSM.eGovFrameUI.prototype.autoRadioBox = function (rootDivId, radioId, labels,
         }
 	}
 
-    if (defaults.dataType !== '') {
+    if (defaults.horizontal) {
         html += 'data-theme="' + defaults.theme + '" data-type="horizontal">';
     } else {
         html += 'data-theme="' + defaults.theme + '">';
@@ -565,10 +561,10 @@ OGDSM.eGovFrameUI.prototype.seoulEnvironment = function (divId, theme) {
     ],
         environmentValues = ['PM10', 'PM25', 'SO2', 'O3', 'NO2', 'CO'];
     var rootDiv = $('#' + divId),
-        visualType = this.autoRadioBox(divId, 'visualType', 'visualType', ['맵', '차트'], ['map', 'chart'], ['h']),
+        visualType = this.autoRadioBox(divId, 'visualType', ['맵', '차트'], ['map', 'chart'], {horizontal : true}),
         date = this.dateInput(divId),
         time = this.timeInput(divId),
-        environmentType = this.autoRadioBox(divId, 'envType', 'envType', environmentImages, environmentValues, ['h']);
+        environmentType = this.autoRadioBox(divId, 'envType', environmentImages, environmentValues, {horizontal : true});
     return [visualType, date, time, environmentType];
 };
 

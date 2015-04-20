@@ -4,7 +4,7 @@ OGDSM.namesapce('mapLayerList');
 
 (function (OGDSM) {
     "use strict";
-    var arrlayerObjs = [], arrlabels = [], visualChecks = [];
+    var arrlayerObjs = [], arrlabels = [];
     /**
      * 오픈레이어 맵 레이어 목록 객체
      * OpenLayers3 Map layer list class
@@ -25,8 +25,8 @@ OGDSM.namesapce('mapLayerList');
             listRootElement = document.createElement('div'),
             listUlElement = document.createElement('ul'),
             btnText = '레이어목록 보이기',
-            elementCSS = 'position : absolute; background : rgba(255,255,255,0.0); top: 0px; height : 99%;  z-index : 1;',
-            olCustomListCSS = 'float : left; padding : 1px;	background : rgba(255,255,255,0.0); height : 100%;' +
+            elementCSS = 'position : absolute; background : rgba(255,255,255,0.0); top: 0px;  z-index : 1;',
+            olCustomListCSS = 'float : left; padding : 1px;	background : rgba(255,255,255,0.0); ' +
             'width : ' + listSize + 'px;',
             olCustomButtonCSS = 'cursor:pointer; position : absolute; width:' + buttonSize + 'px; height: 50px;',
             listTitleCSS = 'width: 100%; text-align:center;',
@@ -69,8 +69,6 @@ OGDSM.namesapce('mapLayerList');
         listRootElement.id = listDiv + 'Div';
         listUlElement.id = listDiv + 'Contents';
         listUlElement.style.cssText = listUlCSS;
-/*        listUlElement.setAttribute('data-role', 'listview');
-        listUlElement.setAttribute('data-inset', 'true');*/
 
         listElement.appendChild(listTitleElement);
         listElement.appendChild(listRootElement);
@@ -89,36 +87,6 @@ OGDSM.namesapce('mapLayerList');
         this.ulObj = Sortable.create(document.getElementById(this.listDiv + 'Contents'), {
             animation: 150,
             handle: '.drag-handle',
-            filter : '.layer-manager',
-            onFilter: function (evt) {
-                var type = evt.srcElement.getAttribute('data-value'),
-                    labels = thisObj.getLabels(),
-                    length = labels.length - 1,
-                    objs = thisObj.getLayersObj(),
-                    srcNum = Math.abs(length - evt.oldIndex);
-                console.log("test");
-                if (type === 'onoff') {
-    //                var onoff = evt.srcElement.style.background;
-                    var layerName = evt.srcElement.getAttribute('data-label');
-    //                if (onoff === 'rgb(125, 172, 44)') {
-                    if (!evt.srcElement.checked) {
-      //                  evt.srcElement.style.background = 'rgb(255, 255, 255)';
-    //                    evt.srcElement.childNodes[0].childNodes[0].innerHTML = 'OFF';
-                        //ogdsmObj.setVisible(layerName, false);
-                    } else {
-    //                    evt.srcElement.style.background = 'rgb(125, 172, 44)';
-    //                    evt.srcElement.childNodes[0].childNodes[0].innerHTML = 'ON';
-                        //ogdsmObj.setVisible(layerName, true);
-                    }
-                } else if (type === 'delete') {
-                    //ogdsmObj.removeMap(labels[srcNum]);
-                    evt.item.parentNode.removeChild(evt.item);
-                    labels.splice(srcNum, 1);
-                    objs.splice(srcNum, 1);
-                    thisObj.setLayersObj(objs);
-                    thisObj.setLabels(labels);
-                }
-            },
             onUpdate : function (evt) {
                 var labels = thisObj.getLabels(), i,
                     objs = thisObj.getLayersObj(),
@@ -150,16 +118,6 @@ OGDSM.namesapce('mapLayerList');
                 thisObj.setLabels(labels);
             }
         });
-/*        var olList = $('#' + this.listDiv + 'Contents');
-        olList.prepend('<li id="test">' +
-                       '<img src="./images/' + 'list_bul_polygon.png' + '" width="10%" align="middle" class="drag-handle">' +
-                       '<fieldset data-role="controlgroup">' +
-                       '<input type="checkbox" name="listCheckBox" id="listCheckBox1" data-label="" class="drag-handle custom">' +
-                       '<label for="listCheckBox' + '1' + '">' + 'eeeeeeeee' + '</label>' +
-                       '</fieldset>' +
-                       '</li>');
-        */
-        $('#' + this.listDiv + 'Contents').trigger("create");
     };
     OGDSM.mapLayerList.prototype = {
         constructor : OGDSM.mapLayerList,
@@ -181,25 +139,16 @@ OGDSM.namesapce('mapLayerList');
             return arrlabels;
         },
         setLabel : function (label) {
-        //    arrlabels.push(label);
             arrlabels.push(label);
         },
         setLabels : function (labels) {
             arrlabels = labels;
         },
-        setCheck : function (chk, i) {
-            i = (typeof (i) !== 'undefined') ? i : null;
-            if (i === null) {
-                visualChecks.push(chk);
-            } else {
-                visualChecks[i] = chk;
-            }
-        },
-        getCheck : function (i) {
-            return visualChecks[i];
-        },
         getVisualizationObj : function () {
             return this.visualizationObj;
+        },
+        getThis : function () {
+            return this;
         }
     };
     return OGDSM.mapLayerList;
@@ -211,14 +160,14 @@ OGDSM.namesapce('mapLayerList');
  * @param {ol3 layer object} obj - openlayers3 layer object
  * @param {String} label - list name
  */
-OGDSM.mapLayerList.prototype.addList = function (obj, label) {
+OGDSM.mapLayerList.prototype.addList = function (obj, label, color, type) {
     'use strict';
+    type = (typeof (type) !== 'undefined') ? type : null;
     var i, olList = $('#' + this.listDiv + 'Contents'),
         thisObj = this,
         labels = this.getLabels(),
         objs = this.getLayersObj(),
-        ogdsmObj = this.visualizationObj,
-        objTypeImageURL = 'list_bul_polygon.png';
+        ogdsmObj = this.visualizationObj;
     this.setLayerObj(obj);
     this.setLabel(label);
     function sliderEvent(e, u) {
@@ -230,38 +179,29 @@ OGDSM.mapLayerList.prototype.addList = function (obj, label) {
     function deleteEvent(e, u) {
         var layerName = e.currentTarget.getAttribute('data-label');
         var labels = thisObj.getLabels();
-        var length = labels.length - 1;
-        var liNum = length - e.currentTarget.getAttribute('data-num');
-        var labelNum = e.currentTarget.getAttribute('data-num');
-        console.log(labels);  //0
-        console.log(document.getElementById(layerName + 'li'));
-        /*listUlElement.removeChild(document.getElementById(layerName + 'li'));*/
+        var layerNum = $.inArray(layerName, labels);
         ogdsmObj.removeMap(layerName);
-        labels.splice(labelNum, 1);
-        objs.splice(labelNum, 1);
+        labels.splice(layerNum, 1);
+        objs.splice(layerNum, 1);
         thisObj.setLayersObj(objs);
         thisObj.setLabels(labels);
-
-//        evt.item.parentNode.removeChild(evt.item);
+        $('#layer' + layerName).remove();
+        $('#popup' + layerName).hide();
     }
     function checkBoxEvent(e, u) {
         var layerName = e.currentTarget.getAttribute('data-label');
-        var layerNum = e.currentTarget.getAttribute('data-num');
-        console.log(e);
         if (!e.currentTarget.checked) {
             ogdsmObj.setVisible(layerName, false);
-         //   thisObj.setCheck(false, layerNum);
         } else {
             ogdsmObj.setVisible(layerName, true);
-        //    thisObj.setCheck(true, layerNum);
         }
     }
     olList.prepend('<li id="layer' + label + '" style="float:left">' +
                    '<div style="width:15%; float:left; margin-top:4px;">' +
-                   '<img src="./images/' + objTypeImageURL + '" width="100%" align="middle" class="drag-handle">' +
+                   '<canvas id="' + label + 'canvas" width="100%" height=30px; class="drag-handle" ></canvas>' +
                    '</div> <div style="width:70%; float:left; padding:0px; margin:0px;">' +
                    '<input type="checkbox" name="listCheckBox" data-corners="false" data-mini="true"  class="custom" ' +
-                   'id="' + 'visualSW' + thisObj.getLabels().length + '" data-label="' + label + '"/>' +
+                   'id="' + 'visualSW' + thisObj.getLabels().length + '" data-label="' + label + '" checked/>' +
                    '<label for="' + 'visualSW' + thisObj.getLabels().length + '">' + label + '</label>' +
                    '</div> <div style="width:15%; float:left; padding:0px; margin:0px;">' +
                    '<a data-role="button" data-rel="popup" data-theme="b" data-corners="false" data-mini="true" data-transition="pop"' +
@@ -275,13 +215,29 @@ OGDSM.mapLayerList.prototype.addList = function (obj, label) {
                    '</div>' +
                    '</li>');
 
+    var labelCanvas = document.getElementById(label + 'canvas').getContext('2d');
+    if (type === 'polygon') {
+        labelCanvas.fillStyle = color;
+        labelCanvas.fillRect(5, 5, 20, 20);
+        labelCanvas.strokeRect(5, 5, 20, 20);
+    } else if (type === 'point') {
+        labelCanvas.beginPath();
+        labelCanvas.arc(15, 15, 12, 0, 2 * Math.PI);
+        labelCanvas.fillStyle = color;
+        labelCanvas.fill();
+        labelCanvas.stroke();
+    } else if (type === 'line') {
+        labelCanvas.moveTo(5, 5);
+        labelCanvas.lineTo(20, 20);
+        labelCanvas.strokeStyle = color;
+        labelCanvas.stroke();
+    } else {
+        labelCanvas.fillStyle = 'rgb(0, 0, 0)';
+        labelCanvas.fillRect(5, 5, 20, 20);
+        labelCanvas.strokeRect(5, 5, 20, 20);
+    }
     $('#layer' + label).trigger('create');
     $('#' + label + 'slider').bind('change', sliderEvent);
     $('#' + label + 'delete').bind('click', deleteEvent);
     $('input[name=listCheckBox]').bind('click', checkBoxEvent);
-    /*for (i = 0; i < labels.length; i++) {
-        $('#' + labels[i] + 'slider').bind('change', sliderEvent);
-        $('#' + labels[i] + 'delete').bind('click', deleteEvent);
-        $('input[name=listCheckBox]').bind('click', checkBoxEvent);
-    }*/
 };

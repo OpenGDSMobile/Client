@@ -274,13 +274,27 @@ OGDSM.visualization.prototype.updateLayoutSetting = function (mapDiv) {
  * @method addMap
  * @param {ol Map Object} data - Openlayers map object (OpenLayers WMS/WFS/ Object)
  */
-OGDSM.visualization.prototype.addMap = function (data) {
+OGDSM.visualization.prototype.addMap = function (data, type) {
     'use strict';
     var chkData = this.layerCheck(data.get('title'));
     if (chkData === false) {
-       // this.getMap().removeLayer(chkData);
         this.getMap().addLayer(data);
-        this.layerListObj.addList(data, data.get('title'));
+        console.log(type);
+        if (typeof (this.layerListObj) !== 'undefined') {
+            var color;
+            if (typeof data.getStyle !== 'undefined') {
+                if (type === 'polygon') {
+                    color = data.getStyle()[0].getFill().getColor();
+                } else if (type === 'point') {
+                    color = data.getStyle()[0].getImage().getFill().getColor();
+                }
+
+            } else {
+                color =  'rgb(0, 0, 0)';
+            }
+            console.log(color);
+            this.layerListObj.addList(data, data.get('title'), color, type);
+        }
     } else {
         console.log("Layer is existence");
     }

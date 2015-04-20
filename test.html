@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <script>
+        function drawStart(){
+            console.log("Test");
+            var test = document.getElementById('test').getContext('2d');
+            test.beginPath();
+            test.arc(50, 50, 5, 0, 2*Math.PI);
+            test.stroke();
+        }
+    </script>
+    </head>
+    <body onload="drawStart()">
+    ddd
+        <canvas id="test"></canvas>
+
+    </body>
+</html>
