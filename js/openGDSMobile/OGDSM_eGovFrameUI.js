@@ -107,12 +107,20 @@ OGDSM.eGovFrameUI.prototype.autoCheckBox = function (rootDivId, chkId, chkName, 
     } else {
         html += '>';
     }
-    for (i = 0; i < labels.length; i += 1) {
-        html += '<input type="checkbox" name="' + chkName + '" id="' + chkId + i + '" value="' + values[i] + '" ';
+    html = '';
+    if (Array.isArray(labels)) {
+        for (i = 0; i < labels.length; i += 1) {
+            html += '<input type="checkbox" name="' + chkName + '" id="' + chkId + i + '" value="' + values[i] + '" ';
+            html += optionName[1] + '="' + optionData[1] + '" class="custom"/>';
+            html += '<label for="' + chkId + i + '">' + labels[i] + '</label>';
+        }
+    } else {
+        html += '<input type="checkbox" name="' + chkName + '" id="' + chkId + '" value="' + values[i] + '" ';
         html += optionName[1] + '="' + optionData[1] + '" class="custom"/>';
-        html += '<label for="' + chkId + i + '">' + labels[i] + '</label>';
+        html += '<label for="' + chkId + '">' + labels + '</label>';
     }
-    html += '</fieldset>';
+
+  //  html += '</fieldset>';
     rootDiv.append(html);
     rootDiv.trigger('create');
     return $('input[name=' + chkName + ']:checkbox');

@@ -213,14 +213,21 @@ OGDSM.namesapce('mapLayerList');
  */
 OGDSM.mapLayerList.prototype.addList = function (obj, label) {
     'use strict';
-    var i, olList = $('#' + this.listDiv + 'Contents'),
+    var i, listRootDiv = $('#' + this.listDiv + 'Div'),
         thisObj = this,
+   /*     listUlElement = document.createElement('ul'),*/
         labels = this.getLabels(),
         objs = this.getLayersObj(),
         ogdsmObj = this.visualizationObj,
         objTypeImageURL = 'list_bul_polygon.png';
+  /*  listRootDiv.empty();*/
+  /*$('#' + this.listDiv + 'Contents').empty();*/
     this.setLayerObj(obj);
     this.setLabel(label);
+    /*listOlElement.id = this.listDiv + 'Contents';*/
+    /*listOlElement.setAttribute('data-role', 'listview');*/
+    /*listRootDiv.append(listOlElement);*/
+    var olList = $('#' + this.listDiv + 'Contents');
     function sliderEvent(e, u) {
         var layerName = e.currentTarget.getAttribute('data-label'),
             opacityValue = e.currentTarget.value,
@@ -256,32 +263,76 @@ OGDSM.mapLayerList.prototype.addList = function (obj, label) {
         //    thisObj.setCheck(true, layerNum);
         }
     }
-    olList.prepend('<li id="layer' + label + '" style="float:left">' +
-                   '<div style="width:15%; float:left; margin-top:4px;">' +
-                   '<img src="./images/' + objTypeImageURL + '" width="100%" align="middle" class="drag-handle">' +
-                   '</div> <div style="width:70%; float:left; padding:0px; margin:0px;">' +
-                   '<input type="checkbox" name="listCheckBox" data-corners="false" data-mini="true"  class="custom" ' +
-                   'id="' + 'visualSW' + thisObj.getLabels().length + '" data-label="' + label + '"/>' +
-                   '<label for="' + 'visualSW' + thisObj.getLabels().length + '">' + label + '</label>' +
-                   '</div> <div style="width:15%; float:left; padding:0px; margin:0px;">' +
-                   '<a data-role="button" data-rel="popup" data-theme="b" data-corners="false" data-mini="true" data-transition="pop"' +
-                   'data-label="' + label + '" href="#popup' + label + '">　</a>' +
-                   '</div>' +
-                   '<div data-role="popup" id="popup' + label + '" style="width:' + 200 + 'px">' +
-                   '<input type="range" value="100" min="0" max="100" data-highlight="true" class="layer-manager"' +
-                   'id="' + label + 'slider" data-label="' + label + '">' +
-                   '<a data-role="button" data-theme="f" data-mini="true"' +
-                   'id="' + label + 'delete" data-label="' + label + '">Delete</a>' +
-                   '</div>' +
-                   '</li>');
+ //   for (i = 0; i < labels.length; i++) {
+//        var text = (labels[i].length > 9) ? labels[i].substring(0, 9) + '...' : labels[i];
+/*        olList.prepend('<li style="width:94%; height:72px; padding:0px; top:18px; padding-top:4px;">' +
+                      '<div data-role="controlgroup" data-type="horizontal" style="margin:0px; padding-left:18px;">' +
+                      '<a data-role="button" data-theme="c" data-mini="true" style="width:85px;">' + text + '</a>' +
+                      '<a data-role="button" data-theme="d" data-mini="true" class="layer-manager" data-value="onoff"' +
+                      'data-label="' + labels[i] + '" style="background:#7dac2c;">ON</a>' +
+                      '<a data-role="button" data-theme="f" data-mini="true" class="layer-manager" data-value="delete"' +
+                      'data-label="' + labels[i] + '">Delete</a>' +
+                      '</div>' +
+                      '<div  style="padding:0px; margin:0px; padding-left:18px;">' +
+                      '<input type="range" value="100" min="0" max="100" data-highlight="true"' +
+                      'id="' + labels[i] + 'slider" data-label="' + labels[i] + '">' +
+                      '</div>' +
+                      '</li>');*/
+        /*
+        olList.prepend('<li style="width:94%; height:74px; padding:0px; top:18px; padding-top:4px;">' +
+                       '<img src="./images/' + objTypeImageURL + '" width="50%" height="50%">' +
+                       '<div data-role="popup" id="popup' + labels[i] + '" style="width:' + 200 + 'px">' +
+                       '<input type="range" value="100" min="0" max="100" data-highlight="true" class="layer-manager"' +
+                       'id="' + labels[i] + 'slider" data-label="' + labels[i] + '">' +
+                       '<a data-role="button" data-theme="f" data-mini="true"' +
+                       'id="' + labels[i] + 'delete" data-label="' + labels[i] + '" data-num="' + i + '">Delete</a>' +
+                       '</div>' +
+                       '<div data-role="controlgroup"style="margin:0px; padding-left:18px;">' +
+                       '<input type="checkbox" name="listCheckBox"' +
+                       'id="listCheckBox' + i + '" data-label="' + labels[i] + '" data-num="' + i + '">' +
+                       '<label for="listCheckBox' + i + '">' + text + '</label>' +
+                       '<a data-role="button" data-rel="popup" data-theme="c" data-mini="true" data-transition="pop"' +
+                       'data-label="' + labels[i] + '" href="#popup' + labels[i] + '">추가 기능</a>' +
+                       '</div>' +
+                       '</li>');
+    */
+//        var checkBoxCSS = 'width:20px;';
+        console.log(thisObj.getLabels().length);
+        olList.prepend('<li id="layer' + label + '" style="float:left">' +
+                       '<div style="width:15%; float:left; margin-top:4px;">' +
+                       '<img src="./images/' + objTypeImageURL + '" width="100%" align="middle" class="drag-handle">' +
+                       '</div> <div style="width:70%; float:left; padding:0px; margin:0px;">' +
+                       '<input type="checkbox" name="listCheckBox" data-corners="false" data-mini="true"  class="custom" '+
+                       'id="' + 'visualSW' + thisObj.getLabels().length + '" data-label="' + label + '"/>' +
+                       '<label for="' + 'visualSW' + thisObj.getLabels().length + '">' + label + '</label>' +
+                       '</div> <div style="width:15%; float:left; padding:0px; margin:0px;">' +
+                       '<a data-role="button" data-rel="popup" data-theme="b" data-corners="false" data-mini="true" data-transition="pop"' +
+                       'data-label="' + label + '" href="#popup' + label + '">　</a>' +
+                       '</div>' +
+                       '<div data-role="popup" id="popup' + label + '" style="width:' + 200 + 'px">' +
+                       '<input type="range" value="100" min="0" max="100" data-highlight="true" class="layer-manager"' +
+                       'id="' + label + 'slider" data-label="' + label + '">' +
+                       '<a data-role="button" data-theme="f" data-mini="true"' +
+                       'id="' + label + 'delete" data-label="' + label + '">Delete</a>' +
+                       '</div>' +
+                       '</li>');
 
-    $('#layer' + label).trigger('create');
-    $('#' + label + 'slider').bind('change', sliderEvent);
-    $('#' + label + 'delete').bind('click', deleteEvent);
-    $('input[name=listCheckBox]').bind('click', checkBoxEvent);
-    /*for (i = 0; i < labels.length; i++) {
+        var testObj = new OGDSM.eGovFrameUI();
+
+        $('#layer' + label).trigger('create');
+        //testObj.autoCheckBox('layer' + labels[i], 'visaulSW' + i, 'listCheckBox', labels[i], labels[i]);
+//    }
+    //thisObj.setCheck(true);
+    /*
+    for (i = 0; i < labels.length; i++) {
+        $('#listCheckBox' + i).attr("checked", thisObj.getCheck(i));
+    }
+    */
+
+    console.log($('#listCheckBox0'));
+    for (i = 0; i < labels.length; i++) {
         $('#' + labels[i] + 'slider').bind('change', sliderEvent);
         $('#' + labels[i] + 'delete').bind('click', deleteEvent);
         $('input[name=listCheckBox]').bind('click', checkBoxEvent);
-    }*/
+    }
 };
