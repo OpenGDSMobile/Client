@@ -1,34 +1,48 @@
-/*jslint devel: true */
+/*jslint devel: true, vars : true, plusplus : true */
 /*global $, jQuery, ol, OGDSM, d3*/
-
 OGDSM.namesapce('visualization');
-(function (ol, OGDSM) {
+(function (OGDSM) {
     "use strict";
     var mapObj;
     /**
-    * OpenLayers3 Map Control Class
+    * 오픈레이어3 지도 시각화 객체
+    * OpenLayers3 Map Visualization Class
     * @class OGDSM.visualization
     * @constructor
-    * @param {ol.Map} map
+    * @param {String} mapDiv - Map div id
+    * @param {ol.Map} layerlistDiv - Layer list div view (option)
     */
-    OGDSM.visualization = function (map) {
-        mapObj = map;
+    OGDSM.visualization = function (mapDiv, layerlistDiv) {
+        layerlistDiv = (typeof (layerlistDiv) !== 'undefined') ? layerlistDiv : null;
+        this.updateLayoutSetting(mapDiv);
+        this.mapDiv = mapDiv;
+        this.geoLocation = null;
+        OGDSM.visualization = this;
+        $(window).on('resize', function () {
+            OGDSM.visualization.updateLayoutSetting();
+        });
+        if (layerlistDiv !== null) {
+            this.layerListObj = new OGDSM.mapLayerList(this, 'layerList');
+        }
+        // Orientation...
     };
     OGDSM.visualization.prototype = {
-        constructor : OGDSM.olMap,
+        constructor : OGDSM.visualization,
         /**
-         * getMap Method get map object about OpenLayers3.
+         * 지도 객체 받기
+         * Get map object about OpenLayers3
          * @method getMap
-         * @return {ol.Map} Retrun is OpenLayers object.
+         * @return {ol.Map} Retrun is OpenLayers object
          */
         getMap : function () {
-            return mapObj;
+            return this.mapObj;
         },
         /**
-         * Current Layers Check about OpenLayers3.
+         * 지도 레이어 존재 여부 확인
+         * Current layers check about OpenLayers3
          * @method layerCheck
-         * @param {String} layerName - Search layer name
-         * @return {OpenLayer3 Layer Object} Retrun is OpenLayers object.
+         * @param {String} layerName - Search layer title
+         * @return {OpenLayer3 Layer Object} Retrun is OpenLayers object
          */
         layerCheck : function (layerName) {
             var i,
@@ -39,27 +53,89 @@ OGDSM.namesapce('visualization');
                 }
             }
             return false;
+        },
+        /**
+         * 지도 레이어 인덱스 값
+         * Current layers index value about OpenLayers3
+         * @method indexOf
+         * @param {ol3 layers object} layers - Layer objects
+         * @return {Number} Retrun is index number
+         */
+        indexOf : function (layers, layer) {
+            var length = layers.getLength(), i;
+            for (i = 0; i < length; i++) {
+                if (layer === layers.item(i)) {
+                    return i;
+                }
+            }
+            return -1;
         }
-        
     };
     return OGDSM.visualization;
-}(ol, OGDSM));
+}(OGDSM));
 
 /**
- * changeBaseMap Method is base map Change.
+ * OpenGDS 모바일 맵 초기화
+ * OGDSM Mobile map view
+ * @method olMapView
+ * @param {Array}  latlng   - Map init center latitude, longitude (option) [default : [37.582200, 127.010031] ]
+ * @param {String} mapType - Background map (option) [default : 'OSM']
+ * @param {String} baseProj  - Map base projection (option) [default : 'EPSG:3857']
+ * @return {ol.Map} Return is openlayers3 ol.Map object
+ */
+OGDSM.visualization.prototype.olMapView = function (latlng, mapType, baseProj) {
+    'use strict';
+    latlng = (typeof (latlng) !== 'undefined') ? latlng : [37.582200, 127.010031];
+    mapType = (typeof (mapType) !== 'undefined') ? mapType : 'OSM';
+    baseProj = (typeof (baseProj) !== 'undefined') ? baseProj : 'EPSG:3857';
+    var map = null, baseMapLayer = null, geolocation;
+    var epsg5181 = new ol.proj.Projection({
+        code : 'EPSG:5181',
+        extent : [-219825.99, -535028.96, 819486.07, 777525.22],
+        units : 'm'
+    });
+    var epsg5179 = new ol.proj.Projection({
+        code : 'EPSG:5179',
+        extent : [531371.84, 967246.47, 1576674.68, 2274021.31],
+        units : 'm'
+    });
+    ol.proj.addProjection(epsg5181);
+    ol.proj.addProjection(epsg5179);
+    var baseView = new ol.View({
+        projection : ol.proj.get(baseProj),
+        center : ol.proj.transform(latlng, 'EPSG:4326', baseProj),
+        zoom : 12,
+        maxZoom : 18,
+        minZoom : 6
+    });
+    map = new ol.Map({
+        target : this.mapDiv,
+        layers : [
+            new ol.layer.Tile({
+                title : 'basemap',
+                source : baseMapLayer
+            })
+        ],
+        view : baseView,
+        controls: []
+    });
+    this.mapObj = map;
+    this.baseProj = baseProj;
+    this.changeBaseMap(mapType);
+    return this.mapObj;
+};
+
+
+/**
+ * 배경지도 변경
+ * Base map change
  * @method changeBaseMap
- * @param {String} mapStyle ('VWorld' or 'OSM')
+ * @param {String} mapStyle - Map style ("OSM" | "VWorld" | "VWorld_m" | "VWorld_h")
  */
 OGDSM.visualization.prototype.changeBaseMap = function (mapStyle) {
     "use strict";
-    var TMS = null,
-        view = null,
-        baseLayer = null,
-        map = this.getMap(),
-        maplayers = map.getLayers(),
-        mapCenter = map.getView().getCenter(),
-        mapZoom = map.getView().getZoom(),
-        mapProj = map.getView().getProjection();
+    var TMS = null, view = null, baseLayer = null, map = this.mapObj, maplayers = map.getLayers(),
+        mapCenter = map.getView().getCenter(), mapZoom = map.getView().getZoom(), mapProj = map.getView().getProjection();
 
     maplayers.forEach(function (obj, i) {
         var layerTitle = obj.get('title');
@@ -81,46 +157,204 @@ OGDSM.visualization.prototype.changeBaseMap = function (mapStyle) {
         view = new ol.View({
             projection : mapProj,
             center : mapCenter,
-            zoom : mapZoom
+            zoom : mapZoom,
+            maxZoom : 18,
+            minZoom : 6
+        });
+    } else if (mapStyle === 'VWorld_s') {
+        TMS = new ol.source.XYZ(({
+            url : "http://xdworld.vworld.kr:8080/2d/Satellite/201301/{z}/{x}/{y}.jpeg"
+        }));
+        view = new ol.View({
+            projection : mapProj,
+            center : mapCenter,
+            zoom : mapZoom,
+            maxZoom : 18,
+            minZoom : 6
+        });
+    } else if (mapStyle === 'VWorld_g') {
+        TMS = new ol.source.XYZ(({
+            url : "http://xdworld.vworld.kr:8080/2d/gray/201411/{z}/{x}/{y}.png"
+        }));
+        view = new ol.View({
+            projection : mapProj,
+            center : mapCenter,
+            zoom : mapZoom,
+            maxZoom : 18,
+            minZoom : 6
+        });
+    } else if (mapStyle === 'VWorld_m') {
+        TMS = new ol.source.XYZ(({
+            url : "http://xdworld.vworld.kr:8080/2d/midnight/201411/{z}/{x}/{y}.png"
+        }));
+        view = new ol.View({
+            projection : mapProj,
+            center : mapCenter,
+            zoom : mapZoom,
+            maxZoom : 18,
+            minZoom : 6
+        });
+    } else if (mapStyle === '') {
+        TMS = null;
+        view = new ol.View({
+            projection : mapProj,
+            center : mapCenter,
+            zoom : mapZoom,
+            maxZoom : 18,
+            minZoom : 6
         });
     } else {
-        console.error('Not Map Style "OSM" | "VWorld"');
+        console.error('Not Map Style "OSM" | "VWorld" | "VWorld_m" | "VWorld_h"');
         return null;
     }
     if (baseLayer !== null) {
         map.setView(view);
         baseLayer.setSource(TMS);
     }
-    /*
-    map.addLayer(new ol.layer.Tile({
-        title : 'basemap',
-        source : TMS
-    }));
-    */
+};
+
+/**
+ * 지도 GPS 트래킹 스위치
+ * Map geolocation tracking
+ * @method trackingGeoLocation
+ * @param {boolean} sw - Geolocation switch (true | false
+ **/
+OGDSM.visualization.prototype.trackingGeoLocation = function (sw) {
+    'use strict';
+    var geolocation = this.geoLocation, mapObj = this.mapObj;
+    if (typeof (this.mapObj) === 'undefined') {
+        console.error('Not Create Map!!');
+        return null;
+    }
+    if (geolocation === null) {
+        geolocation = new ol.Geolocation({
+            projection:	mapObj.getView().getProjection(),
+            tracking : true
+        });
+    }
+
+    if (sw === true) {
+        geolocation.once('change:position', function () {
+            mapObj.getView().setCenter(geolocation.getPosition());
+        });
+    }
 };
 /**
- * WMS/WFS Map Add
+ * 모바일 해상도에 맞는 지도 레이아웃 업데이트
+ * OGDSM Mobile screen update layout
+ * @method updateLayoutSetting
+ * @param {String} mapDiv - Map div name
+ **/
+OGDSM.visualization.prototype.updateLayoutSetting = function (mapDiv) {
+    'use strict';
+    mapDiv = (typeof (mapDiv) !== 'undefined') ? mapDiv : this.mapDiv;
+    $('#' + mapDiv).width(window.innerWidth);
+    $('#' + mapDiv).height(window.innerHeight);
+    if (typeof (this.mapObj) !== 'undefined') {
+        this.mapObj.updateSize();
+    }
+
+    /*******************/
+/*    $("#d3View").attr('width', $(window).width() - 100);
+	$('#d3viewonMap').hide();
+	$("#d3viewonMap").attr('width', $(window).width() - 50);
+	$('#d3viewonMap').css('top', $(window).height() - 300);
+
+	$('#interpolationMap').hide();
+	$("#interpolationMap").attr('width', $(window).width() - 50);
+	$('#interpolationMap').css('top', $(window).height() - 600);
+
+	$('#layersList').css('height', $(window).height() - 400);
+	$('#layersList').css("overflow-y", "auto");*/
+    /********************/
+};
+/**
+ * WMS 및 WFS 맵 레이어 추가
+ * WMS/WFS map layer add
  * @method addMap
- * @param {ol Map Object} data (OpenLayers WMS/WFS/ Object)
+ * @param {ol Map Object} data - Openlayers map object (OpenLayers WMS/WFS/ Object)
  */
-OGDSM.visualization.prototype.addMap = function (data) {
+OGDSM.visualization.prototype.addMap = function (data, type) {
     'use strict';
     var chkData = this.layerCheck(data.get('title'));
-    if (chkData !== null) {
-        this.getMap().removeLayer(chkData);
+    if (chkData === false) {
+        this.getMap().addLayer(data);
+        console.log(type);
+        if (typeof (this.layerListObj) !== 'undefined') {
+            var color;
+            if (typeof data.getStyle !== 'undefined') {
+                if (type === 'polygon') {
+                    color = data.getStyle()[0].getFill().getColor();
+                } else if (type === 'point') {
+                    color = data.getStyle()[0].getImage().getFill().getColor();
+                }
+
+            } else {
+                color =  'rgb(0, 0, 0)';
+            }
+            console.log(color);
+            this.layerListObj.addList(data, data.get('title'), color, type);
+        }
+    } else {
+        console.log("Layer is existence");
     }
-    this.getMap().addLayer(data);
 };
 /**
- *
- *
+ * 이미지 레이어 시각화
+ * Image Layer Visualization
+ * @method imageLayer
+ * @param {String} imgURL (Image URL)
+ * @param {String} imgTitle (Image title)
+ * @param {Array} imgSize (Image size [width, height] )
+ * @param {Array} imgExtent (Image extent [lower left lon, lower left lat, upper right lon, upper right lat] or [left, bottom, right, top])
+ */
+OGDSM.visualization.prototype.imageLayer = function (imgURL, imgTitle, imgSize, imgExtent) {
+    'use strict';
+    var imgLayer = null,
+        title = imgTitle;
+
+    imgLayer = new ol.layer.Image({
+        opacity : 1.0,
+        title : title,
+        source : new ol.source.ImageStatic({
+            url : imgURL + '?' + Math.random(),
+            imageSize : imgSize,
+            projection : new ol.proj.Projection({code : 'EPSG:3857'}),
+            imageExtent : imgExtent
+
+        })
+    });
+    this.getMap().addLayer(imgLayer);
+};
+/**
+ * 맵 레이어 삭제
+ * WMS/WFS/ImageLayer map layer remove
+ * @method removeMap
+ * @param {String} layerName - Layer title
  */
 OGDSM.visualization.prototype.removeMap = function (layerName) {
     'use strict';
     var obj = this.layerCheck(layerName);
-    this.getMap().removeLayer(obj);
+    if (obj !== false) {
+        this.getMap().removeLayer(obj);
+    }
 };
 /**
+ * 맵 레이어 시각화 여부
+ * Map layer visualization flag
+ * @method setVisible
+ * @param {String} layerName - Layer title
+ * @param {Boolean} flag - visualization switch true or false
+ */
+OGDSM.visualization.prototype.setVisible = function (layerName, flag) {
+    'use strict';
+    var obj = this.layerCheck(layerName);
+    if (obj !== false) {
+        obj.setVisible(flag);
+    }
+};
+/**
+ * WFS 스타일 변경  (수정중....)
  * WFS style change
  * @method changeWFSStyle
  * @param {String} layerName (OpenLayers layer name)
@@ -143,6 +377,7 @@ OGDSM.visualization.prototype.changeWFSStyle = function (layerName, colors, type
         style = null;
 
     if (map === false) {
+        console.error('Not Map Layer');
         return -1;
     }
     map.setStyle(function (f, r) {
@@ -294,29 +529,46 @@ OGDSM.visualization.prototype.barChart = function (divId, data, range, color) {
         });
 };
 
-/**
- * Image Layer Visualization based on OpenLayers3
- * @method imageLayer
- * @param {String} imgURL (Image URL)
- * @param {String} imgTitle (Image title)
- * @param {Array} imgSize (Image size [width, height] )
- * @param {Array} imgExtent (Image extent [lower left lon, lower left lat, upper right lon, upper right lat] or [left, bottom, right, top])
- */
-OGDSM.visualization.prototype.imageLayer = function (imgURL, imgTitle, imgSize, imgExtent) {
+/*
+OGDSM.visualization.prototype.changeWFSzIndex = function (layerName, color, type, zIndex) {
     'use strict';
-    var imgLayer = null,
-        title = imgTitle;
+    var map = this.layerCheck(layerName);
+    if (map === false) {
+        return -1;
+    }
 
-    imgLayer = new ol.layer.Image({
-        opacity : 1.0,
-        title : title,
-        source : new ol.source.ImageStatic({
-            url : imgURL + '?' + Math.random(),
-            imageSize : imgSize,
-            projection : new ol.proj.Projection({code : 'EPSG:3857'}),
-            imageExtent : imgExtent
+    console.log(layerName + ' ' + zIndex);
+    map.setStyle(function (f, r) {
+        var style = null;
+        if (type === 'polygon') {
+            style = [new ol.style.Style({
+                fill : new ol.style.Fill({
+                    color : color
+                }),
+                stroke : new ol.style.Stroke({
+                    color : '#00000',
+                    width : 1
+                }),
+                zIndex : zIndex
+            })];
 
-        })
+        } else if (type === 'point') {
+            style = [new ol.style.Style({
+                image : new ol.style.Circle({
+                    radius : 5,
+                    fill : new ol.style.Fill({
+                        color : color
+                    }),
+                    stroke : new ol.style.Stroke({
+                        color : '#000000',
+                        width : 1
+                    })
+                }),
+                zIndex : zIndex
+            })];
+
+        }
+        return style;
     });
-    this.getMap().addLayer(imgLayer);
 };
+*/

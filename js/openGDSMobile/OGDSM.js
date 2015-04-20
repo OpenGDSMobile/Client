@@ -1,13 +1,12 @@
-/*jslint devel: true */
+/*jslint devel: true, vars : true */
 /*global $, jQuery, ol*/
-
 /*
  * OpenGDS Mobile JavaScript Library
  * Released under the MIT license
  */
 var OGDSM = OGDSM || {};
 /**
-* OGDSM Super Class.<br>
+* OGDSM<br>
 * --
 * Classes
 *  - eGovFrameUI
@@ -18,10 +17,15 @@ var OGDSM = OGDSM || {};
 * @class OGDSM
 */
 OGDSM = (function (window, $) {
-    "use strict";
+    'use strict';
+    /**
+    * OGDS Mobile Layout / Map Setting Super Class
+    * @class OGDSM
+    * @constructor
+    */
     OGDSM.prototype = {
         constructor : OGDSM,
-        version : "1.0"
+        version : '1.1'
     };
     return OGDSM;
 }(window, jQuery));
@@ -43,6 +47,7 @@ OGDSM.namesapce = function (ns_string) {
     var parts = ns_string.split('.'),
         parent = OGDSM,
         i;
+    var test;
 
     if (parent[0] === 'OGDSM') {
         parts = parts.slice(1);
@@ -77,3 +82,4 @@ OGDSM.jsonToArray = function (obj, x, y) {
     });
     return xyAxis;
 };
+

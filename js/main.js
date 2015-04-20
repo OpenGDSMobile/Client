@@ -1,77 +1,117 @@
-/*jslint devel: true*/
+/*jslint devel: true, vars: true, plusplus: true*/
 /*global $, jQuery, ol, OGDSM*/
-var WEBAPP = WEBAPP || {};
-WEBAPP = (function ($) {
-    'use strict';
-    var map, divName, minResolution = null,
-        windowOrientation = null,
-        deviceOrientation = null;
-    WEBAPP = function () {
 
-    };
-    WEBAPP.prototype = {
-        constructor : WEBAPP
-    };
-    return WEBAPP;
-}(jQuery));
+var openGDSMObj;
 
-var beforeProcess = {
-    popupSize: function (obj, width, height) {
-        'use strict';
-        width = (typeof (width) !== 'undefined') ? width : $(window).width() - 50;
-        height = (typeof (height) !== 'undefined') ? height : "300px";
-        $(obj).css("width", width / 2);
-        $(obj).css("height", height);
-        $(obj).css("overflow-y", "auto");
-        $(obj).css("overflow-x", "hidden");
-    },
-    popupOpen: function (obj) {
-        'use strict';
-        $('#serviceName').attr('data-value', $(obj).attr('data-value'));
-    }
-};
-WEBAPP.prototype.mapInit = function (divName) {
+//배경지도 라디오 버튼 사용자 인터페이스 생성 함수
+function mapSelectUI(openGDSMObj) {
     'use strict';
-    var map, obj;
-    obj = this;
-    map = new ol.Map({
-        target : divName,
-        layers : [
-            new ol.layer.Tile({
-                title : 'basemap',
-                source : new ol.source.OSM()
-            })
-        ],
-        view: new ol.View({
-            projection : ol.proj.get('EPSG:3857'),
-            center : [0, 0],
-            zoom : 10
-        }),
-        controls: []
+    var ui = new OGDSM.eGovFrameUI();
+    //ui.baseMapRadioBox(openGDSMObj, 'mapSelect', 'OSM VWorld VWorld_m VWorld_s VWorld_g'); //현재.... 데이터 체크...
+    ui.baseMapSelect(openGDSMObj, 'mapSelect', 'OSM VWorld VWorld_m VWorld_s VWorld_g'); //현재.... 데이터 체크...
+}
+//데이터 라디오 버튼 사용자 인터페이스 생성 함수
+function mapAttrUI() {
+    'use strict';
+    var ui = new OGDSM.eGovFrameUI();
+    var radioObj = ui.autoRadioBox('dataViewCheckBox', 'dataViewSelect', ['공간정보', '속성정보'], ['map', 'attr'], {horizontal : true});
+    radioObj.bind('change', function () {
+        if ($(this).val() === 'attr') {
+            $('#attributeTable').removeClass('OGDSPosTransTopDownHide');
+            $('#attributeTable').addClass('OGDSPosTransTopDownShow');
+        } else {
+            $('#attributeTable').removeClass('OGDSPosTransTopDownShow');
+            $('#attributeTable').addClass('OGDSPosTransTopDownHide');
+
+        }
     });
-    
-    
-    
-    return map;
-};
-WEBAPP.prototype.getMap = function () {
-    'use strict';
-    return this.map;
-};
-WEBAPP.prototype.updateLayout = function () {
-    'use strict';
-    var footer = $("div[data-role='footer']:visible"),
-        header = $("div[data-role='header']:visible"),
-        content = $("div[data-role='content']:visible:visible"),
-        viewHeight = $(window).height(),
-        contentHeight = viewHeight - (footer.outerHeight() + header.outerHeight());
-	if ((content.outerHeight() + footer.outerHeight()) !== viewHeight) {
-	    contentHeight -= (content.outerHeight() - content.height() + 1);
-	    content.height(contentHeight);
-	}
-    $("#map").width($(window).width());
-    $("#map").height(contentHeight);
 
+}
+//브이월드 WMS 데이터 선택 사용자 인터페이스 생성 / 시각화 함수
+function vworldWMSUI() {
+    'use strict';
+    $('#vworldSelect').empty();
+    var ui = new OGDSM.eGovFrameUI();
+    var externalServer = new OGDSM.externalConnection('vworldWMS');
+    var wmsListIds = ui.vworldWMSList('vworldSelect');
+    var processBtn = ui.autoButton('vworldSelect', 'vworldProcess', 'Process', '#', {
+        theme : 'a'
+    });
+    processBtn.click(function () {
+        var i, data = [];
+        for (i = 0; i < wmsListIds.length; i++) {
+            var tmpData = $('#' + wmsListIds[i] + ' option:selected').val();
+            if (tmpData !== '') {
+                data.push(tmpData);
+            }
+        }
+        var wmsData = externalServer.vworldWMSLoad("9E21E5EE-67D4-36B9-85BB-E153321EEE65", "http://localhost", data);
+        openGDSMObj.addMap(wmsData);
+    });
+}
+//지오서버 WFS 데이터 시각화 함수
+function wfsLoad(str) {
+    'use strict';
+    var r = Math.floor(Math.random() * 256),
+        g = Math.floor(Math.random() * 256),
+        b = Math.floor(Math.random() * 256);
+    var color = 'rgb(' + r + ',' + g + ',' + b + ')';
+    var addr = 'http://113.198.80.9';
+    var externalServer = new OGDSM.externalConnection();
+    var ui = new OGDSM.eGovFrameUI();
+    if (str === 'seoul_env_position') {
+        externalServer.geoServerWFSLoad(openGDSMObj, addr, 'opengds', str, 'point', color);
+    } else {
+        externalServer.geoServerWFSLoad(openGDSMObj, addr, 'opengds', str, 'polygon', color);
+    }
+}
+//서울 열린데이터 광장 데이터 선택 사용자 인터페이스 생성 / 시각화 함수
+function createSeoulPublicAreaEnvUI() {
+    'use strict';
+    $('#setting').empty();
+    var ui = new OGDSM.eGovFrameUI();
+    var envIds = ui.seoulEnvironment('setting');
+    var processBtn = ui.autoButton('setting', 'vworldProcess', 'Process', '#', {
+        theme : 'a'
+    });
+    var externalServer = new OGDSM.externalConnection();
+    var colors = ['#0090ff', '#008080', '#4cff4c', '#99ff99', '#FFFF00', '#FFFF99', '#FF9900', '#FF0000'],
+        ranges = [ [15, 30, 55, 80, 100, 120, 200],    //PM10, PM25
+                  [1, 2, 5.5, 9, 10.5, 12, 15],        //CO
+                  [0.015, 0.03, 0.05, 0.06, 0.1045, 0.15, 0.2],    //NO2
+                  [0.01, 0.02, 0.035, 0.05, 0.075, 0.1, 0.15],     //SO2
+                  [0.02, 0.04, 0.06, 0.08, 0.10, 0.12, 0.3] ];     //O3
+    processBtn.click(function () {
+        $('#setting').popup("close");
+        var apiKey = '6473565a72696e7438326262524174',
+            addr = 'http://113.198.80.60:8087/mobile/SeoulOpenData.do',
+            geoServerAddr = 'http://113.198.80.9';
+        var visualType = $('input[name=' + envIds[0].attr('name') + ']:checked').val(),
+            environmentType = $('input[name=' + envIds[3].attr('name') + ']:checked').val(),
+            date = envIds[1].val(),
+            time = envIds[2].val();
+        console.log(addr + ' ' + visualType + ' ' + environmentType + ' ' + date + ' ' + time);
+        var data = externalServer.seoulEnvironmentLoad(addr, apiKey, environmentType, date, time);
+        console.log(data);
+        var xyData = OGDSM.jsonToArray(data, environmentType, 'MSRSTE_NM');
+        console.log(xyData);
+        if (visualType === 'map') {
+            externalServer.geoServerWFSLoad(openGDSMObj, geoServerAddr, 'opengds', 'seoul_sig', 'polygon');
+            openGDSMObj.changeWFSStyle('seoul_sig', colors, 'polygon', 0.6, 'sig_kor_nm', ranges, xyData);
+        }
+
+    });
+}
+$(function () {
+    'use strict';
+    openGDSMObj = new OGDSM.visualization('map', 'layerList'); //map div, layerList switch
+    openGDSMObj.olMapView([127.010031, 37.582200], 'OSM', 'EPSG:900913'); //VWorld
+    //openGDSMObj.olMapView([127.010031, 37.582200], 'OSM'); //VWorld
+    openGDSMObj.trackingGeoLocation(true);
+    mapSelectUI(openGDSMObj);
+    mapAttrUI();
+
+    /***************************************************/
     $("#d3View").attr('width', $(window).width() - 100);
 	$('#d3viewonMap').hide();
 	$("#d3viewonMap").attr('width', $(window).width() - 50);
@@ -80,88 +120,19 @@ WEBAPP.prototype.updateLayout = function () {
 	$('#interpolationMap').hide();
 	$("#interpolationMap").attr('width', $(window).width() - 50);
 	$('#interpolationMap').css('top', $(window).height() - 600);
-	beforeProcess.popupSize("#dataSelect");
-	beforeProcess.popupSize("#vworldList", "300px");
-	$('#layersList').css('height', $(window).height() - 400);
-	$('#layersList').css("overflow-y", "auto");
-};
+    /***************************************************/
 
+    var externalServer = new OGDSM.externalConnection();
+    var r = Math.floor(Math.random() * 256),
+        g = Math.floor(Math.random() * 256),
+        b = Math.floor(Math.random() * 256);
+    var color = 'rgb(' + r + ',' + g + ',' + b + ')';
+    var addr = 'http://113.198.80.9';
+    externalServer.geoServerWFSLoad(openGDSMObj, addr, 'opengds', 'seoul_sig', 'polygon', color);
 
-WEBAPP.prototype.setRotation = function (rotation) {
-    'use strict';
-    this.map.getView.setRotation(rotation);
-};
-WEBAPP.prototype.adjustedHeading = function (heading) {
-    'use strict';
-	if (this.windowOrientation !== undefined) {
-		// include window orientation (0, 90, -90 or 180)
-		heading -= this.windowOrientation * Math.PI / 180.0;
-	}
-	return heading;
-};
-WEBAPP.prototype.setWindowOrientation = function (orientation) {
-    'use strict';
-	this.windowOrientation = orientation;
-	if (this.deviceOrientation !== null && WEBAPP.deviceOrientation.getTracking()
-            && this.deviceOrientation.getHeading() !== undefined) {
-		this.setRotation(this.adjustedHeading(-this.deviceOrientation.getHeading()));
-	}
-};
+});
 
-
-WEBAPP.prototype.initViewer = function () {
-    'use strict';
-    var map,
-        projection,
-        geolocation,
-        obj;
-//    map = this.map;
-    obj = this;
-	obj.updateLayout();
-	$(window).on('resize', function () {
-		obj.updateLayout();
-	});
-    /*
-	$(window).on('orientationchange', function (e) {
-        obj.setWindowOrientation(window.orientation);
-	});
-    */
-	projection = new ol.proj.Projection({
-		extent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
-		units : 'm'
-	});
-	ol.proj.addProjection(projection);
-
-    map = this.mapInit('map');
-    this.map = map;
-    geolocation = new ol.Geolocation({
-		projection:	map.getView().getProjection(),
-		tracking : true
-	});
-    /**
-	 * Geolocation Event(Set Center)
-	 **/
-	geolocation.once('change:position', function () {
-		map.getView().setCenter(geolocation.getPosition());
-	});
-	/**
-	 * Layers Event
-	 **/
-    /*
-	$(map.getViewport()).bind('tap', function (evt) {
-		var pixel = map.getEventPixel(evt.originalEvent);
-	//	Layer.displayFeatureInfo(pixel);
-	});
-    */
-	this.updateLayout();
-};
-
-var styleChange = function (obj) {
-    'use strict';
-	$('#wmsButton').attr('data-layer', $(obj).attr('value'));
-};
-//            addr = 'http://113.198.80.9/OpenGDSMobileApplicationServer1.0';
-//            addr = 'http://61.102.113.183:8080/mobile';
+/*
 $(document).ready(function (e) {
     'use strict';
     var webAppObj,
@@ -191,7 +162,7 @@ $(document).ready(function (e) {
         ProcessBtn,
 
         externalServer;
-   /*
+
     webAppObj = new WEBAPP();
     webAppObj.initViewer();
 
@@ -429,4 +400,4 @@ $(document).ready(function (e) {
         });
     };
     */
-});
+//});
