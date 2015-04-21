@@ -104,9 +104,9 @@ function createSeoulPublicAreaEnvUI() {
 }
 $(function () {
     'use strict';
-    openGDSMObj = new OGDSM.visualization('map', 'layerList'); //map div, layerList switch
-    openGDSMObj.olMapView([127.010031, 37.582200], 'OSM', 'EPSG:900913'); //VWorld
-    //openGDSMObj.olMapView([127.010031, 37.582200], 'OSM'); //VWorld
+    openGDSMObj = new OGDSM.visualization('map', 'layerList', 'attributeTable'); //map div, layerList switch
+    //openGDSMObj.olMapView([127.010031, 37.582200], 'OSM', 'EPSG:900913'); //VWorld
+    openGDSMObj.olMapView([127.010031, 37.582200], 'OSM'); //VWorld
     openGDSMObj.trackingGeoLocation(true);
     mapSelectUI(openGDSMObj);
     mapAttrUI();

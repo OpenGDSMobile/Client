@@ -10,10 +10,12 @@ OGDSM.namesapce('visualization');
     * @class OGDSM.visualization
     * @constructor
     * @param {String} mapDiv - Map div id
-    * @param {ol.Map} layerlistDiv - Layer list div view (option)
+    * @param {String} layerlistDiv - Layer list div view (option)
+    * @param {String} attrtableDiv - Layer attribute div view (option)
     */
-    OGDSM.visualization = function (mapDiv, layerlistDiv) {
+    OGDSM.visualization = function (mapDiv, layerlistDiv, attrtableDiv) {
         layerlistDiv = (typeof (layerlistDiv) !== 'undefined') ? layerlistDiv : null;
+        attrtableDiv = (typeof (attrtableDiv) !== 'undefined') ? attrtableDiv : null;
         this.updateLayoutSetting(mapDiv);
         this.mapDiv = mapDiv;
         this.geoLocation = null;
@@ -22,7 +24,10 @@ OGDSM.namesapce('visualization');
             OGDSM.visualization.updateLayoutSetting();
         });
         if (layerlistDiv !== null) {
-            this.layerListObj = new OGDSM.mapLayerList(this, 'layerList');
+            this.layerListObj = new OGDSM.mapLayerList(this, layerlistDiv);
+        }
+        if (attrtableDiv !== null) {
+            this.attrTableObj = new OGDSM.attributeTable(attrtableDiv);
         }
         // Orientation...
     };
@@ -279,7 +284,6 @@ OGDSM.visualization.prototype.addMap = function (data, type) {
     var chkData = this.layerCheck(data.get('title'));
     if (chkData === false) {
         this.getMap().addLayer(data);
-        console.log(type);
         if (typeof (this.layerListObj) !== 'undefined') {
             var color;
             if (typeof data.getStyle !== 'undefined') {
@@ -292,8 +296,10 @@ OGDSM.visualization.prototype.addMap = function (data, type) {
             } else {
                 color =  'rgb(0, 0, 0)';
             }
-            console.log(color);
             this.layerListObj.addList(data, data.get('title'), color, type);
+        }
+        if (typeof (this.attrTableObj) !== 'undefined') {
+            this.attrTableObj.addAttribute(data.get('title'));
         }
     } else {
         console.log("Layer is existence");
