@@ -40,9 +40,12 @@
                         <div id="api-tabview-panel">
                             <ul id="api-classes" class="apis classes">
                                 <li><a href="../classes/OGDSM.html">OGDSM</a></li>
+                                <li><a href="../classes/OGDSM.attributeTable.html">OGDSM.attributeTable</a></li>
                                 <li><a href="../classes/OGDSM.eGovFramUI.html">OGDSM.eGovFramUI</a></li>
                                 <li><a href="../classes/OGDSM.externalConnection.html">OGDSM.externalConnection</a></li>
+                                <li><a href="../classes/OGDSM.mapLayerList.html">OGDSM.mapLayerList</a></li>
                                 <li><a href="../classes/OGDSM.visualization.html">OGDSM.visualization</a></li>
+                                <li><a href="../classes/Sortable.html">Sortable</a></li>
                             </ul>
                 
                             <ul id="api-modules" class="apis modules">
@@ -96,7 +99,8 @@
                         
                         <h3>Summary</h3>
                         <div class="intro">
-                            <p>e-Goverement Framework UX Component Automatic Create.</p>
+                            <p>전자정부표준프레임워크 UX 컴포넌트 자동 생성 객체
+                        e-Goverement Framework UX Component Automatic Create Class</p>
                         
                         </div>
                         
@@ -185,23 +189,43 @@
                         
                                                     </li>
                                                     <li class="index-item method">
-                                                        <a href="#method_DateInput">DateInput</a>
+                                                        <a href="#method_autoButton">autoButton</a>
                         
+                                                    </li>
+                                                    <li class="index-item method">
+                                                        <a href="#method_autoCheckBox">autoCheckBox</a>
+                        
+                                                    </li>
+                                                    <li class="index-item method">
+                                                        <a href="#method_autoRadioBox">autoRadioBox</a>
+                        
+                                                    </li>
+                                                    <li class="index-item method">
+                                                        <a href="#method_autoSelect">autoSelect</a>
+                        
+                                                    </li>
+                                                    <li class="index-item method">
+                                                        <a href="#method_autoSelect">autoSelect</a>
+
+                                                    </li>
+                                                    <li class="index-item method">
+                                                        <a href="#method_baseMapRadioBox">baseMapRadioBox</a>
+
+                                                    </li>
+                                                    <li class="index-item method">
+                                                        <a href="#method_baseMapSelect">baseMapSelect</a>
+
+                                                    </li>
+                                                    <li class="index-item method">
+                                                        <a href="#method_DateInput">DateInput</a>
+
                                                     </li>
                                                     <li class="index-item method">
                                                         <a href="#method_envTypeRadio">envTypeRadio</a>
-                        
+
                                                     </li>
                                                     <li class="index-item method">
                                                         <a href="#method_mapListSelect">mapListSelect</a>
-                        
-                                                    </li>
-                                                    <li class="index-item method">
-                                                        <a href="#method_processButton">processButton</a>
-                        
-                                                    </li>
-                                                    <li class="index-item method">
-                                                        <a href="#method_selectBox">selectBox</a>
 
                                                     </li>
                                                     <li class="index-item method">
@@ -213,7 +237,7 @@
                         
                                                     </li>
                                                     <li class="index-item method">
-                                                        <a href="#method_vworldWMSCheck">vworldWMSCheck</a>
+                                                        <a href="#method_vworldWMSList">vworldWMSList</a>
                         
                                                     </li>
                                             </ul>
@@ -232,7 +256,7 @@
                                               <div class="meta method-meta">
                                                   <p>
                                                       Defined in
-                                                  <a href="../files/js_openGDSMobile_OGDSM_eGovFrameUI.js.html#l316"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_eGovFrameUI.js:316</code></a>
+                                                  <a href="../files/js_openGDSMobile_OGDSM_eGovFrameUI.js.html#l635"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_eGovFrameUI.js:635</code></a>
                                               </p>
                                             
                                             
@@ -320,13 +344,13 @@
                                             
                                             
                                             </div>
-                                            <div id="method_DateInput" class="method item">
-                                              <h3 class="blue-method-name">DateInput</h3>
+                                            <div id="method_autoButton" class="method item">
+                                              <h3 class="blue-method-name">autoButton</h3>
                                             
                                               <div class="meta method-meta">
                                                   <p>
                                                       Defined in
-                                                  <a href="../files/js_openGDSMobile_OGDSM_eGovFrameUI.js.html#l246"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_eGovFrameUI.js:246</code></a>
+                                                  <a href="../files/js_openGDSMobile_OGDSM_eGovFrameUI.js.html#l28"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_eGovFrameUI.js:28</code></a>
                                               </p>
                                             
                                             
@@ -335,12 +359,24 @@
                                             
                                               <h3>Syntax</h3>
                                               <div class="blue-method-syntax">
-                                              <h3 class="name"><code>DateInput</code></h3>
+                                              <h3 class="name"><code>autoButton</code></h3>
                                             
                                                     <div class="args">
                                                         <span class="paren">(</span><ul class="args-list inline commas">
                                                             <li class="arg">
                                                                     <code>divId</code>
+                                                            </li>
+                                                            <li class="arg">
+                                                                    <code>linkId</code>
+                                                            </li>
+                                                            <li class="arg">
+                                                                    <code>buttonTitle</code>
+                                                            </li>
+                                                            <li class="arg">
+                                                                    <code>url</code>
+                                                            </li>
+                                                            <li class="arg">
+                                                                    <code>options</code>
                                                             </li>
                                                         </ul><span class="paren">)</span>
                                                     </div>
@@ -358,7 +394,8 @@
                                               </div>
                                                 <div class="description">
                                                   <h3>Summary</h3>
-                                                    <p>User Interface Create about visualization type (Date Input).</p>
+                                                    <p>버튼 자동 생성
+                                            Auto Create about Button.</p>
                                             
                                                 </div>
                                             
@@ -373,11 +410,62 @@
                                             
                                                                 <div class="param-description">
                                                                     <ul>
-                                            <li>div id about HTML tag attribute</li>
+                                            <li>root div id about HTML tag attribute [상위 DIV 아이디]</li>
+                                            </ul>
+
+                                                                </div>
+
+                                                            </li>
+                                                            <li class="param">
+                                                                    <code class="param-name">linkId</code>
+                                                                    <span class="type">String</span>
+
+
+                                                                <div class="param-description">
+                                                                    <ul>
+                                            <li>link a id about HTML tag attribute  [생성될 버튼 아이디]</li>
+                                            </ul>
+
+                                                                </div>
+
+                                                            </li>
+                                                            <li class="param">
+                                                                    <code class="param-name">buttonTitle</code>
+                                                                    <span class="type">String</span>
+
+
+                                                                <div class="param-description">
+                                                                    <ul>
+                                            <li>button title [버튼 이름]</li>
+                                            </ul>
+
+                                                                </div>
+
+                                                            </li>
+                                                            <li class="param">
+                                                                    <code class="param-name">url</code>
+                                                                    <span class="type">String</span>
+
+
+                                                                <div class="param-description">
+                                                                    <ul>
+                                            <li>link url</li>
                                             </ul>
                                             
                                                                 </div>
                                             
+                                                            </li>
+                                                            <li class="param">
+                                                                    <code class="param-name">options</code>
+                                                                    <span class="type">Array</span>
+
+
+                                                                <div class="param-description">
+                                                                    <p>(option) - theme, corners, inline, mini
+                                                                                [values : &#39;a&#39;~&#39;g&#39;(default:this.dataTheme), true(default) | false, true | false(default), true | false(default)]</p>
+
+                                                                </div>
+
                                                             </li>
                                                         </ul>
                                                     </div>
@@ -388,7 +476,7 @@
                                                         <div class="returns-description">
                                                             <span class="type">JQuery Object</span>:
                                                             <div class="blue-return-desc">
-                                                                <p>User Interface Date Input Object (Date YYYY/MM/DD)</p>
+                                                                <p>user interface id object [제이쿼리 아이디 객체]</p>
                                             
                                                             </div>
                                             
@@ -398,13 +486,13 @@
                                             
                                             
                                             </div>
-                                            <div id="method_envTypeRadio" class="method item">
-                                              <h3 class="blue-method-name">envTypeRadio</h3>
+                                            <div id="method_autoCheckBox" class="method item">
+                                              <h3 class="blue-method-name">autoCheckBox</h3>
                                             
                                               <div class="meta method-meta">
                                                   <p>
                                                       Defined in
-                                                  <a href="../files/js_openGDSMobile_OGDSM_eGovFrameUI.js.html#l278"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_eGovFrameUI.js:278</code></a>
+                                                  <a href="../files/js_openGDSMobile_OGDSM_eGovFrameUI.js.html#l68"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_eGovFrameUI.js:68</code></a>
                                               </p>
                                             
                                             
@@ -413,8 +501,872 @@
                                             
                                               <h3>Syntax</h3>
                                               <div class="blue-method-syntax">
-                                              <h3 class="name"><code>envTypeRadio</code></h3>
+                                              <h3 class="name"><code>autoCheckBox</code></h3>
                                             
+                                                    <div class="args">
+                                                        <span class="paren">(</span><ul class="args-list inline commas">
+                                                            <li class="arg">
+                                                                    <code>divId</code>
+                                                            </li>
+                                                            <li class="arg">
+                                                                    <code>chkId</code>
+                                                            </li>
+                                                            <li class="arg">
+                                                                    <code>chkName</code>
+                                                            </li>
+                                                            <li class="arg">
+                                                                    <code>labels</code>
+                                                            </li>
+                                                            <li class="arg">
+                                                                    <code>{Array)</code>
+                                                            </li>
+                                                            <li class="arg">
+                                                                    <code>options</code>
+                                                            </li>
+                                                        </ul><span class="paren">)</span>
+                                                    </div>
+                                            
+                                                    <span class="returns-inline">
+                                                        <span class="type">JQuery Object</span>
+                                                    </span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                              </div>
+                                                <div class="description">
+                                                  <h3>Summary</h3>
+                                                    <p>체크박스 자동 생성
+                                            Auto Create about Check Box.</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Parameters:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">divId</code>
+                                                                    <span class="type">String</span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <ul>
+                                            <li>root div id about HTML tag attribute [상위 DIV 아이디]</li>
+                                            </ul>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                            <li class="param">
+                                                                    <code class="param-name">chkId</code>
+                                                                    <span class="type">String</span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <ul>
+                                            <li>checkbox ids about HTML tag attribute  [생성될 체크박스 아이디]</li>
+                                            </ul>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                            <li class="param">
+                                                                    <code class="param-name">chkName</code>
+                                                                    <span class="type">String</span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <ul>
+                                            <li>checkbox name [체크박스 이름]</li>
+                                            </ul>
+
+                                                                </div>
+
+                                                            </li>
+                                                            <li class="param">
+                                                                    <code class="param-name">labels</code>
+                                                                    <span class="type">Array</span>
+
+
+                                                                <div class="param-description">
+                                                                    <ul>
+                                            <li>checkbox label names [체크박스 라벨 이름]</li>
+                                            </ul>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                            <li class="param">
+                                                                    <code class="param-name">{Array)</code>
+                                                                    <span class="type">Object</span>
+
+
+                                                                <div class="param-description">
+                                                                    <p>values - checkbox values [체크박스 값]</p>
+
+                                                                </div>
+
+                                                            </li>
+                                                            <li class="param">
+                                                                    <code class="param-name">options</code>
+                                                                    <span class="type">Array</span>
+
+
+                                                                <div class="param-description">
+                                                                    <p>(option) - theme, horizontal
+                                                                                [values : &#39;a&#39;~&#39;g&#39;(default:this.dataTheme), true(default) | false(default)]
+                                                                                [ 배열인자 옵션: 수직,수평(0), 테마(1) ]</p>
+
+                                                                </div>
+
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                                    <div class="returns">
+                                                        <h4>Returns:</h4>
+                                            
+                                                        <div class="returns-description">
+                                                            <span class="type">JQuery Object</span>:
+                                                            <div class="blue-return-desc">
+                                                                <p>user interface name object [제이쿼리 이름 객체]</p>
+                                            
+                                                            </div>
+                                            
+                                            
+                                                        </div>
+                                                    </div>
+                                            
+                                            
+                                            </div>
+                                            <div id="method_autoRadioBox" class="method item">
+                                              <h3 class="blue-method-name">autoRadioBox</h3>
+                                            
+                                              <div class="meta method-meta">
+                                                  <p>
+                                                      Defined in
+                                                  <a href="../files/js_openGDSMobile_OGDSM_eGovFrameUI.js.html#l125"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_eGovFrameUI.js:125</code></a>
+                                              </p>
+                                            
+                                            
+                                            
+                                              </div>
+                                            
+                                              <h3>Syntax</h3>
+                                              <div class="blue-method-syntax">
+                                              <h3 class="name"><code>autoRadioBox</code></h3>
+                                            
+                                                    <div class="args">
+                                                        <span class="paren">(</span><ul class="args-list inline commas">
+                                                            <li class="arg">
+                                                                    <code>divId</code>
+                                                            </li>
+                                                            <li class="arg">
+                                                                    <code>radioId</code>
+                                                            </li>
+                                                            <li class="arg">
+                                                                    <code>radioName</code>
+                                                            </li>
+                                                            <li class="arg">
+                                                                    <code>labels</code>
+                                                            </li>
+                                                            <li class="arg">
+                                                                    <code>{Array)</code>
+                                                            </li>
+                                                            <li class="arg">
+                                                                    <code>options</code>
+                                                            </li>
+                                                        </ul><span class="paren">)</span>
+                                                    </div>
+                                            
+                                                    <span class="returns-inline">
+                                                        <span class="type">JQuery Object</span>
+                                                    </span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                              </div>
+                                                <div class="description">
+                                                  <h3>Summary</h3>
+                                                    <p>라디오 박스 자동 생성 (수정)
+                                            Auto Create about Radio Box.</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Parameters:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">divId</code>
+                                                                    <span class="type">String</span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <ul>
+                                            <li>root div id about HTML tag attribute [상위 DIV 아이디]</li>
+                                            </ul>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                            <li class="param">
+                                                                    <code class="param-name">radioId</code>
+                                                                    <span class="type">String</span>
+
+
+                                                                <div class="param-description">
+                                                                    <ul>
+                                            <li>radiobox ids about HTML tag attribute  [생성될 라디오박스 아이디]</li>
+                                            </ul>
+
+                                                                </div>
+
+                                                            </li>
+                                                            <li class="param">
+                                                                    <code class="param-name">radioName</code>
+                                                                    <span class="type">String</span>
+
+
+                                                                <div class="param-description">
+                                                                    <ul>
+                                            <li>radiobox name [라디오박스 이름]</li>
+                                            </ul>
+
+                                                                </div>
+
+                                                            </li>
+                                                            <li class="param">
+                                                                    <code class="param-name">labels</code>
+                                                                    <span class="type">Array</span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <ul>
+                                            <li>radiobox label names [라디오박스 라벨 이름]</li>
+                                            </ul>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                            <li class="param">
+                                                                    <code class="param-name">{Array)</code>
+                                                                    <span class="type">Object</span>
+
+
+                                                                <div class="param-description">
+                                                                    <p>values - radiobox values [라디오박스 값]</p>
+
+                                                                </div>
+
+                                                            </li>
+                                                            <li class="param">
+                                                                    <code class="param-name">options</code>
+                                                                    <span class="type">Array</span>
+
+
+                                                                <div class="param-description">
+                                                                    <p>(option) - radioName, horizontal, theme
+                                                                                [values : radioId + &#39;Name&#39; (default), true| false(default), &#39;a&#39;~&#39;g&#39;(default: this.dataTheme)]</p>
+
+                                                                </div>
+
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                                    <div class="returns">
+                                                        <h4>Returns:</h4>
+                                            
+                                                        <div class="returns-description">
+                                                            <span class="type">JQuery Object</span>:
+                                                            <div class="blue-return-desc">
+                                                                <p>user interface name object [제이쿼리 이름 객체]</p>
+                                            
+                                                            </div>
+                                            
+                                            
+                                                        </div>
+                                                    </div>
+                                            
+                                            
+                                            </div>
+                                            <div id="method_autoSelect" class="method item">
+                                              <h3 class="blue-method-name">autoSelect</h3>
+                                            
+                                              <div class="meta method-meta">
+                                                  <p>
+                                                      Defined in
+                                                  <a href="../files/js_openGDSMobile_OGDSM_eGovFrameUI.js.html#l184"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_eGovFrameUI.js:184</code></a>
+                                              </p>
+                                            
+                                            
+                                            
+                                              </div>
+                                            
+                                              <h3>Syntax</h3>
+                                              <div class="blue-method-syntax">
+                                              <h3 class="name"><code>autoSelect</code></h3>
+                                            
+                                                    <div class="args">
+                                                        <span class="paren">(</span><ul class="args-list inline commas">
+                                                            <li class="arg">
+                                                                    <code>divId</code>
+                                                            </li>
+                                                            <li class="arg">
+                                                                    <code>selectId</code>
+                                                            </li>
+                                                            <li class="arg">
+                                                                    <code>selectName</code>
+                                                            </li>
+                                                            <li class="arg">
+                                                                    <code>text</code>
+                                                            </li>
+                                                            <li class="arg">
+                                                                    <code>{Array)</code>
+                                                            </li>
+                                                            <li class="arg">
+                                                                    <code>options</code>
+                                                            </li>
+                                                        </ul><span class="paren">)</span>
+                                                    </div>
+                                            
+                                                    <span class="returns-inline">
+                                                        <span class="type">JQuery Object</span>
+                                                    </span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                              </div>
+                                                <div class="description">
+                                                  <h3>Summary</h3>
+                                                    <p>셀렉트 자동 생성
+                                            Auto Create about Select.</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Parameters:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">divId</code>
+                                                                    <span class="type">String</span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <ul>
+                                            <li>root div id about HTML tag attribute [상위 DIV 아이디]</li>
+                                            </ul>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                            <li class="param">
+                                                                    <code class="param-name">selectId</code>
+                                                                    <span class="type">String</span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <ul>
+                                            <li>radiobox ids about HTML tag attribute  [생성될 버튼 아이디]</li>
+                                            </ul>
+
+                                                                </div>
+
+                                                            </li>
+                                                            <li class="param">
+                                                                    <code class="param-name">selectName</code>
+                                                                    <span class="type">String</span>
+
+
+                                                                <div class="param-description">
+                                                                    <ul>
+                                            <li>radiobox name [셀렉트 이름]</li>
+                                            </ul>
+
+                                                                </div>
+
+                                                            </li>
+                                                            <li class="param">
+                                                                    <code class="param-name">text</code>
+                                                                    <span class="type">Array</span>
+
+
+                                                                <div class="param-description">
+                                                                    <ul>
+                                            <li>radiobox label names [셀렉트 텍스트]</li>
+                                            </ul>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                            <li class="param">
+                                                                    <code class="param-name">{Array)</code>
+                                                                    <span class="type">Object</span>
+
+
+                                                                <div class="param-description">
+                                                                    <p>values - radiobox values [셀렉트 값]</p>
+
+                                                                </div>
+
+                                                            </li>
+                                                            <li class="param">
+                                                                    <code class="param-name">options</code>
+                                                                    <span class="type">Array</span>
+
+
+                                                                <div class="param-description">
+                                                                    <p>(option) - firstName, theme, corners, inline
+                                                                                [values : &#39;&#39;(default), &#39;a&#39;~&#39;g&#39;(default: this.dataTheme), true(default) | false, true | false(default)]</p>
+
+                                                                </div>
+
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                                    <div class="returns">
+                                                        <h4>Returns:</h4>
+                                            
+                                                        <div class="returns-description">
+                                                            <span class="type">JQuery Object</span>:
+                                                            <div class="blue-return-desc">
+                                                                <p>user interface id object [제이쿼리 아이디 객체]</p>
+                                            
+                                                            </div>
+                                            
+                                            
+                                                        </div>
+                                                    </div>
+                                            
+                                            
+                                            </div>
+                                            <div id="method_autoSelect" class="method item">
+                                              <h3 class="blue-method-name">autoSelect</h3>
+
+                                              <div class="meta method-meta">
+                                                  <p>
+                                                      Defined in
+                                                  <a href="../files/js_openGDSMobile_OGDSM_eGovFrameUI.js.html#l230"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_eGovFrameUI.js:230</code></a>
+                                              </p>
+
+
+
+                                              </div>
+
+                                              <h3>Syntax</h3>
+                                              <div class="blue-method-syntax">
+                                              <h3 class="name"><code>autoSelect</code></h3>
+
+                                                    <div class="args">
+                                                        <span class="paren">(</span><ul class="args-list inline commas">
+                                                            <li class="arg">
+                                                                    <code>divId</code>
+                                                            </li>
+                                                            <li class="arg">
+                                                                    <code>switchId</code>
+                                                            </li>
+                                                            <li class="arg">
+                                                                    <code>switchName</code>
+                                                            </li>
+                                                            <li class="arg">
+                                                                    <code>options</code>
+                                                            </li>
+                                                        </ul><span class="paren">)</span>
+                                                    </div>
+
+                                                    <span class="returns-inline">
+                                                        <span class="type">JQuery Object</span>
+                                                    </span>
+
+
+
+
+
+
+
+                                              </div>
+                                                <div class="description">
+                                                  <h3>Summary</h3>
+                                                    <p>스위치 자동 생성 (수정)
+                                            Auto Create about Switch based on Select.</p>
+
+                                                </div>
+
+                                                    <div class="params">
+                                                        <h4>Parameters:</h4>
+
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">divId</code>
+                                                                    <span class="type">String</span>
+
+
+                                                                <div class="param-description">
+                                                                    <ul>
+                                            <li>root div id about HTML tag attribute [상위 DIV 아이디]</li>
+                                            </ul>
+
+                                                                </div>
+
+                                                            </li>
+                                                            <li class="param">
+                                                                    <code class="param-name">switchId</code>
+                                                                    <span class="type">String</span>
+
+
+                                                                <div class="param-description">
+                                                                    <ul>
+                                            <li>radiobox ids about HTML tag attribute  [생성될 스위치 아이디]</li>
+                                            </ul>
+
+                                                                </div>
+
+                                                            </li>
+                                                            <li class="param">
+                                                                    <code class="param-name">switchName</code>
+                                                                    <span class="type">String</span>
+
+
+                                                                <div class="param-description">
+                                                                    <ul>
+                                            <li>radiobox name [셀렉트 이름]</li>
+                                            </ul>
+
+                                                                </div>
+
+                                                            </li>
+                                                            <li class="param">
+                                                                    <code class="param-name">options</code>
+                                                                    <span class="type">Array</span>
+
+
+                                                                <div class="param-description">
+                                                                    <p>(option) - theme (0), track theme (1)
+                                                                                [values : &#39;a&#39;~&#39;g&#39;(default: this.dataTheme), &#39;a&#39;~&#39;g&#39;(default: this.dataTheme)]
+                                                                                [ 배열인자 옵션: 테마(0), 트랙 테마(1)]</p>
+
+                                                                </div>
+
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+
+                                                    <div class="returns">
+                                                        <h4>Returns:</h4>
+
+                                                        <div class="returns-description">
+                                                            <span class="type">JQuery Object</span>:
+                                                            <div class="blue-return-desc">
+                                                                <p>user interface id object [제이쿼리 아이디 객체]</p>
+
+                                                            </div>
+
+
+                                                        </div>
+                                                    </div>
+
+
+                                            </div>
+                                            <div id="method_baseMapRadioBox" class="method item">
+                                              <h3 class="blue-method-name">baseMapRadioBox</h3>
+
+                                              <div class="meta method-meta">
+                                                  <p>
+                                                      Defined in
+                                                  <a href="../files/js_openGDSMobile_OGDSM_eGovFrameUI.js.html#l305"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_eGovFrameUI.js:305</code></a>
+                                              </p>
+
+
+
+                                              </div>
+
+                                              <h3>Syntax</h3>
+                                              <div class="blue-method-syntax">
+                                              <h3 class="name"><code>baseMapRadioBox</code></h3>
+
+                                                    <div class="args">
+                                                        <span class="paren">(</span><ul class="args-list inline commas">
+                                                            <li class="arg">
+                                                                    <code>OGDSMObj</code>
+                                                            </li>
+                                                            <li class="arg">
+                                                                    <code>rootDiv</code>
+                                                            </li>
+                                                            <li class="arg">
+                                                                    <code>options</code>
+                                                            </li>
+                                                        </ul><span class="paren">)</span>
+                                                    </div>
+
+
+
+
+
+
+
+
+                                              </div>
+                                                <div class="description">
+                                                  <h3>Summary</h3>
+                                                    <p>배경 맵 선택 사용자 인터페이스 자동 생성 (라디오 박스)
+                                            Auto Create about Map Type User Interface.</p>
+
+                                                </div>
+
+                                                    <div class="params">
+                                                        <h4>Parameters:</h4>
+
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">OGDSMObj</code>
+                                                                    <span class="type">OGDSM Object</span>
+
+
+                                                                <div class="param-description">
+                                                                    <ul>
+                                            <li>OpenGDS Mobile Visualization Object [OpenGDS모바일 시각화 객체]</li>
+                                            </ul>
+
+                                                                </div>
+
+                                                            </li>
+                                                            <li class="param">
+                                                                    <code class="param-name">rootDiv</code>
+                                                                    <span class="type">String</span>
+
+
+                                                                <div class="param-description">
+                                                                    <ul>
+                                            <li>Root div id [상위 DIV 아이디]</li>
+                                            </ul>
+
+                                                                </div>
+
+                                                            </li>
+                                                            <li class="param">
+                                                                    <code class="param-name">options</code>
+                                                                    <span class="type">Array</span>
+
+
+                                                                <div class="param-description">
+                                                                    <ul>
+                                            <li>Map type to support [제공할 지도 타입]</li>
+                                            </ul>
+
+                                                                </div>
+
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+
+
+
+                                            </div>
+                                            <div id="method_baseMapSelect" class="method item">
+                                              <h3 class="blue-method-name">baseMapSelect</h3>
+
+                                              <div class="meta method-meta">
+                                                  <p>
+                                                      Defined in
+                                                  <a href="../files/js_openGDSMobile_OGDSM_eGovFrameUI.js.html#l329"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_eGovFrameUI.js:329</code></a>
+                                              </p>
+
+
+
+                                              </div>
+
+                                              <h3>Syntax</h3>
+                                              <div class="blue-method-syntax">
+                                              <h3 class="name"><code>baseMapSelect</code></h3>
+
+                                                    <div class="args">
+                                                        <span class="paren">(</span><ul class="args-list inline commas">
+                                                            <li class="arg">
+                                                                    <code>OGDSMObj</code>
+                                                            </li>
+                                                            <li class="arg">
+                                                                    <code>rootDiv</code>
+                                                            </li>
+                                                            <li class="arg">
+                                                                    <code>options</code>
+                                                            </li>
+                                                        </ul><span class="paren">)</span>
+                                                    </div>
+
+
+
+
+
+
+
+
+                                              </div>
+                                                <div class="description">
+                                                  <h3>Summary</h3>
+                                                    <p>배경 맵 선택 사용자 인터페이스 자동 생성 (셀렉트)
+                                            Auto Create about Map Type User Interface.</p>
+
+                                                </div>
+
+                                                    <div class="params">
+                                                        <h4>Parameters:</h4>
+
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">OGDSMObj</code>
+                                                                    <span class="type">OGDSM Object</span>
+
+
+                                                                <div class="param-description">
+                                                                    <ul>
+                                            <li>OpenGDS Mobile Visualization Object [OpenGDS모바일 시각화 객체]</li>
+                                            </ul>
+
+                                                                </div>
+
+                                                            </li>
+                                                            <li class="param">
+                                                                    <code class="param-name">rootDiv</code>
+                                                                    <span class="type">String</span>
+
+
+                                                                <div class="param-description">
+                                                                    <ul>
+                                            <li>Root div id [상위 DIV 아이디]</li>
+                                            </ul>
+
+                                                                </div>
+
+                                                            </li>
+                                                            <li class="param">
+                                                                    <code class="param-name">options</code>
+                                                                    <span class="type">Array</span>
+
+
+                                                                <div class="param-description">
+                                                                    <ul>
+                                            <li>Map type to support [제공할 지도 타입]</li>
+                                            </ul>
+
+                                                                </div>
+
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+
+
+
+                                            </div>
+                                            <div id="method_DateInput" class="method item">
+                                              <h3 class="blue-method-name">DateInput</h3>
+
+                                              <div class="meta method-meta">
+                                                  <p>
+                                                      Defined in
+                                                  <a href="../files/js_openGDSMobile_OGDSM_eGovFrameUI.js.html#l288"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_eGovFrameUI.js:288</code></a>
+                                              </p>
+
+
+
+                                              </div>
+
+                                              <h3>Syntax</h3>
+                                              <div class="blue-method-syntax">
+                                              <h3 class="name"><code>DateInput</code></h3>
+
+                                                    <div class="args">
+                                                        <span class="paren">(</span><ul class="args-list inline commas">
+                                                            <li class="arg">
+                                                                    <code>divId</code>
+                                                            </li>
+                                                        </ul><span class="paren">)</span>
+                                                    </div>
+
+                                                    <span class="returns-inline">
+                                                        <span class="type">JQuery Object</span>
+                                                    </span>
+
+
+
+
+
+
+
+                                              </div>
+                                                <div class="description">
+                                                  <h3>Summary</h3>
+                                                    <p>User Interface Create about visualization type (Date Input).</p>
+
+                                                </div>
+
+                                                    <div class="params">
+                                                        <h4>Parameters:</h4>
+
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">divId</code>
+                                                                    <span class="type">String</span>
+
+
+                                                                <div class="param-description">
+                                                                    <ul>
+                                            <li>div id about HTML tag attribute</li>
+                                            </ul>
+
+                                                                </div>
+
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+
+                                                    <div class="returns">
+                                                        <h4>Returns:</h4>
+
+                                                        <div class="returns-description">
+                                                            <span class="type">JQuery Object</span>:
+                                                            <div class="blue-return-desc">
+                                                                <p>User Interface Date Input Object (Date YYYY/MM/DD)</p>
+
+                                                            </div>
+
+
+                                                        </div>
+                                                    </div>
+
+
+                                            </div>
+                                            <div id="method_envTypeRadio" class="method item">
+                                              <h3 class="blue-method-name">envTypeRadio</h3>
+
+                                              <div class="meta method-meta">
+                                                  <p>
+                                                      Defined in
+                                                  <a href="../files/js_openGDSMobile_OGDSM_eGovFrameUI.js.html#l597"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_eGovFrameUI.js:597</code></a>
+                                              </p>
+
+
+
+                                              </div>
+
+                                              <h3>Syntax</h3>
+                                              <div class="blue-method-syntax">
+                                              <h3 class="name"><code>envTypeRadio</code></h3>
+
                                                     <div class="args">
                                                         <span class="paren">(</span><ul class="args-list inline commas">
                                                             <li class="arg">
@@ -428,103 +1380,103 @@
                                                             </li>
                                                         </ul><span class="paren">)</span>
                                                     </div>
-                                            
+
                                                     <span class="returns-inline">
                                                         <span class="type">String</span>
                                                     </span>
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
+
+
+
+
+
+
+
                                               </div>
                                                 <div class="description">
                                                   <h3>Summary</h3>
                                                     <p>User Interface Create about Environment Type (Radio Button).</p>
-                                            
+
                                                 </div>
-                                            
+
                                                     <div class="params">
                                                         <h4>Parameters:</h4>
-                                            
+
                                                         <ul class="params-list">
                                                             <li class="param">
                                                                     <code class="param-name">divId</code>
                                                                     <span class="type">String</span>
-                                            
-                                            
+
+
                                                                 <div class="param-description">
                                                                     <ul>
                                             <li>div id about HTML tag attribute</li>
                                             </ul>
-                                            
+
                                                                 </div>
-                                            
+
                                                             </li>
                                                             <li class="param">
                                                                     <code class="param-name">provider</code>
                                                                     <span class="type">String</span>
-                                            
-                                            
+
+
                                                                 <div class="param-description">
                                                                     <ul>
                                             <li>public data provider (&#39;seoul&#39; or &#39;public&#39;) (default : seoul)</li>
                                             </ul>
-                                            
+
                                                                 </div>
-                                            
+
                                                             </li>
                                                             <li class="param">
                                                                     <code class="param-name">theme</code>
                                                                     <span class="type">String</span>
-                                            
-                                            
+
+
                                                                 <div class="param-description">
                                                                     <ul>
                                             <li>eGovframework theme a~g (default constructor)</li>
                                             </ul>
-                                            
+
                                                                 </div>
-                                            
+
                                                             </li>
                                                         </ul>
                                                     </div>
-                                            
+
                                                     <div class="returns">
                                                         <h4>Returns:</h4>
-                                            
+
                                                         <div class="returns-description">
                                                             <span class="type">String</span>:
                                                             <div class="blue-return-desc">
                                                                 <p>User Interface Radio Button Name (envTypeRadio)</p>
-                                            
+
                                                             </div>
-                                            
-                                            
+
+
                                                         </div>
                                                     </div>
-                                            
-                                            
+
+
                                             </div>
                                             <div id="method_mapListSelect" class="method item">
                                               <h3 class="blue-method-name">mapListSelect</h3>
-                                            
+
                                               <div class="meta method-meta">
                                                   <p>
                                                       Defined in
-                                                  <a href="../files/js_openGDSMobile_OGDSM_eGovFrameUI.js.html#l345"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_eGovFrameUI.js:345</code></a>
+                                                  <a href="../files/js_openGDSMobile_OGDSM_eGovFrameUI.js.html#l664"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_eGovFrameUI.js:664</code></a>
                                               </p>
-                                            
-                                            
-                                            
+
+
+
                                               </div>
-                                            
+
                                               <h3>Syntax</h3>
                                               <div class="blue-method-syntax">
                                               <h3 class="name"><code>mapListSelect</code></h3>
-                                            
+
                                                     <div class="args">
                                                         <span class="paren">(</span><ul class="args-list inline commas">
                                                             <li class="arg">
@@ -535,300 +1487,64 @@
                                                             </li>
                                                         </ul><span class="paren">)</span>
                                                     </div>
-                                            
+
                                                     <span class="returns-inline">
                                                         <span class="type">String</span>
                                                     </span>
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
+
+
+
+
+
+
+
                                               </div>
                                                 <div class="description">
                                                   <h3>Summary</h3>
                                                     <p>User Interface Create about Map List (Select).</p>
-                                            
+
                                                 </div>
-                                            
+
                                                     <div class="params">
                                                         <h4>Parameters:</h4>
-                                            
+
                                                         <ul class="params-list">
                                                             <li class="param">
                                                                     <code class="param-name">divId</code>
                                                                     <span class="type">String</span>
-                                            
-                                            
+
+
                                                                 <div class="param-description">
                                                                     <ul>
                                             <li>div id about HTML tag attribute</li>
                                             </ul>
-                                            
+
                                                                 </div>
-                                            
+
                                                             </li>
                                                             <li class="param">
                                                                     <code class="param-name">arr</code>
                                                                     <span class="type">Array</span>
-                                            
-                                            
+
+
                                                                 <div class="param-description">
                                                                     <ul>
                                             <li>Select Box Option List</li>
                                             </ul>
-                                            
+
                                                                 </div>
-                                            
+
                                                             </li>
                                                         </ul>
                                                     </div>
-                                            
+
                                                     <div class="returns">
                                                         <h4>Returns:</h4>
-                                            
+
                                                         <div class="returns-description">
                                                             <span class="type">String</span>:
                                                             <div class="blue-return-desc">
                                                                 <p>Select Box Id Value</p>
-                                            
-                                                            </div>
-                                            
-                                            
-                                                        </div>
-                                                    </div>
-                                            
-                                            
-                                            </div>
-                                            <div id="method_processButton" class="method item">
-                                              <h3 class="blue-method-name">processButton</h3>
-                                            
-                                              <div class="meta method-meta">
-                                                  <p>
-                                                      Defined in
-                                                  <a href="../files/js_openGDSMobile_OGDSM_eGovFrameUI.js.html#l369"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_eGovFrameUI.js:369</code></a>
-                                              </p>
-                                            
-                                            
-                                            
-                                              </div>
-                                            
-                                              <h3>Syntax</h3>
-                                              <div class="blue-method-syntax">
-                                              <h3 class="name"><code>processButton</code></h3>
-                                            
-                                                    <div class="args">
-                                                        <span class="paren">(</span><ul class="args-list inline commas">
-                                                            <li class="arg">
-                                                                    <code>divId</code>
-                                                            </li>
-                                                            <li class="arg">
-                                                                    <code>theme</code>
-                                                            </li>
-                                                        </ul><span class="paren">)</span>
-                                                    </div>
-                                            
-                                                    <span class="returns-inline">
-                                                        <span class="type">JQuery Object</span>
-                                                    </span>
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                              </div>
-                                                <div class="description">
-                                                  <h3>Summary</h3>
-                                                    <p>User Interface Create about Process (Button).</p>
-                                            
-                                                </div>
-                                            
-                                                    <div class="params">
-                                                        <h4>Parameters:</h4>
-                                            
-                                                        <ul class="params-list">
-                                                            <li class="param">
-                                                                    <code class="param-name">divId</code>
-                                                                    <span class="type">String</span>
-                                            
-                                            
-                                                                <div class="param-description">
-                                                                    <ul>
-                                            <li>div id about HTML tag attribute</li>
-                                            </ul>
-                                            
-                                                                </div>
-                                            
-                                                            </li>
-                                                            <li class="param">
-                                                                    <code class="param-name">theme</code>
-                                                                    <span class="type">String</span>
-                                            
-                                            
-                                                                <div class="param-description">
-                                                                    <ul>
-                                            <li>eGovframework theme a~g (default constructor)</li>
-                                            </ul>
-                                            
-                                                                </div>
-                                            
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                            
-                                                    <div class="returns">
-                                                        <h4>Returns:</h4>
-                                            
-                                                        <div class="returns-description">
-                                                            <span class="type">JQuery Object</span>:
-                                                            <div class="blue-return-desc">
-                                                                <p>User Interface Button Object (Process)</p>
-                                            
-                                                            </div>
-                                            
-                                            
-                                                        </div>
-                                                    </div>
-                                            
-                                            
-                                            </div>
-                                            <div id="method_selectBox" class="method item">
-                                              <h3 class="blue-method-name">selectBox</h3>
-
-                                              <div class="meta method-meta">
-                                                  <p>
-                                                      Defined in
-                                                  <a href="../files/js_openGDSMobile_OGDSM_eGovFrameUI.js.html#l388"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_eGovFrameUI.js:388</code></a>
-                                              </p>
-
-
-
-                                              </div>
-
-                                              <h3>Syntax</h3>
-                                              <div class="blue-method-syntax">
-                                              <h3 class="name"><code>selectBox</code></h3>
-
-                                                    <div class="args">
-                                                        <span class="paren">(</span><ul class="args-list inline commas">
-                                                            <li class="arg">
-                                                                    <code>divId</code>
-                                                            </li>
-                                                            <li class="arg">
-                                                                    <code>name</code>
-                                                            </li>
-                                                            <li class="arg">
-                                                                    <code>id</code>
-                                                            </li>
-                                                            <li class="arg">
-                                                                    <code>data</code>
-                                                            </li>
-                                                            <li class="arg">
-                                                                    <code>theme</code>
-                                                            </li>
-                                                        </ul><span class="paren">)</span>
-                                                    </div>
-
-                                                    <span class="returns-inline">
-                                                        <span class="type">JQuery Object</span>
-                                                    </span>
-
-
-
-
-
-
-
-                                              </div>
-                                                <div class="description">
-                                                  <h3>Summary</h3>
-                                                    <p>User Interface Create about SelectBox</p>
-
-                                                </div>
-
-                                                    <div class="params">
-                                                        <h4>Parameters:</h4>
-
-                                                        <ul class="params-list">
-                                                            <li class="param">
-                                                                    <code class="param-name">divId</code>
-                                                                    <span class="type">String</span>
-
-
-                                                                <div class="param-description">
-                                                                    <ul>
-                                            <li>div id about HTML tag attribute</li>
-                                            </ul>
-
-                                                                </div>
-
-                                                            </li>
-                                                            <li class="param">
-                                                                    <code class="param-name">name</code>
-                                                                    <span class="type">String</span>
-
-
-                                                                <div class="param-description">
-                                                                    <ul>
-                                            <li>selectbox name about HTML tag attribute</li>
-                                            </ul>
-
-                                                                </div>
-
-                                                            </li>
-                                                            <li class="param">
-                                                                    <code class="param-name">id</code>
-                                                                    <span class="type">String</span>
-
-
-                                                                <div class="param-description">
-                                                                    <ul>
-                                            <li>selectbox id about HTML tag attribute</li>
-                                            </ul>
-
-                                                                </div>
-
-                                                            </li>
-                                                            <li class="param">
-                                                                    <code class="param-name">data</code>
-                                                                    <span class="type">Array</span>
-
-
-                                                                <div class="param-description">
-                                                                    <ul>
-                                            <li>selectbox option data</li>
-                                            </ul>
-
-                                                                </div>
-
-                                                            </li>
-                                                            <li class="param">
-                                                                    <code class="param-name">theme</code>
-                                                                    <span class="type">String</span>
-
-
-                                                                <div class="param-description">
-                                                                    <ul>
-                                            <li>eGovframework theme a~g (default constructor)</li>
-                                            </ul>
-
-                                                                </div>
-
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-
-                                                    <div class="returns">
-                                                        <h4>Returns:</h4>
-
-                                                        <div class="returns-description">
-                                                            <span class="type">JQuery Object</span>:
-                                                            <div class="blue-return-desc">
-                                                                <p>div id Object</p>
 
                                                             </div>
 
@@ -844,7 +1560,7 @@
                                               <div class="meta method-meta">
                                                   <p>
                                                       Defined in
-                                                  <a href="../files/js_openGDSMobile_OGDSM_eGovFrameUI.js.html#l262"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_eGovFrameUI.js:262</code></a>
+                                                  <a href="../files/js_openGDSMobile_OGDSM_eGovFrameUI.js.html#l272"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_eGovFrameUI.js:272</code></a>
                                               </p>
                                             
                                             
@@ -922,7 +1638,7 @@
                                               <div class="meta method-meta">
                                                   <p>
                                                       Defined in
-                                                  <a href="../files/js_openGDSMobile_OGDSM_eGovFrameUI.js.html#l222"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_eGovFrameUI.js:222</code></a>
+                                                  <a href="../files/js_openGDSMobile_OGDSM_eGovFrameUI.js.html#l572"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_eGovFrameUI.js:572</code></a>
                                               </p>
                                             
                                             
@@ -1010,13 +1726,13 @@
                                             
                                             
                                             </div>
-                                            <div id="method_vworldWMSCheck" class="method item">
-                                              <h3 class="blue-method-name">vworldWMSCheck</h3>
+                                            <div id="method_vworldWMSList" class="method item">
+                                              <h3 class="blue-method-name">vworldWMSList</h3>
                                             
                                               <div class="meta method-meta">
                                                   <p>
                                                       Defined in
-                                                  <a href="../files/js_openGDSMobile_OGDSM_eGovFrameUI.js.html#l26"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_eGovFrameUI.js:26</code></a>
+                                                  <a href="../files/js_openGDSMobile_OGDSM_eGovFrameUI.js.html#l358"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_eGovFrameUI.js:358</code></a>
                                               </p>
                                             
                                             
@@ -1025,7 +1741,7 @@
                                             
                                               <h3>Syntax</h3>
                                               <div class="blue-method-syntax">
-                                              <h3 class="name"><code>vworldWMSCheck</code></h3>
+                                              <h3 class="name"><code>vworldWMSList</code></h3>
                                             
                                                     <div class="args">
                                                         <span class="paren">(</span><ul class="args-list inline commas">
@@ -1051,7 +1767,7 @@
                                               </div>
                                                 <div class="description">
                                                   <h3>Summary</h3>
-                                                    <p>VWorld WMS API List (CheckBox).</p>
+                                                    <p>VWorld WMS API List (Using autoSelect).</p>
                                             
                                                 </div>
                                             

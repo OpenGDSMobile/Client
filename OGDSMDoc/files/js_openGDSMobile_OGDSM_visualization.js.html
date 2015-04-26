@@ -40,9 +40,12 @@
                         <div id="api-tabview-panel">
                             <ul id="api-classes" class="apis classes">
                                 <li><a href="../classes/OGDSM.html">OGDSM</a></li>
+                                <li><a href="../classes/OGDSM.attributeTable.html">OGDSM.attributeTable</a></li>
                                 <li><a href="../classes/OGDSM.eGovFramUI.html">OGDSM.eGovFramUI</a></li>
                                 <li><a href="../classes/OGDSM.externalConnection.html">OGDSM.externalConnection</a></li>
+                                <li><a href="../classes/OGDSM.mapLayerList.html">OGDSM.mapLayerList</a></li>
                                 <li><a href="../classes/OGDSM.visualization.html">OGDSM.visualization</a></li>
+                                <li><a href="../classes/Sortable.html">Sortable</a></li>
                             </ul>
                 
                             <ul id="api-modules" class="apis modules">
@@ -85,37 +88,73 @@
                         
                         <div class="file">
                             <pre class="code prettyprint linenums">
-                        /*jslint devel: true */
+                        /*jslint devel: true, vars : true, plusplus : true */
                         /*global $, jQuery, ol, OGDSM, d3*/
-                        
                         OGDSM.namesapce(&#x27;visualization&#x27;);
-                        (function (ol, OGDSM) {
+                        (function (OGDSM) {
                             &quot;use strict&quot;;
                             var mapObj;
                             /**
-                            * OpenLayers3 Map Control Class
+                            * 오픈레이어3 지도 시각화 객체
+                            * OpenLayers3 Map Visualization Class
                             * @class OGDSM.visualization
                             * @constructor
-                            * @param {ol.Map} map
+                            * @param {String} mapDiv - Map div id
+                            * @param {String} options (option) - layerListDiv, attrTableDiv, attrAddr
+                                                        [values : div string(default : null), div string(default: null), address string(default: &#x27;&#x27;)]
+                            * @param {String} layerlistDiv - Layer list div view (option)
+                            * @param {String} attrtableDiv - Layer attribute div view (option)
+                             layerlistDiv, attrtableDiv
                             */
-                            OGDSM.visualization = function (map) {
-                                mapObj = map;
+                            OGDSM.visualization = function (mapDiv, options) {
+                                //layerlistDiv = (typeof (layerlistDiv) !== &#x27;undefined&#x27;) ? layerlistDiv : null;
+                                //attrtableDiv = (typeof (attrtableDiv) !== &#x27;undefined&#x27;) ? attrtableDiv : null;
+                                var name;
+                                this.updateLayoutSetting(mapDiv);
+                                this.mapDiv = mapDiv;
+                                this.geoLocation = null;
+                                OGDSM.visualization = this;
+                                var defaults = {
+                                    layerListDiv : null,
+                                    attrTableDiv : null,
+                                    attrAddr : &#x27;&#x27;
+                                };
+
+                                for (name in defaults) {
+                                    if (defaults.hasOwnProperty(name)) {
+                                        if (options.hasOwnProperty(name)) {
+                                            defaults[name] = options[name];
+                                        }
+                                    }
+                                }
+                                $(window).on(&#x27;resize&#x27;, function () {
+                                    OGDSM.visualization.updateLayoutSetting();
+                                });
+                                if (defaults.layerlistDiv !== null) {
+                                    this.layerListObj = new OGDSM.mapLayerList(this, defaults.layerListDiv);
+                                }
+                                if (defaults.attrtableDiv !== null) {
+                                    this.attrTableObj = new OGDSM.attributeTable(defaults.attrTableDiv, defaults.attrAddr);
+                                }
+                                // Orientation...
                             };
                             OGDSM.visualization.prototype = {
-                                constructor : OGDSM.olMap,
+                                constructor : OGDSM.visualization,
                                 /**
-                                 * getMap Method get map object about OpenLayers3.
+                                 * 지도 객체 받기
+                                 * Get map object about OpenLayers3
                                  * @method getMap
-                                 * @return {ol.Map} Retrun is OpenLayers object.
+                                 * @return {ol.Map} Retrun is OpenLayers object
                                  */
                                 getMap : function () {
-                                    return mapObj;
+                                    return this.mapObj;
                                 },
                                 /**
-                                 * Current Layers Check about OpenLayers3.
+                                 * 지도 레이어 존재 여부 확인
+                                 * Current layers check about OpenLayers3
                                  * @method layerCheck
-                                 * @param {String} layerName - Search layer name
-                                 * @return {OpenLayer3 Layer Object} Retrun is OpenLayers object.
+                                 * @param {String} layerName - Search layer title
+                                 * @return {OpenLayer3 Layer Object} Retrun is OpenLayers object
                                  */
                                 layerCheck : function (layerName) {
                                     var i,
@@ -126,32 +165,93 @@
                                         }
                                     }
                                     return false;
+                                },
+                                /**
+                                 * 지도 레이어 인덱스 값
+                                 * Current layers index value about OpenLayers3
+                                 * @method indexOf
+                                 * @param {ol3 layers object} layers - Layer objects
+                                 * @return {Number} Retrun is index number
+                                 */
+                                indexOf : function (layers, layer) {
+                                    var length = layers.getLength(), i;
+                                    for (i = 0; i &lt; length; i++) {
+                                        if (layer === layers.item(i)) {
+                                            return i;
+                                        }
+                                    }
+                                    return -1;
                                 }
-                                
                             };
                             return OGDSM.visualization;
-                        }(ol, OGDSM));
+                        }(OGDSM));
+
+                        /**
+                         * OpenGDS 모바일 맵 초기화
+                         * OGDSM Mobile map view
+                         * @method olMapView
+                         * @param {Array}  latlng   - Map init center latitude, longitude (option) [default : [37.582200, 127.010031] ]
+                         * @param {String} mapType - Background map (option) [default : &#x27;OSM&#x27;]
+                         * @param {String} baseProj  - Map base projection (option) [default : &#x27;EPSG:3857&#x27;]
+                         * @return {ol.Map} Return is openlayers3 ol.Map object
+                         */
+                        OGDSM.visualization.prototype.olMapView = function (latlng, mapType, baseProj) {
+                            &#x27;use strict&#x27;;
+                            latlng = (typeof (latlng) !== &#x27;undefined&#x27;) ? latlng : [37.582200, 127.010031];
+                            mapType = (typeof (mapType) !== &#x27;undefined&#x27;) ? mapType : &#x27;OSM&#x27;;
+                            baseProj = (typeof (baseProj) !== &#x27;undefined&#x27;) ? baseProj : &#x27;EPSG:3857&#x27;;
+                            var map = null, baseMapLayer = null, geolocation;
+                            var epsg5181 = new ol.proj.Projection({
+                                code : &#x27;EPSG:5181&#x27;,
+                                extent : [-219825.99, -535028.96, 819486.07, 777525.22],
+                                units : &#x27;m&#x27;
+                            });
+                            var epsg5179 = new ol.proj.Projection({
+                                code : &#x27;EPSG:5179&#x27;,
+                                extent : [531371.84, 967246.47, 1576674.68, 2274021.31],
+                                units : &#x27;m&#x27;
+                            });
+                            ol.proj.addProjection(epsg5181);
+                            ol.proj.addProjection(epsg5179);
+                            var baseView = new ol.View({
+                                projection : ol.proj.get(baseProj),
+                                center : ol.proj.transform(latlng, &#x27;EPSG:4326&#x27;, baseProj),
+                                zoom : 12,
+                                maxZoom : 18,
+                                minZoom : 6
+                            });
+                            map = new ol.Map({
+                                target : this.mapDiv,
+                                layers : [
+                                    new ol.layer.Tile({
+                                        title : &#x27;basemap&#x27;,
+                                        source : baseMapLayer
+                                    })
+                                ],
+                                view : baseView,
+                                controls: []
+                            });
+                            this.mapObj = map;
+                            this.baseProj = baseProj;
+                            this.changeBaseMap(mapType);
+                            return this.mapObj;
+                        };
+
                         
                         /**
-                         * changeBaseMap Method is base map Change.
+                         * 배경지도 변경
+                         * Base map change
                          * @method changeBaseMap
-                         * @param {String} mapStyle (&#x27;VWorld&#x27; or &#x27;OSM&#x27;)
+                         * @param {String} mapStyle - Map style (&quot;OSM&quot; | &quot;VWorld&quot; | &quot;VWorld_m&quot; | &quot;VWorld_h&quot;)
                          */
                         OGDSM.visualization.prototype.changeBaseMap = function (mapStyle) {
                             &quot;use strict&quot;;
-                            var TMS = null,
-                                view = null,
-                                baseLayer = null,
-                                map = this.getMap(),
-                                maplayers = map.getLayers(),
-                                mapCenter = map.getView().getCenter(),
-                                mapZoom = map.getView().getZoom(),
-                                mapProj = map.getView().getProjection();
+                            var TMS = null, view = null, baseLayer = null, map = this.mapObj, maplayers = map.getLayers(),
+                                mapCenter = map.getView().getCenter(), mapZoom = map.getView().getZoom(), mapProj = map.getView().getProjection();
                         
                             maplayers.forEach(function (obj, i) {
                                 var layerTitle = obj.get(&#x27;title&#x27;);
                                 if (layerTitle === &#x27;basemap&#x27;) {
-                                    //map.removeLayer(obj);
                                     baseLayer = obj;
                                 }
                             });
@@ -169,46 +269,205 @@
                                 view = new ol.View({
                                     projection : mapProj,
                                     center : mapCenter,
-                                    zoom : mapZoom
+                                    zoom : mapZoom,
+                                    maxZoom : 18,
+                                    minZoom : 6
+                                });
+                            } else if (mapStyle === &#x27;VWorld_s&#x27;) {
+                                TMS = new ol.source.XYZ(({
+                                    url : &quot;http://xdworld.vworld.kr:8080/2d/Satellite/201301/{z}/{x}/{y}.jpeg&quot;
+                                }));
+                                view = new ol.View({
+                                    projection : mapProj,
+                                    center : mapCenter,
+                                    zoom : mapZoom,
+                                    maxZoom : 18,
+                                    minZoom : 6
+                                });
+                            } else if (mapStyle === &#x27;VWorld_g&#x27;) {
+                                TMS = new ol.source.XYZ(({
+                                    url : &quot;http://xdworld.vworld.kr:8080/2d/gray/201411/{z}/{x}/{y}.png&quot;
+                                }));
+                                view = new ol.View({
+                                    projection : mapProj,
+                                    center : mapCenter,
+                                    zoom : mapZoom,
+                                    maxZoom : 18,
+                                    minZoom : 6
+                                });
+                            } else if (mapStyle === &#x27;VWorld_m&#x27;) {
+                                TMS = new ol.source.XYZ(({
+                                    url : &quot;http://xdworld.vworld.kr:8080/2d/midnight/201411/{z}/{x}/{y}.png&quot;
+                                }));
+                                view = new ol.View({
+                                    projection : mapProj,
+                                    center : mapCenter,
+                                    zoom : mapZoom,
+                                    maxZoom : 18,
+                                    minZoom : 6
+                                });
+                            } else if (mapStyle === &#x27;&#x27;) {
+                                TMS = null;
+                                view = new ol.View({
+                                    projection : mapProj,
+                                    center : mapCenter,
+                                    zoom : mapZoom,
+                                    maxZoom : 18,
+                                    minZoom : 6
                                 });
                             } else {
-                                console.log(&#x27;Not Map Style&#x27;);
+                                console.error(&#x27;Not Map Style &quot;OSM&quot; | &quot;VWorld&quot; | &quot;VWorld_m&quot; | &quot;VWorld_h&quot;&#x27;);
+                                return null;
                             }
-                            console.log(TMS);
                             if (baseLayer !== null) {
                                 map.setView(view);
                                 baseLayer.setSource(TMS);
                             }
-                            /*
-                            map.addLayer(new ol.layer.Tile({
-                                title : &#x27;basemap&#x27;,
-                                source : TMS
-                            }));
-                            */
+                        };
+
+                        /**
+                         * 지도 GPS 트래킹 스위치
+                         * Map geolocation tracking
+                         * @method trackingGeoLocation
+                         * @param {boolean} sw - Geolocation switch (true | false
+                         **/
+                        OGDSM.visualization.prototype.trackingGeoLocation = function (sw) {
+                            &#x27;use strict&#x27;;
+                            var geolocation = this.geoLocation, mapObj = this.mapObj;
+                            if (typeof (this.mapObj) === &#x27;undefined&#x27;) {
+                                console.error(&#x27;Not Create Map!!&#x27;);
+                                return null;
+                            }
+                            if (geolocation === null) {
+                                geolocation = new ol.Geolocation({
+                                    projection:	mapObj.getView().getProjection(),
+                                    tracking : true
+                                });
+                            }
+
+                            if (sw === true) {
+                                geolocation.once(&#x27;change:position&#x27;, function () {
+                                    mapObj.getView().setCenter(geolocation.getPosition());
+                                });
+                            }
                         };
                         /**
-                         * WMS/WFS Map Add
+                         * 모바일 해상도에 맞는 지도 레이아웃 업데이트
+                         * OGDSM Mobile screen update layout
+                         * @method updateLayoutSetting
+                         * @param {String} mapDiv - Map div name
+                         **/
+                        OGDSM.visualization.prototype.updateLayoutSetting = function (mapDiv) {
+                            &#x27;use strict&#x27;;
+                            mapDiv = (typeof (mapDiv) !== &#x27;undefined&#x27;) ? mapDiv : this.mapDiv;
+                            $(&#x27;#&#x27; + mapDiv).width(window.innerWidth);
+                            $(&#x27;#&#x27; + mapDiv).height(window.innerHeight);
+                            if (typeof (this.mapObj) !== &#x27;undefined&#x27;) {
+                                this.mapObj.updateSize();
+                            }
+
+                            /*******************/
+                        /*    $(&quot;#d3View&quot;).attr(&#x27;width&#x27;, $(window).width() - 100);
+                        	$(&#x27;#d3viewonMap&#x27;).hide();
+                        	$(&quot;#d3viewonMap&quot;).attr(&#x27;width&#x27;, $(window).width() - 50);
+                        	$(&#x27;#d3viewonMap&#x27;).css(&#x27;top&#x27;, $(window).height() - 300);
+
+                        	$(&#x27;#interpolationMap&#x27;).hide();
+                        	$(&quot;#interpolationMap&quot;).attr(&#x27;width&#x27;, $(window).width() - 50);
+                        	$(&#x27;#interpolationMap&#x27;).css(&#x27;top&#x27;, $(window).height() - 600);
+
+                        	$(&#x27;#layersList&#x27;).css(&#x27;height&#x27;, $(window).height() - 400);
+                        	$(&#x27;#layersList&#x27;).css(&quot;overflow-y&quot;, &quot;auto&quot;);*/
+                            /********************/
+                        };
+                        /**
+                         * WMS 및 WFS 맵 레이어 추가
+                         * WMS/WFS map layer add
                          * @method addMap
-                         * @param {ol Map Object} data (OpenLayers WMS/WFS/ Object)
+                         * @param {ol Map Object} data - Openlayers map object (OpenLayers WMS/WFS/ Object)
                          */
-                        OGDSM.visualization.prototype.addMap = function (data) {
+                        OGDSM.visualization.prototype.addMap = function (data, type) {
                             &#x27;use strict&#x27;;
                             var chkData = this.layerCheck(data.get(&#x27;title&#x27;));
-                            if (chkData !== null) {
-                                this.getMap().removeLayer(chkData);
+                            if (chkData === false) {
+                                this.getMap().addLayer(data);
+                                if (typeof (this.layerListObj) !== &#x27;undefined&#x27;) {
+                                    var color;
+                                    if (typeof data.getStyle !== &#x27;undefined&#x27;) {
+                                        if (type === &#x27;polygon&#x27;) {
+                                            color = data.getStyle()[0].getFill().getColor();
+                                        } else if (type === &#x27;point&#x27;) {
+                                            color = data.getStyle()[0].getImage().getFill().getColor();
+                                        }
+
+                                    } else {
+                                        color =  &#x27;rgb(0, 0, 0)&#x27;;
+                                    }
+                                    this.layerListObj.listManager(data, data.get(&#x27;title&#x27;), color, type);
+                                }
+                                if (typeof (this.attrTableObj) !== &#x27;undefined&#x27;) {
+                                    this.attrTableObj.addAttribute(data.get(&#x27;title&#x27;));
+                                }
+                            } else {
+                                console.log(&quot;Layer is existence&quot;);
                             }
-                            this.getMap().addLayer(data);
                         };
                         /**
-                         *
-                         *
+                         * 이미지 레이어 시각화
+                         * Image Layer Visualization
+                         * @method imageLayer
+                         * @param {String} imgURL (Image URL)
+                         * @param {String} imgTitle (Image title)
+                         * @param {Array} imgSize (Image size [width, height] )
+                         * @param {Array} imgExtent (Image extent [lower left lon, lower left lat, upper right lon, upper right lat] or [left, bottom, right, top])
+                         */
+                        OGDSM.visualization.prototype.imageLayer = function (imgURL, imgTitle, imgSize, imgExtent) {
+                            &#x27;use strict&#x27;;
+                            var imgLayer = null,
+                                title = imgTitle;
+
+                            imgLayer = new ol.layer.Image({
+                                opacity : 1.0,
+                                title : title,
+                                source : new ol.source.ImageStatic({
+                                    url : imgURL + &#x27;?&#x27; + Math.random(),
+                                    imageSize : imgSize,
+                                    projection : new ol.proj.Projection({code : &#x27;EPSG:3857&#x27;}),
+                                    imageExtent : imgExtent
+
+                                })
+                            });
+                            this.getMap().addLayer(imgLayer);
+                        };
+                        /**
+                         * 맵 레이어 삭제
+                         * WMS/WFS/ImageLayer map layer remove
+                         * @method removeMap
+                         * @param {String} layerName - Layer title
                          */
                         OGDSM.visualization.prototype.removeMap = function (layerName) {
                             &#x27;use strict&#x27;;
                             var obj = this.layerCheck(layerName);
-                            this.getMap().removeLayer(obj);
+                            if (obj !== false) {
+                                this.getMap().removeLayer(obj);
+                            }
                         };
                         /**
+                         * 맵 레이어 시각화 여부
+                         * Map layer visualization flag
+                         * @method setVisible
+                         * @param {String} layerName - Layer title
+                         * @param {Boolean} flag - visualization switch true or false
+                         */
+                        OGDSM.visualization.prototype.setVisible = function (layerName, flag) {
+                            &#x27;use strict&#x27;;
+                            var obj = this.layerCheck(layerName);
+                            if (obj !== false) {
+                                obj.setVisible(flag);
+                            }
+                        };
+                        /**
+                         * WFS 스타일 변경  (수정중....)
                          * WFS style change
                          * @method changeWFSStyle
                          * @param {String} layerName (OpenLayers layer name)
@@ -231,6 +490,7 @@
                                 style = null;
                         
                             if (map === false) {
+                                console.error(&#x27;Not Map Layer&#x27;);
                                 return -1;
                             }
                             map.setStyle(function (f, r) {
@@ -382,32 +642,50 @@
                                 });
                         };
                         
-                        /**
-                         * Image Layer Visualization based on OpenLayers3
-                         * @method imageLayer
-                         * @param {String} imgURL (Image URL)
-                         * @param {String} imgTitle (Image title)
-                         * @param {Array} imgSize (Image size [width, height] )
-                         * @param {Array} imgExtent (Image extent [lower left lon, lower left lat, upper right lon, upper right lat] or [left, bottom, right, top])
-                         */
-                        OGDSM.visualization.prototype.imageLayer = function (imgURL, imgTitle, imgSize, imgExtent) {
+                        /*
+                        OGDSM.visualization.prototype.changeWFSzIndex = function (layerName, color, type, zIndex) {
                             &#x27;use strict&#x27;;
-                            var imgLayer = null,
-                                title = imgTitle;
+                            var map = this.layerCheck(layerName);
+                            if (map === false) {
+                                return -1;
+                            }
 
-                            imgLayer = new ol.layer.Image({
-                                opacity : 1.0,
-                                title : title,
-                                source : new ol.source.ImageStatic({
-                                    url : imgURL + &#x27;?&#x27; + Math.random(),
-                                    imageSize : imgSize,
-                                    projection : new ol.proj.Projection({code : &#x27;EPSG:3857&#x27;}),
-                                    imageExtent : imgExtent
+                            console.log(layerName + &#x27; &#x27; + zIndex);
+                            map.setStyle(function (f, r) {
+                                var style = null;
+                                if (type === &#x27;polygon&#x27;) {
+                                    style = [new ol.style.Style({
+                                        fill : new ol.style.Fill({
+                                            color : color
+                                        }),
+                                        stroke : new ol.style.Stroke({
+                                            color : &#x27;#00000&#x27;,
+                                            width : 1
+                                        }),
+                                        zIndex : zIndex
+                                    })];
 
-                                })
+                                } else if (type === &#x27;point&#x27;) {
+                                    style = [new ol.style.Style({
+                                        image : new ol.style.Circle({
+                                            radius : 5,
+                                            fill : new ol.style.Fill({
+                                                color : color
+                                            }),
+                                            stroke : new ol.style.Stroke({
+                                                color : &#x27;#000000&#x27;,
+                                                width : 1
+                                            })
+                                        }),
+                                        zIndex : zIndex
+                                    })];
+
+                                }
+                                return style;
                             });
-                            this.getMap().addLayer(imgLayer);
                         };
+                        */
+
                             </pre>
                         </div>
                     </div>

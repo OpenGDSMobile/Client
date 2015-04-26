@@ -50,8 +50,9 @@ function vworldWMSUI() {
     });
 }
 //지오서버 WFS 데이터 시각화 함수
-function wfsLoad(str) {
+function wfsLoad(str, type) {
     'use strict';
+    type = (typeof (type) !== 'undefined') ? type : 'polygon';
     var r = Math.floor(Math.random() * 256),
         g = Math.floor(Math.random() * 256),
         b = Math.floor(Math.random() * 256);
@@ -59,11 +60,8 @@ function wfsLoad(str) {
     var addr = 'http://113.198.80.9';
     var externalServer = new OGDSM.externalConnection();
     var ui = new OGDSM.eGovFrameUI();
-    if (str === 'seoul_env_position') {
-        externalServer.geoServerWFSLoad(openGDSMObj, addr, 'opengds', str, 'point', color);
-    } else {
-        externalServer.geoServerWFSLoad(openGDSMObj, addr, 'opengds', str, 'polygon', color);
-    }
+    externalServer.geoServerWFSLoad(openGDSMObj, addr, 'opengds', str, type, color);
+
 }
 //서울 열린데이터 광장 데이터 선택 사용자 인터페이스 생성 / 시각화 함수
 function createSeoulPublicAreaEnvUI() {
@@ -104,9 +102,14 @@ function createSeoulPublicAreaEnvUI() {
 }
 $(function () {
     'use strict';
-    openGDSMObj = new OGDSM.visualization('map', 'layerList'); //map div, layerList switch
-    openGDSMObj.olMapView([127.010031, 37.582200], 'OSM', 'EPSG:900913'); //VWorld
-    //openGDSMObj.olMapView([127.010031, 37.582200], 'OSM'); //VWorld
+    //openGDSMObj = new OGDSM.visualization('map', 'layerList', 'attributeTable'); //map div, layerList switch
+    openGDSMObj = new OGDSM.visualization('map', {
+        layerListDiv : 'layerList',
+        attrTableDiv : 'attributeTable',
+        attrAddr : 'http://113.198.80.9/sisOpenGDSMobile/attrTable.do'
+    }); //map div, layerList switch
+    //openGDSMObj.olMapView([127.010031, 37.582200], 'OSM', 'EPSG:900913'); //VWorld
+    openGDSMObj.olMapView([127.010031, 37.582200], 'OSM'); //VWorld
     openGDSMObj.trackingGeoLocation(true);
     mapSelectUI(openGDSMObj);
     mapAttrUI();
@@ -128,7 +131,7 @@ $(function () {
         b = Math.floor(Math.random() * 256);
     var color = 'rgb(' + r + ',' + g + ',' + b + ')';
     var addr = 'http://113.198.80.9';
-    externalServer.geoServerWFSLoad(openGDSMObj, addr, 'opengds', 'seoul_sig', 'polygon', color);
+    //externalServer.geoServerWFSLoad(openGDSMObj, addr, 'opengds', 'seoul_env_position', 'point', color);
 
 });
 

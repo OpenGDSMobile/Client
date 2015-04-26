@@ -40,9 +40,12 @@
                         <div id="api-tabview-panel">
                             <ul id="api-classes" class="apis classes">
                                 <li><a href="../classes/OGDSM.html">OGDSM</a></li>
+                                <li><a href="../classes/OGDSM.attributeTable.html">OGDSM.attributeTable</a></li>
                                 <li><a href="../classes/OGDSM.eGovFramUI.html">OGDSM.eGovFramUI</a></li>
                                 <li><a href="../classes/OGDSM.externalConnection.html">OGDSM.externalConnection</a></li>
+                                <li><a href="../classes/OGDSM.mapLayerList.html">OGDSM.mapLayerList</a></li>
                                 <li><a href="../classes/OGDSM.visualization.html">OGDSM.visualization</a></li>
+                                <li><a href="../classes/Sortable.html">Sortable</a></li>
                             </ul>
                 
                             <ul id="api-modules" class="apis modules">
@@ -86,7 +89,7 @@
                         
                         
                                 <div class="foundat">
-                                    Defined in: <a href="../files/js_openGDSMobile_OGDSM_visualization.js.html#l8"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_visualization.js:8</code></a>
+                                    Defined in: <a href="../files/js_openGDSMobile_OGDSM_visualization.js.html#l7"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_visualization.js:7</code></a>
                                 </div>
                         
                                     Module: <a href="../modules/OGDSM.jsontoArray.html">OGDSM.jsontoArray</a>
@@ -96,7 +99,8 @@
                         
                         <h3>Summary</h3>
                         <div class="intro">
-                            <p>OpenLayers3 Map Control Class</p>
+                            <p>오픈레이어3 지도 시각화 객체
+                        OpenLayers3 Map Visualization Class</p>
                         
                         </div>
                         
@@ -108,7 +112,7 @@
                                   <div class="meta method-meta">
                                       <p>
                                           Defined in
-                                      <a href="../files/js_openGDSMobile_OGDSM_visualization.js.html#l8"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_visualization.js:8</code></a>
+                                      <a href="../files/js_openGDSMobile_OGDSM_visualization.js.html#l7"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_visualization.js:7</code></a>
                                   </p>
                                 
                                 
@@ -122,7 +126,16 @@
                                         <div class="args">
                                             <span class="paren">(</span><ul class="args-list inline commas">
                                                 <li class="arg">
-                                                        <code>map</code>
+                                                        <code>mapDiv</code>
+                                                </li>
+                                                <li class="arg">
+                                                        <code>options</code>
+                                                </li>
+                                                <li class="arg">
+                                                        <code>layerlistDiv</code>
+                                                </li>
+                                                <li class="arg">
+                                                        <code>attrtableDiv</code>
                                                 </li>
                                             </ul><span class="paren">)</span>
                                         </div>
@@ -145,12 +158,54 @@
                                 
                                             <ul class="params-list">
                                                 <li class="param">
-                                                        <code class="param-name">map</code>
-                                                        <span class="type">ol.Map</span>
+                                                        <code class="param-name">mapDiv</code>
+                                                        <span class="type">String</span>
+
+
+                                                    <div class="param-description">
+                                                        <ul>
+                                <li>Map div id</li>
+                                </ul>
+
+                                                    </div>
+
+                                                </li>
+                                                <li class="param">
+                                                        <code class="param-name">options</code>
+                                                        <span class="type">String</span>
+
+
+                                                    <div class="param-description">
+                                                        <p>(option) - layerListDiv, attrTableDiv, attrAddr
+                                                               [values : div string(default : null), div string(default: null), address string(default: &#39;&#39;)]</p>
+
+                                                    </div>
+
+                                                </li>
+                                                <li class="param">
+                                                        <code class="param-name">layerlistDiv</code>
+                                                        <span class="type">String</span>
+
+
+                                                    <div class="param-description">
+                                                        <ul>
+                                <li>Layer list div view (option)</li>
+                                </ul>
+
+                                                    </div>
+
+                                                </li>
+                                                <li class="param">
+                                                        <code class="param-name">attrtableDiv</code>
+                                                        <span class="type">String</span>
                                 
                                 
                                                     <div class="param-description">
-                                                         
+                                                        <ul>
+                                <li>Layer attribute div view (option)
+                                  layerlistDiv, attrtableDiv</li>
+                                </ul>
+
                                                     </div>
                                 
                                                 </li>
@@ -202,8 +257,32 @@
 
                                                     </li>
                                                     <li class="index-item method">
+                                                        <a href="#method_indexOf">indexOf</a>
+
+                                                    </li>
+                                                    <li class="index-item method">
                                                         <a href="#method_layerCheck">layerCheck</a>
                         
+                                                    </li>
+                                                    <li class="index-item method">
+                                                        <a href="#method_olMapView">olMapView</a>
+
+                                                    </li>
+                                                    <li class="index-item method">
+                                                        <a href="#method_removeMap">removeMap</a>
+
+                                                    </li>
+                                                    <li class="index-item method">
+                                                        <a href="#method_setVisible">setVisible</a>
+
+                                                    </li>
+                                                    <li class="index-item method">
+                                                        <a href="#method_trackingGeoLocation">trackingGeoLocation</a>
+
+                                                    </li>
+                                                    <li class="index-item method">
+                                                        <a href="#method_updateLayoutSetting">updateLayoutSetting</a>
+
                                                     </li>
                                             </ul>
                                         </div>
@@ -221,7 +300,7 @@
                                               <div class="meta method-meta">
                                                   <p>
                                                       Defined in
-                                                  <a href="../files/js_openGDSMobile_OGDSM_visualization.js.html#l102"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_visualization.js:102</code></a>
+                                                  <a href="../files/js_openGDSMobile_OGDSM_visualization.js.html#l293"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_visualization.js:293</code></a>
                                               </p>
                                             
                                             
@@ -250,7 +329,8 @@
                                               </div>
                                                 <div class="description">
                                                   <h3>Summary</h3>
-                                                    <p>WMS/WFS Map Add</p>
+                                                    <p>WMS 및 WFS 맵 레이어 추가
+                                            WMS/WFS map layer add</p>
                                             
                                                 </div>
                                             
@@ -264,7 +344,9 @@
                                             
                                             
                                                                 <div class="param-description">
-                                                                    <p>(OpenLayers WMS/WFS/ Object)</p>
+                                                                    <ul>
+                                            <li>Openlayers map object (OpenLayers WMS/WFS/ Object)</li>
+                                            </ul>
                                             
                                                                 </div>
                                             
@@ -281,7 +363,7 @@
                                               <div class="meta method-meta">
                                                   <p>
                                                       Defined in
-                                                  <a href="../files/js_openGDSMobile_OGDSM_visualization.js.html#l207"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_visualization.js:207</code></a>
+                                                  <a href="../files/js_openGDSMobile_OGDSM_visualization.js.html#l464"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_visualization.js:464</code></a>
                                               </p>
                                             
                                             
@@ -384,7 +466,7 @@
                                               <div class="meta method-meta">
                                                   <p>
                                                       Defined in
-                                                  <a href="../files/js_openGDSMobile_OGDSM_visualization.js.html#l48"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_visualization.js:48</code></a>
+                                                  <a href="../files/js_openGDSMobile_OGDSM_visualization.js.html#l151"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_visualization.js:151</code></a>
                                               </p>
                                             
                                             
@@ -413,7 +495,8 @@
                                               </div>
                                                 <div class="description">
                                                   <h3>Summary</h3>
-                                                    <p>changeBaseMap Method is base map Change.</p>
+                                                    <p>배경지도 변경
+                                            Base map change</p>
                                             
                                                 </div>
                                             
@@ -427,7 +510,9 @@
                                             
                                             
                                                                 <div class="param-description">
-                                                                    <p>(&#39;VWorld&#39; or &#39;OSM&#39;)</p>
+                                                                    <ul>
+                                            <li>Map style (&quot;OSM&quot; | &quot;VWorld&quot; | &quot;VWorld_m&quot; | &quot;VWorld_h&quot;)</li>
+                                            </ul>
                                             
                                                                 </div>
                                             
@@ -444,7 +529,7 @@
                                               <div class="meta method-meta">
                                                   <p>
                                                       Defined in
-                                                  <a href="../files/js_openGDSMobile_OGDSM_visualization.js.html#l124"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_visualization.js:124</code></a>
+                                                  <a href="../files/js_openGDSMobile_OGDSM_visualization.js.html#l379"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_visualization.js:379</code></a>
                                               </p>
                                             
                                             
@@ -491,7 +576,8 @@
                                               </div>
                                                 <div class="description">
                                                   <h3>Summary</h3>
-                                                    <p>WFS style change</p>
+                                                    <p>WFS 스타일 변경  (수정중....)
+                                            WFS style change</p>
                                             
                                                 </div>
                                             
@@ -588,7 +674,7 @@
                                               <div class="meta method-meta">
                                                   <p>
                                                       Defined in
-                                                  <a href="../files/js_openGDSMobile_OGDSM_visualization.js.html#l19"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_visualization.js:19</code></a>
+                                                  <a href="../files/js_openGDSMobile_OGDSM_visualization.js.html#l53"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_visualization.js:53</code></a>
                                               </p>
                                             
                                             
@@ -614,7 +700,8 @@
                                               </div>
                                                 <div class="description">
                                                   <h3>Summary</h3>
-                                                    <p>getMap Method get map object about OpenLayers3.</p>
+                                                    <p>지도 객체 받기
+                                            Get map object about OpenLayers3</p>
                                             
                                                 </div>
                                             
@@ -625,7 +712,7 @@
                                                         <div class="returns-description">
                                                             <span class="type">ol.Map</span>:
                                                             <div class="blue-return-desc">
-                                                                <p>Retrun is OpenLayers object.</p>
+                                                                <p>Retrun is OpenLayers object</p>
                                             
                                                             </div>
                                             
@@ -641,7 +728,7 @@
                                               <div class="meta method-meta">
                                                   <p>
                                                       Defined in
-                                                  <a href="../files/js_openGDSMobile_OGDSM_visualization.js.html#l298"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_visualization.js:298</code></a>
+                                                  <a href="../files/js_openGDSMobile_OGDSM_visualization.js.html#l325"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_visualization.js:325</code></a>
                                               </p>
 
 
@@ -679,7 +766,8 @@
                                               </div>
                                                 <div class="description">
                                                   <h3>Summary</h3>
-                                                    <p>Image Layer Visualization based on OpenLayers3</p>
+                                                    <p>이미지 레이어 시각화
+                                            Image Layer Visualization</p>
 
                                                 </div>
 
@@ -737,13 +825,92 @@
 
 
                                             </div>
+                                            <div id="method_indexOf" class="method item">
+                                              <h3 class="blue-method-name">indexOf</h3>
+
+                                              <div class="meta method-meta">
+                                                  <p>
+                                                      Defined in
+                                                  <a href="../files/js_openGDSMobile_OGDSM_visualization.js.html#l79"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_visualization.js:79</code></a>
+                                              </p>
+
+
+
+                                              </div>
+
+                                              <h3>Syntax</h3>
+                                              <div class="blue-method-syntax">
+                                              <h3 class="name"><code>indexOf</code></h3>
+
+                                                    <div class="args">
+                                                        <span class="paren">(</span><ul class="args-list inline commas">
+                                                            <li class="arg">
+                                                                    <code>layers</code>
+                                                            </li>
+                                                        </ul><span class="paren">)</span>
+                                                    </div>
+
+                                                    <span class="returns-inline">
+                                                        <span class="type">Number</span>
+                                                    </span>
+
+
+
+
+
+
+
+                                              </div>
+                                                <div class="description">
+                                                  <h3>Summary</h3>
+                                                    <p>지도 레이어 인덱스 값
+                                            Current layers index value about OpenLayers3</p>
+
+                                                </div>
+
+                                                    <div class="params">
+                                                        <h4>Parameters:</h4>
+
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">layers</code>
+                                                                    <span class="type">Ol3 layers object</span>
+
+
+                                                                <div class="param-description">
+                                                                    <ul>
+                                            <li>Layer objects</li>
+                                            </ul>
+
+                                                                </div>
+
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+
+                                                    <div class="returns">
+                                                        <h4>Returns:</h4>
+
+                                                        <div class="returns-description">
+                                                            <span class="type">Number</span>:
+                                                            <div class="blue-return-desc">
+                                                                <p>Retrun is index number</p>
+
+                                                            </div>
+
+
+                                                        </div>
+                                                    </div>
+
+
+                                            </div>
                                             <div id="method_layerCheck" class="method item">
                                               <h3 class="blue-method-name">layerCheck</h3>
                                             
                                               <div class="meta method-meta">
                                                   <p>
                                                       Defined in
-                                                  <a href="../files/js_openGDSMobile_OGDSM_visualization.js.html#l27"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_visualization.js:27</code></a>
+                                                  <a href="../files/js_openGDSMobile_OGDSM_visualization.js.html#l62"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_visualization.js:62</code></a>
                                               </p>
                                             
                                             
@@ -775,7 +942,8 @@
                                               </div>
                                                 <div class="description">
                                                   <h3>Summary</h3>
-                                                    <p>Current Layers Check about OpenLayers3.</p>
+                                                    <p>지도 레이어 존재 여부 확인
+                                            Current layers check about OpenLayers3</p>
                                             
                                                 </div>
                                             
@@ -790,7 +958,7 @@
                                             
                                                                 <div class="param-description">
                                                                     <ul>
-                                            <li>Search layer name</li>
+                                            <li>Search layer title</li>
                                             </ul>
                                             
                                                                 </div>
@@ -805,7 +973,7 @@
                                                         <div class="returns-description">
                                                             <span class="type">OpenLayer3 Layer Object</span>:
                                                             <div class="blue-return-desc">
-                                                                <p>Retrun is OpenLayers object.</p>
+                                                                <p>Retrun is OpenLayers object</p>
                                             
                                                             </div>
                                             
@@ -814,6 +982,385 @@
                                                     </div>
                                             
                                             
+                                            </div>
+                                            <div id="method_olMapView" class="method item">
+                                              <h3 class="blue-method-name">olMapView</h3>
+
+                                              <div class="meta method-meta">
+                                                  <p>
+                                                      Defined in
+                                                  <a href="../files/js_openGDSMobile_OGDSM_visualization.js.html#l99"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_visualization.js:99</code></a>
+                                              </p>
+
+
+
+                                              </div>
+
+                                              <h3>Syntax</h3>
+                                              <div class="blue-method-syntax">
+                                              <h3 class="name"><code>olMapView</code></h3>
+
+                                                    <div class="args">
+                                                        <span class="paren">(</span><ul class="args-list inline commas">
+                                                            <li class="arg">
+                                                                    <code>latlng</code>
+                                                            </li>
+                                                            <li class="arg">
+                                                                    <code>mapType</code>
+                                                            </li>
+                                                            <li class="arg">
+                                                                    <code>baseProj</code>
+                                                            </li>
+                                                        </ul><span class="paren">)</span>
+                                                    </div>
+
+                                                    <span class="returns-inline">
+                                                        <span class="type">ol.Map</span>
+                                                    </span>
+
+
+
+
+
+
+
+                                              </div>
+                                                <div class="description">
+                                                  <h3>Summary</h3>
+                                                    <p>OpenGDS 모바일 맵 초기화
+                                            OGDSM Mobile map view</p>
+
+                                                </div>
+
+                                                    <div class="params">
+                                                        <h4>Parameters:</h4>
+
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">latlng</code>
+                                                                    <span class="type">Array</span>
+
+
+                                                                <div class="param-description">
+                                                                    <ul>
+                                            <li>Map init center latitude, longitude (option) [default : [37.582200, 127.010031] ]</li>
+                                            </ul>
+
+                                                                </div>
+
+                                                            </li>
+                                                            <li class="param">
+                                                                    <code class="param-name">mapType</code>
+                                                                    <span class="type">String</span>
+
+
+                                                                <div class="param-description">
+                                                                    <ul>
+                                            <li>Background map (option) [default : &#39;OSM&#39;]</li>
+                                            </ul>
+
+                                                                </div>
+
+                                                            </li>
+                                                            <li class="param">
+                                                                    <code class="param-name">baseProj</code>
+                                                                    <span class="type">String</span>
+
+
+                                                                <div class="param-description">
+                                                                    <ul>
+                                            <li>Map base projection (option) [default : &#39;EPSG:3857&#39;]</li>
+                                            </ul>
+
+                                                                </div>
+
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+
+                                                    <div class="returns">
+                                                        <h4>Returns:</h4>
+
+                                                        <div class="returns-description">
+                                                            <span class="type">ol.Map</span>:
+                                                            <div class="blue-return-desc">
+                                                                <p>Return is openlayers3 ol.Map object</p>
+
+                                                            </div>
+
+
+                                                        </div>
+                                                    </div>
+
+
+                                            </div>
+                                            <div id="method_removeMap" class="method item">
+                                              <h3 class="blue-method-name">removeMap</h3>
+
+                                              <div class="meta method-meta">
+                                                  <p>
+                                                      Defined in
+                                                  <a href="../files/js_openGDSMobile_OGDSM_visualization.js.html#l352"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_visualization.js:352</code></a>
+                                              </p>
+
+
+
+                                              </div>
+
+                                              <h3>Syntax</h3>
+                                              <div class="blue-method-syntax">
+                                              <h3 class="name"><code>removeMap</code></h3>
+
+                                                    <div class="args">
+                                                        <span class="paren">(</span><ul class="args-list inline commas">
+                                                            <li class="arg">
+                                                                    <code>layerName</code>
+                                                            </li>
+                                                        </ul><span class="paren">)</span>
+                                                    </div>
+
+
+
+
+
+
+
+
+                                              </div>
+                                                <div class="description">
+                                                  <h3>Summary</h3>
+                                                    <p>맵 레이어 삭제
+                                            WMS/WFS/ImageLayer map layer remove</p>
+
+                                                </div>
+
+                                                    <div class="params">
+                                                        <h4>Parameters:</h4>
+
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">layerName</code>
+                                                                    <span class="type">String</span>
+
+
+                                                                <div class="param-description">
+                                                                    <ul>
+                                            <li>Layer title</li>
+                                            </ul>
+
+                                                                </div>
+
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+
+
+
+                                            </div>
+                                            <div id="method_setVisible" class="method item">
+                                              <h3 class="blue-method-name">setVisible</h3>
+
+                                              <div class="meta method-meta">
+                                                  <p>
+                                                      Defined in
+                                                  <a href="../files/js_openGDSMobile_OGDSM_visualization.js.html#l365"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_visualization.js:365</code></a>
+                                              </p>
+
+
+
+                                              </div>
+
+                                              <h3>Syntax</h3>
+                                              <div class="blue-method-syntax">
+                                              <h3 class="name"><code>setVisible</code></h3>
+
+                                                    <div class="args">
+                                                        <span class="paren">(</span><ul class="args-list inline commas">
+                                                            <li class="arg">
+                                                                    <code>layerName</code>
+                                                            </li>
+                                                            <li class="arg">
+                                                                    <code>flag</code>
+                                                            </li>
+                                                        </ul><span class="paren">)</span>
+                                                    </div>
+
+
+
+
+
+
+
+
+                                              </div>
+                                                <div class="description">
+                                                  <h3>Summary</h3>
+                                                    <p>맵 레이어 시각화 여부
+                                            Map layer visualization flag</p>
+
+                                                </div>
+
+                                                    <div class="params">
+                                                        <h4>Parameters:</h4>
+
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">layerName</code>
+                                                                    <span class="type">String</span>
+
+
+                                                                <div class="param-description">
+                                                                    <ul>
+                                            <li>Layer title</li>
+                                            </ul>
+
+                                                                </div>
+
+                                                            </li>
+                                                            <li class="param">
+                                                                    <code class="param-name">flag</code>
+                                                                    <span class="type">Boolean</span>
+
+
+                                                                <div class="param-description">
+                                                                    <ul>
+                                            <li>visualization switch true or false</li>
+                                            </ul>
+
+                                                                </div>
+
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+
+
+
+                                            </div>
+                                            <div id="method_trackingGeoLocation" class="method item">
+                                              <h3 class="blue-method-name">trackingGeoLocation</h3>
+
+                                              <div class="meta method-meta">
+                                                  <p>
+                                                      Defined in
+                                                  <a href="../files/js_openGDSMobile_OGDSM_visualization.js.html#l238"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_visualization.js:238</code></a>
+                                              </p>
+
+
+
+                                              </div>
+
+                                              <h3>Syntax</h3>
+                                              <div class="blue-method-syntax">
+                                              <h3 class="name"><code>trackingGeoLocation</code></h3>
+
+                                                    <div class="args">
+                                                        <span class="paren">(</span><ul class="args-list inline commas">
+                                                            <li class="arg">
+                                                                    <code>sw</code>
+                                                            </li>
+                                                        </ul><span class="paren">)</span>
+                                                    </div>
+
+
+
+
+
+
+
+
+                                              </div>
+                                                <div class="description">
+                                                  <h3>Summary</h3>
+                                                    <p>지도 GPS 트래킹 스위치
+                                            Map geolocation tracking</p>
+
+                                                </div>
+
+                                                    <div class="params">
+                                                        <h4>Parameters:</h4>
+
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">sw</code>
+                                                                    <span class="type">Boolean</span>
+
+
+                                                                <div class="param-description">
+                                                                    <ul>
+                                            <li>Geolocation switch (true | false</li>
+                                            </ul>
+
+                                                                </div>
+
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+
+
+
+                                            </div>
+                                            <div id="method_updateLayoutSetting" class="method item">
+                                              <h3 class="blue-method-name">updateLayoutSetting</h3>
+
+                                              <div class="meta method-meta">
+                                                  <p>
+                                                      Defined in
+                                                  <a href="../files/js_openGDSMobile_OGDSM_visualization.js.html#l264"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_visualization.js:264</code></a>
+                                              </p>
+
+
+
+                                              </div>
+
+                                              <h3>Syntax</h3>
+                                              <div class="blue-method-syntax">
+                                              <h3 class="name"><code>updateLayoutSetting</code></h3>
+
+                                                    <div class="args">
+                                                        <span class="paren">(</span><ul class="args-list inline commas">
+                                                            <li class="arg">
+                                                                    <code>mapDiv</code>
+                                                            </li>
+                                                        </ul><span class="paren">)</span>
+                                                    </div>
+
+
+
+
+
+
+
+
+                                              </div>
+                                                <div class="description">
+                                                  <h3>Summary</h3>
+                                                    <p>모바일 해상도에 맞는 지도 레이아웃 업데이트
+                                            OGDSM Mobile screen update layout</p>
+
+                                                </div>
+
+                                                    <div class="params">
+                                                        <h4>Parameters:</h4>
+
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">mapDiv</code>
+                                                                    <span class="type">String</span>
+
+
+                                                                <div class="param-description">
+                                                                    <ul>
+                                            <li>Map div name</li>
+                                            </ul>
+
+                                                                </div>
+
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+
+
+
                                             </div>
                                     </div>
                         

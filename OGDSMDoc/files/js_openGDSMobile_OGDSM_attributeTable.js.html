@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en" class="yui-overrride">
+<head>
+    <meta charset="utf-8">
+    <title>js/openGDSMobile/OGDSM_attributeTable.js</title>
+    <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700' rel='stylesheet' type='text/css'>
+    <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
+    <script src="http://yui.yahooapis.com/combo?3.9.1/build/yui/yui-min.js"></script>
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+</head>
+<body class="yui3-skin-sam">
+
+<div id="doc">
+    <div id="hd" class="yui3-g header">
+        <div class="yui3-u-3-4">
+            <h1 class="blue-main-title"></h1>
+        </div>
+        <div class="yui3-u-1-4 version project-version">
+            API Docs for:
+        </div>
+    </div>
+    <div id="bd" class="yui3-g">
+
+        <div class="yui3-u-1-4">
+            <div id="docs-sidebar" class="sidebar apidocs">
+                <div id="api-list">
+                    <h2 class="off-left">APIs</h2>
+                    <div id="api-tabview" class="tabview">
+                        <ul class="tabs">
+                            <li><a href="#api-classes">Classes</a></li>
+                            <li><a href="#api-modules">Modules</a></li>
+                        </ul>
+
+                        <div id="api-tabview-filter">
+                            <input type="search" id="api-filter" placeholder="Type to filter APIs">
+                        </div>
+
+                        <div id="api-tabview-panel">
+                            <ul id="api-classes" class="apis classes">
+                                <li><a href="../classes/OGDSM.html">OGDSM</a></li>
+                                <li><a href="../classes/OGDSM.attributeTable.html">OGDSM.attributeTable</a></li>
+                                <li><a href="../classes/OGDSM.eGovFramUI.html">OGDSM.eGovFramUI</a></li>
+                                <li><a href="../classes/OGDSM.externalConnection.html">OGDSM.externalConnection</a></li>
+                                <li><a href="../classes/OGDSM.mapLayerList.html">OGDSM.mapLayerList</a></li>
+                                <li><a href="../classes/OGDSM.visualization.html">OGDSM.visualization</a></li>
+                                <li><a href="../classes/Sortable.html">Sortable</a></li>
+                            </ul>
+
+                            <ul id="api-modules" class="apis modules">
+                                <li><a href="../modules/OGDSM.jsontoArray.html">OGDSM.jsontoArray</a></li>
+                                <li><a href="../modules/OGDSM.namespace.html">OGDSM.namespace</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="yui3-u-3-4">
+                <div id="api-options">
+                    Show:
+                    <label for="api-show-inherited">
+                        <input type="checkbox" id="api-show-inherited" checked>
+                        Inherited
+                    </label>
+
+                    <label for="api-show-protected">
+                        <input type="checkbox" id="api-show-protected">
+                        Protected
+                    </label>
+
+                    <label for="api-show-private">
+                        <input type="checkbox" id="api-show-private">
+                        Private
+                    </label>
+                    <label for="api-show-deprecated">
+                        <input type="checkbox" id="api-show-deprecated">
+                        Deprecated
+                    </label>
+
+                </div>
+
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+                        <h1 class="file-heading">File: js/openGDSMobile/OGDSM_attributeTable.js</h1>
+
+                        <div class="file">
+                            <pre class="code prettyprint linenums">
+                        /*jslint devel: true, vars : true plusplus : true*/
+                        /*global $, jQuery, ol, OGDSM*/
+
+                        OGDSM.namesapce(&#x27;attributeTable&#x27;);
+                        (function (OGDSM) {
+                            &#x27;use strict&#x27;;
+                            /**
+                             * 속성정보 시각화 객체
+                             *
+                             * @class OGDSM.attributeTable
+                             * @constructor
+                             * @param {String} RootDiv - Attribute table div name
+                             * @param {String} addr - PostgreSQL connect address
+                             */
+                            OGDSM.attributeTable = function (rootDiv, addr) {
+                                this.rootDiv = rootDiv;
+                                this.addr = addr;
+                                var rootElement = document.getElementById(rootDiv),
+                                    ulElement = document.createElement(&#x27;ul&#x27;),
+                                    contentsElement = document.createElement(&#x27;div&#x27;);
+                                var contentsCSS = &#x27;width: 100%; height: 100%; background: rgba(255, 255, 255, 1); margin: 0px;&#x27;,
+                                    ulCSS = &#x27;list-style: none; position: relative; margin: 0px; z-index: 2; top: 1px; display: table; border-left: 1px solid #f5ab36;&#x27;;
+
+                                ulElement.id = rootDiv + &#x27;Tab&#x27;;
+                                ulElement.style.cssText = ulCSS;
+
+                                contentsElement.id = rootDiv + &#x27;Contents&#x27;;
+                                contentsElement.style.cssText = contentsCSS;
+
+                                rootElement.appendChild(ulElement);
+                                rootElement.appendChild(contentsElement);
+                            };
+                            OGDSM.attributeTable.prototype = {
+                                constructor : OGDSM.attributeTable
+                            };
+                            return OGDSM.attributeTable;
+                        }(OGDSM));
+
+                        /**
+                         * 속성 정보 추가
+                         * Add attribute table (Connect PostgreSQL)
+                         * @method addAttribute
+                         * @param {String}  layerName   - Database table name
+                         */
+                        OGDSM.attributeTable.prototype.addAttribute = function (layerName) {
+                            &#x27;use strict&#x27;;
+                            var rootDiv = this.rootDiv,
+                                tabs = $(&#x27;#&#x27; + rootDiv + &#x27;Tab&#x27;),
+                                contents = $(&#x27;#&#x27; + rootDiv + &#x27;Contents&#x27;);
+                            var aBaseCSS = &#x27;background:#ffd89b; color: #222; display:block; padding:6px 15px; text-decoration:none; border-right:1px solid #f5ab36;&#x27; +
+                                       &#x27;border-top:1px solid #f5ab36; border-right:1px solid #f5ab36; margin:0;&#x27;,
+                                backgroundNotSelected = &#x27;#ffd89b&#x27;,
+                                colorNotSelected = &#x27;#222&#x27;,
+                                backgroundSelected = &#x27;#fff&#x27;,
+                                colorSelected = &#x27;#344385&#x27;,
+                                borderSelected = &#x27;1px solid #fff&#x27;;
+                            function tabClickEvent(e) {
+                                $(&#x27;#&#x27; + rootDiv + &#x27;Tab a&#x27;).css(&#x27;border-bottom&#x27;, &#x27;&#x27;);
+                                $(&#x27;#&#x27; + rootDiv + &#x27;Tab a&#x27;).css(&#x27;color&#x27;, colorNotSelected);
+                                $(&#x27;#&#x27; + rootDiv + &#x27;Tab a&#x27;).css(&#x27;background&#x27;, backgroundNotSelected);
+                                $(e.currentTarget).css(&#x27;border-bottom&#x27;, borderSelected);
+                                $(e.currentTarget).css(&#x27;background&#x27;, backgroundSelected);
+                                $(e.currentTarget).css(&#x27;color&#x27;, colorSelected);
+                                $(&#x27;.attrTable&#x27;).hide();
+                                $(&#x27;#divAttrTable&#x27; + layerName).css(&#x27;display&#x27;, &#x27;block&#x27;);
+                            }
+                            tabs.prepend(&#x27;&lt;li id=&quot;attrTab&#x27; + layerName + &#x27;&quot; style=&quot;float:left;&quot;&gt;&lt;a href=&quot;#&quot; style=&quot;&#x27; + aBaseCSS + &#x27;&quot;&gt;&#x27; + layerName + &#x27;&lt;/a&gt;&lt;/li&gt;&#x27;);
+                            $(&#x27;#&#x27; + rootDiv + &#x27;Tab a&#x27;).css(&#x27;border-bottom&#x27;, &#x27;&#x27;);
+                            $(&#x27;#&#x27; + rootDiv + &#x27;Tab a&#x27;).css(&#x27;color&#x27;, colorNotSelected);
+                            $(&#x27;#&#x27; + rootDiv + &#x27;Tab a&#x27;).css(&#x27;background&#x27;, backgroundNotSelected);
+                            $(&#x27;#attrTab&#x27; + layerName + &#x27; a&#x27;).css(&#x27;border-bottom&#x27;, borderSelected);
+                            $(&#x27;#attrTab&#x27; + layerName + &#x27; a&#x27;).css(&#x27;background&#x27;, backgroundSelected);
+                            $(&#x27;#attrTab&#x27; + layerName + &#x27; a&#x27;).css(&#x27;color&#x27;, colorSelected);
+
+                            var attrDivHeight = $(&#x27;#&#x27; + rootDiv + &#x27;Contents&#x27;).height();
+                            contents.prepend(&#x27;&lt;div id=&quot;divAttrTable&#x27; + layerName + &#x27;&quot; class=&quot;attrTable&quot;&gt;&lt;table id=&quot;attrTable&#x27; + layerName + &#x27;&quot; class=&quot;display compact&quot; cellspacing=&quot;0&quot; width=&quot;100%&quot;&gt;&#x27; +
+                                             &#x27;&lt;thead style=&quot;width:100%;&quot;&gt;&lt;tr&gt;&lt;/tr&gt;&lt;/thead&gt;&#x27; +
+                                             &#x27;&lt;tbody&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/div&gt;&#x27;);
+
+                            $(&#x27;.attrTable&#x27;).hide();
+                            $(&#x27;#divAttrTable&#x27; + layerName).css(&#x27;display&#x27;, &#x27;block&#x27;);
+                            $(&#x27;#attrTab&#x27; + layerName + &#x27; a&#x27;).bind(&#x27;click&#x27;, tabClickEvent);
+                            var parm = &#x27;{&quot;tableName&quot;:&quot;&#x27; + layerName + &#x27;&quot;}&#x27;;
+                            parm = JSON.parse(parm);
+                            function createTableCol(attrContents, i, tableBody, tableTh) {
+                                $.each(attrContents, function (key, value) {
+                                    if (key === &#x27;geom&#x27;) {
+                                        return true;
+                                    }
+                                    if (i === 0) {
+                                        tableTh.append(&#x27;&lt;th&gt;&#x27; + key + &#x27;&lt;/th&gt;&#x27;);
+                                    }
+                                    var newCell = tableBody.find(&#x27;tr:last&#x27;);
+                                    newCell.append(&#x27;&lt;td&gt;&#x27; + value + &#x27;&lt;/td&gt;&#x27;);
+                                });
+                            }
+                            $.ajax({
+                                type : &#x27;POST&#x27;,
+                                url : this.addr,
+                                data : JSON.stringify(parm),
+                                contentType : &quot;application/json;charset=UTF-8&quot;,
+                                dataType : &#x27;json&#x27;,
+                                success : function (msg) {
+                                    var attrContents = msg.data, i = 0;
+                                    if (attrContents === null) {
+                                        console.log(&#x27;Not attribute information&#x27;);
+                                        return -1;
+                                    }
+                                    var tableDiv = $(&#x27;#attrTable&#x27; + layerName),
+                                        tableTh = tableDiv.find(&#x27;thead&#x27;).find(&#x27;tr&#x27;),
+                                        tableBody = tableDiv.find(&#x27;tbody&#x27;);
+                                    for (i = 0; i &lt; attrContents.length; i++) {
+                                        tableBody.append(&#x27;&lt;tr&gt;&#x27;);
+                                        createTableCol(attrContents[i], i, tableBody, tableTh);
+                                        tableBody.append(&#x27;&lt;/tr&gt;&#x27;);
+                                    }
+
+                                    var thHeight = $(&#x27;thead&#x27;).height() + 7;
+                                    $(&#x27;#attrTable&#x27; + layerName).DataTable({
+                                        &#x27;paging&#x27; : false,
+                                        &#x27;scrollY&#x27; : attrDivHeight - thHeight,
+                                        &#x27;scrollX&#x27; : true,
+                                        &#x27;scrollCollapse&#x27; : true,
+                                        &#x27;bFilter&#x27; : false
+                                    });
+
+                                    $(window).on(&#x27;resize&#x27;, function () {
+                                        var attrDivHeight = $(&#x27;#&#x27; + rootDiv + &#x27;Contents&#x27;).height();
+                                        var thHeight = $(&#x27;thead&#x27;).height() + 7;
+                                        $(&#x27;.divAttrTable table&#x27;).DataTable({
+                                            &#x27;paging&#x27; : false,
+                                            &#x27;scrollY&#x27; : attrDivHeight - thHeight,
+                                            &#x27;scrollX&#x27; : true,
+                                            &#x27;scrollCollapse&#x27; : true,
+                                            &#x27;bFilter&#x27; : false
+                                        });
+                                    });
+                                },
+                                error : function (e) {
+                                    console.log(e);
+                                }
+                            });
+                        };
+
+                            </pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script>prettyPrint();</script>
+<script src="../assets/js/yui-prettify.js"></script>
+<script src="../assets/../api.js"></script>
+<script src="../assets/js/api-filter.js"></script>
+<script src="../assets/js/api-list.js"></script>
+<script src="../assets/js/api-search.js"></script>
+<script src="../assets/js/apidocs.js"></script>
+</body>
+</html>
