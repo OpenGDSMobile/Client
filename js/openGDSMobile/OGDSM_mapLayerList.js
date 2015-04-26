@@ -11,7 +11,7 @@ OGDSM.namesapce('mapLayerList');
      * @class OGDSM.mapLayerList
      * @constructor
      * @param {OGDSM.visualization} obj - OGDSM visualization object
-     * @param {String} listDiv - list div name
+     * @param {String} listDiv - List div name
      */
     OGDSM.mapLayerList = function (obj, listDiv) {
         this.listDiv = listDiv;
@@ -121,11 +121,6 @@ OGDSM.namesapce('mapLayerList');
     };
     OGDSM.mapLayerList.prototype = {
         constructor : OGDSM.mapLayerList,
-        /**
-         * getMap Method get map object about OpenLayers3.
-         * @method getMap
-         * @return {ol.Map} Retrun is OpenLayers object.
-         */
         getLayersObj : function () {
             return arrlayerObjs;
         },
@@ -154,13 +149,15 @@ OGDSM.namesapce('mapLayerList');
     return OGDSM.mapLayerList;
 }(OGDSM));
 /**
- * 레이어 목록 추가 - (이름 변경 및 레이어 내용 변경...)
- * Add list.
- * @method addList
- * @param {ol3 layer object} obj - openlayers3 layer object
+ * 레이어 목록 관리 - (이름 변경 및 레이어 내용 변경...)
+ * list Management.
+ * @method listManager
+ * @param {ol3 layer object} obj - openlayers3 layer object to be added
  * @param {String} label - list name
+ * @param {String} color - rgb color (ex: rgb(255,255,255))
+ * @param {String} type - object type (polygon | point | line)
  */
-OGDSM.mapLayerList.prototype.addList = function (obj, label, color, type) {
+OGDSM.mapLayerList.prototype.listManager = function (obj, label, color, type) {
     'use strict';
     type = (typeof (type) !== 'undefined') ? type : null;
     var i, olList = $('#' + this.listDiv + 'Contents'),
@@ -196,13 +193,18 @@ OGDSM.mapLayerList.prototype.addList = function (obj, label, color, type) {
             ogdsmObj.setVisible(layerName, true);
         }
     }
+    var sublabel = label;
+    if (label.length > 8) {
+        sublabel = sublabel.substr(0, 8) + '...';
+    }
+
     olList.prepend('<li id="layer' + label + '" style="float:left">' +
                    '<div style="width:15%; float:left; margin-top:4px;">' +
                    '<canvas id="' + label + 'canvas" width="100%" height=30px; class="drag-handle" ></canvas>' +
                    '</div> <div style="width:70%; float:left; padding:0px; margin:0px;">' +
-                   '<input type="checkbox" name="listCheckBox" data-corners="false" data-mini="true"  class="custom" ' +
+                   '<input type="checkbox" name="listCheckBox" data-corners="false" data-mini="true" style="width:100px;" class="custom" ' +
                    'id="' + 'visualSW' + thisObj.getLabels().length + '" data-label="' + label + '" checked/>' +
-                   '<label for="' + 'visualSW' + thisObj.getLabels().length + '">' + label + '</label>' +
+                   '<label for="' + 'visualSW' + thisObj.getLabels().length + '">' + sublabel + '</label>' +
                    '</div> <div style="width:15%; float:left; padding:0px; margin:0px;">' +
                    '<a data-role="button" data-rel="popup" data-theme="b" data-corners="false" data-mini="true" data-transition="pop"' +
                    'data-label="' + label + '" href="#popup' + label + '">　</a>' +

@@ -17,7 +17,7 @@
     <script type="text/javascript" src="js/egovframework/mbl/cmm/EgovMobile-1.3.2.js"></script>      <!-- eGov Mobile -->
     <!-- Proj, OpenLayers3, D3 -->
     <script type="text/javascript" src="js/proj4js/2.2.2/proj4.js"></script>                         <!-- Proj4js -->
-    <script type="text/javascript" src="js/ol3/ol-debug.js"></script>                                      <!-- OpenLayers 3 -->
+    <script type="text/javascript" src="js/ol3/ol.js"></script>                                      <!-- OpenLayers 3 -->
     <script type="text/javascript" src="js/d3/d3.js"></script>                                       <!-- D3.js -->
 
     <!-- openGDSMobileClient1.1 development version-->
@@ -28,7 +28,7 @@
     <script src="js/openGDSMobile/OGDSM_externalConnection.js"  charset="UTF-8"></script>
     <script src="js/openGDSMobile/OGDSM_mapLayerList.js"  charset="UTF-8"></script>
     <script src="js/openGDSMobile/OGDSM_attributeTable.js"  charset="UTF-8"></script>
-<!--  <script type="text/javascript" src="OpenGDSMobileLib/openGDSMobileClient1.1.js"></script>-->
+    <!--<script type="text/javascript" src="OpenGDSMobileLib/openGDSMobileClient1.2.js"></script>-->
 
     <script type="text/javascript" src="js/main.js"></script>
 
@@ -189,6 +189,8 @@
                 벡터 데이터</a>
             <a href="#opendataList" data-role="button" data-rel="popup" data-mini="true" data-inline="true" data-transition="slidefade">
                 오픈 데이터</a>
+            <a href="#openWFSList" data-role="button" data-rel="popup" data-mini="true" data-inline="true" data-transition="slidefade">
+                오픈 공간 데이터</a>
         </div>
 
         <div id="mapSelect" class="OGDSPosTopRight"></div>
@@ -306,6 +308,15 @@
             <li><a href="#" onclick="wfsLoad('Jeju_sig')">제주도(구 단위)</a></li>
             <li><a href="#" onclick="wfsLoad('Jellanam_sig')">전라남도(구 단위)</a></li>
             <li><a href="#" onclick="wfsLoad('Jeollabuk_sig')">전라북도(구 단위)</a></li>
+        </ul>
+    </div>
+    <!--WFS PopUp-->
+    <div data-role="popup" id="openWFSList">
+        <ul data-role="listview" id="openwfslayersList">
+            <li data-theme="z" data-role="list-divider">오픈 공간 데이터</li>
+            <li><a href="#" onclick="wfsLoad('seoul_env_position','point')">환경 센서위치(서울)</a></li>
+            <li><a href="#" onclick="wfsLoad('city_wer_mse_esb_loca_w','point')">도시 기상 관측망(서울)</a></li>
+            <li><a href="#" onclick="wfsLoad('sejong_population_wgs84')">인구 데이터(세종특별시2013.1.-2014.2.)</a></li>
         </ul>
     </div>
     <!--Open Data PopUp-->

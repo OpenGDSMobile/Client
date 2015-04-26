@@ -2,9 +2,12 @@ YUI.add("yuidoc-meta", function(Y) {
    Y.YUIDoc = { meta: {
     "classes": [
         "OGDSM",
+        "OGDSM.attributeTable",
         "OGDSM.eGovFramUI",
         "OGDSM.externalConnection",
-        "OGDSM.visualization"
+        "OGDSM.mapLayerList",
+        "OGDSM.visualization",
+        "Sortable"
     ],
     "modules": [
         "OGDSM.jsontoArray",

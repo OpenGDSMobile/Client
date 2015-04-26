@@ -9,7 +9,8 @@ OGDSM.namesapce('attributeTable');
      *
      * @class OGDSM.attributeTable
      * @constructor
-     * @param {String} RootDiv - eGovframework theme a~g (default c)
+     * @param {String} RootDiv - Attribute table div name
+     * @param {String} addr - PostgreSQL connect address
      */
     OGDSM.attributeTable = function (rootDiv, addr) {
         this.rootDiv = rootDiv;
@@ -35,7 +36,12 @@ OGDSM.namesapce('attributeTable');
     return OGDSM.attributeTable;
 }(OGDSM));
 
-
+/**
+ * 속성 정보 추가
+ * Add attribute table (Connect PostgreSQL)
+ * @method addAttribute
+ * @param {String}  layerName   - Database table name
+ */
 OGDSM.attributeTable.prototype.addAttribute = function (layerName) {
     'use strict';
     var rootDiv = this.rootDiv,

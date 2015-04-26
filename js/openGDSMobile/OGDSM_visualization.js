@@ -313,7 +313,7 @@ OGDSM.visualization.prototype.addMap = function (data, type) {
             } else {
                 color =  'rgb(0, 0, 0)';
             }
-            this.layerListObj.addList(data, data.get('title'), color, type);
+            this.layerListObj.listManager(data, data.get('title'), color, type);
         }
         if (typeof (this.attrTableObj) !== 'undefined') {
             this.attrTableObj.addAttribute(data.get('title'));

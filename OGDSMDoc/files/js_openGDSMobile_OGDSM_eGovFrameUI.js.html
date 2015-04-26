@@ -40,9 +40,12 @@
                         <div id="api-tabview-panel">
                             <ul id="api-classes" class="apis classes">
                                 <li><a href="../classes/OGDSM.html">OGDSM</a></li>
+                                <li><a href="../classes/OGDSM.attributeTable.html">OGDSM.attributeTable</a></li>
                                 <li><a href="../classes/OGDSM.eGovFramUI.html">OGDSM.eGovFramUI</a></li>
                                 <li><a href="../classes/OGDSM.externalConnection.html">OGDSM.externalConnection</a></li>
+                                <li><a href="../classes/OGDSM.mapLayerList.html">OGDSM.mapLayerList</a></li>
                                 <li><a href="../classes/OGDSM.visualization.html">OGDSM.visualization</a></li>
+                                <li><a href="../classes/Sortable.html">Sortable</a></li>
                             </ul>
                 
                             <ul id="api-modules" class="apis modules">
@@ -85,17 +88,18 @@
                         
                         <div class="file">
                             <pre class="code prettyprint linenums">
-                        /*jslint devel: true*/
+                        /*jslint devel: true, vars : true */
                         /*global $, jQuery, ol, OGDSM*/
                         OGDSM.namesapce(&#x27;eGovFrameUI&#x27;);
                         (function (OGDSM) {
                             &#x27;use strict&#x27;;
                             /**
-                            * e-Goverement Framework UX Component Automatic Create.
-                            * @class OGDSM.eGovFramUI
-                            * @constructor
-                            * @param {String} theme - eGovframework theme a~g (default c)
-                            */
+                             * 전자정부표준프레임워크 UX 컴포넌트 자동 생성 객체
+                             * e-Goverement Framework UX Component Automatic Create Class
+                             * @class OGDSM.eGovFramUI
+                             * @constructor
+                             * @param {String} theme - eGovframework theme a~g (default c)
+                             */
                             OGDSM.eGovFrameUI = function (theme) {
                                 theme = (typeof (theme) !== &#x27;undefined&#x27;) ? theme : null;
                                 if (theme !== null) {
@@ -103,25 +107,356 @@
                                 } else {
                                     this.dataTheme = &quot;c&quot;;
                                 }
-                        
                             };
                             OGDSM.eGovFrameUI.prototype = {
                                 constructor : OGDSM.eGovFrameUI
                             };
                             return OGDSM.eGovFrameUI;
                         }(OGDSM));
+
+
                         /**
-                         * VWorld WMS API List (CheckBox).
-                         * @method vworldWMSCheck
+                         * 버튼 자동 생성
+                         * Auto Create about Button.
+                         * @method autoButton
+                         * @param {String} divId - root div id about HTML tag attribute [상위 DIV 아이디]
+                         * @param {String} linkId - link a id about HTML tag attribute  [생성될 버튼 아이디]
+                         * @param {String} buttonTitle - button title [버튼 이름]
+                         * @param {String} url - link url
+                         * @param {Array} options (option) - theme, corners, inline, mini
+                                                             [values : &#x27;a&#x27;~&#x27;g&#x27;(default:this.dataTheme), true(default) | false, true | false(default), true | false(default)]
+                         * @return {jQuery Object} user interface id object [제이쿼리 아이디 객체]
+                         */
+                        OGDSM.eGovFrameUI.prototype.autoButton = function (rootDivId, linkId, buttonTitle, url, options) {
+                            &#x27;use strict&#x27;;
+                            options = (typeof (options) !== &#x27;undefined&#x27;) ? options : {};
+                            var rootDiv = $(&#x27;#&#x27; + rootDivId),
+                                html = &#x27;&lt;a data-role=&quot;button&quot; id=&quot;&#x27; + linkId + &#x27;&quot; href=&quot;&#x27; + url + &#x27;&quot; &#x27;,
+                                i = 0,
+                                name = null;
+
+                            var defaults = {
+                                theme : this.dataTheme,
+                                corners : true,
+                                inline : false,
+                                mini : false
+                            };
+                            for (name in defaults) {
+                                if (defaults.hasOwnProperty(name)) {
+                                    if (options.hasOwnProperty(name)) {
+                                        defaults[name] = options[name];
+                                    }
+                                }
+                        	}
+                            html += &#x27;data-theme=&quot;&#x27; + defaults.theme + &#x27;&quot; data-corners=&quot;&#x27; + defaults.corners + &#x27;&quot; data-inline=&quot;&#x27; + defaults.inline + &#x27;&quot; data-mini=&quot;&#x27; + defaults.mini + &#x27;&quot;&#x27;;
+                            html += &#x27;&gt;&#x27; + buttonTitle + &#x27;&lt;/a&gt;&#x27;;
+                            rootDiv.append(html);
+                            rootDiv.trigger(&quot;create&quot;);
+                            return $(&quot;#&quot; + linkId);
+                        };
+
+                        /**
+                         * 체크박스 자동 생성
+                         * Auto Create about Check Box.
+                         * @method autoCheckBox
+                         * @param {String} divId - root div id about HTML tag attribute [상위 DIV 아이디]
+                         * @param {String} chkId - checkbox ids about HTML tag attribute  [생성될 체크박스 아이디]
+                         * @param {String} chkName - checkbox name [체크박스 이름]
+                         * @param {Array} labels - checkbox label names [체크박스 라벨 이름]
+                         * @param {Array) values - checkbox values [체크박스 값]
+                         * @param {Array} options (option) - theme, horizontal
+                                                             [values : &#x27;a&#x27;~&#x27;g&#x27;(default:this.dataTheme), true(default) | false(default)]
+                                                             [ 배열인자 옵션: 수직,수평(0), 테마(1) ]
+                         * @return {jQuery Object} user interface name object [제이쿼리 이름 객체]
+                         */
+                        OGDSM.eGovFrameUI.prototype.autoCheckBox = function (rootDivId, chkId, labels, values, options) {
+                            &#x27;use strict&#x27;;
+                            options = (typeof (options) !== &#x27;undefined&#x27;) ? options : null;
+                            var rootDiv = $(&#x27;#&#x27; + rootDivId),
+                                html = &#x27;&#x27;,
+                                i = 0,
+                                name = null,
+                                defaults = {
+                                    checkName : chkId + &#x27;Name&#x27;,
+                                    theme : this.dataTheme,
+                                    horizontal : false
+                                };
+                            for (name in defaults) {
+                                if (defaults.hasOwnProperty(name)) {
+                                    if (options.hasOwnProperty(name)) {
+                                        defaults[name] = options[name];
+                                    }
+                                }
+                        	}
+                            html = &#x27;&#x27;;
+                            if (Array.isArray(labels)) {
+                                html += &#x27;&lt;fieldset data-role=&quot;controlgroup&quot; &#x27;;
+                                if (defaults.horizontal) {
+                                    html += &#x27;data-type=&quot;horizontal&quot;&gt;&#x27;;
+                                } else {
+                                    html += &#x27;&gt;&#x27;;
+                                }
+                                for (i = 0; i &lt; labels.length; i += 1) {
+                                    html += &#x27;&lt;input type=&quot;checkbox&quot; name=&quot;&#x27; + defaults.checkName + &#x27;&quot; id=&quot;&#x27; + chkId + i + &#x27;&quot; value=&quot;&#x27; + values[i] + &#x27;&quot; &#x27;;
+                                    html += &#x27;data-theme=&quot;&#x27; + defaults.theme + &#x27;&quot; class=&quot;custom&quot;/&gt;&#x27;;
+                                    html += &#x27;&lt;label for=&quot;&#x27; + chkId + i + &#x27;&quot;&gt;&#x27; + labels[i] + &#x27;&lt;/label&gt;&#x27;;
+                                }
+                                html += &#x27;&lt;/fieldset&gt;&#x27;;
+                            } else {
+                                html += &#x27;&lt;input type=&quot;checkbox&quot; name=&quot;&#x27; + defaults.checkName + &#x27;&quot; id=&quot;&#x27; + chkId + &#x27;&quot; value=&quot;&#x27; + values[i] + &#x27;&quot; &#x27;;
+                                html += &#x27;data-theme=&quot;&#x27; + defaults.theme + &#x27;&quot; class=&quot;custom&quot;/&gt;&#x27;;
+                                html += &#x27;&lt;label for=&quot;&#x27; + chkId + &#x27;&quot;&gt;&#x27; + labels + &#x27;&lt;/label&gt;&#x27;;
+                            }
+                            rootDiv.append(html);
+                            rootDiv.trigger(&#x27;create&#x27;);
+                            return $(&#x27;input[name=&#x27; + defaults.checkName + &#x27;]:checkbox&#x27;);
+                        };
+
+                        /**
+                         * 라디오 박스 자동 생성 (수정)
+                         * Auto Create about Radio Box.
+                         * @method autoRadioBox
+                         * @param {String} divId - root div id about HTML tag attribute [상위 DIV 아이디]
+                         * @param {String} radioId - radiobox ids about HTML tag attribute  [생성될 라디오박스 아이디]
+                         * @param {String} radioName - radiobox name [라디오박스 이름]
+                         * @param {Array} labels - radiobox label names [라디오박스 라벨 이름]
+                         * @param {Array) values - radiobox values [라디오박스 값]
+                         * @param {Array} options (option) - radioName, horizontal, theme
+                                                             [values : radioId + &#x27;Name&#x27; (default), true| false(default), &#x27;a&#x27;~&#x27;g&#x27;(default: this.dataTheme)]
+                         * @return {jQuery Object} user interface name object [제이쿼리 이름 객체]
+                         */
+                        OGDSM.eGovFrameUI.prototype.autoRadioBox = function (rootDivId, radioId, labels, values, options) {
+                            &#x27;use strict&#x27;;
+                            options = (typeof (options) !== &#x27;undefined&#x27;) ? options : null;
+                            var rootDiv = $(&#x27;#&#x27; + rootDivId),
+                                html = &#x27;&lt;fieldset data-role=&quot;controlgroup&quot; style=&quot;margin:0px; align:center;&quot;&#x27;,
+                                optionName = [&#x27;data-type&#x27;, &#x27;data-theme&#x27;],
+                                optionData = [&#x27;&#x27;, this.dataTheme],
+                                i = 0,
+                                name = 0;
+
+                            var defaults = {
+                                radioName : radioId + &#x27;Name&#x27;,
+                                horizontal : false,
+                                theme : this.dataTheme
+                            };
+                            for (name in defaults) {
+                                if (defaults.hasOwnProperty(name)) {
+                                    if (options.hasOwnProperty(name)) {
+                                        defaults[name] = options[name];
+                                    }
+                                }
+                        	}
+
+                            if (defaults.horizontal) {
+                                html += &#x27;data-theme=&quot;&#x27; + defaults.theme + &#x27;&quot; data-type=&quot;horizontal&quot;&gt;&#x27;;
+                            } else {
+                                html += &#x27;data-theme=&quot;&#x27; + defaults.theme + &#x27;&quot;&gt;&#x27;;
+                            }
+
+                            for (i = 0; i &lt; labels.length; i += 1) {
+                                html += &#x27;&lt;input type=&quot;radio&quot;name=&quot;&#x27; + defaults.radioName + &#x27;&quot; id=&quot;&#x27; + radioId + i + &#x27;&quot; value=&quot;&#x27; + values[i] + &#x27;&quot; &#x27;;
+                                html += &#x27;data-theme=&quot;&#x27; + defaults.theme + &#x27;&quot; class=&quot;custom&quot; &#x27;;
+                                if (i === 0) {
+                                    html += &#x27;checked=&quot;checked&quot; /&gt;&#x27;;
+                                } else {
+                                    html += &#x27;/&gt;&#x27;;
+                                }
+                                html += &#x27;&lt;label for=&quot;&#x27; + radioId + i + &#x27;&quot;&gt;&#x27; + labels[i] + &#x27;&lt;/label&gt;&#x27;;
+                            }
+                            html += &#x27;&lt;/fieldset&gt;&#x27;;
+                            rootDiv.append(html);
+                            rootDiv.trigger(&#x27;create&#x27;);
+                            return $(&#x27;input[name=&#x27; + defaults.radioName + &#x27;]:radio&#x27;);
+
+                        };
+
+                        /**
+                         * 셀렉트 자동 생성
+                         * Auto Create about Select.
+                         * @method autoSelect
+                         * @param {String} divId - root div id about HTML tag attribute [상위 DIV 아이디]
+                         * @param {String} selectId - radiobox ids about HTML tag attribute  [생성될 버튼 아이디]
+                         * @param {String} selectName - radiobox name [셀렉트 이름]
+                         * @param {Array} text - radiobox label names [셀렉트 텍스트]
+                         * @param {Array) values - radiobox values [셀렉트 값]
+                         * @param {Array} options (option) - firstName, theme, corners, inline
+                                                             [values : &#x27;&#x27;(default), &#x27;a&#x27;~&#x27;g&#x27;(default: this.dataTheme), true(default) | false, true | false(default)]
+                         * @return {jQuery Object} user interface id object [제이쿼리 아이디 객체]
+                         */
+                        OGDSM.eGovFrameUI.prototype.autoSelect = function (rootDivId, selectId, selectName, text, values, options) {
+                            &#x27;use strict&#x27;;
+                            options = (typeof (options) !== &#x27;undefined&#x27;) ? options : {};
+                            var rootDiv = $(&#x27;#&#x27; + rootDivId), html = null, i = 0, name = null;
+                            var defaults = {
+                                firstName : &#x27;&#x27;,
+                                theme : this.dataTheme,
+                                corners : true,
+                                inline : false,
+                                selected : 0
+                            };
+                            for (name in defaults) {
+                                if (defaults.hasOwnProperty(name)) {
+                                    if (options.hasOwnProperty(name)) {
+                                        defaults[name] = options[name];
+                                    }
+                                }
+                        	}
+                            html = &#x27;&lt;select name=&quot;&#x27; + selectName + &#x27;&quot; id=&quot;&#x27; + selectId + &#x27;&quot; &#x27; +
+                                   &#x27;data-theme=&quot;&#x27; + defaults.theme + &#x27;&quot; data-corners=&quot;&#x27; + defaults.corners + &#x27;&quot; data-inline=&quot;&#x27; + defaults.inline + &#x27;&quot;&gt;&#x27;;
+                            html += &#x27;&lt;option value=&quot;&quot;&gt; &#x27; + defaults.firstName + &#x27;&lt;/option&gt;&#x27;;
+
+                            for (i = 0; i &lt; text.length; i += 1) {
+                                html += &#x27;&lt;option value=&quot;&#x27; + values[i] + &#x27;&quot;&gt;&#x27; + text[i] + &#x27;&lt;/option&gt;&#x27;;
+                            }
+                            html += &#x27;&lt;/select&gt;&#x27;;
+                            html += &#x27;&lt;/fieldset&gt;&#x27;;
+                            rootDiv.append(html);
+                            $(&#x27;#&#x27; + selectId).val(defaults.selected);
+                            rootDiv.trigger(&#x27;create&#x27;);
+                            return $(&#x27;#&#x27; + selectId);
+                        };
+
+                        /**
+                         * 스위치 자동 생성 (수정)
+                         * Auto Create about Switch based on Select.
+                         * @method autoSelect
+                         * @param {String} divId - root div id about HTML tag attribute [상위 DIV 아이디]
+                         * @param {String} switchId - radiobox ids about HTML tag attribute  [생성될 스위치 아이디]
+                         * @param {String} switchName - radiobox name [셀렉트 이름]
+                         * @param {Array} options (option) - theme (0), track theme (1)
+                                                             [values : &#x27;a&#x27;~&#x27;g&#x27;(default: this.dataTheme), &#x27;a&#x27;~&#x27;g&#x27;(default: this.dataTheme)]
+                                                             [ 배열인자 옵션: 테마(0), 트랙 테마(1)]
+                         * @return {jQuery Object} user interface id object [제이쿼리 아이디 객체]
+                         */
+                        OGDSM.eGovFrameUI.prototype.autoSwitch = function (rootDivId, switchId, switchName, options) {
+                            &#x27;use strict&#x27;;
+                            options = (typeof (options) !== &#x27;undefined&#x27;) ? options : null;
+                            var rootDiv = $(&#x27;#&#x27; + rootDivId),
+                                html = &#x27;&lt;select name=&quot;&#x27; + switchName + &#x27;&quot; id=&quot;&#x27; + switchId + &#x27;&quot; data-role=&quot;slider&quot; data-inline=&quot;true&quot; &#x27;,
+                                optionName = [&#x27;data-theme&#x27;, &#x27;data-track-theme&#x27;],
+                                optionData = [this.dataTheme, this.dataTheme],
+                                i = 0;
+
+                            if (options !== null) {
+                                if (typeof (options[1]) !== &#x27;undefined&#x27;) {
+                                    optionData[1] = options[1];
+                                }
+                                optionData[0] = options[0];
+                                for (i = 0; i &lt; options.length; i += 1) {
+                                    html += optionName[i] + &#x27;=&quot;&#x27; + optionData[i] + &#x27;&quot; &#x27;;
+                                }
+                            }
+                            html += &#x27;&gt;&#x27;;
+                            html += &#x27;&lt;option value=&quot;off&quot;&gt;Off&lt;/option&gt;&#x27;;
+                            html += &#x27;&lt;option value=&quot;on&quot;&gt;On&lt;/option&gt;&#x27;;
+                            html += &#x27;&lt;/select&gt;&#x27;;
+                            rootDiv.append(html);
+                            rootDiv.trigger(&#x27;create&#x27;);
+                            return $(&#x27;#&#x27; + switchId);
+
+
+
+                        };
+
+                        /**
+                         * User Interface Create about time input (Time Input).
+                         * @method timeInput
+                         * @param {String} divId - div id about HTML tag attribute
+                         * @return {jQuery Object} User Interface Time Input Object (Time)
+                         */
+                        OGDSM.eGovFrameUI.prototype.timeInput = function (divId) {
+                            &#x27;use strict&#x27;;
+                            var rootDiv, html;
+                            rootDiv = $(&#x27;#&#x27; + divId);
+                            html = &#x27;&lt;input type=&quot;time&quot; id=&quot;timeValue&quot;&gt;&#x27;;
+                            rootDiv.append(html);
+                            rootDiv.trigger(&quot;create&quot;);
+                            return $(&#x27;#timeValue&#x27;);
+                        };
+
+                        /**
+                         * User Interface Create about visualization type (Date Input).
+                         * @method DateInput
+                         * @param {String} divId - div id about HTML tag attribute
+                         * @return {jQuery Object} User Interface Date Input Object (Date YYYY/MM/DD)
+                         */
+                        OGDSM.eGovFrameUI.prototype.dateInput = function (divId) {
+                            &#x27;use strict&#x27;;
+                            var rootDiv, html;
+                            rootDiv = $(&#x27;#&#x27; + divId);
+                            html = &#x27;&lt;input type=&quot;date&quot; id=&quot;dateValue&quot;&gt;&#x27;;
+                            rootDiv.append(html);
+                            rootDiv.trigger(&quot;create&quot;);
+                            return $(&#x27;#dateValue&#x27;);
+                        };
+                        /**************Custom UI Create *******************/
+
+                        /**
+                         * 배경 맵 선택 사용자 인터페이스 자동 생성 (라디오 박스)
+                         * Auto Create about Map Type User Interface.
+                         * @method baseMapRadioBox
+                         * @param {OGDSM Object} OGDSMObj - OpenGDS Mobile Visualization Object [OpenGDS모바일 시각화 객체]
+                         * @param {String}       rootDiv - Root div id [상위 DIV 아이디]
+                         * @param {Array}        options - Map type to support [제공할 지도 타입]
+                         */
+                        OGDSM.eGovFrameUI.prototype.baseMapRadioBox = function (OGDSMObj, rootDiv, options) {
+                        //var mapRadioNameObj = uiTest.autoRadioBox(&#x27;mapSelect&#x27;,&#x27;mapType&#x27;, &#x27;radioMap&#x27;, [&#x27;OSM&#x27;,&#x27;VWorld&#x27;], [&#x27;OSM&#x27;,&#x27;VWorld&#x27;], [&#x27;h&#x27;]);
+                            &#x27;use strict&#x27;;
+                            options = (typeof (options) !== &#x27;undefined&#x27;) ? options : null;
+                            var mapRadioNameObj,
+                                supportMap;
+
+                            if (options !== null) {
+                                supportMap = options.split(&#x27; &#x27;);
+                            }
+                            mapRadioNameObj = this.autoRadioBox(rootDiv, &#x27;mapType&#x27;, &#x27;radioMapType&#x27;, supportMap, supportMap, [&#x27;h&#x27;]);
+
+                            mapRadioNameObj.change(function () {
+                                OGDSMObj.changeBaseMap($(this).val());
+                            });
+                        };
+                        /**
+                         * 배경 맵 선택 사용자 인터페이스 자동 생성 (셀렉트)
+                         * Auto Create about Map Type User Interface.
+                         * @method baseMapSelect
+                         * @param {OGDSM Object} OGDSMObj - OpenGDS Mobile Visualization Object [OpenGDS모바일 시각화 객체]
+                         * @param {String}       rootDiv - Root div id [상위 DIV 아이디]
+                         * @param {Array}        options - Map type to support [제공할 지도 타입]
+                         */
+                        OGDSM.eGovFrameUI.prototype.baseMapSelect = function (OGDSMObj, rootDiv, options) {
+                        //var mapRadioNameObj = uiTest.autoRadioBox(&#x27;mapSelect&#x27;,&#x27;mapType&#x27;, &#x27;radioMap&#x27;, [&#x27;OSM&#x27;,&#x27;VWorld&#x27;], [&#x27;OSM&#x27;,&#x27;VWorld&#x27;], [&#x27;h&#x27;]);
+                            &#x27;use strict&#x27;;
+                            options = (typeof (options) !== &#x27;undefined&#x27;) ? options : null;
+                            var mapRadioNameObj,
+                                supportMap;
+
+                            if (options !== null) {
+                                supportMap = options.split(&#x27; &#x27;);
+                            }
+                            mapRadioNameObj = this.autoSelect(rootDiv, &#x27;mapType&#x27;, &#x27;selectMapType&#x27;, supportMap, supportMap, {
+                                firstName : &#x27;맵 선택&#x27;,
+                                selected : supportMap[0],
+                                inline : true
+                            });
+                            OGDSMObj.changeBaseMap(supportMap[0]);
+                            mapRadioNameObj.change(function () {
+                                OGDSMObj.changeBaseMap($(this).val());
+                            });
+                        };
+
+                        /**
+                         * VWorld WMS API List (Using autoSelect).
+                         * @method vworldWMSList
                          * @param {String} divId - div id about HTML tag attribute
                          * @param {String} theme - eGovframework theme a~g (default constructor)
                          * @return {Array} User Interface selectbox Name, id array (&#x27;vworldWMSChk_1&#x27;, &#x27;vworldWMSChk_2&#x27;, &#x27;vworldWMSChk_3&#x27;, &#x27;vworldWMSChk_4&#x27;, &#x27;vworldWMSChk_5&#x27;)
                          */
-                        OGDSM.eGovFrameUI.prototype.vworldWMSCheck = function (divId, theme) {
+                        OGDSM.eGovFrameUI.prototype.vworldWMSList = function (divId, theme) {
                             &#x27;use strict&#x27;;
                             var selectTheme = (typeof (theme) !== &#x27;undefined&#x27;) ? theme : this.dataTheme,
                                 rootDiv = $(&#x27;#&#x27; + divId),
-                                html = &#x27;&lt;fieldset data-role=&quot;controlgroup&quot;&gt;&#x27;,
+                                html = &#x27;&lt;fieldset data-role=&quot;controlgroup&quot; id=&quot;vworldWMS&quot;&gt;&#x27;,
                                 OGDSM = this.OGDSM,
                                 selectName = [&#x27;vworldWMSChk_1&#x27;, &#x27;vworldWMSChk_2&#x27;, &#x27;vworldWMSChk_3&#x27;, &#x27;vworldWMSChk_4&#x27;, &#x27;vworldWMSChk_5&#x27;],
                                 selectState = [0, 0, 0, 0, 0],
@@ -177,17 +512,13 @@
                                 &#x27;접근관제구역&#x27;, &#x27;훈련구역&#x27;, &#x27;건물군(40층이상)&#x27;, &#x27;수색비행장비행구역&#x27;,
                                 &#x27;시계비행로&#x27;, &#x27;시계비행보고지점&#x27;,
                                 &#x27;한강회랑&#x27;, &#x27;헬기장&#x27;];
-                            for (j = 0; j &lt; selectName.length; j += 1) {
-                                html += &#x27;&lt;select name=&quot;&#x27; + selectName[j] + &#x27;&quot; id=&quot;&#x27; + selectName[j] + &#x27;&quot; data-theme=&#x27; + selectTheme + &#x27;&gt;&#x27;;
-                                html += &#x27;&lt;option value=&quot;&quot;&gt;&#x27; + (j + 1) + &#x27;번째 레이어 선택 &lt;/option&gt;&#x27;;
-                                for (i = 0; i &lt; styles.length; i += 1) {
-                                    html += &#x27;&lt;option value=&quot;&#x27; + styles[i] + &#x27;&quot;&gt;&#x27; + stylesText[i] + &#x27;&lt;/option&gt;&#x27;;
-                                }
-                                html += &#x27;&lt;/select&gt;&#x27;;
-                            }
-                            html += &#x27;&lt;/fieldset&gt;&#x27;;
+
                             rootDiv.append(html);
-                            rootDiv.trigger(&quot;create&quot;);
+                            for (j = 0; j &lt; selectName.length; j += 1) {
+                                this.autoSelect(&quot;vworldWMS&quot;, selectName[j], selectName[j], stylesText, styles, {
+                                    firstName : (j + 1) + &#x27;번째 레이어 선택&#x27;
+                                });
+                            }
                             
                             $(&quot;#&quot; + selectName[0]).change(function () {
                                 selectState[0] = this.selectedIndex;
@@ -306,6 +637,28 @@
                             });
                             return selectName;
                         };
+
+                        OGDSM.eGovFrameUI.prototype.seoulEnvironment = function (divId, theme) {
+                            &#x27;use strict&#x27;;
+                            theme = (typeof (theme) !== &#x27;undefined&#x27;) ? theme : this.dataTheme;
+                            var environmentImages = [
+                                &#x27;&lt;img src=&quot;images/input_bt_pm10.png&quot; width=30&gt;&#x27;,
+                                &#x27;&lt;img src=&quot;images/input_bt_pm25.png&quot; width=30&gt;&#x27;,
+                                &#x27;&lt;img src=&quot;images/input_bt_so2.png&quot; width=30&gt;&#x27;,
+                                &#x27;&lt;img src=&quot;images/input_bt_o3.png&quot; width=30&gt;&#x27;,
+                                &#x27;&lt;img src=&quot;images/input_bt_no2.png&quot; width=30&gt;&#x27;,
+                                &#x27;&lt;img src=&quot;images/input_bt_co.png&quot; width=30&gt;&#x27;
+                            ],
+                                environmentValues = [&#x27;PM10&#x27;, &#x27;PM25&#x27;, &#x27;SO2&#x27;, &#x27;O3&#x27;, &#x27;NO2&#x27;, &#x27;CO&#x27;];
+                            var rootDiv = $(&#x27;#&#x27; + divId),
+                                visualType = this.autoRadioBox(divId, &#x27;visualType&#x27;, [&#x27;맵&#x27;, &#x27;차트&#x27;], [&#x27;map&#x27;, &#x27;chart&#x27;], {horizontal : true}),
+                                date = this.dateInput(divId),
+                                time = this.timeInput(divId),
+                                environmentType = this.autoRadioBox(divId, &#x27;envType&#x27;, environmentImages, environmentValues, {horizontal : true});
+                            return [visualType, date, time, environmentType];
+                        };
+
+
                         /**
                          * User Interface Create about visualization type (Radio Button).
                          * @method visTypeRadio
@@ -330,38 +683,7 @@
                             rootDiv.trigger(&quot;create&quot;);
                             return &#x27;visualType&#x27;;
                         };
-                        /**
-                         * User Interface Create about visualization type (Date Input).
-                         * @method DateInput
-                         * @param {String} divId - div id about HTML tag attribute
-                         * @return {jQuery Object} User Interface Date Input Object (Date YYYY/MM/DD)
-                         */
-                        OGDSM.eGovFrameUI.prototype.dateInput = function (divId) {
-                            &#x27;use strict&#x27;;
-                            var rootDiv, html;
-                            rootDiv = $(&#x27;#&#x27; + divId);
-                            html = &#x27;&lt;label for=&quot;dateValue&quot;&gt;날짜 : &lt;/label&gt;&#x27; +
-                        			&#x27;&lt;input type=&quot;date&quot; id=&quot;dateValue&quot;/&gt;&#x27;;
-                            rootDiv.append(html);
-                            rootDiv.trigger(&quot;create&quot;);
-                            return $(&#x27;#dateValue&#x27;);
-                        };
-                        /**
-                         * User Interface Create about time input (Time Input).
-                         * @method timeInput
-                         * @param {String} divId - div id about HTML tag attribute
-                         * @return {jQuery Object} User Interface Time Input Object (Time)
-                         */
-                        OGDSM.eGovFrameUI.prototype.timeInput = function (divId) {
-                            &#x27;use strict&#x27;;
-                            var rootDiv, html;
-                            rootDiv = $(&#x27;#&#x27; + divId);
-                            html =  &#x27;&lt;label for=&quot;timeValue&quot;&gt;시간 : &lt;/label&gt;&#x27; +
-                        			&#x27;&lt;input type=&quot;time&quot; id=&quot;timeValue&quot;&gt;&#x27;;
-                            rootDiv.append(html);
-                            rootDiv.trigger(&quot;create&quot;);
-                            return $(&#x27;#timeValue&#x27;);
-                        };
+
                         /**
                          * User Interface Create about Environment Type (Radio Button).
                          * @method envTypeRadio
@@ -436,6 +758,7 @@
                          * @param {Array} arr - Select Box Option List
                          * @return {String} Select Box Id Value
                          */
+                        /*
                         OGDSM.eGovFrameUI.prototype.mapListSelect = function (divId, arr) {
                             &#x27;use strict&#x27;;
                             var html, i,
@@ -453,59 +776,7 @@
                             rootDiv.trigger(&quot;create&quot;);
                             return &#x27;geoServerSelectBox&#x27;;
                         };
-                        /**
-                         * User Interface Create about Process (Button).
-                         * @method processButton
-                         * @param {String} divId - div id about HTML tag attribute
-                         * @param {String} theme - eGovframework theme a~g (default constructor)
-                         * @return {jQuery Object} User Interface Button Object (Process)
-                         */
-                        OGDSM.eGovFrameUI.prototype.processButton = function (divId, theme) {
-                            &#x27;use strict&#x27;;
-                            var butTheme = (typeof (theme) !== &#x27;undefined&#x27;) ? theme : this.dataTheme,
-                                rootDiv,
-                                html;
-                            rootDiv = $(&#x27;#&#x27; + divId);
-                            html = &#x27;&lt;a href=&quot;#&quot; id=&quot;processBtn&quot; data-role=&quot;button&quot; data-theme=&quot;&#x27; + butTheme + &#x27;&quot;&gt;시각화&lt;/a&gt;&#x27;;
-                            rootDiv.append(html);
-                            rootDiv.trigger(&quot;create&quot;);
-                            return $(&#x27;#processBtn&#x27;);
-                        };
-                        
-                        /**
-                         * User Interface Create about SelectBox
-                         * @method selectBox
-                         * @param {String} divId - div id about HTML tag attribute
-                         * @param {String} name - selectbox name about HTML tag attribute
-                         * @param {String} id - selectbox id about HTML tag attribute
-                         * @param {Array} data - selectbox option data
-                         * @param {String} theme - eGovframework theme a~g (default constructor)
-                         * @return {jQuery Object} div id Object
-                         */
-                        OGDSM.eGovFrameUI.prototype.selectBox = function (divId, name, id, data, theme) {
-                            &#x27;use strict&#x27;;
-                            var selectTheme = (typeof (theme) !== &#x27;undefined&#x27;) ? theme : this.dataTheme,
-                                rootDiv = $(&#x27;#&#x27; + divId),
-                                html = &#x27;&lt;fieldset data-role=&quot;controlgroup&quot;&gt;&#x27;,
-                                OGDSM = this.OGDSM,
-                                styles,
-                                stylesText,
-                                i,
-                                j,
-                                btnObj;
-
-                            html += &#x27;&lt;select name=&quot;&#x27; + name + &#x27;&quot; id=&quot;&#x27; + id + &#x27;&quot; data-theme=&#x27; + selectTheme + &#x27;&gt;&#x27;;
-                            html += &#x27;&lt;option value=&quot;&quot;&gt;  &lt;/option&gt;&#x27;;
-                            for (i = 0; i &lt; data.length; i += 1) {
-                                html += &#x27;&lt;option value=&quot;&#x27; + data[i] + &#x27;&quot;&gt;&#x27; + data[i] + &#x27;&lt;/option&gt;&#x27;;
-                            }
-                            html += &#x27;&lt;/select&gt;&#x27;;
-                            html += &#x27;&lt;/fieldset&gt;&#x27;;
-                            rootDiv.append(html);
-                            rootDiv.trigger(&quot;create&quot;);
-                            return $(&quot;#&quot; + id);
-                        };
-
+                        */
 
                             </pre>
                         </div>
