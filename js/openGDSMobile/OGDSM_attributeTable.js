@@ -11,8 +11,9 @@ OGDSM.namesapce('attributeTable');
      * @constructor
      * @param {String} RootDiv - eGovframework theme a~g (default c)
      */
-    OGDSM.attributeTable = function (rootDiv) {
+    OGDSM.attributeTable = function (rootDiv, addr) {
         this.rootDiv = rootDiv;
+        this.addr = addr;
         var rootElement = document.getElementById(rootDiv),
             ulElement = document.createElement('ul'),
             contentsElement = document.createElement('div');
@@ -54,8 +55,8 @@ OGDSM.attributeTable.prototype.addAttribute = function (layerName) {
         $(e.currentTarget).css('border-bottom', borderSelected);
         $(e.currentTarget).css('background', backgroundSelected);
         $(e.currentTarget).css('color', colorSelected);
-        $('#' + rootDiv + 'Contents table').css('display', 'none');
-        $('#attrTable' + $(e.currentTarget).text()).css('display', 'block');
+        $('.attrTable').hide();
+        $('#divAttrTable' + layerName).css('display', 'block');
     }
     tabs.prepend('<li id="attrTab' + layerName + '" style="float:left;"><a href="#" style="' + aBaseCSS + '">' + layerName + '</a></li>');
     $('#' + rootDiv + 'Tab a').css('border-bottom', '');
@@ -65,30 +66,72 @@ OGDSM.attributeTable.prototype.addAttribute = function (layerName) {
     $('#attrTab' + layerName + ' a').css('background', backgroundSelected);
     $('#attrTab' + layerName + ' a').css('color', colorSelected);
 
-    contents.prepend('<table id="attrTable' + layerName + '" style="width:100%">' +
-                     '<thead><tr><th>' + layerName + '</th></tr></thead>' +
-                     '<tbody></tbody>');
-    $('#' + rootDiv + 'Contents table').css('display', 'none');
-    $('#attrTable' + layerName).css('display', 'block');
+    var attrDivHeight = $('#' + rootDiv + 'Contents').height();
+    contents.prepend('<div id="divAttrTable' + layerName + '" class="attrTable"><table id="attrTable' + layerName + '" class="display compact" cellspacing="0" width="100%">' +
+                     '<thead style="width:100%;"><tr></tr></thead>' +
+                     '<tbody></tbody></table></div>');
+
+    $('.attrTable').hide();
+    $('#divAttrTable' + layerName).css('display', 'block');
     $('#attrTab' + layerName + ' a').bind('click', tabClickEvent);
-
-
-
+    var parm = '{"tableName":"' + layerName + '"}';
+    parm = JSON.parse(parm);
+    function createTableCol(attrContents, i, tableBody, tableTh) {
+        $.each(attrContents, function (key, value) {
+            if (key === 'geom') {
+                return true;
+            }
+            if (i === 0) {
+                tableTh.append('<th>' + key + '</th>');
+            }
+            var newCell = tableBody.find('tr:last');
+            newCell.append('<td>' + value + '</td>');
+        });
+    }
     $.ajax({
         type : 'POST',
-        url : 'http://113.198.80.60:8087/mobile/attrTable.do',
-        crossDomain: true,
-        dataType : 'jsonp',
+        url : this.addr,
+        data : JSON.stringify(parm),
+        contentType : "application/json;charset=UTF-8",
+        dataType : 'json',
         success : function (msg) {
-            console.log(msg);
+            var attrContents = msg.data, i = 0;
+            if (attrContents === null) {
+                console.log('Not attribute information');
+                return -1;
+            }
+            var tableDiv = $('#attrTable' + layerName),
+                tableTh = tableDiv.find('thead').find('tr'),
+                tableBody = tableDiv.find('tbody');
+            for (i = 0; i < attrContents.length; i++) {
+                tableBody.append('<tr>');
+                createTableCol(attrContents[i], i, tableBody, tableTh);
+                tableBody.append('</tr>');
+            }
+
+            var thHeight = $('thead').height() + 7;
+            $('#attrTable' + layerName).DataTable({
+                'paging' : false,
+                'scrollY' : attrDivHeight - thHeight,
+                'scrollX' : true,
+                'scrollCollapse' : true,
+                'bFilter' : false
+            });
+
+            $(window).on('resize', function () {
+                var attrDivHeight = $('#' + rootDiv + 'Contents').height();
+                var thHeight = $('thead').height() + 7;
+                $('.divAttrTable table').DataTable({
+                    'paging' : false,
+                    'scrollY' : attrDivHeight - thHeight,
+                    'scrollX' : true,
+                    'scrollCollapse' : true,
+                    'bFilter' : false
+                });
+            });
         },
         error : function (e) {
             console.log(e);
         }
     });
-
-
-
-
-
 };

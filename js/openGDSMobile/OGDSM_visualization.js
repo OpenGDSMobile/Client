@@ -10,24 +10,41 @@ OGDSM.namesapce('visualization');
     * @class OGDSM.visualization
     * @constructor
     * @param {String} mapDiv - Map div id
+    * @param {String} options (option) - layerListDiv, attrTableDiv, attrAddr
+                                [values : div string(default : null), div string(default: null), address string(default: '')]
     * @param {String} layerlistDiv - Layer list div view (option)
     * @param {String} attrtableDiv - Layer attribute div view (option)
+     layerlistDiv, attrtableDiv
     */
-    OGDSM.visualization = function (mapDiv, layerlistDiv, attrtableDiv) {
-        layerlistDiv = (typeof (layerlistDiv) !== 'undefined') ? layerlistDiv : null;
-        attrtableDiv = (typeof (attrtableDiv) !== 'undefined') ? attrtableDiv : null;
+    OGDSM.visualization = function (mapDiv, options) {
+        //layerlistDiv = (typeof (layerlistDiv) !== 'undefined') ? layerlistDiv : null;
+        //attrtableDiv = (typeof (attrtableDiv) !== 'undefined') ? attrtableDiv : null;
+        var name;
         this.updateLayoutSetting(mapDiv);
         this.mapDiv = mapDiv;
         this.geoLocation = null;
         OGDSM.visualization = this;
+        var defaults = {
+            layerListDiv : null,
+            attrTableDiv : null,
+            attrAddr : ''
+        };
+
+        for (name in defaults) {
+            if (defaults.hasOwnProperty(name)) {
+                if (options.hasOwnProperty(name)) {
+                    defaults[name] = options[name];
+                }
+            }
+        }
         $(window).on('resize', function () {
             OGDSM.visualization.updateLayoutSetting();
         });
-        if (layerlistDiv !== null) {
-            this.layerListObj = new OGDSM.mapLayerList(this, layerlistDiv);
+        if (defaults.layerlistDiv !== null) {
+            this.layerListObj = new OGDSM.mapLayerList(this, defaults.layerListDiv);
         }
-        if (attrtableDiv !== null) {
-            this.attrTableObj = new OGDSM.attributeTable(attrtableDiv);
+        if (defaults.attrtableDiv !== null) {
+            this.attrTableObj = new OGDSM.attributeTable(defaults.attrTableDiv, defaults.attrAddr);
         }
         // Orientation...
     };

@@ -104,7 +104,12 @@ function createSeoulPublicAreaEnvUI() {
 }
 $(function () {
     'use strict';
-    openGDSMObj = new OGDSM.visualization('map', 'layerList', 'attributeTable'); //map div, layerList switch
+    //openGDSMObj = new OGDSM.visualization('map', 'layerList', 'attributeTable'); //map div, layerList switch
+    openGDSMObj = new OGDSM.visualization('map', {
+        layerListDiv : 'layerList',
+        attrTableDiv : 'attributeTable',
+        attrAddr : 'http://113.198.80.9/sisOpenGDSMobile/attrTable.do'
+    }); //map div, layerList switch
     //openGDSMObj.olMapView([127.010031, 37.582200], 'OSM', 'EPSG:900913'); //VWorld
     openGDSMObj.olMapView([127.010031, 37.582200], 'OSM'); //VWorld
     openGDSMObj.trackingGeoLocation(true);
@@ -128,7 +133,7 @@ $(function () {
         b = Math.floor(Math.random() * 256);
     var color = 'rgb(' + r + ',' + g + ',' + b + ')';
     var addr = 'http://113.198.80.9';
-    externalServer.geoServerWFSLoad(openGDSMObj, addr, 'opengds', 'seoul_sig', 'polygon', color);
+    externalServer.geoServerWFSLoad(openGDSMObj, addr, 'opengds', 'seoul_env_position', 'point', color);
 
 });
 
