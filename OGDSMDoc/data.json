@@ -247,17 +247,7 @@
                 },
                 {
                     "name": "options",
-                    "description": "(option) - layerListDiv, attrTableDiv, attrAddr\n                               [values : div string(default : null), div string(default: null), address string(default: '')]",
-                    "type": "String"
-                },
-                {
-                    "name": "layerlistDiv",
-                    "description": "- Layer list div view (option)",
-                    "type": "String"
-                },
-                {
-                    "name": "attrtableDiv",
-                    "description": "- Layer attribute div view (option)\n    layerlistDiv, attrtableDiv",
+                    "description": "(option) - layerListDiv, attrTableDiv, attrAddr\n                               [values : div string(default : null), div string(default: null), address string(default: '')]\n    layerlistDiv, attrtableDiv",
                     "type": "String"
                 }
             ]
@@ -1038,7 +1028,7 @@
         },
         {
             "file": "js/openGDSMobile/OGDSM_visualization.js",
-            "line": 53,
+            "line": 54,
             "description": "지도 객체 받기\nGet map object about OpenLayers3",
             "itemtype": "method",
             "name": "getMap",
@@ -1051,7 +1041,7 @@
         },
         {
             "file": "js/openGDSMobile/OGDSM_visualization.js",
-            "line": 62,
+            "line": 63,
             "description": "지도 레이어 존재 여부 확인\nCurrent layers check about OpenLayers3",
             "itemtype": "method",
             "name": "layerCheck",
@@ -1071,7 +1061,7 @@
         },
         {
             "file": "js/openGDSMobile/OGDSM_visualization.js",
-            "line": 79,
+            "line": 80,
             "description": "지도 레이어 인덱스 값\nCurrent layers index value about OpenLayers3",
             "itemtype": "method",
             "name": "indexOf",
@@ -1091,7 +1081,7 @@
         },
         {
             "file": "js/openGDSMobile/OGDSM_visualization.js",
-            "line": 99,
+            "line": 100,
             "description": "OpenGDS 모바일 맵 초기화\nOGDSM Mobile map view",
             "itemtype": "method",
             "name": "olMapView",
@@ -1121,7 +1111,7 @@
         },
         {
             "file": "js/openGDSMobile/OGDSM_visualization.js",
-            "line": 151,
+            "line": 152,
             "description": "배경지도 변경\nBase map change",
             "itemtype": "method",
             "name": "changeBaseMap",
@@ -1137,7 +1127,7 @@
         },
         {
             "file": "js/openGDSMobile/OGDSM_visualization.js",
-            "line": 238,
+            "line": 239,
             "description": "지도 GPS 트래킹 스위치\nMap geolocation tracking",
             "itemtype": "method",
             "name": "trackingGeoLocation",
@@ -1153,7 +1143,7 @@
         },
         {
             "file": "js/openGDSMobile/OGDSM_visualization.js",
-            "line": 264,
+            "line": 265,
             "description": "모바일 해상도에 맞는 지도 레이아웃 업데이트\nOGDSM Mobile screen update layout",
             "itemtype": "method",
             "name": "updateLayoutSetting",
@@ -1169,19 +1159,19 @@
         },
         {
             "file": "js/openGDSMobile/OGDSM_visualization.js",
-            "line": 279,
+            "line": 280,
             "class": "OGDSM.visualization",
             "module": "OGDSM.jsontoArray"
         },
         {
             "file": "js/openGDSMobile/OGDSM_visualization.js",
-            "line": 291,
+            "line": 292,
             "class": "OGDSM.visualization",
             "module": "OGDSM.jsontoArray"
         },
         {
             "file": "js/openGDSMobile/OGDSM_visualization.js",
-            "line": 293,
+            "line": 294,
             "description": "WMS 및 WFS 맵 레이어 추가\nWMS/WFS map layer add",
             "itemtype": "method",
             "name": "addMap",
@@ -1197,7 +1187,7 @@
         },
         {
             "file": "js/openGDSMobile/OGDSM_visualization.js",
-            "line": 325,
+            "line": 326,
             "description": "이미지 레이어 시각화\nImage Layer Visualization",
             "itemtype": "method",
             "name": "imageLayer",
@@ -1228,7 +1218,7 @@
         },
         {
             "file": "js/openGDSMobile/OGDSM_visualization.js",
-            "line": 352,
+            "line": 353,
             "description": "맵 레이어 삭제\nWMS/WFS/ImageLayer map layer remove",
             "itemtype": "method",
             "name": "removeMap",
@@ -1244,7 +1234,7 @@
         },
         {
             "file": "js/openGDSMobile/OGDSM_visualization.js",
-            "line": 365,
+            "line": 366,
             "description": "맵 레이어 시각화 여부\nMap layer visualization flag",
             "itemtype": "method",
             "name": "setVisible",
@@ -1265,7 +1255,7 @@
         },
         {
             "file": "js/openGDSMobile/OGDSM_visualization.js",
-            "line": 379,
+            "line": 380,
             "description": "WFS 스타일 변경  (수정중....)\nWFS style change",
             "itemtype": "method",
             "name": "changeWFSStyle",
@@ -1311,7 +1301,7 @@
         },
         {
             "file": "js/openGDSMobile/OGDSM_visualization.js",
-            "line": 464,
+            "line": 465,
             "description": "Bar Chart Visualization based on D3.js\nrange length = color length",
             "itemtype": "method",
             "name": "barChart",
@@ -1583,11 +1573,11 @@
         },
         {
             "message": "Missing item type",
-            "line": " js/openGDSMobile/OGDSM_visualization.js:279"
+            "line": " js/openGDSMobile/OGDSM_visualization.js:280"
         },
         {
             "message": "Missing item type",
-            "line": " js/openGDSMobile/OGDSM_visualization.js:291"
+            "line": " js/openGDSMobile/OGDSM_visualization.js:292"
         },
         {
             "message": "Missing item type\nSortable",
