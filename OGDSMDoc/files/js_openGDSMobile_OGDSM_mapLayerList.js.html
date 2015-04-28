@@ -283,13 +283,18 @@
                                     ogdsmObj.setVisible(layerName, true);
                                 }
                             }
+                            var sublabel = label;
+                            if (label.length &gt; 8) {
+                                sublabel = sublabel.substr(0, 8) + &#x27;...&#x27;;
+                            }
+
                             olList.prepend(&#x27;&lt;li id=&quot;layer&#x27; + label + &#x27;&quot; style=&quot;float:left&quot;&gt;&#x27; +
                                            &#x27;&lt;div style=&quot;width:15%; float:left; margin-top:4px;&quot;&gt;&#x27; +
                                            &#x27;&lt;canvas id=&quot;&#x27; + label + &#x27;canvas&quot; width=&quot;100%&quot; height=30px; class=&quot;drag-handle&quot; &gt;&lt;/canvas&gt;&#x27; +
                                            &#x27;&lt;/div&gt; &lt;div style=&quot;width:70%; float:left; padding:0px; margin:0px;&quot;&gt;&#x27; +
-                                           &#x27;&lt;input type=&quot;checkbox&quot; name=&quot;listCheckBox&quot; data-corners=&quot;false&quot; data-mini=&quot;true&quot;  class=&quot;custom&quot; &#x27; +
+                                           &#x27;&lt;input type=&quot;checkbox&quot; name=&quot;listCheckBox&quot; data-corners=&quot;false&quot; data-mini=&quot;true&quot; style=&quot;width:100px;&quot; class=&quot;custom&quot; &#x27; +
                                            &#x27;id=&quot;&#x27; + &#x27;visualSW&#x27; + thisObj.getLabels().length + &#x27;&quot; data-label=&quot;&#x27; + label + &#x27;&quot; checked/&gt;&#x27; +
-                                           &#x27;&lt;label for=&quot;&#x27; + &#x27;visualSW&#x27; + thisObj.getLabels().length + &#x27;&quot;&gt;&#x27; + label + &#x27;&lt;/label&gt;&#x27; +
+                                           &#x27;&lt;label for=&quot;&#x27; + &#x27;visualSW&#x27; + thisObj.getLabels().length + &#x27;&quot;&gt;&#x27; + sublabel + &#x27;&lt;/label&gt;&#x27; +
                                            &#x27;&lt;/div&gt; &lt;div style=&quot;width:15%; float:left; padding:0px; margin:0px;&quot;&gt;&#x27; +
                                            &#x27;&lt;a data-role=&quot;button&quot; data-rel=&quot;popup&quot; data-theme=&quot;b&quot; data-corners=&quot;false&quot; data-mini=&quot;true&quot; data-transition=&quot;pop&quot;&#x27; +
                                            &#x27;data-label=&quot;&#x27; + label + &#x27;&quot; href=&quot;#popup&#x27; + label + &#x27;&quot;&gt;　&lt;/a&gt;&#x27; +
