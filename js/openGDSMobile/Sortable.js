@@ -1,7 +1,9 @@
 /**!
+ * OGDSM Layer list sorting open source
  * Sortable
- * @author	RubaXa   <trash@rubaxa.org>
- * @license MIT
+ * author	RubaXa   <trash@rubaxa.org>
+ * license MIT
+ * @module Sortable.create(...)
  */
 (function (factory) {
 	"use strict";
@@ -157,9 +159,9 @@
 
 
 	/**
-	 * @class  Sortable
-	 * @param  {HTMLElement}  el
-	 * @param  {Object}       [options]
+	 * class  Sortable
+	 * param  {HTMLElement}  el
+	 * param  {Object}       [options]
 	 */
 	function Sortable(el, options) {
 		this.el = el; // root element

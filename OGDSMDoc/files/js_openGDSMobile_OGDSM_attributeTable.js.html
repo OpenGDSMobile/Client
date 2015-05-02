@@ -45,12 +45,12 @@
                                 <li><a href="../classes/OGDSM.externalConnection.html">OGDSM.externalConnection</a></li>
                                 <li><a href="../classes/OGDSM.mapLayerList.html">OGDSM.mapLayerList</a></li>
                                 <li><a href="../classes/OGDSM.visualization.html">OGDSM.visualization</a></li>
-                                <li><a href="../classes/Sortable.html">Sortable</a></li>
                             </ul>
 
                             <ul id="api-modules" class="apis modules">
                                 <li><a href="../modules/OGDSM.jsontoArray.html">OGDSM.jsontoArray</a></li>
                                 <li><a href="../modules/OGDSM.namespace.html">OGDSM.namespace</a></li>
+                                <li><a href="../modules/Sortable.create(...).html">Sortable.create(...)</a></li>
                             </ul>
                         </div>
                     </div>
@@ -96,11 +96,10 @@
                             &#x27;use strict&#x27;;
                             /**
                              * 속성정보 시각화 객체
-                             *
                              * @class OGDSM.attributeTable
                              * @constructor
-                             * @param {String} RootDiv - Attribute table div name
-                             * @param {String} addr - PostgreSQL connect address
+                             * @param {String} RootDiv - 속성 테이블 DIV 이름
+                             * @param {String} addr - PostgreSQL 접속 주소
                              */
                             OGDSM.attributeTable = function (rootDiv, addr) {
                                 this.rootDiv = rootDiv;
@@ -128,9 +127,8 @@
 
                         /**
                          * 속성 정보 추가
-                         * Add attribute table (Connect PostgreSQL)
                          * @method addAttribute
-                         * @param {String}  layerName   - Database table name
+                         * @param {String}  layerName   - 데이터 베이스 테이블 이름
                          */
                         OGDSM.attributeTable.prototype.addAttribute = function (layerName) {
                             &#x27;use strict&#x27;;

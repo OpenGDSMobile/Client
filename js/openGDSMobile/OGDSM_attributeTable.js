@@ -6,11 +6,10 @@ OGDSM.namesapce('attributeTable');
     'use strict';
     /**
      * 속성정보 시각화 객체
-     *
      * @class OGDSM.attributeTable
      * @constructor
-     * @param {String} RootDiv - Attribute table div name
-     * @param {String} addr - PostgreSQL connect address
+     * @param {String} RootDiv - 속성 테이블 DIV 이름
+     * @param {String} addr - PostgreSQL 접속 주소
      */
     OGDSM.attributeTable = function (rootDiv, addr) {
         this.rootDiv = rootDiv;
@@ -38,9 +37,8 @@ OGDSM.namesapce('attributeTable');
 
 /**
  * 속성 정보 추가
- * Add attribute table (Connect PostgreSQL)
  * @method addAttribute
- * @param {String}  layerName   - Database table name
+ * @param {String}  layerName   - 데이터 베이스 테이블 이름
  */
 OGDSM.attributeTable.prototype.addAttribute = function (layerName) {
     'use strict';

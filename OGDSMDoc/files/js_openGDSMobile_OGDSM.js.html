@@ -45,12 +45,12 @@
                                 <li><a href="../classes/OGDSM.externalConnection.html">OGDSM.externalConnection</a></li>
                                 <li><a href="../classes/OGDSM.mapLayerList.html">OGDSM.mapLayerList</a></li>
                                 <li><a href="../classes/OGDSM.visualization.html">OGDSM.visualization</a></li>
-                                <li><a href="../classes/Sortable.html">Sortable</a></li>
                             </ul>
                 
                             <ul id="api-modules" class="apis modules">
                                 <li><a href="../modules/OGDSM.jsontoArray.html">OGDSM.jsontoArray</a></li>
                                 <li><a href="../modules/OGDSM.namespace.html">OGDSM.namespace</a></li>
+                                <li><a href="../modules/Sortable.create(...).html">Sortable.create(...)</a></li>
                             </ul>
                         </div>
                     </div>
@@ -96,12 +96,13 @@
                          */
                         var OGDSM = OGDSM || {};
                         /**
-                        * OGDSM&lt;br&gt;
+                        * OGDSM
                         * --
-                        * Classes
+                        * 객체(Classes)
+                        *  - attributeTable
                         *  - eGovFrameUI
                         *  - externalConnection
-                        *  - olMap
+                        *  - mapLayerList
                         *  - visulaization
                         *
                         * @class OGDSM
@@ -109,27 +110,25 @@
                         OGDSM = (function (window, $) {
                             &#x27;use strict&#x27;;
                             /**
-                            * OGDS Mobile Layout / Map Setting Super Class
+                            * OGDS Mobile Super Class
                             * @class OGDSM
                             * @constructor
                             */
                             OGDSM.prototype = {
                                 constructor : OGDSM,
-                                version : &#x27;1.1&#x27;
+                                version : &#x27;1.2&#x27;
                             };
                             return OGDSM;
                         }(window, jQuery));
                         
                         /**
-                        * OGDSM &#x27;namespace&#x27; module(Create New Object)
+                        * OGDSM 네임스페이스 모듈 (OGDSM &#x27;namespace&#x27; module)
                         *
-                        * - Use
+                        * - 사용 방법 (Use)
                         *       OGDSM.namesace(&#x27;example&#x27;);
-                        * - Developer
                         *       OGDSM.example=(function(){
                         *         //Source Code
                         *       }());
-                        *
                         * @module OGDSM.namespace
                         */
                         OGDSM.namesapce = function (ns_string) {
@@ -153,8 +152,8 @@
                             return parent;
                         };
                         /**
-                         * OGDSM json to Array module 
-                         * - Use
+                         * OGDSM JSON 객체 배열 변환 모듈 (OGDSM json to Array module)
+                         * - 사용 방법(Use)
                          *       OGDSM.jsonToArray(jsonData, array[0], array[1]);
                          *
                          * @module OGDSM.jsontoArray

@@ -5,14 +5,14 @@ OGDSM.namesapce('visualization');
     "use strict";
     var mapObj;
     /**
-    * 오픈레이어3 지도 시각화 객체
-    * OpenLayers3 Map Visualization Class
+    * 오픈레이어3 지도 시각화 객체 (OpenLayers3 Map Visualization Class)
     * @class OGDSM.visualization
     * @constructor
-    * @param {String} mapDiv - Map div id
-    * @param {String} options (option) - layerListDiv, attrTableDiv, attrAddr
-                                [values : div string(default : null), div string(default: null), address string(default: '')]
-     layerlistDiv, attrtableDiv
+    * @param {String} mapDiv - 지도 DIV 아이디 이름 (Map div id)
+    * @param {JSON Object} options - 옵션 JSON 객체 키 값{layerListDiv=null, attrTableDiv=null, attrAddr=''}<br>
+  layerListDiv : 레이어 관리 리스트 DIV 아이디 이름<br>
+  attrTableDiv : 속성 시각화 DIV 아이디 이름<br>
+  attrAddr : 속성 시각화 서버 주소<br>
     */
     OGDSM.visualization = function (mapDiv, options) {
         options = (typeof (options) !== 'undefined') ? options : {};
@@ -50,20 +50,18 @@ OGDSM.namesapce('visualization');
     OGDSM.visualization.prototype = {
         constructor : OGDSM.visualization,
         /**
-         * 지도 객체 받기
-         * Get map object about OpenLayers3
+         * 지도 객체 받기(Get map object about OpenLayers3)
          * @method getMap
-         * @return {ol.Map} Retrun is OpenLayers object
+         * @return {ol.Map} 오픈레이어3 객체
          */
         getMap : function () {
             return this.mapObj;
         },
         /**
-         * 지도 레이어 존재 여부 확인
-         * Current layers check about OpenLayers3
+         * 지도 레이어 존재 여부 확인(Current layers check)
          * @method layerCheck
-         * @param {String} layerName - Search layer title
-         * @return {OpenLayer3 Layer Object} Retrun is OpenLayers object
+         * @param {String} layerName - 레이어 타이틀
+         * @return {OpenLayer3 Layer Object | Boolean} 레이어가 있을 경우 : 레이어 객체, 없을 경우 : false
          */
         layerCheck : function (layerName) {
             var i,
@@ -76,11 +74,10 @@ OGDSM.namesapce('visualization');
             return false;
         },
         /**
-         * 지도 레이어 인덱스 값
-         * Current layers index value about OpenLayers3
+         * 지도 레이어 인덱스 값(Current layers index value)
          * @method indexOf
-         * @param {ol3 layers object} layers - Layer objects
-         * @return {Number} Retrun is index number
+         * @param {ol3 layers object} layers - 레이어 객체
+         * @return {Number} 레이어 인덱스 값
          */
         indexOf : function (layers, layer) {
             var length = layers.getLength(), i;
@@ -96,13 +93,12 @@ OGDSM.namesapce('visualization');
 }(OGDSM));
 
 /**
- * OpenGDS 모바일 맵 초기화
- * OGDSM Mobile map view
+ * OpenGDS 모바일 맵 초기화(OGDSM Mobile map view)
  * @method olMapView
- * @param {Array}  latlng   - Map init center latitude, longitude (option) [default : [37.582200, 127.010031] ]
- * @param {String} mapType - Background map (option) [default : 'OSM']
- * @param {String} baseProj  - Map base projection (option) [default : 'EPSG:3857']
- * @return {ol.Map} Return is openlayers3 ol.Map object
+ * @param {Array}  latlng  - 지도 초기 위,경도 값 (옵션) [default : [37.582200, 127.010031] ]
+ * @param {String} mapType - 배경 지도 초기 값 (옵션) [default : 'OSM']
+ * @param {String} baseProj  - 지도 투영 값 (옵션)   [default : 'EPSG:3857']
+ * @return {ol.Map} openlayers3 ol.Map 객체
  */
 OGDSM.visualization.prototype.olMapView = function (latlng, mapType, baseProj) {
     'use strict';
@@ -148,10 +144,9 @@ OGDSM.visualization.prototype.olMapView = function (latlng, mapType, baseProj) {
 
 
 /**
- * 배경지도 변경
- * Base map change
+ * 배경지도 변경(Base map change)
  * @method changeBaseMap
- * @param {String} mapStyle - Map style ("OSM" | "VWorld" | "VWorld_m" | "VWorld_h")
+ * @param {String} mapStyle - 지도 스타일 ("OSM" | "VWorld" | "VWorld_m" | "VWorld_h")
  */
 OGDSM.visualization.prototype.changeBaseMap = function (mapStyle) {
     "use strict";
@@ -235,10 +230,9 @@ OGDSM.visualization.prototype.changeBaseMap = function (mapStyle) {
 };
 
 /**
- * 지도 GPS 트래킹 스위치
- * Map geolocation tracking
+ * 지도 GPS 트래킹 스위치(Map geolocation tracking)
  * @method trackingGeoLocation
- * @param {boolean} sw - Geolocation switch (true | false
+ * @param {boolean} sw - Geolocation 스위치 (true | false)
  **/
 OGDSM.visualization.prototype.trackingGeoLocation = function (sw) {
     'use strict';
@@ -261,10 +255,9 @@ OGDSM.visualization.prototype.trackingGeoLocation = function (sw) {
     }
 };
 /**
- * 모바일 해상도에 맞는 지도 레이아웃 업데이트
- * OGDSM Mobile screen update layout
+ * 모바일 해상도에 맞는 지도 레이아웃 업데이트(OGDSM Mobile screen update layout)
  * @method updateLayoutSetting
- * @param {String} mapDiv - Map div name
+ * @param {String} mapDiv - 지도 DIV 아이디 이름
  **/
 OGDSM.visualization.prototype.updateLayoutSetting = function (mapDiv) {
     'use strict';
@@ -274,26 +267,12 @@ OGDSM.visualization.prototype.updateLayoutSetting = function (mapDiv) {
     if (typeof (this.mapObj) !== 'undefined') {
         this.mapObj.updateSize();
     }
-
-    /*******************/
-/*    $("#d3View").attr('width', $(window).width() - 100);
-	$('#d3viewonMap').hide();
-	$("#d3viewonMap").attr('width', $(window).width() - 50);
-	$('#d3viewonMap').css('top', $(window).height() - 300);
-
-	$('#interpolationMap').hide();
-	$("#interpolationMap").attr('width', $(window).width() - 50);
-	$('#interpolationMap').css('top', $(window).height() - 600);
-
-	$('#layersList').css('height', $(window).height() - 400);
-	$('#layersList').css("overflow-y", "auto");*/
-    /********************/
 };
 /**
- * WMS 및 WFS 맵 레이어 추가
- * WMS/WFS map layer add
+ * WMS 및 WFS 맵 레이어 추가(Add map layer WMS/WFS)
  * @method addMap
- * @param {ol Map Object} data - Openlayers map object (OpenLayers WMS/WFS/ Object)
+ * @param {ol Map Object} data - 오픈레이어3 지도 객체
+ * @param {String} type - WFS 객체 타입 [polygon(default) | point]
  */
 OGDSM.visualization.prototype.addMap = function (data, type) {
     'use strict';
@@ -322,13 +301,12 @@ OGDSM.visualization.prototype.addMap = function (data, type) {
     }
 };
 /**
- * 이미지 레이어 시각화
- * Image Layer Visualization
+ * 이미지 레이어 시각화(Image layer visualization)
  * @method imageLayer
- * @param {String} imgURL (Image URL)
- * @param {String} imgTitle (Image title)
- * @param {Array} imgSize (Image size [width, height] )
- * @param {Array} imgExtent (Image extent [lower left lon, lower left lat, upper right lon, upper right lat] or [left, bottom, right, top])
+ * @param {String} imgURL - 이미지 주소
+ * @param {String} imgTitle - 이미지 타이틀
+ * @param {Array} imgSize - 이미지 사이즈 [width, height]
+ * @param {Array} imgExtent - 이미지 위치 [lower left lon, lower left lat, upper right lon, upper right lat] or [left, bottom, right, top]
  */
 OGDSM.visualization.prototype.imageLayer = function (imgURL, imgTitle, imgSize, imgExtent) {
     'use strict';
@@ -349,10 +327,9 @@ OGDSM.visualization.prototype.imageLayer = function (imgURL, imgTitle, imgSize, 
     this.getMap().addLayer(imgLayer);
 };
 /**
- * 맵 레이어 삭제
- * WMS/WFS/ImageLayer map layer remove
+ * 맵 레이어 삭제(Remove map layer)
  * @method removeMap
- * @param {String} layerName - Layer title
+ * @param {String} layerName - 레이어 타이틀
  */
 OGDSM.visualization.prototype.removeMap = function (layerName) {
     'use strict';
@@ -362,11 +339,10 @@ OGDSM.visualization.prototype.removeMap = function (layerName) {
     }
 };
 /**
- * 맵 레이어 시각화 여부
- * Map layer visualization flag
+ * 맵 레이어 시각화 여부(Map layer visualization flag)
  * @method setVisible
- * @param {String} layerName - Layer title
- * @param {Boolean} flag - visualization switch true or false
+ * @param {String} layerName - 레이어 타이틀
+ * @param {Boolean} flag - 시각화 스위치 [true | false}
  */
 OGDSM.visualization.prototype.setVisible = function (layerName, flag) {
     'use strict';
@@ -376,28 +352,39 @@ OGDSM.visualization.prototype.setVisible = function (layerName, flag) {
     }
 };
 /**
- * WFS 스타일 변경  (수정중....)
- * WFS style change
+ * WFS 스타일 변경(WFS style change)
  * @method changeWFSStyle
- * @param {String} layerName (OpenLayers layer name)
+ * @param {String} layerName - 오픈레이어3 레이어 타이틀
  * @param {Hex Color, String or Array} colors ( Hex color )
- * @param {String} type (Vector type)
- * @param {Number} opt (Opacity number) - option, Default value : 0.5
- * @param {String} attr (Map attribute name) - option, Default value : null
- * @param {String} range (Colors range) - option, Default value : null
- * @param {String} xyData (attr value data) - option, Default value : null
+ * @param {JSON Object} options - 옵션 JSON 객체 키 값 {type:'polygon', opt : '0.5', attr: null, range: null, xyData: null}
+  type(String) : 객체 타입 (polygon, point)<br>
+  opt(Number) : 레이어 투명도 <br>
+  attr(String) : 속성 이름 <br>
+  range(Array) : 색상 범위<br>
+  xyData(Array) : 색상 데이터<br>
  */
-OGDSM.visualization.prototype.changeWFSStyle = function (layerName, colors, type, opt, attr, range, xyData) {
+OGDSM.visualization.prototype.changeWFSStyle = function (layerName, colors, options) {
     'use strict';
-    opt = (typeof (opt) !== 'undefined') ? opt : 0.5;
-    attr = (typeof (attr) !== 'undefined') ? attr : null;
-    range = (typeof (attr) !== 'undefined') ? range : null;
-    xyData = (typeof (attr) !== 'undefined') ? xyData : null;
-    var i = null,
+    var i = null, name,
         map = this.layerCheck(layerName),
         styleCache = {},
         style = null;
+    options = (typeof (options) !== 'undefined') ? options : {};
+    var defaults = {
+        type : 'polygon',
+        opt : 0.5,
+        attr : null,
+        range : null,
+        xyData : null
+    };
 
+    for (name in defaults) {
+        if (defaults.hasOwnProperty(name)) {
+            if (options.hasOwnProperty(name)) {
+                defaults[name] = options[name];
+            }
+        }
+    }
     if (map === false) {
         console.error('Not Map Layer');
         return -1;
@@ -406,13 +393,13 @@ OGDSM.visualization.prototype.changeWFSStyle = function (layerName, colors, type
         var i,
             j,
             color = '#FFFFFF',
-            text = r < 5000 ? f.get(attr) : '';
+            text = r < 5000 ? f.get(defaults.attr) : '';
         if (!styleCache[text]) {
             if (Array.isArray(colors)) {
-                for (i = 0; i < xyData[1].length; i += 1) {
-                    if (text === xyData[1][i]) {
-                        for (j = 0; j < range.length; j += 1) {
-                            if (xyData[0][i] <= range[j]) {
+                for (i = 0; i < defaults.xyData[1].length; i += 1) {
+                    if (text === defaults.xyData[1][i]) {
+                        for (j = 0; j < defaults.range.length; j += 1) {
+                            if (defaults.xyData[0][i] <= defaults.range[j]) {
                                 color = colors[j];
                                 break;
                             }
@@ -422,7 +409,7 @@ OGDSM.visualization.prototype.changeWFSStyle = function (layerName, colors, type
             } else {
                 color = colors;
             }
-            if (type === 'polygon') {
+            if (defaults.type === 'polygon') {
                 styleCache[text] = [new ol.style.Style({
                     fill : new ol.style.Fill({
                         color : color
@@ -439,7 +426,7 @@ OGDSM.visualization.prototype.changeWFSStyle = function (layerName, colors, type
                         })
                     })
                 })];
-            } else if (type === 'point') {
+            } else if (defaults.type === 'point') {
                 styleCache[text] = [new ol.style.Style({
                     image : new ol.style.Circle({
                         radius : 5,
@@ -458,16 +445,15 @@ OGDSM.visualization.prototype.changeWFSStyle = function (layerName, colors, type
         }
         return styleCache[text];
     });
-    map.setOpacity(opt);
+    map.setOpacity(defaults.opt);
 };
 /**
- * Bar Chart Visualization based on D3.js
- * range length = color length
+ * 가로 막대 차트 시각화(Bar Chart Visualization based on D3.js)
  * @method barChart
- * @param {String} divId (Div name to visualize)
- * @param {Array} data (2 dim array about x, y - data is null 0 or -)
- * @param {Array} range (1 dim array about bar range) - option based )
- * @param {Array} color (1 dun array about bar fill color of range  - option ['#00000'])
+ * @param {String} divId - 막대 차트 시각화할 DIV 아이디 이름
+ * @param {Array} data - 데이터 값 2차원 배열 (0 : x, 1 : y)
+ * @param {Array} range - 데이터 범위 1차원 배열
+ * @param {Array} color - 데이터 색 범위 1차원 배열 default : #000000 (range와 배열 길이 같아야함)
  */
 OGDSM.visualization.prototype.barChart = function (divId, data, range, color) {
     'use strict';
@@ -550,47 +536,3 @@ OGDSM.visualization.prototype.barChart = function (divId, data, range, color) {
             return d;
         });
 };
-
-/*
-OGDSM.visualization.prototype.changeWFSzIndex = function (layerName, color, type, zIndex) {
-    'use strict';
-    var map = this.layerCheck(layerName);
-    if (map === false) {
-        return -1;
-    }
-
-    console.log(layerName + ' ' + zIndex);
-    map.setStyle(function (f, r) {
-        var style = null;
-        if (type === 'polygon') {
-            style = [new ol.style.Style({
-                fill : new ol.style.Fill({
-                    color : color
-                }),
-                stroke : new ol.style.Stroke({
-                    color : '#00000',
-                    width : 1
-                }),
-                zIndex : zIndex
-            })];
-
-        } else if (type === 'point') {
-            style = [new ol.style.Style({
-                image : new ol.style.Circle({
-                    radius : 5,
-                    fill : new ol.style.Fill({
-                        color : color
-                    }),
-                    stroke : new ol.style.Stroke({
-                        color : '#000000',
-                        width : 1
-                    })
-                }),
-                zIndex : zIndex
-            })];
-
-        }
-        return style;
-    });
-};
-*/

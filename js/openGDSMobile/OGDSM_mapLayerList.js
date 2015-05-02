@@ -7,11 +7,10 @@ OGDSM.namesapce('mapLayerList');
     var arrlayerObjs = [], arrlabels = [];
     /**
      * 오픈레이어 맵 레이어 목록 객체
-     * OpenLayers3 Map layer list class
      * @class OGDSM.mapLayerList
      * @constructor
-     * @param {OGDSM.visualization} obj - OGDSM visualization object
-     * @param {String} listDiv - List div name
+     * @param {OGDSM.visualization} obj - OGDSM 시각화 객체
+     * @param {String} listDiv - 생성할 list DIV 이름
      */
     OGDSM.mapLayerList = function (obj, listDiv) {
         this.listDiv = listDiv;
@@ -149,13 +148,12 @@ OGDSM.namesapce('mapLayerList');
     return OGDSM.mapLayerList;
 }(OGDSM));
 /**
- * 레이어 목록 관리 - (이름 변경 및 레이어 내용 변경...)
- * list Management.
+ * 레이어 목록 관리
  * @method listManager
- * @param {ol3 layer object} obj - openlayers3 layer object to be added
- * @param {String} label - list name
- * @param {String} color - rgb color (ex: rgb(255,255,255))
- * @param {String} type - object type (polygon | point | line)
+ * @param {ol3 layer object} obj - 레이어 목록에 추가할 openlayers3 레이어 객체
+ * @param {String} label - 목록 이름
+ * @param {String} color - 레이어 색상 (ex: rgb(255,255,255))
+ * @param {String} type - 객체 타입 (polygon | point | line)
  */
 OGDSM.mapLayerList.prototype.listManager = function (obj, label, color, type) {
     'use strict';

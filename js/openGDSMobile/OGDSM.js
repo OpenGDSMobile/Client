@@ -6,12 +6,13 @@
  */
 var OGDSM = OGDSM || {};
 /**
-* OGDSM<br>
+* OGDSM
 * --
-* Classes
+* 객체(Classes)
+*  - attributeTable
 *  - eGovFrameUI
 *  - externalConnection
-*  - olMap
+*  - mapLayerList
 *  - visulaization
 *
 * @class OGDSM
@@ -19,27 +20,25 @@ var OGDSM = OGDSM || {};
 OGDSM = (function (window, $) {
     'use strict';
     /**
-    * OGDS Mobile Layout / Map Setting Super Class
+    * OGDS Mobile Super Class
     * @class OGDSM
     * @constructor
     */
     OGDSM.prototype = {
         constructor : OGDSM,
-        version : '1.1'
+        version : '1.2'
     };
     return OGDSM;
 }(window, jQuery));
 
 /**
-* OGDSM 'namespace' module(Create New Object)
+* OGDSM 네임스페이스 모듈 (OGDSM 'namespace' module)
 *
-* - Use
+* - 사용 방법 (Use)
 *       OGDSM.namesace('example');
-* - Developer
 *       OGDSM.example=(function(){
 *         //Source Code
 *       }());
-*
 * @module OGDSM.namespace
 */
 OGDSM.namesapce = function (ns_string) {
@@ -63,8 +62,8 @@ OGDSM.namesapce = function (ns_string) {
     return parent;
 };
 /**
- * OGDSM json to Array module 
- * - Use
+ * OGDSM JSON 객체 배열 변환 모듈 (OGDSM json to Array module)
+ * - 사용 방법(Use)
  *       OGDSM.jsonToArray(jsonData, array[0], array[1]);
  *
  * @module OGDSM.jsontoArray

@@ -6,12 +6,13 @@
  */
 var OGDSM = OGDSM || {};
 /**
-* OGDSM<br>
+* OGDSM
 * --
-* Classes
+* 객체(Classes)
+*  - attributeTable
 *  - eGovFrameUI
 *  - externalConnection
-*  - olMap
+*  - mapLayerList
 *  - visulaization
 *
 * @class OGDSM
@@ -19,27 +20,25 @@ var OGDSM = OGDSM || {};
 OGDSM = (function (window, $) {
     'use strict';
     /**
-    * OGDS Mobile Layout / Map Setting Super Class
+    * OGDS Mobile Super Class
     * @class OGDSM
     * @constructor
     */
     OGDSM.prototype = {
         constructor : OGDSM,
-        version : '1.1'
+        version : '1.2'
     };
     return OGDSM;
 }(window, jQuery));
 
 /**
-* OGDSM 'namespace' module(Create New Object)
+* OGDSM 네임스페이스 모듈 (OGDSM 'namespace' module)
 *
-* - Use
+* - 사용 방법 (Use)
 *       OGDSM.namesace('example');
-* - Developer
 *       OGDSM.example=(function(){
 *         //Source Code
 *       }());
-*
 * @module OGDSM.namespace
 */
 OGDSM.namesapce = function (ns_string) {
@@ -63,8 +62,8 @@ OGDSM.namesapce = function (ns_string) {
     return parent;
 };
 /**
- * OGDSM json to Array module
- * - Use
+ * OGDSM JSON 객체 배열 변환 모듈 (OGDSM json to Array module)
+ * - 사용 방법(Use)
  *       OGDSM.jsonToArray(jsonData, array[0], array[1]);
  *
  * @module OGDSM.jsontoArray
@@ -85,9 +84,11 @@ OGDSM.jsonToArray = function (obj, x, y) {
 
 
 /**!
+ * OGDSM Layer list sorting open source
  * Sortable
- * @author	RubaXa   <trash@rubaxa.org>
- * @license MIT
+ * author	RubaXa   <trash@rubaxa.org>
+ * license MIT
+ * @module Sortable.create(...)
  */
 (function (factory) {
 	"use strict";
@@ -243,9 +244,9 @@ OGDSM.jsonToArray = function (obj, x, y) {
 
 
 	/**
-	 * @class  Sortable
-	 * @param  {HTMLElement}  el
-	 * @param  {Object}       [options]
+	 * class  Sortable
+	 * param  {HTMLElement}  el
+	 * param  {Object}       [options]
 	 */
 	function Sortable(el, options) {
 		this.el = el; // root element
@@ -1140,18 +1141,16 @@ OGDSM.namesapce('visualization');
     "use strict";
     var mapObj;
     /**
-    * 오픈레이어3 지도 시각화 객체
-    * OpenLayers3 Map Visualization Class
+    * 오픈레이어3 지도 시각화 객체 (OpenLayers3 Map Visualization Class)
     * @class OGDSM.visualization
     * @constructor
-    * @param {String} mapDiv - Map div id
-    * @param {String} options (option) - layerListDiv, attrTableDiv, attrAddr
-                                [values : div string(default : null), div string(default: null), address string(default: '')]
-     layerlistDiv, attrtableDiv
+    * @param {String} mapDiv - 지도 DIV 아이디 이름 (Map div id)
+    * @param {JSON Object} options - 옵션 JSON 객체 키 값{layerListDiv=null, attrTableDiv=null, attrAddr=''}<br>
+  layerListDiv : 레이어 관리 리스트 DIV 아이디 이름<br>
+  attrTableDiv : 속성 시각화 DIV 아이디 이름<br>
+  attrAddr : 속성 시각화 서버 주소<br>
     */
     OGDSM.visualization = function (mapDiv, options) {
-        //layerlistDiv = (typeof (layerlistDiv) !== 'undefined') ? layerlistDiv : null;
-        //attrtableDiv = (typeof (attrtableDiv) !== 'undefined') ? attrtableDiv : null;
         options = (typeof (options) !== 'undefined') ? options : {};
         var name;
         this.updateLayoutSetting(mapDiv);
@@ -1187,20 +1186,18 @@ OGDSM.namesapce('visualization');
     OGDSM.visualization.prototype = {
         constructor : OGDSM.visualization,
         /**
-         * 지도 객체 받기
-         * Get map object about OpenLayers3
+         * 지도 객체 받기(Get map object about OpenLayers3)
          * @method getMap
-         * @return {ol.Map} Retrun is OpenLayers object
+         * @return {ol.Map} 오픈레이어3 객체
          */
         getMap : function () {
             return this.mapObj;
         },
         /**
-         * 지도 레이어 존재 여부 확인
-         * Current layers check about OpenLayers3
+         * 지도 레이어 존재 여부 확인(Current layers check)
          * @method layerCheck
-         * @param {String} layerName - Search layer title
-         * @return {OpenLayer3 Layer Object} Retrun is OpenLayers object
+         * @param {String} layerName - 레이어 타이틀
+         * @return {OpenLayer3 Layer Object | Boolean} 레이어가 있을 경우 : 레이어 객체, 없을 경우 : false
          */
         layerCheck : function (layerName) {
             var i,
@@ -1213,11 +1210,10 @@ OGDSM.namesapce('visualization');
             return false;
         },
         /**
-         * 지도 레이어 인덱스 값
-         * Current layers index value about OpenLayers3
+         * 지도 레이어 인덱스 값(Current layers index value)
          * @method indexOf
-         * @param {ol3 layers object} layers - Layer objects
-         * @return {Number} Retrun is index number
+         * @param {ol3 layers object} layers - 레이어 객체
+         * @return {Number} 레이어 인덱스 값
          */
         indexOf : function (layers, layer) {
             var length = layers.getLength(), i;
@@ -1233,13 +1229,12 @@ OGDSM.namesapce('visualization');
 }(OGDSM));
 
 /**
- * OpenGDS 모바일 맵 초기화
- * OGDSM Mobile map view
+ * OpenGDS 모바일 맵 초기화(OGDSM Mobile map view)
  * @method olMapView
- * @param {Array}  latlng   - Map init center latitude, longitude (option) [default : [37.582200, 127.010031] ]
- * @param {String} mapType - Background map (option) [default : 'OSM']
- * @param {String} baseProj  - Map base projection (option) [default : 'EPSG:3857']
- * @return {ol.Map} Return is openlayers3 ol.Map object
+ * @param {Array}  latlng  - 지도 초기 위,경도 값 (옵션) [default : [37.582200, 127.010031] ]
+ * @param {String} mapType - 배경 지도 초기 값 (옵션) [default : 'OSM']
+ * @param {String} baseProj  - 지도 투영 값 (옵션)   [default : 'EPSG:3857']
+ * @return {ol.Map} openlayers3 ol.Map 객체
  */
 OGDSM.visualization.prototype.olMapView = function (latlng, mapType, baseProj) {
     'use strict';
@@ -1285,10 +1280,9 @@ OGDSM.visualization.prototype.olMapView = function (latlng, mapType, baseProj) {
 
 
 /**
- * 배경지도 변경
- * Base map change
+ * 배경지도 변경(Base map change)
  * @method changeBaseMap
- * @param {String} mapStyle - Map style ("OSM" | "VWorld" | "VWorld_m" | "VWorld_h")
+ * @param {String} mapStyle - 지도 스타일 ("OSM" | "VWorld" | "VWorld_m" | "VWorld_h")
  */
 OGDSM.visualization.prototype.changeBaseMap = function (mapStyle) {
     "use strict";
@@ -1372,10 +1366,9 @@ OGDSM.visualization.prototype.changeBaseMap = function (mapStyle) {
 };
 
 /**
- * 지도 GPS 트래킹 스위치
- * Map geolocation tracking
+ * 지도 GPS 트래킹 스위치(Map geolocation tracking)
  * @method trackingGeoLocation
- * @param {boolean} sw - Geolocation switch (true | false
+ * @param {boolean} sw - Geolocation 스위치 (true | false)
  **/
 OGDSM.visualization.prototype.trackingGeoLocation = function (sw) {
     'use strict';
@@ -1398,10 +1391,9 @@ OGDSM.visualization.prototype.trackingGeoLocation = function (sw) {
     }
 };
 /**
- * 모바일 해상도에 맞는 지도 레이아웃 업데이트
- * OGDSM Mobile screen update layout
+ * 모바일 해상도에 맞는 지도 레이아웃 업데이트(OGDSM Mobile screen update layout)
  * @method updateLayoutSetting
- * @param {String} mapDiv - Map div name
+ * @param {String} mapDiv - 지도 DIV 아이디 이름
  **/
 OGDSM.visualization.prototype.updateLayoutSetting = function (mapDiv) {
     'use strict';
@@ -1411,26 +1403,12 @@ OGDSM.visualization.prototype.updateLayoutSetting = function (mapDiv) {
     if (typeof (this.mapObj) !== 'undefined') {
         this.mapObj.updateSize();
     }
-
-    /*******************/
-/*    $("#d3View").attr('width', $(window).width() - 100);
-	$('#d3viewonMap').hide();
-	$("#d3viewonMap").attr('width', $(window).width() - 50);
-	$('#d3viewonMap').css('top', $(window).height() - 300);
-
-	$('#interpolationMap').hide();
-	$("#interpolationMap").attr('width', $(window).width() - 50);
-	$('#interpolationMap').css('top', $(window).height() - 600);
-
-	$('#layersList').css('height', $(window).height() - 400);
-	$('#layersList').css("overflow-y", "auto");*/
-    /********************/
 };
 /**
- * WMS 및 WFS 맵 레이어 추가
- * WMS/WFS map layer add
+ * WMS 및 WFS 맵 레이어 추가(Add map layer WMS/WFS)
  * @method addMap
- * @param {ol Map Object} data - Openlayers map object (OpenLayers WMS/WFS/ Object)
+ * @param {ol Map Object} data - 오픈레이어3 지도 객체
+ * @param {String} type - WFS 객체 타입 [polygon(default) | point]
  */
 OGDSM.visualization.prototype.addMap = function (data, type) {
     'use strict';
@@ -1459,13 +1437,12 @@ OGDSM.visualization.prototype.addMap = function (data, type) {
     }
 };
 /**
- * 이미지 레이어 시각화
- * Image Layer Visualization
+ * 이미지 레이어 시각화(Image layer visualization)
  * @method imageLayer
- * @param {String} imgURL (Image URL)
- * @param {String} imgTitle (Image title)
- * @param {Array} imgSize (Image size [width, height] )
- * @param {Array} imgExtent (Image extent [lower left lon, lower left lat, upper right lon, upper right lat] or [left, bottom, right, top])
+ * @param {String} imgURL - 이미지 주소
+ * @param {String} imgTitle - 이미지 타이틀
+ * @param {Array} imgSize - 이미지 사이즈 [width, height]
+ * @param {Array} imgExtent - 이미지 위치 [lower left lon, lower left lat, upper right lon, upper right lat] or [left, bottom, right, top]
  */
 OGDSM.visualization.prototype.imageLayer = function (imgURL, imgTitle, imgSize, imgExtent) {
     'use strict';
@@ -1486,10 +1463,9 @@ OGDSM.visualization.prototype.imageLayer = function (imgURL, imgTitle, imgSize, 
     this.getMap().addLayer(imgLayer);
 };
 /**
- * 맵 레이어 삭제
- * WMS/WFS/ImageLayer map layer remove
+ * 맵 레이어 삭제(Remove map layer)
  * @method removeMap
- * @param {String} layerName - Layer title
+ * @param {String} layerName - 레이어 타이틀
  */
 OGDSM.visualization.prototype.removeMap = function (layerName) {
     'use strict';
@@ -1499,11 +1475,10 @@ OGDSM.visualization.prototype.removeMap = function (layerName) {
     }
 };
 /**
- * 맵 레이어 시각화 여부
- * Map layer visualization flag
+ * 맵 레이어 시각화 여부(Map layer visualization flag)
  * @method setVisible
- * @param {String} layerName - Layer title
- * @param {Boolean} flag - visualization switch true or false
+ * @param {String} layerName - 레이어 타이틀
+ * @param {Boolean} flag - 시각화 스위치 [true | false}
  */
 OGDSM.visualization.prototype.setVisible = function (layerName, flag) {
     'use strict';
@@ -1513,28 +1488,39 @@ OGDSM.visualization.prototype.setVisible = function (layerName, flag) {
     }
 };
 /**
- * WFS 스타일 변경  (수정중....)
- * WFS style change
+ * WFS 스타일 변경(WFS style change)
  * @method changeWFSStyle
- * @param {String} layerName (OpenLayers layer name)
+ * @param {String} layerName - 오픈레이어3 레이어 타이틀
  * @param {Hex Color, String or Array} colors ( Hex color )
- * @param {String} type (Vector type)
- * @param {Number} opt (Opacity number) - option, Default value : 0.5
- * @param {String} attr (Map attribute name) - option, Default value : null
- * @param {String} range (Colors range) - option, Default value : null
- * @param {String} xyData (attr value data) - option, Default value : null
+ * @param {JSON Object} options - 옵션 JSON 객체 키 값 {type:'polygon', opt : '0.5', attr: null, range: null, xyData: null}
+  type(String) : 객체 타입 (polygon, point)<br>
+  opt(Number) : 레이어 투명도 <br>
+  attr(String) : 속성 이름 <br>
+  range(Array) : 색상 범위<br>
+  xyData(Array) : 색상 데이터<br>
  */
-OGDSM.visualization.prototype.changeWFSStyle = function (layerName, colors, type, opt, attr, range, xyData) {
+OGDSM.visualization.prototype.changeWFSStyle = function (layerName, colors, options) {
     'use strict';
-    opt = (typeof (opt) !== 'undefined') ? opt : 0.5;
-    attr = (typeof (attr) !== 'undefined') ? attr : null;
-    range = (typeof (attr) !== 'undefined') ? range : null;
-    xyData = (typeof (attr) !== 'undefined') ? xyData : null;
-    var i = null,
+    var i = null, name,
         map = this.layerCheck(layerName),
         styleCache = {},
         style = null;
+    options = (typeof (options) !== 'undefined') ? options : {};
+    var defaults = {
+        type : 'polygon',
+        opt : 0.5,
+        attr : null,
+        range : null,
+        xyData : null
+    };
 
+    for (name in defaults) {
+        if (defaults.hasOwnProperty(name)) {
+            if (options.hasOwnProperty(name)) {
+                defaults[name] = options[name];
+            }
+        }
+    }
     if (map === false) {
         console.error('Not Map Layer');
         return -1;
@@ -1543,13 +1529,13 @@ OGDSM.visualization.prototype.changeWFSStyle = function (layerName, colors, type
         var i,
             j,
             color = '#FFFFFF',
-            text = r < 5000 ? f.get(attr) : '';
+            text = r < 5000 ? f.get(defaults.attr) : '';
         if (!styleCache[text]) {
             if (Array.isArray(colors)) {
-                for (i = 0; i < xyData[1].length; i += 1) {
-                    if (text === xyData[1][i]) {
-                        for (j = 0; j < range.length; j += 1) {
-                            if (xyData[0][i] <= range[j]) {
+                for (i = 0; i < defaults.xyData[1].length; i += 1) {
+                    if (text === defaults.xyData[1][i]) {
+                        for (j = 0; j < defaults.range.length; j += 1) {
+                            if (defaults.xyData[0][i] <= defaults.range[j]) {
                                 color = colors[j];
                                 break;
                             }
@@ -1559,7 +1545,7 @@ OGDSM.visualization.prototype.changeWFSStyle = function (layerName, colors, type
             } else {
                 color = colors;
             }
-            if (type === 'polygon') {
+            if (defaults.type === 'polygon') {
                 styleCache[text] = [new ol.style.Style({
                     fill : new ol.style.Fill({
                         color : color
@@ -1576,7 +1562,7 @@ OGDSM.visualization.prototype.changeWFSStyle = function (layerName, colors, type
                         })
                     })
                 })];
-            } else if (type === 'point') {
+            } else if (defaults.type === 'point') {
                 styleCache[text] = [new ol.style.Style({
                     image : new ol.style.Circle({
                         radius : 5,
@@ -1595,16 +1581,15 @@ OGDSM.visualization.prototype.changeWFSStyle = function (layerName, colors, type
         }
         return styleCache[text];
     });
-    map.setOpacity(opt);
+    map.setOpacity(defaults.opt);
 };
 /**
- * Bar Chart Visualization based on D3.js
- * range length = color length
+ * 가로 막대 차트 시각화(Bar Chart Visualization based on D3.js)
  * @method barChart
- * @param {String} divId (Div name to visualize)
- * @param {Array} data (2 dim array about x, y - data is null 0 or -)
- * @param {Array} range (1 dim array about bar range) - option based )
- * @param {Array} color (1 dun array about bar fill color of range  - option ['#00000'])
+ * @param {String} divId - 막대 차트 시각화할 DIV 아이디 이름
+ * @param {Array} data - 데이터 값 2차원 배열 (0 : x, 1 : y)
+ * @param {Array} range - 데이터 범위 1차원 배열
+ * @param {Array} color - 데이터 색 범위 1차원 배열 default : #000000 (range와 배열 길이 같아야함)
  */
 OGDSM.visualization.prototype.barChart = function (divId, data, range, color) {
     'use strict';
@@ -1688,462 +1673,74 @@ OGDSM.visualization.prototype.barChart = function (divId, data, range, color) {
         });
 };
 
-/*
-OGDSM.visualization.prototype.changeWFSzIndex = function (layerName, color, type, zIndex) {
-    'use strict';
-    var map = this.layerCheck(layerName);
-    if (map === false) {
-        return -1;
-    }
-
-    console.log(layerName + ' ' + zIndex);
-    map.setStyle(function (f, r) {
-        var style = null;
-        if (type === 'polygon') {
-            style = [new ol.style.Style({
-                fill : new ol.style.Fill({
-                    color : color
-                }),
-                stroke : new ol.style.Stroke({
-                    color : '#00000',
-                    width : 1
-                }),
-                zIndex : zIndex
-            })];
-
-        } else if (type === 'point') {
-            style = [new ol.style.Style({
-                image : new ol.style.Circle({
-                    radius : 5,
-                    fill : new ol.style.Fill({
-                        color : color
-                    }),
-                    stroke : new ol.style.Stroke({
-                        color : '#000000',
-                        width : 1
-                    })
-                }),
-                zIndex : zIndex
-            })];
-
-        }
-        return style;
-    });
-};
-*/
-
 /** GeoServer, Public data, VWorld Connect Class **/
 /*jslint devel: true, vars : true */
 /*global $, jQuery, ol, OGDSM*/
 OGDSM.namesapce('externalConnection');
 (function (OGDSM) {
     'use strict';
-    var values = [], responseData = null, serviceFunc = null;
     /**
-     * externalConnection Class
-     * vworldWMS address http://map.vworld.kr/js/wms.do
+     * 외부 데이터 접속 요청 객체
      * @class OGDSM.externalConnection
      * @constructor
-     * @param {String} serverName - External Server Name (vworldWMS/geoServer/publicData/airKorea)
-     * @param {String} addr option(default: null) - External Server Address
      */
-    OGDSM.externalConnection = function (name, addr) {
-        addr = (typeof (addr) !== 'undefined') ? addr : 'null';
-        this.serverName = name;
-        this.asyncValue = false;
-        if (name === 'vworldWMS') {
-            this.baseAddr = "http://map.vworld.kr/js/wms.do";
-        } else {
-            this.baseAddr = addr;
-        }
+    OGDSM.externalConnection = function () {
 
     };
     OGDSM.externalConnection.prototype = {
-        constructor : OGDSM.externalConnection,
-        /**
-         * Get external server parameter
-         * @method getValues
-         * @return {Array} values
-         */
-        getValues : function () {
-            return values;
-        },
-        /**
-         * Set external server parameter
-         * @method setValues
-         * @param {Array} data values
-         */
-        setValues : function (arr) {
-            values = arr;
-        },
-        /**
-         * Remove external server parameter
-         * @method removeValues
-         */
-        removeValues : function () {
-            values = [];
-        },
-        /**
-         * Get external server ajax result value
-         * @method getResponseData
-         * @return {JSON or Array} responseData
-         */
-        getResponseData : function () {
-            return responseData;
-        },
-        /**
-         * Set external server ajax result value
-         * @method setResponseData
-         * @param {JSON or Array} obj
-         */
-        setResponseData : function (obj) {
-            responseData = null;
-            responseData = obj;
-        },
-        /**
-         * Set external server sub name
-         * @method setSubName
-         * @param {String} name
-         */
-        setSubName : function (name) {
-            this.subName = name;
-        }
+        constructor : OGDSM.externalConnection
     };
     return OGDSM.externalConnection;
 }(OGDSM));
-/**
- * Change external server name and address
- * @method changeServer
- * @param {String} serverName - External Server Name (vworldWMS/geoServer/publicData/airKorea)
- * @param {String} addr option(default: null) - External Server Address
- */
-OGDSM.externalConnection.prototype.changeServer = function (name, addr) {
-    'use strict';
-    addr = (typeof (addr) !== 'undefined') ? addr : 'undefined';
-    this.serverName = name;
-    if (name === 'vworldWMS') {
-        this.baseAddr = "http://map.vworld.kr/js/wms.do";
-    } else {
-        this.baseAddr = addr;
-    }
-};
-/**
- * Setting data for connection
- * @method setData
- * @param {Array} arguments
- */
-OGDSM.externalConnection.prototype.setData = function () {
-    'use strict';
-    var parm, i, values;
-    parm = arguments;
-    this.removeValues();
-    values = this.getValues();
-    for (i = 0; i < parm.length; i += 1) {
-        values.push(parm[i]);
-    }
-    this.setValues(values);
-};
-
-
 
 /**
- * vworldWMS, geoServer(getLayers, WFS), publicData(environment) data loading
- * @method dataLoad
- * @return {JSON or Array} save values(responseData) through setResponseData()
- */
-OGDSM.externalConnection.prototype.dataLoad = function () {
-    'use strict';
-    var resultData = null,
-        jsonData = null,
-        values = this.getValues(),
-        setResponseData = this.setResponseData;
-    if (this.serverName === 'vworldWMS') {
-        if (values.length === 3) {
-            resultData = new ol.layer.Tile({
-                title : this.serverName,
-                source : new ol.source.TileWMS(({
-                    url : this.baseAddr,
-                    params : {
-                        apiKey : values[0],
-                        domain : values[1],
-                        LAYERS : values[2],
-                        STYLES : values[2],
-                        FORMAT : 'image/png',
-                        //CRS : 'EPSG:900913',
-                        CRS : 'EPSG:3857',
-                        EXCEPTIONS : 'text/xml',
-                        TRANSPARENT : true
-                    }
-                }))
-            });
-            setResponseData(resultData);
-        } else {
-            console.log("Not check out data values");
-        }
-    } else if (this.serverName === 'geoServer') {
-        if (this.subName === 'undefined') {
-            console.log('Please setting subName');
-            return false;
-        } else if (this.subName === 'getLayers') {
-            jsonData = {WorkspaceName : values[0] };
-            $.ajax({
-                type : 'POST',
-                url : this.baseAddr,
-                crossDomain: true,
-    //            async : this.asyncValue,
-                data : JSON.stringify(jsonData),
-                contentType : "application/json;charset=UTF-8",
-                dataType : 'json',
-                success : function (msg) {
-                    resultData = msg;
-                    setResponseData(resultData.data);
-                },
-                error : function (e) {
-                    console.log(e);
-                }
-            });
-
-        } else if (this.subName === 'WFS') {//workspace, layerName
-            console.log(values[0] + ', ' + values[1] + ',' + values[2]);
-            resultData = this.geoServerWFS(this.baseAddr, values[0], values[1], values[2]);
-            setResponseData(resultData);
-        }
-    } else if (this.serverName === 'publicData') {
-        if (this.subName === 'TimeAverageAirQuality' ||
-                this.subName === 'RealtimeRoadsideStation' ||
-                this.subName === 'ArpltnInforInqireSvc') {
-            this.publicDataEnv(values[0], values[1], values[2], values[3]);
-        }
-    }
-
-    if (this.getResponseData() === null) {
-        return false;
-    } else {
-        return true;
-    }
-};
-/**
- * GeoServer WFS data load (OpenLayers3 ol.source.ServerVector)
- * @method geoServerWFS
- * @param {String} addr - GeoServer Address
- * @param {String} ws - GeoServer Workspace
- * @param {String} name - GeoServer Layer Name
- * @param {String} type - GeoServer Layer Type (Default : polygon)
- * @return {ol.source.ServerVector} vectorSource - OpenLayers3 Vector Object
- */
-OGDSM.externalConnection.prototype.geoServerWFS = function (addr, ws, name, type) {
-    type = (typeof (type) !== 'undefined') ? type : 'polygon';
-    var vectorSource, styles, resultData;
-    vectorSource = new ol.source.ServerVector({
-        format: new ol.format.GeoJSON(),
-        loader: function (extent, resolution, projection) {
-            var fullAddr = addr + '/geoserver/wfs?service=WFS&' +
-                'version=1.1.0&request=GetFeature' +
-                '&typeNames=' + ws + ':' + name +
-                '&outputFormat=text/javascript&format_options=callback:loadFeatures' +
-                '&srsname=' + 'EPSG:3857' + '&bbox=' + extent.join(',') + ',' + 'EPSG:3857';
-            $.ajax({
-                url : fullAddr,
-                dataType: 'jsonp'
-            });
-        },
-        strategy: ol.loadingstrategy.createTile(new ol.tilegrid.XYZ({
-            maxZoom: 19
-        })),
-        projection: 'EPSG:3857'
-    });
-    if (type === 'polygon') {
-        styles = [
-            new ol.style.Style({
-                fill: new ol.style.Fill({
-                    color: '#ff0000'
-                }),
-                stroke: new ol.style.Stroke({
-                    color: '#000000',
-                    width: 1
-                })
-            })
-        ];
-    } else if (type === 'point') {
-        styles = [
-            new ol.style.Style({
-                image : new ol.style.Circle({
-                    radius : 5,
-                    fill : new ol.style.Fill({color : '#ff0000'}),
-                    stroke : new ol.style.Stroke({color : '#ff0000', width : 1})
-                })
-            })
-        ];
-    }
-    loadFeatures = function (response) {
-        vectorSource.addFeatures(vectorSource.readFeatures(response));
-    };
-    resultData = new ol.layer.Vector({
-        title : name,
-        source : vectorSource,
-        style: styles
-    });
-    return resultData;
-};
-/**
- * Get Environment Data (Seoul Open Data and Public Data Portal)
- * @method publicDataEnv
- * @param {String} apikey - Key Value
- * @param {String} envType - Environment Value (Seoul : PM10, PM25, CO, NO2, O3, SO2   Public : pm10value, covalue, no2value, o3value, so2value
- * @param {String} dateOrArea (option) - environment date or area
- * @param {String} time (option) - environment time
- * @return {JSON} save values(responseData) through setResponseData()
- */
-OGDSM.externalConnection.prototype.publicDataEnv = function (apikey, envType, dateOrArea, time) {
-    'use strict';
-    dateOrArea = (typeof (dateOrArea) !== 'undefined') ? dateOrArea : 'null';
-    time = (typeof (time) !== 'undefined') ? time : 'null';
-
-    var colorRange =
-        ["#0090ff", "#008080", "#4cff4c", "#99ff99", "#FFFF00", "#FFFF99", "#FF9900", "#FF0000"],
-        range = [],
-        jsonData = "",
-        setResponseData = this.setResponseData;
-    $("#setting").popup("close");
-    if (this.subName === 'TimeAverageAirQuality') { //envType add... server change...
-        jsonData = '{"serviceName":"' + this.subName + '",' +
-            ' "keyValue":"' + apikey + '",' +
-            '"dateValue":' + '"' + dateOrArea + '",' +
-            '"envType":' + '"' + envType + '",' +
-            '"timeValue":' + '"' + time + '"}';
-
-    } else if (this.subName === 'ArpltnInforInqireSvc') {
-        jsonData = '{"serviceName":"' + this.subName + '",' +
-            ' "keyValue":"' + apikey + '",' +
-            '"areaType":' + '"' + encodeURIComponent(dateOrArea) + '",' +
-            '"envType":' + '"' + envType + '"}';
-    }
-    console.log(this.baseAddr);
-    jsonData = JSON.parse(jsonData);
-    $.ajax({
-        type : 'POST',
-        url : this.baseAddr,
-        data : JSON.stringify(jsonData),
-        async : this.asyncValue,
-        contentType : "application/json;charset=UTF-8",
-        dataType : 'json',
-        success : function (msg) {
-            var resultData = msg;
-            setResponseData(JSON.parse(resultData.data));
-
-
-        },
-        error : function (e) {
-            console.log(e);
-        }
-    });
-};
-/*
- *
- *
- *
- */
-OGDSM.externalConnection.prototype.seoulEnvironmentLoad = function (addr, apiKey, envType, date, time) {
-    'use strict';
-    var parm = '{"serviceName":"TimeAverageAirQuality",' +
-        '"keyValue":"' + apiKey + '",' +
-        '"dateValue":"' + date + '", ' +
-        '"envType":' + '"' + envType + '",' +
-        '"timeValue":"' + time + '"} ';
-    var resultData;
-    parm = JSON.parse(parm);
-    console.log(parm);
-    $.mobile.loading('show', {
-        text : 'Loading',
-        textVisible : 'true',
-        theme : 'c',
-        textonlt : 'false'
-    });
-    $.ajax({
-        type : 'POST',
-        url : addr,
-        data : JSON.stringify(parm),
-        async : false,
-        contentType : "application/json;charset=UTF-8",
-        dataType : 'json',
-        success : function (msg) {
-            resultData = JSON.parse(msg.data);
-            $.mobile.loading('hide');
-        },
-        error : function (e) {
-            console.log(e);
-        }
-    });
-    return resultData;
-};
-
-
-/**
- * vworldWMS data loading
- * @method vworldWMSLoad
- * @param
- * @param
- * @param
- * @return {JSON or Array} save values(responseData) through setResponseData()
- */
-OGDSM.externalConnection.prototype.vworldWMSLoad = function (apiKey, domain, data) {
-    'use strict';
-    data = data.join(',');
-    var resultData = new ol.layer.Tile({
-        title : this.serverName,
-        source : new ol.source.TileWMS(({
-            url : this.baseAddr,
-            params : {
-                apiKey : apiKey,
-                domain : domain,
-                LAYERS : data,
-                STYLES : data,
-                FORMAT : 'image/png',
-                CRS : 'EPSG:900913',
-                EXCEPTIONS : 'text/xml',
-                TRANSPARENT : true
-            }
-        }))
-    });
-    return resultData;
-}; //SLD_BODY
-
-
-/**
- * GeoServer WFS data load (OpenLayers3 ol.source.GeoJSON)
+ * GeoServer WFS 데이터 요청 (OpenLayers3 ol.source.GeoJSON)
  * @method geoServerWFSLoad
- * @param {OGDSM Obj} obj - OpenGDS Mobile visualization object
- * @param {String} addr - GeoServer address
- * @param {String} workspace - GeoServer workspace name
- * @param {String} name - GeoServer WFS object name
- * @param {String} type - Object type (polygon | point)
- * @param {String} color - color ( rgba(0,0,0,0) )
+ * @param {OGDSM Obj} obj - OpenGDS Mobile 시각화 객체
+ * @param {String} addr - 주소
+ * @param {String} workspace - 워크스페이스
+ * @param {String} layerName - 레이어 이름
+ * @param {JSON Object} options - 옵션 JSON 객체 키 값{type='polygon', color='rgba(0, 0, 0, 0.0)', callback : function () {}}
+  type(String) : 레이어 타입( polygon | point)
+  color(String) : 색상 rgba
+  callback(Function) : 요청 후 색상 변경시 콜백 함수
  */
-OGDSM.externalConnection.prototype.geoServerWFSLoad = function (obj, addr, workspace, name, type, color) {
+OGDSM.externalConnection.prototype.geoServerWFSLoad = function (obj, addr, workspace, layerName, options) {
     'use strict';
-    color = (typeof (color) !== 'undefined') ? color : 'rgba(0, 0, 0, 0.0)';
-    var fullAddr = addr + '/geoserver/wfs?service=WFS&version=1.1.0&request=GetFeature&typeNames=' + workspace + ':' + name +
+    options = (typeof (options) !== 'undefined') ? options : {};
+    var fullAddr = addr + '/geoserver/wfs?service=WFS&version=1.1.0&request=GetFeature&typeNames=' + workspace + ':' + layerName +
         '&outputFormat=json&srsname=' + obj.baseProj;
-    var objStyles;
-
-    if (type === 'polygon') {
+    var objStyles, name;
+    var defaults = {
+        type : 'polygon',
+        color : 'rgba(0, 0, 0, 0.0)',
+        callback : function (wfslayer) {}
+    };
+    for (name in defaults) {
+        if (defaults.hasOwnProperty(name)) {
+            if (options.hasOwnProperty(name)) {
+                defaults[name] = options[name];
+            }
+        }
+	}
+    if (defaults.type === 'polygon') {
         objStyles = [
             new ol.style.Style({
                 fill : new ol.style.Fill({
-                    color : color
+                    color : defaults.color
                 }),
                 stroke : new ol.style.Stroke({
                     color : 'rgba(0, 0, 0, 1.0)',
                     width : 1
                 })
             })];
-    } else if (type === 'point') {
+    } else if (defaults.type === 'point') {
         objStyles = [
             new ol.style.Style({
                 image : new ol.style.Circle({
                     radius : 5,
                     fill : new ol.style.Fill({
-                        color : color
+                        color : defaults.color
                     }),
                     stroke : new ol.style.Stroke({
                         color : 'rgba(0, 0, 0, 1.0)',
@@ -2166,32 +1763,226 @@ OGDSM.externalConnection.prototype.geoServerWFSLoad = function (obj, addr, works
         dataType : 'json',
         success : function (msg) {
             var wfsLayer = new ol.layer.Vector({
-                title : name,
+                title : layerName,
                 source : new ol.source.GeoJSON({
                     object: msg
                 }),
                 style : objStyles
             });
-            obj.addMap(wfsLayer, type);
+            obj.addMap(wfsLayer, defaults.type);
             $.mobile.loading('hide');
+            defaults.callback(wfsLayer);
         },
         error : function (e) {
             console.log(e);
         }
     });
 };
+/**
+ * GeoServer WFS 요청 (OpenLayers3 ol.source.ServerVector)
+ * @method geoServerWFS
+ * @param {String} addr - 주소
+ * @param {String} ws - 워크스페이스
+ * @param {String} layerName - 레이어 이름
+ * @param {JSON Object} options - 옵션 JSON 객체 키 값{type='polygon', epsg='epsg3857'}
+  type(String) : 레이어 타입( polygon | point)
+  epsg(String) : EPSG
+ * @return {ol.layer.Vector} vectorSource - OpenLayers3 백터 객체
+ */
+OGDSM.externalConnection.prototype.geoServerWFS = function (addr, ws, layerName, options) {
+    options = (typeof (options) !== 'undefined') ? options : {};
+    var vectorSource, styles, resultData, name;
 
+    var defaults = {
+        type : 'polygon',
+        epsg : 'epsg3857'
+    };
+    for (name in defaults) {
+        if (defaults.hasOwnProperty(name)) {
+            if (options.hasOwnProperty(name)) {
+                defaults[name] = options[name];
+            }
+        }
+	}
+
+    vectorSource = new ol.source.ServerVector({
+        format: new ol.format.GeoJSON(),
+        loader: function (extent, resolution, projection) {
+            var fullAddr = addr + '/geoserver/wfs?service=WFS&' +
+                'version=1.1.0&request=GetFeature' +
+                '&typeNames=' + ws + ':' + layerName +
+                '&outputFormat=text/javascript&format_options=callback:loadFeatures' +
+                '&srsname=' + defaults.epsg + '&bbox=' + extent.join(',') + ',' + defaults.epsg;
+            $.ajax({
+                url : fullAddr,
+                dataType: 'jsonp'
+            });
+        },
+        strategy: ol.loadingstrategy.createTile(new ol.tilegrid.XYZ({
+            maxZoom: 19
+        })),
+        projection: 'EPSG:3857'
+    });
+    if (defaults.type === 'polygon') {
+        styles = [
+            new ol.style.Style({
+                fill: new ol.style.Fill({
+                    color: '#ff0000'
+                }),
+                stroke: new ol.style.Stroke({
+                    color: '#000000',
+                    width: 1
+                })
+            })
+        ];
+    } else if (defaults.type === 'point') {
+        styles = [
+            new ol.style.Style({
+                image : new ol.style.Circle({
+                    radius : 5,
+                    fill : new ol.style.Fill({color : '#ff0000'}),
+                    stroke : new ol.style.Stroke({color : '#ff0000', width : 1})
+                })
+            })
+        ];
+    }
+    loadFeatures = function (response) {
+        vectorSource.addFeatures(vectorSource.readFeatures(response));
+    };
+    resultData = new ol.layer.Vector({
+        title : layerName,
+        source : vectorSource,
+        style: styles
+    });
+    return resultData;
+};
+/**
+ * VWorld WMS 데이터 요청
+ * @method vworldWMSLoad
+ * @param {String} apiKey - api 키
+ * @param {String} domain - 도메인
+ * @param {String} data - WMS 레이어 이름
+ * @return {ol.layer.Tile} OpenLayers 타일 객체
+ */
+OGDSM.externalConnection.prototype.vworldWMSLoad = function (apiKey, domain, data) {
+    'use strict';
+    data = data.join(',');
+    var resultData = new ol.layer.Tile({
+        title : 'VWorldWMS',
+        source : new ol.source.TileWMS(({
+            url : 'http://map.vworld.kr/js/wms.do',
+            params : {
+                apiKey : apiKey,
+                domain : domain,
+                LAYERS : data,
+                STYLES : data,
+                FORMAT : 'image/png',
+                CRS : 'EPSG:900913',
+                EXCEPTIONS : 'text/xml',
+                TRANSPARENT : true
+            }
+        }))
+    });
+    return resultData;
+};
+
+/**
+ * 서울 열린 데이터 광장 환경 데이터 요청
+ * @method seoulEnvironmentLoad
+ * @param {String} addr - 주소
+ * @param {String} apiKey - api 키
+ * @param {String} envType - 환경 정보 이름
+ * @param {date} date - 날짜
+ * @param {time} time - 시간
+ * @param {function} callback - 성공 콜백 함수
+ */
+OGDSM.externalConnection.prototype.seoulEnvironmentLoad = function (addr, apiKey, envType, date, time, callback) {
+    'use strict';
+    var parm = '{"serviceName":"TimeAverageAirQuality",' +
+        '"keyValue":"' + apiKey + '",' +
+        '"dateValue":"' + date + '", ' +
+        '"envType":' + '"' + envType + '",' +
+        '"timeValue":"' + time + '"} ';
+    var resultData;
+    parm = JSON.parse(parm);
+    console.log(parm);
+    $.mobile.loading('show', {
+        text : 'Loading',
+        textVisible : 'true',
+        theme : 'c',
+        textonlt : 'false'
+    });
+    $.ajax({
+        type : 'POST',
+        url : addr,
+        data : JSON.stringify(parm),
+        contentType : "application/json;charset=UTF-8",
+        dataType : 'json',
+        success : function (msg) {
+            resultData = JSON.parse(msg.data);
+            $.mobile.loading('hide');
+            callback(resultData);
+        },
+        error : function (e) {
+            console.log(e);
+            $.mobile.loading('hide');
+        }
+    });
+};
+
+
+/**
+ * 데이터 포털 환경 데이터 요청
+ * @method seoulEnvironmentLoad
+ * @param {String} addr - 주소
+ * @param {String} apiKey - api 키
+ * @param {String} envType - 환경 정보 이름
+ * @param {date} date - 날짜
+ * @param {time} time - 시간
+ * @param {function} callback - 성공 콜백 함수
+ */
+OGDSM.externalConnection.prototype.dataPortalEnvironmentLoad = function (addr, apiKey, envType, area, callback) {
+    'use strict';
+    var parm = '{"serviceName":"ArpltnInforInqireSvc",' +
+            ' "keyValue":"' + apiKey + '",' +
+            '"areaType":' + '"' + encodeURIComponent(area) + '",' +
+            '"envType":' + '"' + envType + '"}';
+    var resultData;
+    parm = JSON.parse(parm);
+    console.log(parm);
+    $.mobile.loading('show', {
+        text : 'Loading',
+        textVisible : 'true',
+        theme : 'c',
+        textonlt : 'false'
+    });
+    $.ajax({
+        type : 'POST',
+        url : addr,
+        data : JSON.stringify(parm),
+        contentType : "application/json;charset=UTF-8",
+        dataType : 'json',
+        success : function (msg) {
+            resultData = JSON.parse(msg.data);
+            $.mobile.loading('hide');
+            callback(resultData);
+        },
+        error : function (e) {
+            console.log(e);
+            $.mobile.loading('hide');
+        }
+    });
+};
 /*jslint devel: true, vars : true */
 /*global $, jQuery, ol, OGDSM*/
 OGDSM.namesapce('eGovFrameUI');
 (function (OGDSM) {
     'use strict';
     /**
-     * 전자정부표준프레임워크 UX 컴포넌트 자동 생성 객체
-     * e-Goverement Framework UX Component Automatic Create Class
+     * 전자정부표준프레임워크 UX 컴포넌트 자동 생성 객체(e-Goverement Framework UX Component Automatic Create Class)
      * @class OGDSM.eGovFramUI
      * @constructor
-     * @param {String} theme - eGovframework theme a~g (default c)
+     * @param {String} theme - eGovframework 테마 a~g (default c)
      */
     OGDSM.eGovFrameUI = function (theme) {
         theme = (typeof (theme) !== 'undefined') ? theme : null;
@@ -2209,16 +2000,18 @@ OGDSM.namesapce('eGovFrameUI');
 
 
 /**
- * 버튼 자동 생성
- * Auto Create about Button.
+ * 버튼 자동 생성( Auto Create about Button)
  * @method autoButton
- * @param {String} divId - root div id about HTML tag attribute [상위 DIV 아이디]
- * @param {String} linkId - link a id about HTML tag attribute  [생성될 버튼 아이디]
- * @param {String} buttonTitle - button title [버튼 이름]
- * @param {String} url - link url
- * @param {Array} options (option) - theme, corners, inline, mini
-                                     [values : 'a'~'g'(default:this.dataTheme), true(default) | false, true | false(default), true | false(default)]
- * @return {jQuery Object} user interface id object [제이쿼리 아이디 객체]
+ * @param {String} divId - 최상위 DIV 아이디 이름
+ * @param {String} linkId - 생성될 버튼 아이디 이름
+ * @param {String} buttonTitle - 버튼 이름
+ * @param {String} url - 링크 주소
+ * @param {JSON Object} options - 옵션 JSON 객체 키 값{theme=this.dataTheme, corners=true, inline=false, mini=false}
+  theme(String) : 테마
+  corners(Boolean) : 모서리 둥글게 여부
+  inline(Boolean) : 가로 정렬 여부
+  mini(Boolean) : 버튼 크기
+ * @return {jQuery Object} 제이쿼리 아이디 버튼 객체
  */
 OGDSM.eGovFrameUI.prototype.autoButton = function (rootDivId, linkId, buttonTitle, url, options) {
     'use strict';
@@ -2249,22 +2042,21 @@ OGDSM.eGovFrameUI.prototype.autoButton = function (rootDivId, linkId, buttonTitl
 };
 
 /**
- * 체크박스 자동 생성
- * Auto Create about Check Box.
+ * 체크박스 자동 생성(Auto Create about Check Box)
  * @method autoCheckBox
- * @param {String} divId - root div id about HTML tag attribute [상위 DIV 아이디]
- * @param {String} chkId - checkbox ids about HTML tag attribute  [생성될 체크박스 아이디]
- * @param {String} chkName - checkbox name [체크박스 이름]
- * @param {Array} labels - checkbox label names [체크박스 라벨 이름]
- * @param {Array) values - checkbox values [체크박스 값]
- * @param {Array} options (option) - theme, horizontal
-                                     [values : 'a'~'g'(default:this.dataTheme), true(default) | false(default)]
-                                     [ 배열인자 옵션: 수직,수평(0), 테마(1) ]
- * @return {jQuery Object} user interface name object [제이쿼리 이름 객체]
+ * @param {String} divId - 최상위 DIV 아이디 이름
+ * @param {String} chkId - 생성될 체크박스 아이디 이름
+ * @param {String | Array} labels - 체크박스 라벨
+ * @param {String | Array) values - 체크박스 값
+ * @param {JSON Object} options - 옵션 JSON 객체 키 값{theme=this.dataTheme, horizontal=true, checkName : chkId + 'Name'}
+  theme(String) : 테마
+  horizontal(Boolean) : 체크박스 수평 여부
+  checkName(String) : 체크박스 그룹 이름
+ * @return {jQuery Object} 제이쿼리 체크박스 그룹 이름 객체
  */
 OGDSM.eGovFrameUI.prototype.autoCheckBox = function (rootDivId, chkId, labels, values, options) {
     'use strict';
-    options = (typeof (options) !== 'undefined') ? options : null;
+    options = (typeof (options) !== 'undefined') ? options : {};
     var rootDiv = $('#' + rootDivId),
         html = '',
         i = 0,
@@ -2306,21 +2098,21 @@ OGDSM.eGovFrameUI.prototype.autoCheckBox = function (rootDivId, chkId, labels, v
 };
 
 /**
- * 라디오 박스 자동 생성 (수정)
- * Auto Create about Radio Box.
+ * 라디오 박스 자동 생성(Auto Create about Radio Box)
  * @method autoRadioBox
- * @param {String} divId - root div id about HTML tag attribute [상위 DIV 아이디]
- * @param {String} radioId - radiobox ids about HTML tag attribute  [생성될 라디오박스 아이디]
- * @param {String} radioName - radiobox name [라디오박스 이름]
- * @param {Array} labels - radiobox label names [라디오박스 라벨 이름]
- * @param {Array) values - radiobox values [라디오박스 값]
- * @param {Array} options (option) - radioName, horizontal, theme
-                                     [values : radioId + 'Name' (default), true| false(default), 'a'~'g'(default: this.dataTheme)]
- * @return {jQuery Object} user interface name object [제이쿼리 이름 객체]
+ * @param {String} divId - 최상위 DIV 아이디 이름
+ * @param {String} radioId - 생성될 라디오박스 아이디 이름
+ * @param {String | Array} labels - 라디오박스 라벨
+ * @param {String | Array) values - 라디오박스 값
+ * @param {JSON Object} options - 옵션 JSON 객체 키 값{theme=this.dataTheme, horizontal=true, radioName : radioId + 'Name'}
+  theme(String) : 테마
+  horizontal(Boolean) : 라디오박스 수평 여부
+  radioName(String) : 라디오박스 그룹 이름
+ * @return {jQuery Object} 제이쿼리 그룹 이름 객체
  */
 OGDSM.eGovFrameUI.prototype.autoRadioBox = function (rootDivId, radioId, labels, values, options) {
     'use strict';
-    options = (typeof (options) !== 'undefined') ? options : null;
+    options = (typeof (options) !== 'undefined') ? options : {};
     var rootDiv = $('#' + rootDivId),
         html = '<fieldset data-role="controlgroup" style="margin:0px; align:center;"',
         optionName = ['data-type', 'data-theme'],
@@ -2368,14 +2160,17 @@ OGDSM.eGovFrameUI.prototype.autoRadioBox = function (rootDivId, radioId, labels,
  * 셀렉트 자동 생성
  * Auto Create about Select.
  * @method autoSelect
- * @param {String} divId - root div id about HTML tag attribute [상위 DIV 아이디]
- * @param {String} selectId - radiobox ids about HTML tag attribute  [생성될 버튼 아이디]
- * @param {String} selectName - radiobox name [셀렉트 이름]
- * @param {Array} text - radiobox label names [셀렉트 텍스트]
- * @param {Array) values - radiobox values [셀렉트 값]
- * @param {Array} options (option) - firstName, theme, corners, inline
-                                     [values : ''(default), 'a'~'g'(default: this.dataTheme), true(default) | false, true | false(default)]
- * @return {jQuery Object} user interface id object [제이쿼리 아이디 객체]
+ * @param {String} divId - 최상위 DIV 아이디 이름
+ * @param {String} selectId - 생성될 선택 아이디 이름
+ * @param {String | Array} text - 선택 라벨 텍스트
+ * @param {String | Array) values - 선택 값
+ * @param {JSON Object} options - 옵션 JSON 객체 키 값{firstName='', theme=this.dataTheme, corners=true, inline=false, selected:0}
+  firstName(String) : 첫번째 값
+  theme(String) : 테마
+  corners(Boolean) : 테두리 둥글게 여부
+  inline(Boolean) : 가로 정렬 여부
+  selected(Boolean) : 처음 선택된 인덱스 값
+ * @return {jQuery Object} 제이쿼리 그룹 이름 객체
  */
 OGDSM.eGovFrameUI.prototype.autoSelect = function (rootDivId, selectId, selectName, text, values, options) {
     'use strict';
@@ -2411,52 +2206,52 @@ OGDSM.eGovFrameUI.prototype.autoSelect = function (rootDivId, selectId, selectNa
 };
 
 /**
- * 스위치 자동 생성 (수정)
- * Auto Create about Switch based on Select.
+ * 스위치 자동 생성(Auto Create about Switch based on Select)
  * @method autoSelect
- * @param {String} divId - root div id about HTML tag attribute [상위 DIV 아이디]
- * @param {String} switchId - radiobox ids about HTML tag attribute  [생성될 스위치 아이디]
- * @param {String} switchName - radiobox name [셀렉트 이름]
- * @param {Array} options (option) - theme (0), track theme (1)
-                                     [values : 'a'~'g'(default: this.dataTheme), 'a'~'g'(default: this.dataTheme)]
-                                     [ 배열인자 옵션: 테마(0), 트랙 테마(1)]
- * @return {jQuery Object} user interface id object [제이쿼리 아이디 객체]
+ * @param {String} divId - 최상위 DIV 아이디 이름
+ * @param {String} switchId - 생성될 스위치 아이디 이름
+ * @param {JSON Object} options - 옵션 JSON 객체 키 값{theme=this.dataTheme, track_theme=this.dataTheme, switchName=switchId+'Name'}
+  theme(String) : 테마
+  track-theme(String) : 버튼 테마
+  switchName(String) : 스위치 그룹 이름
+ * @return {jQuery Object} 제이쿼리 아이디 객체
  */
 OGDSM.eGovFrameUI.prototype.autoSwitch = function (rootDivId, switchId, switchName, options) {
     'use strict';
-    options = (typeof (options) !== 'undefined') ? options : null;
-    var rootDiv = $('#' + rootDivId),
-        html = '<select name="' + switchName + '" id="' + switchId + '" data-role="slider" data-inline="true" ',
+    options = (typeof (options) !== 'undefined') ? options : {};
+    var rootDiv = $('#' + rootDivId), name,
+        html = '',
         optionName = ['data-theme', 'data-track-theme'],
         optionData = [this.dataTheme, this.dataTheme],
         i = 0;
 
-    if (options !== null) {
-        if (typeof (options[1]) !== 'undefined') {
-            optionData[1] = options[1];
+    var defaults = {
+        theme : this.dataTheme,
+        track_theme : this.dataTheme,
+        switchName : switchId + 'Name'
+    };
+    for (name in defaults) {
+        if (defaults.hasOwnProperty(name)) {
+            if (options.hasOwnProperty(name)) {
+                defaults[name] = options[name];
+            }
         }
-        optionData[0] = options[0];
-        for (i = 0; i < options.length; i += 1) {
-            html += optionName[i] + '="' + optionData[i] + '" ';
-        }
-    }
-    html += '>';
+	}
+    html = '<select name="' + defaults.switchName + '" id="' + switchId + '" data-theme="' + defaults.theme +
+           '" data-track-theme="' + defaults.track_theme + '" data-role="slider" data-inline="true">';
     html += '<option value="off">Off</option>';
     html += '<option value="on">On</option>';
     html += '</select>';
     rootDiv.append(html);
     rootDiv.trigger('create');
     return $('#' + switchId);
-
-
-
 };
 
 /**
- * User Interface Create about time input (Time Input).
+ * 시간 폼 태그 생성 (User Interface Create about time input)
  * @method timeInput
- * @param {String} divId - div id about HTML tag attribute
- * @return {jQuery Object} User Interface Time Input Object (Time)
+ * @param {String} divId - 최상위 DIV 아이디 이름
+ * @return {jQuery Object} 제이쿼리 아이디 이름 객체
  */
 OGDSM.eGovFrameUI.prototype.timeInput = function (divId) {
     'use strict';
@@ -2469,10 +2264,10 @@ OGDSM.eGovFrameUI.prototype.timeInput = function (divId) {
 };
 
 /**
- * User Interface Create about visualization type (Date Input).
+ * 날짜 폼 태그 생성(User Interface Create about visualization type)
  * @method DateInput
- * @param {String} divId - div id about HTML tag attribute
- * @return {jQuery Object} User Interface Date Input Object (Date YYYY/MM/DD)
+ * @param {String} divId - 최상위 DIV 아이디 이름
+ * @return {jQuery Object} 제이쿼리 아이디 이름 객체 (Date YYYY/MM/DD)
  */
 OGDSM.eGovFrameUI.prototype.dateInput = function (divId) {
     'use strict';
@@ -2483,15 +2278,14 @@ OGDSM.eGovFrameUI.prototype.dateInput = function (divId) {
     rootDiv.trigger("create");
     return $('#dateValue');
 };
-/**************Custom UI Create *******************/
 
+/**************Custom UI Create *******************/
 /**
- * 배경 맵 선택 사용자 인터페이스 자동 생성 (라디오 박스)
- * Auto Create about Map Type User Interface.
+ * 배경 맵 선택 사용자 인터페이스 자동 생성: 라디오 박스 (Auto Create about Map Type User Interface)
  * @method baseMapRadioBox
- * @param {OGDSM Object} OGDSMObj - OpenGDS Mobile Visualization Object [OpenGDS모바일 시각화 객체]
- * @param {String}       rootDiv - Root div id [상위 DIV 아이디]
- * @param {Array}        options - Map type to support [제공할 지도 타입]
+ * @param {OGDSM Object} OGDSMObj - OpenGDS모바일 시각화 객체
+ * @param {String}       rootDiv - 최상위 DIV 아이디 이름
+ * @param {Array}        options - 제공할 지도 타입
  */
 OGDSM.eGovFrameUI.prototype.baseMapRadioBox = function (OGDSMObj, rootDiv, options) {
 //var mapRadioNameObj = uiTest.autoRadioBox('mapSelect','mapType', 'radioMap', ['OSM','VWorld'], ['OSM','VWorld'], ['h']);
@@ -2510,15 +2304,13 @@ OGDSM.eGovFrameUI.prototype.baseMapRadioBox = function (OGDSMObj, rootDiv, optio
     });
 };
 /**
- * 배경 맵 선택 사용자 인터페이스 자동 생성 (셀렉트)
- * Auto Create about Map Type User Interface.
+ * 배경 맵 선택 사용자 인터페이스 자동 생성: 셀렉트(Auto Create about Map Type User Interface)
  * @method baseMapSelect
- * @param {OGDSM Object} OGDSMObj - OpenGDS Mobile Visualization Object [OpenGDS모바일 시각화 객체]
- * @param {String}       rootDiv - Root div id [상위 DIV 아이디]
- * @param {Array}        options - Map type to support [제공할 지도 타입]
+ * @param {OGDSM Object} OGDSMObj - OpenGDS모바일 시각화 객체
+ * @param {String}       rootDiv - 최상위 DIV 아이디 이름
+ * @param {Array}        options - 제공할 지도 타입
  */
 OGDSM.eGovFrameUI.prototype.baseMapSelect = function (OGDSMObj, rootDiv, options) {
-//var mapRadioNameObj = uiTest.autoRadioBox('mapSelect','mapType', 'radioMap', ['OSM','VWorld'], ['OSM','VWorld'], ['h']);
     'use strict';
     options = (typeof (options) !== 'undefined') ? options : null;
     var mapRadioNameObj,
@@ -2539,11 +2331,11 @@ OGDSM.eGovFrameUI.prototype.baseMapSelect = function (OGDSMObj, rootDiv, options
 };
 
 /**
- * VWorld WMS API List (Using autoSelect).
+ * 브이월드 WMS API 리스트 요청 인터페이스(VWorld WMS API List).
  * @method vworldWMSList
- * @param {String} divId - div id about HTML tag attribute
- * @param {String} theme - eGovframework theme a~g (default constructor)
- * @return {Array} User Interface selectbox Name, id array ('vworldWMSChk_1', 'vworldWMSChk_2', 'vworldWMSChk_3', 'vworldWMSChk_4', 'vworldWMSChk_5')
+ * @param {String} divId - 최상위 DIV 아이디 이름
+ * @param {String} theme - 테마 default : this.dataTheme
+ * @return {Array} 선택 박스 아이디 이름 배열 ('vworldWMSChk_1', 'vworldWMSChk_2', 'vworldWMSChk_3', 'vworldWMSChk_4', 'vworldWMSChk_5')
  */
 OGDSM.eGovFrameUI.prototype.vworldWMSList = function (divId, theme) {
     'use strict';
@@ -2731,6 +2523,13 @@ OGDSM.eGovFrameUI.prototype.vworldWMSList = function (divId, theme) {
     return selectName;
 };
 
+/**
+ * 서울 열린 데이터 광장 환경정보 요청 인터페이스
+ * @method seoulEnvironment
+ * @param {String} divId - 최상위 DIV 아이디 이름
+ * @param {String} theme - 테마 default : this.dataTheme
+ * @return {String} 생성된 객체 배열 [visualType, date, time, environmentType]
+ */
 OGDSM.eGovFrameUI.prototype.seoulEnvironment = function (divId, theme) {
     'use strict';
     theme = (typeof (theme) !== 'undefined') ? theme : this.dataTheme;
@@ -2747,130 +2546,61 @@ OGDSM.eGovFrameUI.prototype.seoulEnvironment = function (divId, theme) {
         visualType = this.autoRadioBox(divId, 'visualType', ['맵', '차트'], ['map', 'chart'], {horizontal : true}),
         date = this.dateInput(divId),
         time = this.timeInput(divId),
-        environmentType = this.autoRadioBox(divId, 'envType', environmentImages, environmentValues, {horizontal : true});
+        environmentType,
+        i;
+    for (i = 0; i < environmentValues.length; i += 3) {
+        environmentType = this.autoRadioBox(divId, 'areenvTypeaType',
+                                      [environmentImages[i], environmentImages[i + 1], environmentImages[i + 2]],
+                                      [environmentValues[i], environmentValues[i + 1], environmentValues[i + 2]],
+                                      {horizontal : true});
+    }
     return [visualType, date, time, environmentType];
 };
 
 
 /**
- * User Interface Create about visualization type (Radio Button).
- * @method visTypeRadio
- * @param {String} divId - div id about HTML tag attribute
- * @param {String} theme - eGovframework theme a~g (default constructor)
- * @return {String} User Interface Radio Button Name (visualType)
+ * 데이터 포털 환경정보 요청 인터페이스
+ * @method dataProtalEnvironment
+ * @param {String} divId - 최상위 DIV 아이디 이름
+ * @param {String} theme - 테마 default : this.dataTheme
+ * @return {String} 생성된 객체 배열 [visualType, areaType, environmentType]
  */
-OGDSM.eGovFrameUI.prototype.visTypeRadio = function (divId, theme) {
+OGDSM.eGovFrameUI.prototype.dataProtalEnvironment = function (divId, theme) {
     'use strict';
-    var radioTheme = (typeof (theme) !== 'undefined') ? theme : this.dataTheme,
-        rootDiv = $('#' + divId),
-        html = '<fieldset data-role="controlgroup" data-type="horizontal" class="egov-align-center">',
-        arr = ['map', 'chart'],
-        arrText = ['맵', '차트'],
-        i;
-    for (i = 0; i < arr.length; i += 1) {
-        html += '<input type="radio" name="visualType" class="custom" data-theme=' + radioTheme +
-								' id="id-' + arr[i] + '" value="' + arr[i] + '" ';
-        html += '>' + '<label for="id-' + arr[i] + '">' + arrText[i] + '</label>';
-    }
-    rootDiv.append(html);
-    rootDiv.trigger("create");
-    return 'visualType';
-};
+    theme = (typeof (theme) !== 'undefined') ? theme : this.dataTheme;
+    var i, environmentImages = [
+        '<img src="images/input_bt_pm10.png" width=30>',
+        '<img src="images/input_bt_pm25.png" width=30>',
+        '<img src="images/input_bt_so2.png" width=30>',
+        '<img src="images/input_bt_o3.png" width=30>',
+        '<img src="images/input_bt_no2.png" width=30>',
+        '<img src="images/input_bt_co.png" width=30>'
+    ],
+        environmentValues = ['pm10Value', 'pm25Value', 'so2value', 'o3Value', 'no2Value', 'coValue'],
+        areaTypes = ['인천', '서울', '경기', '강원', '충남', '세종', '충북', '대전', '경북', '전북', '대구', '울산', '전남', '광주', '경남', '부산', '제주'];
+    var rootDiv = $('#' + divId),
+        visualType = this.autoRadioBox(divId, 'visualType', ['맵', '차트'], ['map', 'chart'], {horizontal : true}),
+        areaRadio,
+        environmentType;
 
-/**
- * User Interface Create about Environment Type (Radio Button).
- * @method envTypeRadio
- * @param {String} divId - div id about HTML tag attribute
- * @param {String} provider - public data provider ('seoul' or 'public') (default : seoul)
- * @param {String} theme - eGovframework theme a~g (default constructor)
- * @return {String} User Interface Radio Button Name (envTypeRadio)
- */
-OGDSM.eGovFrameUI.prototype.envTypeRadio = function (divId, prov, theme) {
-    'use strict';
-    var provider = (typeof (prov) !== 'undefined') ? prov : "seoul",
-        radioTheme = (typeof (theme) !== 'undefined') ? theme : this.dataTheme,
-        rootDiv = $('#' + divId),
-        html = '<label for="envValue">환경정보:</label>' +
-            '<fieldset data-role="controlgroup" data-type="horizontal" class="egov-align-center">',
-        envTypes = ['pm10', 'pm25', 'so2', 'o3', 'no2', 'co'],
-        envTypeValues,
-        i;
-    if (provider === 'seoul') {
-        envTypeValues = ['PM10', 'PM25', 'SO2', 'O3', 'NO2', 'CO'];
-    } else if (provider === 'public') {
-        envTypeValues = ['pm10Value', 'pm25Value', 'so2Value', 'o3Value', 'no2Value', 'coValue'];
+    for (i = 0; i < areaTypes.length - 2; i += 3) {
+        areaRadio = this.autoRadioBox(divId, 'areaType',
+                                      [areaTypes[i], areaTypes[i + 1], areaTypes[i + 2]],
+                                      [areaTypes[i], areaTypes[i + 1], areaTypes[i + 2]],
+                                      {horizontal : true});
     }
-    for (i = 0; i < envTypes.length; i += 1) {
-        html += '<input type="radio" name="envTypeRadio" class="custom" data-theme=' + radioTheme +
-            ' id="id-' + envTypeValues[i] + '" value="' + envTypeValues[i] + '"/>' +
-            '<label for="id-' + envTypeValues[i] + '">' +
-            '<img src="images/input_bt_' + envTypes[i] + '.png" width=30>' +
-            '</label>';
-        if (i !== 0 && (i + 1) % 3 === 0) {
-            html += '</fieldset>' +
-                '<fieldset data-role="controlgroup" data-type="horizontal" class="egov-align-center">';
-        }
+    areaRadio = this.autoRadioBox(divId, 'areaType',
+                                  [areaTypes[areaTypes.length - 2], areaTypes[areaTypes.length - 1]],
+                                  [areaTypes[areaTypes.length - 2], areaTypes[areaTypes.length - 1]],
+                                  {horizontal : true});
+    for (i = 0; i < environmentValues.length; i += 3) {
+        environmentType = this.autoRadioBox(divId, 'areenvTypeaType',
+                                      [environmentImages[i], environmentImages[i + 1], environmentImages[i + 2]],
+                                      [environmentValues[i], environmentValues[i + 1], environmentValues[i + 2]],
+                                      {horizontal : true});
     }
-    rootDiv.append(html);
-    rootDiv.trigger("create");
-    return 'envTypeRadio';
+    return [visualType, areaRadio, environmentType];
 };
-/**
- * User Interface Create about Area Type (Radio Button).
- * @method areaTypeRadio
- * @param {String} divId - div id about HTML tag attribute
- * @param {String} theme - eGovframework theme a~g (default constructor)
- * @return {String} User Interface Radio Button Attribute Name Value (areaTypeRadio)
- */
-OGDSM.eGovFrameUI.prototype.areaTypeRadio = function (divId, theme) {
-    'use strict';
-    var radioTheme = (typeof (theme) !== 'undefined') ? theme : this.dataTheme,
-        rootDiv = $('#' + divId),
-        html = '<label for="areaValue">지역:</label>' +
-            '<fieldset data-role="controlgroup" data-type="horizontal" class="egov-align-center">',
-        areaTypes = ['인천', '서울', '경기', '강원', '충남', '세종', '충북', '대전', '경북', '전북', '대구', '울산', '전남', '광주', '경남', '부산', '제주'],
-        i;
-    for (i = 0; i < areaTypes.length; i += 1) {
-        html += '<input type="radio" name="areaTypeRadio" class="custom" data-theme=' + this.dataTheme +
-            ' id="id-' + areaTypes[i] + '" value="' + areaTypes[i] + '"/>' +
-            '<label for="id-' + areaTypes[i] + '">' + areaTypes[i] + '</label>';
-        if (i !== 0 && (i + 1) % 3 === 0) {
-            html += '</fieldset>' +
-                '<fieldset data-role="controlgroup" data-type="horizontal" class="egov-align-center">';
-        }
-    }
-    html += '</fieldset>';
-    rootDiv.append(html);
-    rootDiv.trigger("create");
-    return 'areaTypeRadio';
-};
-/**
- * User Interface Create about Map List (Select).
- * @method mapListSelect
- * @param {String} divId - div id about HTML tag attribute
- * @param {Array} arr - Select Box Option List
- * @return {String} Select Box Id Value
- */
-/*
-OGDSM.eGovFrameUI.prototype.mapListSelect = function (divId, arr) {
-    'use strict';
-    var html, i,
-        rootDiv = $('#' + divId);
-    console.log(arr);
-    html =
-        '<select name="geoServerSelectBox" id="geoServerSelectBox" data-theme=' + this.dataTheme + '>' +
-        '<option value=""></option>';
-    for (i = 0; i < arr.length; i += 1) {
-        html += '<option value="' + arr[i] + '">' +
-            arr[i] + '</option>';
-    }
-    html += '</select>';
-    rootDiv.append(html);
-    rootDiv.trigger("create");
-    return 'geoServerSelectBox';
-};
-*/
-
 /*jslint devel: true, vars : true plusplus : true*/
 /*global $, jQuery, ol, OGDSM, d3, Sortable*/
 OGDSM.namesapce('mapLayerList');
@@ -2880,11 +2610,10 @@ OGDSM.namesapce('mapLayerList');
     var arrlayerObjs = [], arrlabels = [];
     /**
      * 오픈레이어 맵 레이어 목록 객체
-     * OpenLayers3 Map layer list class
      * @class OGDSM.mapLayerList
      * @constructor
-     * @param {OGDSM.visualization} obj - OGDSM visualization object
-     * @param {String} listDiv - List div name
+     * @param {OGDSM.visualization} obj - OGDSM 시각화 객체
+     * @param {String} listDiv - 생성할 list DIV 이름
      */
     OGDSM.mapLayerList = function (obj, listDiv) {
         this.listDiv = listDiv;
@@ -3022,13 +2751,12 @@ OGDSM.namesapce('mapLayerList');
     return OGDSM.mapLayerList;
 }(OGDSM));
 /**
- * 레이어 목록 관리 - (이름 변경 및 레이어 내용 변경...)
- * list Management.
+ * 레이어 목록 관리
  * @method listManager
- * @param {ol3 layer object} obj - openlayers3 layer object to be added
- * @param {String} label - list name
- * @param {String} color - rgb color (ex: rgb(255,255,255))
- * @param {String} type - object type (polygon | point | line)
+ * @param {ol3 layer object} obj - 레이어 목록에 추가할 openlayers3 레이어 객체
+ * @param {String} label - 목록 이름
+ * @param {String} color - 레이어 색상 (ex: rgb(255,255,255))
+ * @param {String} type - 객체 타입 (polygon | point | line)
  */
 OGDSM.mapLayerList.prototype.listManager = function (obj, label, color, type) {
     'use strict';
@@ -3125,11 +2853,10 @@ OGDSM.namesapce('attributeTable');
     'use strict';
     /**
      * 속성정보 시각화 객체
-     *
      * @class OGDSM.attributeTable
      * @constructor
-     * @param {String} RootDiv - Attribute table div name
-     * @param {String} addr - PostgreSQL connect address
+     * @param {String} RootDiv - 속성 테이블 DIV 이름
+     * @param {String} addr - PostgreSQL 접속 주소
      */
     OGDSM.attributeTable = function (rootDiv, addr) {
         this.rootDiv = rootDiv;
@@ -3157,9 +2884,8 @@ OGDSM.namesapce('attributeTable');
 
 /**
  * 속성 정보 추가
- * Add attribute table (Connect PostgreSQL)
  * @method addAttribute
- * @param {String}  layerName   - Database table name
+ * @param {String}  layerName   - 데이터 베이스 테이블 이름
  */
 OGDSM.attributeTable.prototype.addAttribute = function (layerName) {
     'use strict';

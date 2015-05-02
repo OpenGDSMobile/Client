@@ -45,12 +45,12 @@
                                 <li><a href="../classes/OGDSM.externalConnection.html">OGDSM.externalConnection</a></li>
                                 <li><a href="../classes/OGDSM.mapLayerList.html">OGDSM.mapLayerList</a></li>
                                 <li><a href="../classes/OGDSM.visualization.html">OGDSM.visualization</a></li>
-                                <li><a href="../classes/Sortable.html">Sortable</a></li>
                             </ul>
                 
                             <ul id="api-modules" class="apis modules">
                                 <li><a href="../modules/OGDSM.jsontoArray.html">OGDSM.jsontoArray</a></li>
                                 <li><a href="../modules/OGDSM.namespace.html">OGDSM.namespace</a></li>
+                                <li><a href="../modules/Sortable.create(...).html">Sortable.create(...)</a></li>
                             </ul>
                         </div>
                     </div>
@@ -99,8 +99,7 @@
                         
                         <h3>Summary</h3>
                         <div class="intro">
-                            <p>오픈레이어3 지도 시각화 객체
-                        OpenLayers3 Map Visualization Class</p>
+                            <p>오픈레이어3 지도 시각화 객체 (OpenLayers3 Map Visualization Class)</p>
                         
                         </div>
                         
@@ -158,7 +157,7 @@
 
                                                     <div class="param-description">
                                                         <ul>
-                                <li>Map div id</li>
+                                <li>지도 DIV 아이디 이름 (Map div id)</li>
                                 </ul>
 
                                                     </div>
@@ -166,13 +165,16 @@
                                                 </li>
                                                 <li class="param">
                                                         <code class="param-name">options</code>
-                                                        <span class="type">String</span>
+                                                        <span class="type">JSON Object</span>
                                 
                                 
                                                     <div class="param-description">
-                                                        <p>(option) - layerListDiv, attrTableDiv, attrAddr
-                                                               [values : div string(default : null), div string(default: null), address string(default: &#39;&#39;)]
-                                    layerlistDiv, attrtableDiv</p>
+                                                        <ul>
+                                <li>옵션 JSON 객체 키 값{layerListDiv=null, attrTableDiv=null, attrAddr=&#39;&#39;}<br>
+                                layerListDiv : 레이어 관리 리스트 DIV 아이디 이름<br>
+                                attrTableDiv : 속성 시각화 DIV 아이디 이름<br>
+                                attrAddr : 속성 시각화 서버 주소<br></li>
+                                </ul>
 
                                                     </div>
                                 
@@ -268,7 +270,7 @@
                                               <div class="meta method-meta">
                                                   <p>
                                                       Defined in
-                                                  <a href="../files/js_openGDSMobile_OGDSM_visualization.js.html#l294"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_visualization.js:294</code></a>
+                                                  <a href="../files/js_openGDSMobile_OGDSM_visualization.js.html#l271"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_visualization.js:271</code></a>
                                               </p>
                                             
                                             
@@ -284,6 +286,9 @@
                                                             <li class="arg">
                                                                     <code>data</code>
                                                             </li>
+                                                            <li class="arg">
+                                                                    <code>type</code>
+                                                            </li>
                                                         </ul><span class="paren">)</span>
                                                     </div>
                                             
@@ -297,8 +302,7 @@
                                               </div>
                                                 <div class="description">
                                                   <h3>Summary</h3>
-                                                    <p>WMS 및 WFS 맵 레이어 추가
-                                            WMS/WFS map layer add</p>
+                                                    <p>WMS 및 WFS 맵 레이어 추가(Add map layer WMS/WFS)</p>
                                             
                                                 </div>
                                             
@@ -313,7 +317,20 @@
                                             
                                                                 <div class="param-description">
                                                                     <ul>
-                                            <li>Openlayers map object (OpenLayers WMS/WFS/ Object)</li>
+                                            <li>오픈레이어3 지도 객체</li>
+                                            </ul>
+
+                                                                </div>
+
+                                                            </li>
+                                                            <li class="param">
+                                                                    <code class="param-name">type</code>
+                                                                    <span class="type">String</span>
+
+
+                                                                <div class="param-description">
+                                                                    <ul>
+                                            <li>WFS 객체 타입 [polygon(default) | point]</li>
                                             </ul>
                                             
                                                                 </div>
@@ -331,7 +348,7 @@
                                               <div class="meta method-meta">
                                                   <p>
                                                       Defined in
-                                                  <a href="../files/js_openGDSMobile_OGDSM_visualization.js.html#l465"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_visualization.js:465</code></a>
+                                                  <a href="../files/js_openGDSMobile_OGDSM_visualization.js.html#l450"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_visualization.js:450</code></a>
                                               </p>
                                             
                                             
@@ -369,8 +386,7 @@
                                               </div>
                                                 <div class="description">
                                                   <h3>Summary</h3>
-                                                    <p>Bar Chart Visualization based on D3.js
-                                            range length = color length</p>
+                                                    <p>가로 막대 차트 시각화(Bar Chart Visualization based on D3.js)</p>
                                             
                                                 </div>
                                             
@@ -384,7 +400,9 @@
                                             
                                             
                                                                 <div class="param-description">
-                                                                    <p>(Div name to visualize)</p>
+                                                                    <ul>
+                                            <li>막대 차트 시각화할 DIV 아이디 이름</li>
+                                            </ul>
                                             
                                                                 </div>
                                             
@@ -395,7 +413,9 @@
                                             
                                             
                                                                 <div class="param-description">
-                                                                    <p>(2 dim array about x, y - data is null 0 or -)</p>
+                                                                    <ul>
+                                            <li>데이터 값 2차원 배열 (0 : x, 1 : y)</li>
+                                            </ul>
                                             
                                                                 </div>
                                             
@@ -406,7 +426,9 @@
                                             
                                             
                                                                 <div class="param-description">
-                                                                    <p>(1 dim array about bar range) - option based )</p>
+                                                                    <ul>
+                                            <li>데이터 범위 1차원 배열</li>
+                                            </ul>
                                             
                                                                 </div>
                                             
@@ -417,7 +439,9 @@
                                             
                                             
                                                                 <div class="param-description">
-                                                                    <p>(1 dun array about bar fill color of range  - option [&#39;#00000&#39;])</p>
+                                                                    <ul>
+                                            <li>데이터 색 범위 1차원 배열 default : #000000 (range와 배열 길이 같아야함)</li>
+                                            </ul>
                                             
                                                                 </div>
                                             
@@ -434,7 +458,7 @@
                                               <div class="meta method-meta">
                                                   <p>
                                                       Defined in
-                                                  <a href="../files/js_openGDSMobile_OGDSM_visualization.js.html#l152"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_visualization.js:152</code></a>
+                                                  <a href="../files/js_openGDSMobile_OGDSM_visualization.js.html#l146"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_visualization.js:146</code></a>
                                               </p>
                                             
                                             
@@ -463,8 +487,7 @@
                                               </div>
                                                 <div class="description">
                                                   <h3>Summary</h3>
-                                                    <p>배경지도 변경
-                                            Base map change</p>
+                                                    <p>배경지도 변경(Base map change)</p>
                                             
                                                 </div>
                                             
@@ -479,7 +502,7 @@
                                             
                                                                 <div class="param-description">
                                                                     <ul>
-                                            <li>Map style (&quot;OSM&quot; | &quot;VWorld&quot; | &quot;VWorld_m&quot; | &quot;VWorld_h&quot;)</li>
+                                            <li>지도 스타일 (&quot;OSM&quot; | &quot;VWorld&quot; | &quot;VWorld_m&quot; | &quot;VWorld_h&quot;)</li>
                                             </ul>
                                             
                                                                 </div>
@@ -497,7 +520,7 @@
                                               <div class="meta method-meta">
                                                   <p>
                                                       Defined in
-                                                  <a href="../files/js_openGDSMobile_OGDSM_visualization.js.html#l380"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_visualization.js:380</code></a>
+                                                  <a href="../files/js_openGDSMobile_OGDSM_visualization.js.html#l354"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_visualization.js:354</code></a>
                                               </p>
                                             
                                             
@@ -517,19 +540,7 @@
                                                                     <code>colors</code>
                                                             </li>
                                                             <li class="arg">
-                                                                    <code>type</code>
-                                                            </li>
-                                                            <li class="arg">
-                                                                    <code>opt</code>
-                                                            </li>
-                                                            <li class="arg">
-                                                                    <code>attr</code>
-                                                            </li>
-                                                            <li class="arg">
-                                                                    <code>range</code>
-                                                            </li>
-                                                            <li class="arg">
-                                                                    <code>xyData</code>
+                                                                    <code>options</code>
                                                             </li>
                                                         </ul><span class="paren">)</span>
                                                     </div>
@@ -544,8 +555,7 @@
                                               </div>
                                                 <div class="description">
                                                   <h3>Summary</h3>
-                                                    <p>WFS 스타일 변경  (수정중....)
-                                            WFS style change</p>
+                                                    <p>WFS 스타일 변경(WFS style change)</p>
                                             
                                                 </div>
                                             
@@ -559,7 +569,9 @@
                                             
                                             
                                                                 <div class="param-description">
-                                                                    <p>(OpenLayers layer name)</p>
+                                                                    <ul>
+                                            <li>오픈레이어3 레이어 타이틀</li>
+                                            </ul>
                                             
                                                                 </div>
                                             
@@ -567,65 +579,28 @@
                                                             <li class="param">
                                                                     <code class="param-name">colors</code>
                                                                     <span class="type">Hex Color, String or Array</span>
-
-
+                                            
+                                            
                                                                 <div class="param-description">
                                                                     <p>( Hex color )</p>
-
-                                                                </div>
-
-                                                            </li>
-                                                            <li class="param">
-                                                                    <code class="param-name">type</code>
-                                                                    <span class="type">String</span>
-                                            
-                                            
-                                                                <div class="param-description">
-                                                                    <p>(Vector type)</p>
                                             
                                                                 </div>
                                             
                                                             </li>
                                                             <li class="param">
-                                                                    <code class="param-name">opt</code>
-                                                                    <span class="type">Number</span>
+                                                                    <code class="param-name">options</code>
+                                                                    <span class="type">JSON Object</span>
                                             
                                             
                                                                 <div class="param-description">
-                                                                    <p>(Opacity number) - option, Default value : 0.5</p>
-
-                                                                </div>
-
-                                                            </li>
-                                                            <li class="param">
-                                                                    <code class="param-name">attr</code>
-                                                                    <span class="type">String</span>
-
-
-                                                                <div class="param-description">
-                                                                    <p>(Map attribute name) - option, Default value : null</p>
-                                            
-                                                                </div>
-                                            
-                                                            </li>
-                                                            <li class="param">
-                                                                    <code class="param-name">range</code>
-                                                                    <span class="type">String</span>
-                                            
-                                            
-                                                                <div class="param-description">
-                                                                    <p>(Colors range) - option, Default value : null</p>
-
-                                                                </div>
-
-                                                            </li>
-                                                            <li class="param">
-                                                                    <code class="param-name">xyData</code>
-                                                                    <span class="type">String</span>
-
-
-                                                                <div class="param-description">
-                                                                    <p>(attr value data) - option, Default value : null</p>
+                                                                    <ul>
+                                            <li>옵션 JSON 객체 키 값 {type:&#39;polygon&#39;, opt : &#39;0.5&#39;, attr: null, range: null, xyData: null}
+                                            type(String) : 객체 타입 (polygon, point)<br>
+                                            opt(Number) : 레이어 투명도 <br>
+                                            attr(String) : 속성 이름 <br>
+                                            range(Array) : 색상 범위<br>
+                                            xyData(Array) : 색상 데이터<br></li>
+                                            </ul>
                                             
                                                                 </div>
                                             
@@ -642,7 +617,7 @@
                                               <div class="meta method-meta">
                                                   <p>
                                                       Defined in
-                                                  <a href="../files/js_openGDSMobile_OGDSM_visualization.js.html#l54"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_visualization.js:54</code></a>
+                                                  <a href="../files/js_openGDSMobile_OGDSM_visualization.js.html#l52"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_visualization.js:52</code></a>
                                               </p>
                                             
                                             
@@ -668,8 +643,7 @@
                                               </div>
                                                 <div class="description">
                                                   <h3>Summary</h3>
-                                                    <p>지도 객체 받기
-                                            Get map object about OpenLayers3</p>
+                                                    <p>지도 객체 받기(Get map object about OpenLayers3)</p>
                                             
                                                 </div>
                                             
@@ -680,7 +654,7 @@
                                                         <div class="returns-description">
                                                             <span class="type">ol.Map</span>:
                                                             <div class="blue-return-desc">
-                                                                <p>Retrun is OpenLayers object</p>
+                                                                <p>오픈레이어3 객체</p>
                                             
                                                             </div>
                                             
@@ -696,7 +670,7 @@
                                               <div class="meta method-meta">
                                                   <p>
                                                       Defined in
-                                                  <a href="../files/js_openGDSMobile_OGDSM_visualization.js.html#l326"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_visualization.js:326</code></a>
+                                                  <a href="../files/js_openGDSMobile_OGDSM_visualization.js.html#l303"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_visualization.js:303</code></a>
                                               </p>
 
 
@@ -734,8 +708,7 @@
                                               </div>
                                                 <div class="description">
                                                   <h3>Summary</h3>
-                                                    <p>이미지 레이어 시각화
-                                            Image Layer Visualization</p>
+                                                    <p>이미지 레이어 시각화(Image layer visualization)</p>
 
                                                 </div>
 
@@ -749,7 +722,9 @@
 
 
                                                                 <div class="param-description">
-                                                                    <p>(Image URL)</p>
+                                                                    <ul>
+                                            <li>이미지 주소</li>
+                                            </ul>
 
                                                                 </div>
 
@@ -760,7 +735,9 @@
 
 
                                                                 <div class="param-description">
-                                                                    <p>(Image title)</p>
+                                                                    <ul>
+                                            <li>이미지 타이틀</li>
+                                            </ul>
 
                                                                 </div>
 
@@ -771,7 +748,9 @@
 
 
                                                                 <div class="param-description">
-                                                                    <p>(Image size [width, height] )</p>
+                                                                    <ul>
+                                            <li>이미지 사이즈 [width, height]</li>
+                                            </ul>
 
                                                                 </div>
 
@@ -782,7 +761,9 @@
 
 
                                                                 <div class="param-description">
-                                                                    <p>(Image extent [lower left lon, lower left lat, upper right lon, upper right lat] or [left, bottom, right, top])</p>
+                                                                    <ul>
+                                            <li>이미지 위치 [lower left lon, lower left lat, upper right lon, upper right lat] or [left, bottom, right, top]</li>
+                                            </ul>
 
                                                                 </div>
 
@@ -799,7 +780,7 @@
                                               <div class="meta method-meta">
                                                   <p>
                                                       Defined in
-                                                  <a href="../files/js_openGDSMobile_OGDSM_visualization.js.html#l80"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_visualization.js:80</code></a>
+                                                  <a href="../files/js_openGDSMobile_OGDSM_visualization.js.html#l76"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_visualization.js:76</code></a>
                                               </p>
 
 
@@ -831,8 +812,7 @@
                                               </div>
                                                 <div class="description">
                                                   <h3>Summary</h3>
-                                                    <p>지도 레이어 인덱스 값
-                                            Current layers index value about OpenLayers3</p>
+                                                    <p>지도 레이어 인덱스 값(Current layers index value)</p>
 
                                                 </div>
 
@@ -847,7 +827,7 @@
 
                                                                 <div class="param-description">
                                                                     <ul>
-                                            <li>Layer objects</li>
+                                            <li>레이어 객체</li>
                                             </ul>
 
                                                                 </div>
@@ -862,7 +842,7 @@
                                                         <div class="returns-description">
                                                             <span class="type">Number</span>:
                                                             <div class="blue-return-desc">
-                                                                <p>Retrun is index number</p>
+                                                                <p>레이어 인덱스 값</p>
 
                                                             </div>
 
@@ -878,7 +858,7 @@
                                               <div class="meta method-meta">
                                                   <p>
                                                       Defined in
-                                                  <a href="../files/js_openGDSMobile_OGDSM_visualization.js.html#l63"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_visualization.js:63</code></a>
+                                                  <a href="../files/js_openGDSMobile_OGDSM_visualization.js.html#l60"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_visualization.js:60</code></a>
                                               </p>
                                             
                                             
@@ -898,7 +878,7 @@
                                                     </div>
                                             
                                                     <span class="returns-inline">
-                                                        <span class="type">OpenLayer3 Layer Object</span>
+                                                        <span class="type">OpenLayer3 Layer Object | Boolean</span>
                                                     </span>
                                             
                                             
@@ -910,8 +890,7 @@
                                               </div>
                                                 <div class="description">
                                                   <h3>Summary</h3>
-                                                    <p>지도 레이어 존재 여부 확인
-                                            Current layers check about OpenLayers3</p>
+                                                    <p>지도 레이어 존재 여부 확인(Current layers check)</p>
                                             
                                                 </div>
                                             
@@ -926,7 +905,7 @@
                                             
                                                                 <div class="param-description">
                                                                     <ul>
-                                            <li>Search layer title</li>
+                                            <li>레이어 타이틀</li>
                                             </ul>
                                             
                                                                 </div>
@@ -939,9 +918,9 @@
                                                         <h4>Returns:</h4>
                                             
                                                         <div class="returns-description">
-                                                            <span class="type">OpenLayer3 Layer Object</span>:
+                                                            <span class="type">OpenLayer3 Layer Object | Boolean</span>:
                                                             <div class="blue-return-desc">
-                                                                <p>Retrun is OpenLayers object</p>
+                                                                <p>레이어가 있을 경우 : 레이어 객체, 없을 경우 : false</p>
                                             
                                                             </div>
                                             
@@ -957,7 +936,7 @@
                                               <div class="meta method-meta">
                                                   <p>
                                                       Defined in
-                                                  <a href="../files/js_openGDSMobile_OGDSM_visualization.js.html#l100"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_visualization.js:100</code></a>
+                                                  <a href="../files/js_openGDSMobile_OGDSM_visualization.js.html#l95"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_visualization.js:95</code></a>
                                               </p>
 
 
@@ -995,8 +974,7 @@
                                               </div>
                                                 <div class="description">
                                                   <h3>Summary</h3>
-                                                    <p>OpenGDS 모바일 맵 초기화
-                                            OGDSM Mobile map view</p>
+                                                    <p>OpenGDS 모바일 맵 초기화(OGDSM Mobile map view)</p>
 
                                                 </div>
 
@@ -1011,7 +989,7 @@
 
                                                                 <div class="param-description">
                                                                     <ul>
-                                            <li>Map init center latitude, longitude (option) [default : [37.582200, 127.010031] ]</li>
+                                            <li>지도 초기 위,경도 값 (옵션) [default : [37.582200, 127.010031] ]</li>
                                             </ul>
 
                                                                 </div>
@@ -1024,7 +1002,7 @@
 
                                                                 <div class="param-description">
                                                                     <ul>
-                                            <li>Background map (option) [default : &#39;OSM&#39;]</li>
+                                            <li>배경 지도 초기 값 (옵션) [default : &#39;OSM&#39;]</li>
                                             </ul>
 
                                                                 </div>
@@ -1037,7 +1015,7 @@
 
                                                                 <div class="param-description">
                                                                     <ul>
-                                            <li>Map base projection (option) [default : &#39;EPSG:3857&#39;]</li>
+                                            <li>지도 투영 값 (옵션)   [default : &#39;EPSG:3857&#39;]</li>
                                             </ul>
 
                                                                 </div>
@@ -1052,7 +1030,7 @@
                                                         <div class="returns-description">
                                                             <span class="type">ol.Map</span>:
                                                             <div class="blue-return-desc">
-                                                                <p>Return is openlayers3 ol.Map object</p>
+                                                                <p>openlayers3 ol.Map 객체</p>
 
                                                             </div>
 
@@ -1068,7 +1046,7 @@
                                               <div class="meta method-meta">
                                                   <p>
                                                       Defined in
-                                                  <a href="../files/js_openGDSMobile_OGDSM_visualization.js.html#l353"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_visualization.js:353</code></a>
+                                                  <a href="../files/js_openGDSMobile_OGDSM_visualization.js.html#l329"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_visualization.js:329</code></a>
                                               </p>
 
 
@@ -1097,8 +1075,7 @@
                                               </div>
                                                 <div class="description">
                                                   <h3>Summary</h3>
-                                                    <p>맵 레이어 삭제
-                                            WMS/WFS/ImageLayer map layer remove</p>
+                                                    <p>맵 레이어 삭제(Remove map layer)</p>
 
                                                 </div>
 
@@ -1113,7 +1090,7 @@
 
                                                                 <div class="param-description">
                                                                     <ul>
-                                            <li>Layer title</li>
+                                            <li>레이어 타이틀</li>
                                             </ul>
 
                                                                 </div>
@@ -1131,7 +1108,7 @@
                                               <div class="meta method-meta">
                                                   <p>
                                                       Defined in
-                                                  <a href="../files/js_openGDSMobile_OGDSM_visualization.js.html#l366"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_visualization.js:366</code></a>
+                                                  <a href="../files/js_openGDSMobile_OGDSM_visualization.js.html#l341"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_visualization.js:341</code></a>
                                               </p>
 
 
@@ -1163,8 +1140,7 @@
                                               </div>
                                                 <div class="description">
                                                   <h3>Summary</h3>
-                                                    <p>맵 레이어 시각화 여부
-                                            Map layer visualization flag</p>
+                                                    <p>맵 레이어 시각화 여부(Map layer visualization flag)</p>
 
                                                 </div>
 
@@ -1179,7 +1155,7 @@
 
                                                                 <div class="param-description">
                                                                     <ul>
-                                            <li>Layer title</li>
+                                            <li>레이어 타이틀</li>
                                             </ul>
 
                                                                 </div>
@@ -1192,7 +1168,7 @@
 
                                                                 <div class="param-description">
                                                                     <ul>
-                                            <li>visualization switch true or false</li>
+                                            <li>시각화 스위치 [true | false}</li>
                                             </ul>
 
                                                                 </div>
@@ -1210,7 +1186,7 @@
                                               <div class="meta method-meta">
                                                   <p>
                                                       Defined in
-                                                  <a href="../files/js_openGDSMobile_OGDSM_visualization.js.html#l239"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_visualization.js:239</code></a>
+                                                  <a href="../files/js_openGDSMobile_OGDSM_visualization.js.html#l232"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_visualization.js:232</code></a>
                                               </p>
 
 
@@ -1239,8 +1215,7 @@
                                               </div>
                                                 <div class="description">
                                                   <h3>Summary</h3>
-                                                    <p>지도 GPS 트래킹 스위치
-                                            Map geolocation tracking</p>
+                                                    <p>지도 GPS 트래킹 스위치(Map geolocation tracking)</p>
 
                                                 </div>
 
@@ -1255,7 +1230,7 @@
 
                                                                 <div class="param-description">
                                                                     <ul>
-                                            <li>Geolocation switch (true | false</li>
+                                            <li>Geolocation 스위치 (true | false)</li>
                                             </ul>
 
                                                                 </div>
@@ -1273,7 +1248,7 @@
                                               <div class="meta method-meta">
                                                   <p>
                                                       Defined in
-                                                  <a href="../files/js_openGDSMobile_OGDSM_visualization.js.html#l265"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_visualization.js:265</code></a>
+                                                  <a href="../files/js_openGDSMobile_OGDSM_visualization.js.html#l257"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_visualization.js:257</code></a>
                                               </p>
 
 
@@ -1302,8 +1277,7 @@
                                               </div>
                                                 <div class="description">
                                                   <h3>Summary</h3>
-                                                    <p>모바일 해상도에 맞는 지도 레이아웃 업데이트
-                                            OGDSM Mobile screen update layout</p>
+                                                    <p>모바일 해상도에 맞는 지도 레이아웃 업데이트(OGDSM Mobile screen update layout)</p>
 
                                                 </div>
 
@@ -1318,7 +1292,7 @@
 
                                                                 <div class="param-description">
                                                                     <ul>
-                                            <li>Map div name</li>
+                                            <li>지도 DIV 아이디 이름</li>
                                             </ul>
 
                                                                 </div>

@@ -45,12 +45,12 @@
                                 <li><a href="../classes/OGDSM.externalConnection.html">OGDSM.externalConnection</a></li>
                                 <li><a href="../classes/OGDSM.mapLayerList.html">OGDSM.mapLayerList</a></li>
                                 <li><a href="../classes/OGDSM.visualization.html">OGDSM.visualization</a></li>
-                                <li><a href="../classes/Sortable.html">Sortable</a></li>
                             </ul>
 
                             <ul id="api-modules" class="apis modules">
                                 <li><a href="../modules/OGDSM.jsontoArray.html">OGDSM.jsontoArray</a></li>
                                 <li><a href="../modules/OGDSM.namespace.html">OGDSM.namespace</a></li>
+                                <li><a href="../modules/Sortable.create(...).html">Sortable.create(...)</a></li>
                             </ul>
                         </div>
                     </div>
@@ -89,9 +89,11 @@
                         <div class="file">
                             <pre class="code prettyprint linenums">
                         /**!
+                         * OGDSM Layer list sorting open source
                          * Sortable
-                         * @author	RubaXa   &lt;trash@rubaxa.org&gt;
-                         * @license MIT
+                         * author	RubaXa   &lt;trash@rubaxa.org&gt;
+                         * license MIT
+                         * @module Sortable.create(...)
                          */
                         (function (factory) {
                         	&quot;use strict&quot;;
@@ -247,9 +249,9 @@
 
 
                         	/**
-                        	 * @class  Sortable
-                        	 * @param  {HTMLElement}  el
-                        	 * @param  {Object}       [options]
+                        	 * class  Sortable
+                        	 * param  {HTMLElement}  el
+                        	 * param  {Object}       [options]
                         	 */
                         	function Sortable(el, options) {
                         		this.el = el; // root element

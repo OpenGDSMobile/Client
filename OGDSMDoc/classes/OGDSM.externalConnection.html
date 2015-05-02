@@ -45,12 +45,12 @@
                                 <li><a href="../classes/OGDSM.externalConnection.html">OGDSM.externalConnection</a></li>
                                 <li><a href="../classes/OGDSM.mapLayerList.html">OGDSM.mapLayerList</a></li>
                                 <li><a href="../classes/OGDSM.visualization.html">OGDSM.visualization</a></li>
-                                <li><a href="../classes/Sortable.html">Sortable</a></li>
                             </ul>
                 
                             <ul id="api-modules" class="apis modules">
                                 <li><a href="../modules/OGDSM.jsontoArray.html">OGDSM.jsontoArray</a></li>
                                 <li><a href="../modules/OGDSM.namespace.html">OGDSM.namespace</a></li>
+                                <li><a href="../modules/Sortable.create(...).html">Sortable.create(...)</a></li>
                             </ul>
                         </div>
                     </div>
@@ -89,7 +89,7 @@
                         
                         
                                 <div class="foundat">
-                                    Defined in: <a href="../files/js_openGDSMobile_OGDSM_externalConnection.js.html#l8"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_externalConnection.js:8</code></a>
+                                    Defined in: <a href="../files/js_openGDSMobile_OGDSM_externalConnection.js.html#l7"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_externalConnection.js:7</code></a>
                                 </div>
                         
                                     Module: <a href="../modules/OGDSM.jsontoArray.html">OGDSM.jsontoArray</a>
@@ -99,8 +99,7 @@
                         
                         <h3>Summary</h3>
                         <div class="intro">
-                            <p>externalConnection Class
-                        vworldWMS address <a href="http://map.vworld.kr/js/wms.do">http://map.vworld.kr/js/wms.do</a></p>
+                            <p>외부 데이터 접속 요청 객체</p>
                         
                         </div>
                         
@@ -112,7 +111,7 @@
                                   <div class="meta method-meta">
                                       <p>
                                           Defined in
-                                      <a href="../files/js_openGDSMobile_OGDSM_externalConnection.js.html#l8"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_externalConnection.js:8</code></a>
+                                      <a href="../files/js_openGDSMobile_OGDSM_externalConnection.js.html#l7"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_externalConnection.js:7</code></a>
                                   </p>
                                 
                                 
@@ -123,16 +122,7 @@
                                   <div class="blue-method-syntax">
                                   <h3 class="name"><code>OGDSM.externalConnection</code></h3>
                                 
-                                        <div class="args">
-                                            <span class="paren">(</span><ul class="args-list inline commas">
-                                                <li class="arg">
-                                                        <code>serverName</code>
-                                                </li>
-                                                <li class="arg">
-                                                        <code>addr</code>
-                                                </li>
-                                            </ul><span class="paren">)</span>
-                                        </div>
+                                        <span class="paren">()</span>
                                 
                                 
                                 
@@ -146,37 +136,7 @@
                                       <h3>Summary</h3>
                                         
                                     </div>
-                                
-                                        <div class="params">
-                                            <h4>Parameters:</h4>
-                                
-                                            <ul class="params-list">
-                                                <li class="param">
-                                                        <code class="param-name">serverName</code>
-                                                        <span class="type">String</span>
-                                
-                                
-                                                    <div class="param-description">
-                                                        <ul>
-                                <li>External Server Name (vworldWMS/geoServer/publicData/airKorea)</li>
-                                </ul>
-                                
-                                                    </div>
-                                
-                                                </li>
-                                                <li class="param">
-                                                        <code class="param-name">addr</code>
-                                                        <span class="type">String</span>
-                                
-                                
-                                                    <div class="param-description">
-                                                        <p>option(default: null) - External Server Address</p>
-                                
-                                                    </div>
-                                
-                                                </li>
-                                            </ul>
-                                        </div>
+
                                 
                                 
                                 
@@ -199,51 +159,19 @@
                         
                                             <ul class="index-list methods">
                                                     <li class="index-item method">
-                                                        <a href="#method_changeServer">changeServer</a>
-                        
-                                                    </li>
-                                                    <li class="index-item method">
-                                                        <a href="#method_dataLoad">dataLoad</a>
-                        
-                                                    </li>
-                                                    <li class="index-item method">
                                                         <a href="#method_geoServerWFS">geoServerWFS</a>
                         
                                                     </li>
                                                     <li class="index-item method">
                                                         <a href="#method_geoServerWFSLoad">geoServerWFSLoad</a>
-
-                                                    </li>
-                                                    <li class="index-item method">
-                                                        <a href="#method_getResponseData">getResponseData</a>
                         
                                                     </li>
                                                     <li class="index-item method">
-                                                        <a href="#method_getValues">getValues</a>
+                                                        <a href="#method_seoulEnvironmentLoad">seoulEnvironmentLoad</a>
                         
                                                     </li>
                                                     <li class="index-item method">
-                                                        <a href="#method_publicDataEnv">publicDataEnv</a>
-                        
-                                                    </li>
-                                                    <li class="index-item method">
-                                                        <a href="#method_removeValues">removeValues</a>
-                        
-                                                    </li>
-                                                    <li class="index-item method">
-                                                        <a href="#method_setData">setData</a>
-                        
-                                                    </li>
-                                                    <li class="index-item method">
-                                                        <a href="#method_setResponseData">setResponseData</a>
-                        
-                                                    </li>
-                                                    <li class="index-item method">
-                                                        <a href="#method_setSubName">setSubName</a>
-                        
-                                                    </li>
-                                                    <li class="index-item method">
-                                                        <a href="#method_setValues">setValues</a>
+                                                        <a href="#method_seoulEnvironmentLoad">seoulEnvironmentLoad</a>
                         
                                                     </li>
                                                     <li class="index-item method">
@@ -260,142 +188,13 @@
                                     <div id="methods" class="api-class-tabpanel">
                                         <h2 class="off-left">Methods</h2>
                         
-                                            <div id="method_changeServer" class="method item">
-                                              <h3 class="blue-method-name">changeServer</h3>
-                                            
-                                              <div class="meta method-meta">
-                                                  <p>
-                                                      Defined in
-                                                  <a href="../files/js_openGDSMobile_OGDSM_externalConnection.js.html#l80"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_externalConnection.js:80</code></a>
-                                              </p>
-                                            
-                                            
-                                            
-                                              </div>
-                                            
-                                              <h3>Syntax</h3>
-                                              <div class="blue-method-syntax">
-                                              <h3 class="name"><code>changeServer</code></h3>
-                                            
-                                                    <div class="args">
-                                                        <span class="paren">(</span><ul class="args-list inline commas">
-                                                            <li class="arg">
-                                                                    <code>serverName</code>
-                                                            </li>
-                                                            <li class="arg">
-                                                                    <code>addr</code>
-                                                            </li>
-                                                        </ul><span class="paren">)</span>
-                                                    </div>
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                              </div>
-                                                <div class="description">
-                                                  <h3>Summary</h3>
-                                                    <p>Change external server name and address</p>
-                                            
-                                                </div>
-                                            
-                                                    <div class="params">
-                                                        <h4>Parameters:</h4>
-                                            
-                                                        <ul class="params-list">
-                                                            <li class="param">
-                                                                    <code class="param-name">serverName</code>
-                                                                    <span class="type">String</span>
-                                            
-                                            
-                                                                <div class="param-description">
-                                                                    <ul>
-                                            <li>External Server Name (vworldWMS/geoServer/publicData/airKorea)</li>
-                                            </ul>
-                                            
-                                                                </div>
-                                            
-                                                            </li>
-                                                            <li class="param">
-                                                                    <code class="param-name">addr</code>
-                                                                    <span class="type">String</span>
-                                            
-                                            
-                                                                <div class="param-description">
-                                                                    <p>option(default: null) - External Server Address</p>
-                                            
-                                                                </div>
-                                            
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                            
-                                            
-                                            
-                                            </div>
-                                            <div id="method_dataLoad" class="method item">
-                                              <h3 class="blue-method-name">dataLoad</h3>
-                                            
-                                              <div class="meta method-meta">
-                                                  <p>
-                                                      Defined in
-                                                  <a href="../files/js_openGDSMobile_OGDSM_externalConnection.js.html#l115"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_externalConnection.js:115</code></a>
-                                              </p>
-                                            
-                                            
-                                            
-                                              </div>
-                                            
-                                              <h3>Syntax</h3>
-                                              <div class="blue-method-syntax">
-                                              <h3 class="name"><code>dataLoad</code></h3>
-                                            
-                                                    <span class="paren">()</span>
-                                            
-                                                    <span class="returns-inline">
-                                                        <span class="type">JSON or Array</span>
-                                                    </span>
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                              </div>
-                                                <div class="description">
-                                                  <h3>Summary</h3>
-                                                    <p>vworldWMS, geoServer(getLayers, WFS), publicData(environment) data loading</p>
-                                            
-                                                </div>
-                                            
-                                            
-                                                    <div class="returns">
-                                                        <h4>Returns:</h4>
-                                            
-                                                        <div class="returns-description">
-                                                            <span class="type">JSON or Array</span>:
-                                                            <div class="blue-return-desc">
-                                                                <p>save values(responseData) through setResponseData()</p>
-                                            
-                                                            </div>
-                                            
-                                            
-                                                        </div>
-                                                    </div>
-                                            
-                                            
-                                            </div>
                                             <div id="method_geoServerWFS" class="method item">
                                               <h3 class="blue-method-name">geoServerWFS</h3>
                                             
                                               <div class="meta method-meta">
                                                   <p>
                                                       Defined in
-                                                  <a href="../files/js_openGDSMobile_OGDSM_externalConnection.js.html#l191"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_externalConnection.js:191</code></a>
+                                                  <a href="../files/js_openGDSMobile_OGDSM_externalConnection.js.html#l106"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_externalConnection.js:106</code></a>
                                               </p>
                                             
                                             
@@ -415,16 +214,16 @@
                                                                     <code>ws</code>
                                                             </li>
                                                             <li class="arg">
-                                                                    <code>name</code>
+                                                                    <code>layerName</code>
                                                             </li>
                                                             <li class="arg">
-                                                                    <code>type</code>
+                                                                    <code>options</code>
                                                             </li>
                                                         </ul><span class="paren">)</span>
                                                     </div>
                                             
                                                     <span class="returns-inline">
-                                                        <span class="type">ol.source.ServerVector</span>
+                                                        <span class="type">ol.layer.Vector</span>
                                                     </span>
                                             
                                             
@@ -436,7 +235,7 @@
                                               </div>
                                                 <div class="description">
                                                   <h3>Summary</h3>
-                                                    <p>GeoServer WFS data load (OpenLayers3 ol.source.ServerVector)</p>
+                                                    <p>GeoServer WFS 요청 (OpenLayers3 ol.source.ServerVector)</p>
                                             
                                                 </div>
                                             
@@ -451,7 +250,7 @@
                                             
                                                                 <div class="param-description">
                                                                     <ul>
-                                            <li>GeoServer Address</li>
+                                            <li>주소</li>
                                             </ul>
                                             
                                                                 </div>
@@ -464,37 +263,39 @@
                                             
                                                                 <div class="param-description">
                                                                     <ul>
-                                            <li>GeoServer Workspace</li>
+                                            <li>워크스페이스</li>
                                             </ul>
                                             
                                                                 </div>
                                             
                                                             </li>
                                                             <li class="param">
-                                                                    <code class="param-name">name</code>
+                                                                    <code class="param-name">layerName</code>
                                                                     <span class="type">String</span>
                                             
                                             
                                                                 <div class="param-description">
                                                                     <ul>
-                                            <li>GeoServer Layer Name</li>
+                                            <li>레이어 이름</li>
                                             </ul>
                                             
                                                                 </div>
                                             
                                                             </li>
                                                             <li class="param">
-                                                                    <code class="param-name">type</code>
-                                                                    <span class="type">String</span>
-
-
+                                                                    <code class="param-name">options</code>
+                                                                    <span class="type">JSON Object</span>
+                                            
+                                            
                                                                 <div class="param-description">
                                                                     <ul>
-                                            <li>GeoServer Layer Type (Default : polygon)</li>
+                                            <li>옵션 JSON 객체 키 값{type=&#39;polygon&#39;, epsg=&#39;epsg3857&#39;}
+                                            type(String) : 레이어 타입( polygon | point)
+                                            epsg(String) : EPSG</li>
                                             </ul>
-
+                                            
                                                                 </div>
-
+                                            
                                                             </li>
                                                         </ul>
                                                     </div>
@@ -503,9 +304,9 @@
                                                         <h4>Returns:</h4>
                                             
                                                         <div class="returns-description">
-                                                            <span class="type">ol.source.ServerVector</span>:
+                                                            <span class="type">ol.layer.Vector</span>:
                                                             <div class="blue-return-desc">
-                                                                <p>vectorSource - OpenLayers3 Vector Object</p>
+                                                                <p>vectorSource - OpenLayers3 백터 객체</p>
                                             
                                                             </div>
                                             
@@ -517,21 +318,21 @@
                                             </div>
                                             <div id="method_geoServerWFSLoad" class="method item">
                                               <h3 class="blue-method-name">geoServerWFSLoad</h3>
-
+                                            
                                               <div class="meta method-meta">
                                                   <p>
                                                       Defined in
-                                                  <a href="../files/js_openGDSMobile_OGDSM_externalConnection.js.html#l378"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_externalConnection.js:378</code></a>
+                                                  <a href="../files/js_openGDSMobile_OGDSM_externalConnection.js.html#l21"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_externalConnection.js:21</code></a>
                                               </p>
-
-
-
+                                            
+                                            
+                                            
                                               </div>
-
+                                            
                                               <h3>Syntax</h3>
                                               <div class="blue-method-syntax">
                                               <h3 class="name"><code>geoServerWFSLoad</code></h3>
-
+                                            
                                                     <div class="args">
                                                         <span class="paren">(</span><ul class="args-list inline commas">
                                                             <li class="arg">
@@ -544,13 +345,142 @@
                                                                     <code>workspace</code>
                                                             </li>
                                                             <li class="arg">
-                                                                    <code>name</code>
+                                                                    <code>layerName</code>
                                                             </li>
                                                             <li class="arg">
-                                                                    <code>type</code>
+                                                                    <code>options</code>
+                                                            </li>
+                                                        </ul><span class="paren">)</span>
+                                                    </div>
+
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                              </div>
+                                                <div class="description">
+                                                  <h3>Summary</h3>
+                                                    <p>GeoServer WFS 데이터 요청 (OpenLayers3 ol.source.GeoJSON)</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Parameters:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">obj</code>
+                                                                    <span class="type">OGDSM Obj</span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <ul>
+                                            <li>OpenGDS Mobile 시각화 객체</li>
+                                            </ul>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                            <li class="param">
+                                                                    <code class="param-name">addr</code>
+                                                                    <span class="type">String</span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <ul>
+                                            <li>주소</li>
+                                            </ul>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                            <li class="param">
+                                                                    <code class="param-name">workspace</code>
+                                                                    <span class="type">String</span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <ul>
+                                            <li>워크스페이스</li>
+                                            </ul>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                            <li class="param">
+                                                                    <code class="param-name">layerName</code>
+                                                                    <span class="type">String</span>
+
+
+                                                                <div class="param-description">
+                                                                    <ul>
+                                            <li>레이어 이름</li>
+                                            </ul>
+
+                                                                </div>
+                                            
+                                                            </li>
+                                                            <li class="param">
+                                                                    <code class="param-name">options</code>
+                                                                    <span class="type">JSON Object</span>
+
+                                            
+                                                                <div class="param-description">
+                                                                    <ul>
+                                            <li>옵션 JSON 객체 키 값{type=&#39;polygon&#39;, color=&#39;rgba(0, 0, 0, 0.0)&#39;, callback : function () {}}
+                                            type(String) : 레이어 타입( polygon | point)
+                                            color(String) : 색상 rgba
+                                            callback(Function) : 요청 후 색상 변경시 콜백 함수</li>
+                                            </ul>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                            
+
+                                            </div>
+                                            <div id="method_seoulEnvironmentLoad" class="method item">
+                                              <h3 class="blue-method-name">seoulEnvironmentLoad</h3>
+
+                                              <div class="meta method-meta">
+                                                  <p>
+                                                      Defined in
+                                                  <a href="../files/js_openGDSMobile_OGDSM_externalConnection.js.html#l214"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_externalConnection.js:214</code></a>
+                                              </p>
+
+
+
+                                              </div>
+
+                                              <h3>Syntax</h3>
+                                              <div class="blue-method-syntax">
+                                              <h3 class="name"><code>seoulEnvironmentLoad</code></h3>
+
+                                                    <div class="args">
+                                                        <span class="paren">(</span><ul class="args-list inline commas">
+                                                            <li class="arg">
+                                                                    <code>addr</code>
                                                             </li>
                                                             <li class="arg">
-                                                                    <code>color</code>
+                                                                    <code>apiKey</code>
+                                                            </li>
+                                                            <li class="arg">
+                                                                    <code>envType</code>
+                                                            </li>
+                                                            <li class="arg">
+                                                                    <code>date</code>
+                                                            </li>
+                                                            <li class="arg">
+                                                                    <code>time</code>
+                                                            </li>
+                                                            <li class="arg">
+                                                                    <code>callback</code>
                                                             </li>
                                                         </ul><span class="paren">)</span>
                                                     </div>
@@ -565,7 +495,7 @@
                                               </div>
                                                 <div class="description">
                                                   <h3>Summary</h3>
-                                                    <p>GeoServer WFS data load (OpenLayers3 ol.source.GeoJSON)</p>
+                                                    <p>서울 열린 데이터 광장 환경 데이터 요청</p>
 
                                                 </div>
 
@@ -574,78 +504,78 @@
 
                                                         <ul class="params-list">
                                                             <li class="param">
-                                                                    <code class="param-name">obj</code>
-                                                                    <span class="type">OGDSM Obj</span>
-
-
-                                                                <div class="param-description">
-                                                                    <ul>
-                                            <li>OpenGDS Mobile visualization object</li>
-                                            </ul>
-
-                                                                </div>
-
-                                                            </li>
-                                                            <li class="param">
                                                                     <code class="param-name">addr</code>
                                                                     <span class="type">String</span>
 
 
                                                                 <div class="param-description">
                                                                     <ul>
-                                            <li>GeoServer address</li>
+                                            <li>주소</li>
                                             </ul>
 
                                                                 </div>
 
                                                             </li>
                                                             <li class="param">
-                                                                    <code class="param-name">workspace</code>
+                                                                    <code class="param-name">apiKey</code>
                                                                     <span class="type">String</span>
 
 
                                                                 <div class="param-description">
                                                                     <ul>
-                                            <li>GeoServer workspace name</li>
+                                            <li>api 키</li>
                                             </ul>
 
                                                                 </div>
 
                                                             </li>
                                                             <li class="param">
-                                                                    <code class="param-name">name</code>
+                                                                    <code class="param-name">envType</code>
                                                                     <span class="type">String</span>
 
 
                                                                 <div class="param-description">
                                                                     <ul>
-                                            <li>GeoServer WFS object name</li>
+                                            <li>환경 정보 이름</li>
                                             </ul>
 
                                                                 </div>
 
                                                             </li>
                                                             <li class="param">
-                                                                    <code class="param-name">type</code>
-                                                                    <span class="type">String</span>
+                                                                    <code class="param-name">date</code>
+                                                                    <span class="type">Date</span>
 
 
                                                                 <div class="param-description">
                                                                     <ul>
-                                            <li>Object type (polygon | point)</li>
+                                            <li>날짜</li>
                                             </ul>
 
                                                                 </div>
 
                                                             </li>
                                                             <li class="param">
-                                                                    <code class="param-name">color</code>
-                                                                    <span class="type">String</span>
+                                                                    <code class="param-name">time</code>
+                                                                    <span class="type">Time</span>
 
 
                                                                 <div class="param-description">
                                                                     <ul>
-                                            <li>color ( rgba(0,0,0,0) )</li>
+                                            <li>시간</li>
+                                            </ul>
+
+                                                                </div>
+
+                                                            </li>
+                                                            <li class="param">
+                                                                    <code class="param-name">callback</code>
+                                                                    <span class="type">Function</span>
+
+
+                                                                <div class="param-description">
+                                                                    <ul>
+                                            <li>성공 콜백 함수</li>
                                             </ul>
 
                                                                 </div>
@@ -657,13 +587,13 @@
 
 
                                             </div>
-                                            <div id="method_getResponseData" class="method item">
-                                              <h3 class="blue-method-name">getResponseData</h3>
+                                            <div id="method_seoulEnvironmentLoad" class="method item">
+                                              <h3 class="blue-method-name">seoulEnvironmentLoad</h3>
                                             
                                               <div class="meta method-meta">
                                                   <p>
                                                       Defined in
-                                                  <a href="../files/js_openGDSMobile_OGDSM_externalConnection.js.html#l52"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_externalConnection.js:52</code></a>
+                                                  <a href="../files/js_openGDSMobile_OGDSM_externalConnection.js.html#l259"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_externalConnection.js:259</code></a>
                                               </p>
                                             
                                             
@@ -672,134 +602,31 @@
                                             
                                               <h3>Syntax</h3>
                                               <div class="blue-method-syntax">
-                                              <h3 class="name"><code>getResponseData</code></h3>
-                                            
-                                                    <span class="paren">()</span>
-                                            
-                                                    <span class="returns-inline">
-                                                        <span class="type">JSON or Array</span>
-                                                    </span>
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                              </div>
-                                                <div class="description">
-                                                  <h3>Summary</h3>
-                                                    <p>Get external server ajax result value</p>
-                                            
-                                                </div>
-                                            
-                                            
-                                                    <div class="returns">
-                                                        <h4>Returns:</h4>
-                                            
-                                                        <div class="returns-description">
-                                                            <span class="type">JSON or Array</span>:
-                                                            <div class="blue-return-desc">
-                                                                <p>responseData</p>
-                                            
-                                                            </div>
-                                            
-                                            
-                                                        </div>
-                                                    </div>
-                                            
-                                            
-                                            </div>
-                                            <div id="method_getValues" class="method item">
-                                              <h3 class="blue-method-name">getValues</h3>
-                                            
-                                              <div class="meta method-meta">
-                                                  <p>
-                                                      Defined in
-                                                  <a href="../files/js_openGDSMobile_OGDSM_externalConnection.js.html#l29"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_externalConnection.js:29</code></a>
-                                              </p>
-                                            
-                                            
-                                            
-                                              </div>
-                                            
-                                              <h3>Syntax</h3>
-                                              <div class="blue-method-syntax">
-                                              <h3 class="name"><code>getValues</code></h3>
-                                            
-                                                    <span class="paren">()</span>
-                                            
-                                                    <span class="returns-inline">
-                                                        <span class="type">Array</span>
-                                                    </span>
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                              </div>
-                                                <div class="description">
-                                                  <h3>Summary</h3>
-                                                    <p>Get external server parameter</p>
-                                            
-                                                </div>
-                                            
-                                            
-                                                    <div class="returns">
-                                                        <h4>Returns:</h4>
-                                            
-                                                        <div class="returns-description">
-                                                            <span class="type">Array</span>:
-                                                            <div class="blue-return-desc">
-                                                                <p>values</p>
-                                            
-                                                            </div>
-                                            
-                                            
-                                                        </div>
-                                                    </div>
-                                            
-                                            
-                                            </div>
-                                            <div id="method_publicDataEnv" class="method item">
-                                              <h3 class="blue-method-name">publicDataEnv</h3>
-                                            
-                                              <div class="meta method-meta">
-                                                  <p>
-                                                      Defined in
-                                                  <a href="../files/js_openGDSMobile_OGDSM_externalConnection.js.html#l254"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_externalConnection.js:254</code></a>
-                                              </p>
-                                            
-                                            
-                                            
-                                              </div>
-                                            
-                                              <h3>Syntax</h3>
-                                              <div class="blue-method-syntax">
-                                              <h3 class="name"><code>publicDataEnv</code></h3>
+                                              <h3 class="name"><code>seoulEnvironmentLoad</code></h3>
                                             
                                                     <div class="args">
                                                         <span class="paren">(</span><ul class="args-list inline commas">
                                                             <li class="arg">
-                                                                    <code>apikey</code>
+                                                                    <code>addr</code>
+                                                            </li>
+                                                            <li class="arg">
+                                                                    <code>apiKey</code>
                                                             </li>
                                                             <li class="arg">
                                                                     <code>envType</code>
                                                             </li>
                                                             <li class="arg">
-                                                                    <code>dateOrArea</code>
+                                                                    <code>date</code>
                                                             </li>
                                                             <li class="arg">
                                                                     <code>time</code>
                                                             </li>
+                                                            <li class="arg">
+                                                                    <code>callback</code>
+                                                            </li>
                                                         </ul><span class="paren">)</span>
                                                     </div>
-                                            
-                                                    <span class="returns-inline">
-                                                        <span class="type">JSON</span>
-                                                    </span>
+
                                             
                                             
                                             
@@ -810,7 +637,7 @@
                                               </div>
                                                 <div class="description">
                                                   <h3>Summary</h3>
-                                                    <p>Get Environment Data (Seoul Open Data and Public Data Portal)</p>
+                                                    <p>데이터 포털 환경 데이터 요청</p>
                                             
                                                 </div>
                                             
@@ -819,13 +646,26 @@
                                             
                                                         <ul class="params-list">
                                                             <li class="param">
-                                                                    <code class="param-name">apikey</code>
+                                                                    <code class="param-name">addr</code>
                                                                     <span class="type">String</span>
                                             
                                             
                                                                 <div class="param-description">
                                                                     <ul>
-                                            <li>Key Value</li>
+                                            <li>주소</li>
+                                            </ul>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                            <li class="param">
+                                                                    <code class="param-name">apiKey</code>
+                                                                    <span class="type">String</span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <ul>
+                                            <li>api 키</li>
                                             </ul>
                                             
                                                                 </div>
@@ -838,318 +678,48 @@
                                             
                                                                 <div class="param-description">
                                                                     <ul>
-                                            <li>Environment Value (Seoul : PM10, PM25, CO, NO2, O3, SO2   Public : pm10value, covalue, no2value, o3value, so2value</li>
+                                            <li>환경 정보 이름</li>
                                             </ul>
                                             
                                                                 </div>
                                             
                                                             </li>
                                                             <li class="param">
-                                                                    <code class="param-name">dateOrArea</code>
-                                                                    <span class="type">String</span>
+                                                                    <code class="param-name">date</code>
+                                                                    <span class="type">Date</span>
                                             
                                             
                                                                 <div class="param-description">
-                                                                    <p>(option) - environment date or area</p>
+                                                                    <ul>
+                                            <li>날짜</li>
+                                            </ul>
                                             
                                                                 </div>
                                             
                                                             </li>
                                                             <li class="param">
                                                                     <code class="param-name">time</code>
-                                                                    <span class="type">String</span>
+                                                                    <span class="type">Time</span>
                                             
                                             
                                                                 <div class="param-description">
-                                                                    <p>(option) - environment time</p>
+                                                                    <ul>
+                                            <li>시간</li>
+                                            </ul>
                                             
                                                                 </div>
-                                            
+
                                                             </li>
-                                                        </ul>
-                                                    </div>
-                                            
-                                                    <div class="returns">
-                                                        <h4>Returns:</h4>
-                                            
-                                                        <div class="returns-description">
-                                                            <span class="type">JSON</span>:
-                                                            <div class="blue-return-desc">
-                                                                <p>save values(responseData) through setResponseData()</p>
-                                            
-                                                            </div>
-                                            
-                                            
-                                                        </div>
-                                                    </div>
-                                            
-                                            
-                                            </div>
-                                            <div id="method_removeValues" class="method item">
-                                              <h3 class="blue-method-name">removeValues</h3>
-                                            
-                                              <div class="meta method-meta">
-                                                  <p>
-                                                      Defined in
-                                                  <a href="../files/js_openGDSMobile_OGDSM_externalConnection.js.html#l45"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_externalConnection.js:45</code></a>
-                                              </p>
-                                            
-                                            
-                                            
-                                              </div>
-                                            
-                                              <h3>Syntax</h3>
-                                              <div class="blue-method-syntax">
-                                              <h3 class="name"><code>removeValues</code></h3>
-                                            
-                                                    <span class="paren">()</span>
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                              </div>
-                                                <div class="description">
-                                                  <h3>Summary</h3>
-                                                    <p>Remove external server parameter</p>
-                                            
-                                                </div>
-                                            
-                                            
-                                            
-                                            
-                                            </div>
-                                            <div id="method_setData" class="method item">
-                                              <h3 class="blue-method-name">setData</h3>
-                                            
-                                              <div class="meta method-meta">
-                                                  <p>
-                                                      Defined in
-                                                  <a href="../files/js_openGDSMobile_OGDSM_externalConnection.js.html#l96"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_externalConnection.js:96</code></a>
-                                              </p>
-                                            
-                                            
-                                            
-                                              </div>
-                                            
-                                              <h3>Syntax</h3>
-                                              <div class="blue-method-syntax">
-                                              <h3 class="name"><code>setData</code></h3>
-                                            
-                                                    <div class="args">
-                                                        <span class="paren">(</span><ul class="args-list inline commas">
-                                                            <li class="arg">
-                                                                    <code>arguments</code>
-                                                            </li>
-                                                        </ul><span class="paren">)</span>
-                                                    </div>
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                              </div>
-                                                <div class="description">
-                                                  <h3>Summary</h3>
-                                                    <p>Setting data for connection</p>
-                                            
-                                                </div>
-                                            
-                                                    <div class="params">
-                                                        <h4>Parameters:</h4>
-                                            
-                                                        <ul class="params-list">
                                                             <li class="param">
-                                                                    <code class="param-name">arguments</code>
-                                                                    <span class="type">Array</span>
+                                                                    <code class="param-name">callback</code>
+                                                                    <span class="type">Function</span>
                                             
                                             
                                                                 <div class="param-description">
-                                                                     
-                                                                </div>
-                                            
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                            
-                                            
-                                            
-                                            </div>
-                                            <div id="method_setResponseData" class="method item">
-                                              <h3 class="blue-method-name">setResponseData</h3>
-                                            
-                                              <div class="meta method-meta">
-                                                  <p>
-                                                      Defined in
-                                                  <a href="../files/js_openGDSMobile_OGDSM_externalConnection.js.html#l60"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_externalConnection.js:60</code></a>
-                                              </p>
-                                            
-                                            
-                                            
-                                              </div>
-                                            
-                                              <h3>Syntax</h3>
-                                              <div class="blue-method-syntax">
-                                              <h3 class="name"><code>setResponseData</code></h3>
-                                            
-                                                    <div class="args">
-                                                        <span class="paren">(</span><ul class="args-list inline commas">
-                                                            <li class="arg">
-                                                                    <code>obj</code>
-                                                            </li>
-                                                        </ul><span class="paren">)</span>
-                                                    </div>
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                              </div>
-                                                <div class="description">
-                                                  <h3>Summary</h3>
-                                                    <p>Set external server ajax result value</p>
-                                            
-                                                </div>
-                                            
-                                                    <div class="params">
-                                                        <h4>Parameters:</h4>
-                                            
-                                                        <ul class="params-list">
-                                                            <li class="param">
-                                                                    <code class="param-name">obj</code>
-                                                                    <span class="type">JSON or Array</span>
-                                            
-                                            
-                                                                <div class="param-description">
-                                                                     
-                                                                </div>
-                                            
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                            
-                                            
-                                            
-                                            </div>
-                                            <div id="method_setSubName" class="method item">
-                                              <h3 class="blue-method-name">setSubName</h3>
-                                            
-                                              <div class="meta method-meta">
-                                                  <p>
-                                                      Defined in
-                                                  <a href="../files/js_openGDSMobile_OGDSM_externalConnection.js.html#l69"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_externalConnection.js:69</code></a>
-                                              </p>
-                                            
-                                            
-                                            
-                                              </div>
-                                            
-                                              <h3>Syntax</h3>
-                                              <div class="blue-method-syntax">
-                                              <h3 class="name"><code>setSubName</code></h3>
-                                            
-                                                    <div class="args">
-                                                        <span class="paren">(</span><ul class="args-list inline commas">
-                                                            <li class="arg">
-                                                                    <code>name</code>
-                                                            </li>
-                                                        </ul><span class="paren">)</span>
-                                                    </div>
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                              </div>
-                                                <div class="description">
-                                                  <h3>Summary</h3>
-                                                    <p>Set external server sub name</p>
-                                            
-                                                </div>
-                                            
-                                                    <div class="params">
-                                                        <h4>Parameters:</h4>
-                                            
-                                                        <ul class="params-list">
-                                                            <li class="param">
-                                                                    <code class="param-name">name</code>
-                                                                    <span class="type">String</span>
-                                            
-                                            
-                                                                <div class="param-description">
-                                                                     
-                                                                </div>
-                                            
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                            
-                                            
-                                            
-                                            </div>
-                                            <div id="method_setValues" class="method item">
-                                              <h3 class="blue-method-name">setValues</h3>
-                                            
-                                              <div class="meta method-meta">
-                                                  <p>
-                                                      Defined in
-                                                  <a href="../files/js_openGDSMobile_OGDSM_externalConnection.js.html#l37"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_externalConnection.js:37</code></a>
-                                              </p>
-                                            
-                                            
-                                            
-                                              </div>
-                                            
-                                              <h3>Syntax</h3>
-                                              <div class="blue-method-syntax">
-                                              <h3 class="name"><code>setValues</code></h3>
-                                            
-                                                    <div class="args">
-                                                        <span class="paren">(</span><ul class="args-list inline commas">
-                                                            <li class="arg">
-                                                                    <code>data</code>
-                                                            </li>
-                                                        </ul><span class="paren">)</span>
-                                                    </div>
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                              </div>
-                                                <div class="description">
-                                                  <h3>Summary</h3>
-                                                    <p>Set external server parameter</p>
-                                            
-                                                </div>
-                                            
-                                                    <div class="params">
-                                                        <h4>Parameters:</h4>
-                                            
-                                                        <ul class="params-list">
-                                                            <li class="param">
-                                                                    <code class="param-name">data</code>
-                                                                    <span class="type">Array</span>
-                                            
-                                            
-                                                                <div class="param-description">
-                                                                    <p>values</p>
-                                            
+                                                                    <ul>
+                                            <li>성공 콜백 함수</li>
+                                            </ul>
+
                                                                 </div>
                                             
                                                             </li>
@@ -1161,48 +731,105 @@
                                             </div>
                                             <div id="method_vworldWMSLoad" class="method item">
                                               <h3 class="blue-method-name">vworldWMSLoad</h3>
-
+                                            
                                               <div class="meta method-meta">
                                                   <p>
                                                       Defined in
-                                                  <a href="../files/js_openGDSMobile_OGDSM_externalConnection.js.html#l347"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_externalConnection.js:347</code></a>
+                                                  <a href="../files/js_openGDSMobile_OGDSM_externalConnection.js.html#l184"><code>js&#x2F;openGDSMobile&#x2F;OGDSM_externalConnection.js:184</code></a>
                                               </p>
-
-
-
+                                            
+                                            
+                                            
                                               </div>
-
+                                            
                                               <h3>Syntax</h3>
                                               <div class="blue-method-syntax">
                                               <h3 class="name"><code>vworldWMSLoad</code></h3>
-
-                                                    <span class="paren">()</span>
-
+                                            
+                                                    <div class="args">
+                                                        <span class="paren">(</span><ul class="args-list inline commas">
+                                                            <li class="arg">
+                                                                    <code>apiKey</code>
+                                                            </li>
+                                                            <li class="arg">
+                                                                    <code>domain</code>
+                                                            </li>
+                                                            <li class="arg">
+                                                                    <code>data</code>
+                                                            </li>
+                                                        </ul><span class="paren">)</span>
+                                                    </div>
+                                            
                                                     <span class="returns-inline">
-                                                        <span class="type">JSON or Array</span>
+                                                        <span class="type">ol.layer.Tile</span>
                                                     </span>
-
-
-
-
-
-
-
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
                                               </div>
                                                 <div class="description">
                                                   <h3>Summary</h3>
-                                                    <p>vworldWMS data loading</p>
-
+                                                    <p>VWorld WMS 데이터 요청</p>
+                                            
                                                 </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Parameters:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">apiKey</code>
+                                                                    <span class="type">String</span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <ul>
+                                            <li>api 키</li>
+                                            </ul>
 
+                                                                </div>
+                                            
+                                                            </li>
+                                                            <li class="param">
+                                                                    <code class="param-name">domain</code>
+                                                                    <span class="type">String</span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <ul>
+                                            <li>도메인</li>
+                                            </ul>
+                                            
+                                                                </div>
+
+                                                            </li>
+                                                            <li class="param">
+                                                                    <code class="param-name">data</code>
+                                                                    <span class="type">String</span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <ul>
+                                            <li>WMS 레이어 이름</li>
+                                            </ul>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                        </ul>
+                                                    </div>
 
                                                     <div class="returns">
                                                         <h4>Returns:</h4>
 
                                                         <div class="returns-description">
-                                                            <span class="type">JSON or Array</span>:
+                                                            <span class="type">ol.layer.Tile</span>:
                                                             <div class="blue-return-desc">
-                                                                <p>save values(responseData) through setResponseData()</p>
+                                                                <p>OpenLayers 타일 객체</p>
 
                                                             </div>
 
