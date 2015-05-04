@@ -1,1 +1,43 @@
-iiiiiii
+<!DOCTYPE html>
+<html>
+   <!-- dependency library CSS-->
+    <link rel="stylesheet" href="css/egovframework/mbl/cmm/jquery.mobile-1.3.2.css">   <!-- jQuery Mobile -->
+    <link rel="stylesheet" href="css/egovframework/mbl/cmm/EgovMobile-1.3.2.css">      <!-- eGov Mobile -->
+    <link type="text/css" rel="stylesheet" href="css/ol3/ol.css">                      <!-- OpenLayers 3 -->
+
+    <!-- dependency library JS-->
+    <!-- egovFramework  KOREA-->
+    <script type="text/javascript" src="js/egovframework/mbl/cmm/jquery-1.9.1.min.js"></script>      <!-- jQuery -->
+    <script type="text/javascript" src="js/egovframework/mbl/cmm/jquery.mobile-1.3.2.min.js"></script> <!-- jQuery Mobile -->
+    <script type="text/javascript" src="js/egovframework/mbl/cmm/EgovMobile-1.3.2.js"></script>      <!-- eGov Mobile -->
+    <!-- Proj, OpenLayers3, D3 -->
+    <script type="text/javascript" src="js/proj4js/2.2.2/proj4.js"></script>                         <!-- Proj4js -->
+    <script type="text/javascript" src="js/ol3/ol.js"></script>                                      <!-- OpenLayers 3 -->
+<!--   <script type="text/javascript" src="js/d3/d3.js"></script> -->                                      <!-- D3.js -->
+
+    <!-- openGDSMobileClient1.1 development version-->
+    <!-- <script type="text/javascript" src="OpenGDSMobileLib/openGDSMobileClient1.2.js"></script> -->
+
+    <!-- openGDSMobileClient1.1 development version-->
+ <!--   <script src="js/openGDSMobile/Sortable.js" charset="UTF-8"></script>
+    <script src="js/openGDSMobile/OGDSM.js" charset="UTF-8"></script>
+    <script src="js/openGDSMobile/OGDSM_visualization.js"  charset="UTF-8"></script>
+    <script src="js/openGDSMobile/OGDSM_eGovFrameUI.js"  charset="UTF-8"></script>
+    <script src="js/openGDSMobile/OGDSM_externalConnection.js"  charset="UTF-8"></script>
+    <script src="js/openGDSMobile/OGDSM_mapLayerList.js"  charset="UTF-8"></script>
+    <script src="js/openGDSMobile/OGDSM_attributeTable.js"  charset="UTF-8"></script> -->
+    <script type="text/javascript" src="OpenGDSMobileLib/openGDSMobileClient1.2.js"></script>
+
+ <body>
+    <div id="map" style="width:100%; height:100%;"></div>
+    <script>
+//map----------------------------------------------------------------------------------------------------------
+
+	var openGDSMObj = new OGDSM.visualization('map');
+        openGDSMObj.olMapView([37.582200, 127.010031], 'OSM');
+	openGDSMObj.trackingGeoLocation(true);
+//	ogdsm.addMap(outputImageLayer_ms);
+   </script>
+ </body>
+</html>
+
