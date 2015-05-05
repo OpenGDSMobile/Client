@@ -1,5 +1,7 @@
 <!DOCTYPE html>
 <html>
+<head><meta charset="utf-8"></head>
+
    <!-- dependency library CSS-->
     <link rel="stylesheet" href="css/egovframework/mbl/cmm/jquery.mobile-1.3.2.css">   <!-- jQuery Mobile -->
     <link rel="stylesheet" href="css/egovframework/mbl/cmm/EgovMobile-1.3.2.css">      <!-- eGov Mobile -->
@@ -13,30 +15,91 @@
     <!-- Proj, OpenLayers3, D3 -->
     <script type="text/javascript" src="js/proj4js/2.2.2/proj4.js"></script>                         <!-- Proj4js -->
     <script type="text/javascript" src="js/ol3/ol.js"></script>                                      <!-- OpenLayers 3 -->
-<!--   <script type="text/javascript" src="js/d3/d3.js"></script> -->                                      <!-- D3.js -->
-
+    <script type="text/javascript" src="js/d3/d3.js"></script>                                       <!-- D3.js -->
     <!-- openGDSMobileClient1.1 development version-->
-    <!-- <script type="text/javascript" src="OpenGDSMobileLib/openGDSMobileClient1.2.js"></script> -->
-
-    <!-- openGDSMobileClient1.1 development version-->
- <!--   <script src="js/openGDSMobile/Sortable.js" charset="UTF-8"></script>
-    <script src="js/openGDSMobile/OGDSM.js" charset="UTF-8"></script>
-    <script src="js/openGDSMobile/OGDSM_visualization.js"  charset="UTF-8"></script>
-    <script src="js/openGDSMobile/OGDSM_eGovFrameUI.js"  charset="UTF-8"></script>
-    <script src="js/openGDSMobile/OGDSM_externalConnection.js"  charset="UTF-8"></script>
-    <script src="js/openGDSMobile/OGDSM_mapLayerList.js"  charset="UTF-8"></script>
-    <script src="js/openGDSMobile/OGDSM_attributeTable.js"  charset="UTF-8"></script> -->
     <script type="text/javascript" src="OpenGDSMobileLib/openGDSMobileClient1.2.js"></script>
-
  <body>
-    <div id="map" style="width:100%; height:100%;"></div>
-    <script>
-//map----------------------------------------------------------------------------------------------------------
+   <div id="map" style="width:100%; height:100%;"></div>
+   <div id="mapSelect" class="OGDSPosTopRight_1"></div>
+   <div id="processSelect" class="OGDSPosTopRight_2"></div>
 
-	var openGDSMObj = new OGDSM.visualization('map');
-        openGDSMObj.olMapView([37.582200, 127.010031], 'OSM');
-	openGDSMObj.trackingGeoLocation(true);
-//	ogdsm.addMap(outputImageLayer_ms);
+   <style>
+        .OGDSPosTopRight_1{
+            position : absolute;
+            z-index : 1000;
+            top : 8px;
+            left : auto;
+            right : 10px;
+        }
+        .OGDSPosTopRight_2{
+            position : absolute;
+            z-index : 1000;
+            top : 16px;
+            left : auto;
+            right : 10px;
+        }
+   </style> 
+   <script>
+//map----------------------------------------------------------------------------------------------------------
+	var sateliteImageLayer;
+	var openGDSMObj_visual = new OGDSM.visualization('map');
+
+	function mapSelectUI(openGDSMObj_visual) {
+		var ui = new OGDSM.eGovFrameUI();
+		ui.baseMapSelect(openGDSMObj_visual, "mapSelect", 'OSM VWorld VWorld_m VWorld_s VWorld_g');	
+	}
+	function selectProcessUI(openGDSMObj_visual) {
+		var ui = new OGDSM.eGovFrameUI();
+	//	ui.
+	}
+	function WPS_Request(request, identifier, inputdata){
+	if(request == "GetCapabilities"){
+		var Process_list = new Array();
+		$.ajax({
+        	        url : "http://113.198.80.58/geoserver/ows?service=wps&version=1.0.0&request=GetCapabilities",
+        	        type:'GET',
+			dataType:'xml',
+			success : function (xml) {	
+				console.log(xml);
+                        var xmlData = $(xml).find("Process");
+                        var identifier = "";
+                        var value = "";
+			var i = 0;
+                        $(xmlData).each(function(){
+                        value = $(this).find("Identifier").text();              
+                        if(value.indexOf('_WPS') > -1){
+                                identifier = value.substring(value.indexOf(':')+1, value.indexOf('WPS')-1); 
+				Process_list[i] = identifier;
+				i++;
+				console.log(identifier);
+			}}//modify......
+			)
+			return Process_list;
+			},
+			error : function (e) {
+				console.log(e);
+				}
+			});
+	}
+	else if(request == "DescribeProcess"){}
+	else if(request == "Execute"){}
+	}
+
+	$(function(){
+		openGDSMObj_visual.olMapView([127.22, 36.4], 'OSM');
+		openGDSMObj_visual.trackingGeoLocation(true);
+		sateliteImageLayer =  new ol.layer.Tile({
+			title:'index',
+			source: new ol.source.TileWMS(({
+			url: 'http://113.198.80.58/geoserver/wms',
+			params: {'LAYERS': 'TEST3:kompsat2_10801272_epsg3857','TILED':true},
+			serverType:'geoserver'
+			}))
+			});
+		openGDSMObj_visual.addMap(sateliteImageLayer);
+		var ppp = WPS_Request("GetCapabilities");
+		mapSelectUI(openGDSMObj_visual);
+	});
    </script>
  </body>
 </html>
