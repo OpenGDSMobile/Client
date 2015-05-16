@@ -262,8 +262,6 @@ OGDSM.visualization.prototype.trackingGeoLocation = function (sw) {
 OGDSM.visualization.prototype.updateLayoutSetting = function (mapDiv) {
     'use strict';
     mapDiv = (typeof (mapDiv) !== 'undefined') ? mapDiv : this.mapDiv;
-    $('#' + mapDiv).width(window.innerWidth);
-    $('#' + mapDiv).height(window.innerHeight);
     if (typeof (this.mapObj) !== 'undefined') {
         this.mapObj.updateSize();
     }

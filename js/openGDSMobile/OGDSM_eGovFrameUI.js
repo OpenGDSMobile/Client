@@ -552,19 +552,33 @@ OGDSM.eGovFrameUI.prototype.vworldWMSList = function (divId, theme) {
  * 서울 열린 데이터 광장 환경정보 요청 인터페이스
  * @method seoulEnvironment
  * @param {String} divId - 최상위 DIV 아이디 이름
- * @param {String} theme - 테마 default : this.dataTheme
+ * @param {JSON Object} options - 옵션 JSON 객체 키 값{theme=this.dataTheme, path='./images/'}
+  theme(String) : 테마
+  path(String) : 이미지 위치
  * @return {String} 생성된 객체 배열 [visualType, date, time, environmentType]
  */
-OGDSM.eGovFrameUI.prototype.seoulEnvironment = function (divId, theme) {
+OGDSM.eGovFrameUI.prototype.seoulEnvironment = function (divId, options) {
     'use strict';
-    theme = (typeof (theme) !== 'undefined') ? theme : this.dataTheme;
+    options = (typeof (options) !== 'undefined') ? options : {};
+    var name;
+    var defaults = {
+        theme : this.dataTheme,
+        path : './images/'
+    };
+    for (name in defaults) {
+        if (defaults.hasOwnProperty(name)) {
+            if (options.hasOwnProperty(name)) {
+                defaults[name] = options[name];
+            }
+        }
+	}
     var environmentImages = [
-        '<img src="images/input_bt_pm10.png" width=30>',
-        '<img src="images/input_bt_pm25.png" width=30>',
-        '<img src="images/input_bt_so2.png" width=30>',
-        '<img src="images/input_bt_o3.png" width=30>',
-        '<img src="images/input_bt_no2.png" width=30>',
-        '<img src="images/input_bt_co.png" width=30>'
+        '<img src="' + defaults.path + 'input_bt_pm10.png" width=30>',
+        '<img src="' + defaults.path + 'input_bt_pm25.png" width=30>',
+        '<img src="' + defaults.path + 'input_bt_so2.png" width=30>',
+        '<img src="' + defaults.path + 'input_bt_o3.png" width=30>',
+        '<img src="' + defaults.path + 'input_bt_no2.png" width=30>',
+        '<img src="' + defaults.path + 'input_bt_co.png" width=30>'
     ],
         environmentValues = ['PM10', 'PM25', 'SO2', 'O3', 'NO2', 'CO'];
     var rootDiv = $('#' + divId),
@@ -587,19 +601,33 @@ OGDSM.eGovFrameUI.prototype.seoulEnvironment = function (divId, theme) {
  * 데이터 포털 환경정보 요청 인터페이스
  * @method dataProtalEnvironment
  * @param {String} divId - 최상위 DIV 아이디 이름
- * @param {String} theme - 테마 default : this.dataTheme
+ * @param {JSON Object} options - 옵션 JSON 객체 키 값{theme=this.dataTheme, path='./images/'}
+  theme(String) : 테마
+  path(String) : 이미지 위치
  * @return {String} 생성된 객체 배열 [visualType, areaType, environmentType]
  */
-OGDSM.eGovFrameUI.prototype.dataProtalEnvironment = function (divId, theme) {
+OGDSM.eGovFrameUI.prototype.dataProtalEnvironment = function (divId, options) {
     'use strict';
-    theme = (typeof (theme) !== 'undefined') ? theme : this.dataTheme;
-    var i, environmentImages = [
-        '<img src="images/input_bt_pm10.png" width=30>',
-        '<img src="images/input_bt_pm25.png" width=30>',
-        '<img src="images/input_bt_so2.png" width=30>',
-        '<img src="images/input_bt_o3.png" width=30>',
-        '<img src="images/input_bt_no2.png" width=30>',
-        '<img src="images/input_bt_co.png" width=30>'
+    options = (typeof (options) !== 'undefined') ? options : {};
+    var name, i;
+    var defaults = {
+        theme : this.dataTheme,
+        path : './images/'
+    };
+    for (name in defaults) {
+        if (defaults.hasOwnProperty(name)) {
+            if (options.hasOwnProperty(name)) {
+                defaults[name] = options[name];
+            }
+        }
+	}
+    var environmentImages = [
+        '<img src="' + defaults.path + 'input_bt_pm10.png" width=30>',
+        '<img src="' + defaults.path + 'input_bt_pm25.png" width=30>',
+        '<img src="' + defaults.path + 'input_bt_so2.png" width=30>',
+        '<img src="' + defaults.path + 'input_bt_o3.png" width=30>',
+        '<img src="' + defaults.path + 'input_bt_no2.png" width=30>',
+        '<img src="' + defaults.path + 'input_bt_co.png" width=30>'
     ],
         environmentValues = ['pm10Value', 'pm25Value', 'so2value', 'o3Value', 'no2Value', 'coValue'],
         areaTypes = ['인천', '서울', '경기', '강원', '충남', '세종', '충북', '대전', '경북', '전북', '대구', '울산', '전남', '광주', '경남', '부산', '제주'];

@@ -642,19 +642,33 @@
                          * 서울 열린 데이터 광장 환경정보 요청 인터페이스
                          * @method seoulEnvironment
                          * @param {String} divId - 최상위 DIV 아이디 이름
-                         * @param {String} theme - 테마 default : this.dataTheme
+                         * @param {JSON Object} options - 옵션 JSON 객체 키 값{theme=this.dataTheme, path=&#x27;./images/&#x27;}
+                          theme(String) : 테마
+                          path(String) : 이미지 위치
                          * @return {String} 생성된 객체 배열 [visualType, date, time, environmentType]
                          */
-                        OGDSM.eGovFrameUI.prototype.seoulEnvironment = function (divId, theme) {
+                        OGDSM.eGovFrameUI.prototype.seoulEnvironment = function (divId, options) {
                             &#x27;use strict&#x27;;
-                            theme = (typeof (theme) !== &#x27;undefined&#x27;) ? theme : this.dataTheme;
+                            options = (typeof (options) !== &#x27;undefined&#x27;) ? options : {};
+                            var name;
+                            var defaults = {
+                                theme : this.dataTheme,
+                                path : &#x27;./images/&#x27;
+                            };
+                            for (name in defaults) {
+                                if (defaults.hasOwnProperty(name)) {
+                                    if (options.hasOwnProperty(name)) {
+                                        defaults[name] = options[name];
+                                    }
+                                }
+                        	}
                             var environmentImages = [
-                                &#x27;&lt;img src=&quot;images/input_bt_pm10.png&quot; width=30&gt;&#x27;,
-                                &#x27;&lt;img src=&quot;images/input_bt_pm25.png&quot; width=30&gt;&#x27;,
-                                &#x27;&lt;img src=&quot;images/input_bt_so2.png&quot; width=30&gt;&#x27;,
-                                &#x27;&lt;img src=&quot;images/input_bt_o3.png&quot; width=30&gt;&#x27;,
-                                &#x27;&lt;img src=&quot;images/input_bt_no2.png&quot; width=30&gt;&#x27;,
-                                &#x27;&lt;img src=&quot;images/input_bt_co.png&quot; width=30&gt;&#x27;
+                                &#x27;&lt;img src=&quot;&#x27; + defaults.path + &#x27;input_bt_pm10.png&quot; width=30&gt;&#x27;,
+                                &#x27;&lt;img src=&quot;&#x27; + defaults.path + &#x27;input_bt_pm25.png&quot; width=30&gt;&#x27;,
+                                &#x27;&lt;img src=&quot;&#x27; + defaults.path + &#x27;input_bt_so2.png&quot; width=30&gt;&#x27;,
+                                &#x27;&lt;img src=&quot;&#x27; + defaults.path + &#x27;input_bt_o3.png&quot; width=30&gt;&#x27;,
+                                &#x27;&lt;img src=&quot;&#x27; + defaults.path + &#x27;input_bt_no2.png&quot; width=30&gt;&#x27;,
+                                &#x27;&lt;img src=&quot;&#x27; + defaults.path + &#x27;input_bt_co.png&quot; width=30&gt;&#x27;
                             ],
                                 environmentValues = [&#x27;PM10&#x27;, &#x27;PM25&#x27;, &#x27;SO2&#x27;, &#x27;O3&#x27;, &#x27;NO2&#x27;, &#x27;CO&#x27;];
                             var rootDiv = $(&#x27;#&#x27; + divId),
@@ -677,19 +691,33 @@
                          * 데이터 포털 환경정보 요청 인터페이스
                          * @method dataProtalEnvironment
                          * @param {String} divId - 최상위 DIV 아이디 이름
-                         * @param {String} theme - 테마 default : this.dataTheme
+                         * @param {JSON Object} options - 옵션 JSON 객체 키 값{theme=this.dataTheme, path=&#x27;./images/&#x27;}
+                          theme(String) : 테마
+                          path(String) : 이미지 위치
                          * @return {String} 생성된 객체 배열 [visualType, areaType, environmentType]
                          */
-                        OGDSM.eGovFrameUI.prototype.dataProtalEnvironment = function (divId, theme) {
+                        OGDSM.eGovFrameUI.prototype.dataProtalEnvironment = function (divId, options) {
                             &#x27;use strict&#x27;;
-                            theme = (typeof (theme) !== &#x27;undefined&#x27;) ? theme : this.dataTheme;
-                            var i, environmentImages = [
-                                &#x27;&lt;img src=&quot;images/input_bt_pm10.png&quot; width=30&gt;&#x27;,
-                                &#x27;&lt;img src=&quot;images/input_bt_pm25.png&quot; width=30&gt;&#x27;,
-                                &#x27;&lt;img src=&quot;images/input_bt_so2.png&quot; width=30&gt;&#x27;,
-                                &#x27;&lt;img src=&quot;images/input_bt_o3.png&quot; width=30&gt;&#x27;,
-                                &#x27;&lt;img src=&quot;images/input_bt_no2.png&quot; width=30&gt;&#x27;,
-                                &#x27;&lt;img src=&quot;images/input_bt_co.png&quot; width=30&gt;&#x27;
+                            options = (typeof (options) !== &#x27;undefined&#x27;) ? options : {};
+                            var name, i;
+                            var defaults = {
+                                theme : this.dataTheme,
+                                path : &#x27;./images/&#x27;
+                            };
+                            for (name in defaults) {
+                                if (defaults.hasOwnProperty(name)) {
+                                    if (options.hasOwnProperty(name)) {
+                                        defaults[name] = options[name];
+                                    }
+                                }
+                        	}
+                            var environmentImages = [
+                                &#x27;&lt;img src=&quot;&#x27; + defaults.path + &#x27;input_bt_pm10.png&quot; width=30&gt;&#x27;,
+                                &#x27;&lt;img src=&quot;&#x27; + defaults.path + &#x27;input_bt_pm25.png&quot; width=30&gt;&#x27;,
+                                &#x27;&lt;img src=&quot;&#x27; + defaults.path + &#x27;input_bt_so2.png&quot; width=30&gt;&#x27;,
+                                &#x27;&lt;img src=&quot;&#x27; + defaults.path + &#x27;input_bt_o3.png&quot; width=30&gt;&#x27;,
+                                &#x27;&lt;img src=&quot;&#x27; + defaults.path + &#x27;input_bt_no2.png&quot; width=30&gt;&#x27;,
+                                &#x27;&lt;img src=&quot;&#x27; + defaults.path + &#x27;input_bt_co.png&quot; width=30&gt;&#x27;
                             ],
                                 environmentValues = [&#x27;pm10Value&#x27;, &#x27;pm25Value&#x27;, &#x27;so2value&#x27;, &#x27;o3Value&#x27;, &#x27;no2Value&#x27;, &#x27;coValue&#x27;],
                                 areaTypes = [&#x27;인천&#x27;, &#x27;서울&#x27;, &#x27;경기&#x27;, &#x27;강원&#x27;, &#x27;충남&#x27;, &#x27;세종&#x27;, &#x27;충북&#x27;, &#x27;대전&#x27;, &#x27;경북&#x27;, &#x27;전북&#x27;, &#x27;대구&#x27;, &#x27;울산&#x27;, &#x27;전남&#x27;, &#x27;광주&#x27;, &#x27;경남&#x27;, &#x27;부산&#x27;, &#x27;제주&#x27;];
@@ -716,6 +744,7 @@
                             }
                             return [visualType, areaRadio, environmentType];
                         };
+
                             </pre>
                         </div>
                     </div>

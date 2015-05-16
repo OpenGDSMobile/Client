@@ -115,7 +115,7 @@
             "tag": "module",
             "file": "js/openGDSMobile/tmp.js",
             "line": 8,
-            "description": "OGDSM Layer list sorting open source \nSortable\nauthor\tRubaXa   <trash@rubaxa.org>\nlicense MIT"
+            "description": "OGDSM Layer list sorting open source\nSortable\nauthor\tRubaXa   <trash@rubaxa.org>\nlicense MIT"
         }
     },
     "classes": {
@@ -298,7 +298,7 @@
                 },
                 {
                     "name": "options",
-                    "description": "- 옵션 JSON 객체 키 값{theme=this.dataTheme, corners=true, inline=false, mini=false}\n theme(String) : 테마 \n corners(Boolean) : 모서리 둥글게 여부\n inline(Boolean) : 가로 정렬 여부\n mini(Boolean) : 버튼 크기",
+                    "description": "- 옵션 JSON 객체 키 값{theme=this.dataTheme, corners=true, inline=false, mini=false}\n theme(String) : 테마\n corners(Boolean) : 모서리 둥글게 여부\n inline(Boolean) : 가로 정렬 여부\n mini(Boolean) : 버튼 크기",
                     "type": "JSON Object"
                 }
             ],
@@ -592,9 +592,9 @@
                     "type": "String"
                 },
                 {
-                    "name": "theme",
-                    "description": "- 테마 default : this.dataTheme",
-                    "type": "String"
+                    "name": "options",
+                    "description": "- 옵션 JSON 객체 키 값{theme=this.dataTheme, path='./images/'}\n theme(String) : 테마\n path(String) : 이미지 위치",
+                    "type": "JSON Object"
                 }
             ],
             "return": {
@@ -606,7 +606,7 @@
         },
         {
             "file": "js/openGDSMobile/OGDSM_eGovFrameUI.js",
-            "line": 586,
+            "line": 600,
             "description": "데이터 포털 환경정보 요청 인터페이스",
             "itemtype": "method",
             "name": "dataProtalEnvironment",
@@ -617,9 +617,9 @@
                     "type": "String"
                 },
                 {
-                    "name": "theme",
-                    "description": "- 테마 default : this.dataTheme",
-                    "type": "String"
+                    "name": "options",
+                    "description": "- 옵션 JSON 객체 키 값{theme=this.dataTheme, path='./images/'}\n theme(String) : 테마\n path(String) : 이미지 위치",
+                    "type": "JSON Object"
                 }
             ],
             "return": {
@@ -664,7 +664,7 @@
                 },
                 {
                     "name": "options",
-                    "description": "- 옵션 JSON 객체 키 값{type='polygon', color='rgba(0, 0, 0, 0.0)', callback : function () {}}\n type(String) : 레이어 타입( polygon | point) \n color(String) : 색상 rgba\n callback(Function) : 요청 후 색상 변경시 콜백 함수",
+                    "description": "- 옵션 JSON 객체 키 값{type='polygon', color='rgba(0, 0, 0, 0.0)', callback : function () {}}\n type(String) : 레이어 타입( polygon | point)\n color(String) : 색상 rgba\n callback(Function) : 요청 후 색상 변경시 콜백 함수",
                     "type": "JSON Object"
                 }
             ],
@@ -695,7 +695,7 @@
                 },
                 {
                     "name": "options",
-                    "description": "- 옵션 JSON 객체 키 값{type='polygon', epsg='epsg3857'}\n type(String) : 레이어 타입( polygon | point) \n epsg(String) : EPSG",
+                    "description": "- 옵션 JSON 객체 키 값{type='polygon', epsg='epsg3857'}\n type(String) : 레이어 타입( polygon | point)\n epsg(String) : EPSG",
                     "type": "JSON Object"
                 }
             ],
@@ -982,7 +982,7 @@
         },
         {
             "file": "js/openGDSMobile/OGDSM_visualization.js",
-            "line": 271,
+            "line": 269,
             "description": "WMS 및 WFS 맵 레이어 추가(Add map layer WMS/WFS)",
             "itemtype": "method",
             "name": "addMap",
@@ -1003,7 +1003,7 @@
         },
         {
             "file": "js/openGDSMobile/OGDSM_visualization.js",
-            "line": 303,
+            "line": 301,
             "description": "이미지 레이어 시각화(Image layer visualization)",
             "itemtype": "method",
             "name": "imageLayer",
@@ -1034,7 +1034,7 @@
         },
         {
             "file": "js/openGDSMobile/OGDSM_visualization.js",
-            "line": 329,
+            "line": 327,
             "description": "맵 레이어 삭제(Remove map layer)",
             "itemtype": "method",
             "name": "removeMap",
@@ -1050,7 +1050,7 @@
         },
         {
             "file": "js/openGDSMobile/OGDSM_visualization.js",
-            "line": 341,
+            "line": 339,
             "description": "맵 레이어 시각화 여부(Map layer visualization flag)",
             "itemtype": "method",
             "name": "setVisible",
@@ -1071,7 +1071,7 @@
         },
         {
             "file": "js/openGDSMobile/OGDSM_visualization.js",
-            "line": 354,
+            "line": 352,
             "description": "WFS 스타일 변경(WFS style change)",
             "itemtype": "method",
             "name": "changeWFSStyle",
@@ -1097,7 +1097,7 @@
         },
         {
             "file": "js/openGDSMobile/OGDSM_visualization.js",
-            "line": 450,
+            "line": 448,
             "description": "가로 막대 차트 시각화(Bar Chart Visualization based on D3.js)",
             "itemtype": "method",
             "name": "barChart",

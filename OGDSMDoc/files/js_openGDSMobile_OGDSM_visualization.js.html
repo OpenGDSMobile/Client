@@ -352,8 +352,6 @@
                         OGDSM.visualization.prototype.updateLayoutSetting = function (mapDiv) {
                             &#x27;use strict&#x27;;
                             mapDiv = (typeof (mapDiv) !== &#x27;undefined&#x27;) ? mapDiv : this.mapDiv;
-                            $(&#x27;#&#x27; + mapDiv).width(window.innerWidth);
-                            $(&#x27;#&#x27; + mapDiv).height(window.innerHeight);
                             if (typeof (this.mapObj) !== &#x27;undefined&#x27;) {
                                 this.mapObj.updateSize();
                             }

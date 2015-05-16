@@ -27,7 +27,7 @@ YUI.add("yuidoc-meta", function(Y) {
         {
             "displayName": "Sortable.create(...)",
             "name": "Sortable.create(...)",
-            "description": "OGDSM Layer list sorting open source \nSortable\nauthor\tRubaXa   <trash@rubaxa.org>\nlicense MIT"
+            "description": "OGDSM Layer list sorting open source\nSortable\nauthor\tRubaXa   <trash@rubaxa.org>\nlicense MIT"
         }
     ]
 } };
