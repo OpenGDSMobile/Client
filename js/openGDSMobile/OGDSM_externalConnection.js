@@ -81,6 +81,7 @@ OGDSM.externalConnection.prototype.geoServerWFSLoad = function (obj, addr, works
         theme : 'c',
         textonlt : 'false'
     });
+    layerName = layerName.replace(/[ \{\}\[\]\/?.,;:|\)*~`!^\-_+┼<>@\#$%&\'\"\\\(\=]/gi,'');
     $.ajax({
         type : 'POST',
         url : fullAddr,

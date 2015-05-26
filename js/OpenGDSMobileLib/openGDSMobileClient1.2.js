@@ -1175,7 +1175,6 @@ OGDSM.namesapce('visualization');
             OGDSM.visualization.updateLayoutSetting();
         });
         if (defaults.layerListDiv !== null) {
-            console.log(defaults.layerlistDiv);
             this.layerListObj = new OGDSM.mapLayerList(this, defaults.layerListDiv);
         }
         if (defaults.attrTableDiv !== null) {
@@ -1470,6 +1469,9 @@ OGDSM.visualization.prototype.removeMap = function (layerName) {
     var obj = this.layerCheck(layerName);
     if (obj !== false) {
         this.getMap().removeLayer(obj);
+        if (typeof (this.layerListObj) !== 'undefined') {
+            this.layerListObj.removelist(layerName);
+        }
     }
 };
 /**
@@ -1754,6 +1756,7 @@ OGDSM.externalConnection.prototype.geoServerWFSLoad = function (obj, addr, works
         theme : 'c',
         textonlt : 'false'
     });
+    layerName = layerName.replace(/[ \{\}\[\]\/?.,;:|\)*~`!^\-_+┼<>@\#$%&\'\"\\\(\=]/gi,'');
     $.ajax({
         type : 'POST',
         url : fullAddr,
@@ -2296,7 +2299,7 @@ OGDSM.eGovFrameUI.prototype.baseMapRadioBox = function (OGDSMObj, rootDiv, optio
     if (options !== null) {
         supportMap = options.split(' ');
     }
-    mapRadioNameObj = this.autoRadioBox(rootDiv, 'mapType', 'radioMapType', supportMap, supportMap, ['h']);
+    mapRadioNameObj = this.autoRadioBox(rootDiv, 'mapType', supportMap, supportMap, ['h']);
 
     mapRadioNameObj.change(function () {
         OGDSMObj.changeBaseMap($(this).val());
@@ -2873,6 +2876,17 @@ OGDSM.mapLayerList.prototype.listManager = function (obj, label, color, type) {
     $('input[name=listCheckBox]').bind('click', checkBoxEvent);
 };
 
+
+OGDSM.mapLayerList.prototype.removelist = function (layerName) {
+    'use strict';
+    var labels = this.getLabels(),
+        objs = this.getLayersObj();
+    var layerNum = $.inArray(layerName, labels);
+
+    labels.splice(layerNum, 1);
+    objs.splice(layerNum, 1);
+    $('#layer' + layerName).remove();
+};
 /*jslint devel: true, vars : true plusplus : true*/
 /*global $, jQuery, ol, OGDSM*/
 

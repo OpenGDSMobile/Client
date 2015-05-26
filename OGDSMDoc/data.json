@@ -43,7 +43,9 @@
         "js/openGDSMobile/OGDSM_mapLayerList.js": {
             "name": "js/openGDSMobile/OGDSM_mapLayerList.js",
             "modules": {},
-            "classes": {},
+            "classes": {
+                "OGDSM.mapLayerList": 1
+            },
             "fors": {},
             "namespaces": {}
         },
@@ -62,15 +64,6 @@
                 "Sortable.create(...)": 1
             },
             "classes": {},
-            "fors": {},
-            "namespaces": {}
-        },
-        "js/openGDSMobile/tmp.js": {
-            "name": "js/openGDSMobile/tmp.js",
-            "modules": {},
-            "classes": {
-                "OGDSM.mapLayerList": 1
-            },
             "fors": {},
             "namespaces": {}
         }
@@ -95,6 +88,7 @@
                 "OGDSM.attributeTable": 1,
                 "OGDSM.eGovFramUI": 1,
                 "OGDSM.externalConnection": 1,
+                "OGDSM.mapLayerList": 1,
                 "OGDSM.visualization": 1
             },
             "fors": {},
@@ -107,14 +101,12 @@
         "Sortable.create(...)": {
             "name": "Sortable.create(...)",
             "submodules": {},
-            "classes": {
-                "OGDSM.mapLayerList": 1
-            },
+            "classes": {},
             "fors": {},
             "namespaces": {},
             "tag": "module",
-            "file": "js/openGDSMobile/tmp.js",
-            "line": 8,
+            "file": "js/openGDSMobile/Sortable.js",
+            "line": 1,
             "description": "OGDSM Layer list sorting open source\nSortable\nauthor\tRubaXa   <trash@rubaxa.org>\nlicense MIT"
         }
     },
@@ -205,11 +197,11 @@
             "extensions": [],
             "plugin_for": [],
             "extension_for": [],
-            "module": "Sortable.create(...)",
+            "module": "OGDSM.jsontoArray",
             "namespace": "",
-            "file": "js/openGDSMobile/tmp.js",
+            "file": "js/openGDSMobile/OGDSM_mapLayerList.js",
             "line": 8,
-            "description": "오픈레이어 맵 레이어 목록 객체\nOpenLayers3 Map layer list class",
+            "description": "오픈레이어 맵 레이어 목록 객체",
             "is_constructor": 1,
             "params": [
                 {
@@ -673,7 +665,7 @@
         },
         {
             "file": "js/openGDSMobile/OGDSM_externalConnection.js",
-            "line": 106,
+            "line": 107,
             "description": "GeoServer WFS 요청 (OpenLayers3 ol.source.ServerVector)",
             "itemtype": "method",
             "name": "geoServerWFS",
@@ -708,7 +700,7 @@
         },
         {
             "file": "js/openGDSMobile/OGDSM_externalConnection.js",
-            "line": 184,
+            "line": 185,
             "description": "VWorld WMS 데이터 요청",
             "itemtype": "method",
             "name": "vworldWMSLoad",
@@ -738,7 +730,7 @@
         },
         {
             "file": "js/openGDSMobile/OGDSM_externalConnection.js",
-            "line": 214,
+            "line": 215,
             "description": "서울 열린 데이터 광장 환경 데이터 요청",
             "itemtype": "method",
             "name": "seoulEnvironmentLoad",
@@ -779,7 +771,7 @@
         },
         {
             "file": "js/openGDSMobile/OGDSM_externalConnection.js",
-            "line": 259,
+            "line": 260,
             "description": "데이터 포털 환경 데이터 요청",
             "itemtype": "method",
             "name": "seoulEnvironmentLoad",
@@ -1050,7 +1042,7 @@
         },
         {
             "file": "js/openGDSMobile/OGDSM_visualization.js",
-            "line": 339,
+            "line": 342,
             "description": "맵 레이어 시각화 여부(Map layer visualization flag)",
             "itemtype": "method",
             "name": "setVisible",
@@ -1071,7 +1063,7 @@
         },
         {
             "file": "js/openGDSMobile/OGDSM_visualization.js",
-            "line": 352,
+            "line": 355,
             "description": "WFS 스타일 변경(WFS style change)",
             "itemtype": "method",
             "name": "changeWFSStyle",
@@ -1097,7 +1089,7 @@
         },
         {
             "file": "js/openGDSMobile/OGDSM_visualization.js",
-            "line": 448,
+            "line": 451,
             "description": "가로 막대 차트 시각화(Bar Chart Visualization based on D3.js)",
             "itemtype": "method",
             "name": "barChart",
@@ -1130,7 +1122,7 @@
             "file": "js/openGDSMobile/Sortable.js",
             "line": 161,
             "description": "class  Sortable\nparam  {HTMLElement}  el\nparam  {Object}       [options]",
-            "class": "OGDSM.mapLayerList",
+            "class": "",
             "module": "Sortable.create(...)"
         },
         {
@@ -1141,7 +1133,7 @@
                 "description": "",
                 "type": "String[]"
             },
-            "class": "OGDSM.mapLayerList",
+            "class": "",
             "module": "Sortable.create(...)"
         },
         {
@@ -1155,14 +1147,14 @@
                     "type": "String[]"
                 }
             ],
-            "class": "OGDSM.mapLayerList",
+            "class": "",
             "module": "Sortable.create(...)"
         },
         {
             "file": "js/openGDSMobile/Sortable.js",
             "line": 765,
             "description": "Save the current sorting",
-            "class": "OGDSM.mapLayerList",
+            "class": "",
             "module": "Sortable.create(...)"
         },
         {
@@ -1186,7 +1178,7 @@
                 "description": "",
                 "type": "HTMLElement|null"
             },
-            "class": "OGDSM.mapLayerList",
+            "class": "",
             "module": "Sortable.create(...)"
         },
         {
@@ -1210,20 +1202,20 @@
                 "description": "",
                 "type": "*"
             },
-            "class": "OGDSM.mapLayerList",
+            "class": "",
             "module": "Sortable.create(...)"
         },
         {
             "file": "js/openGDSMobile/Sortable.js",
             "line": 802,
             "description": "Destroy",
-            "class": "OGDSM.mapLayerList",
+            "class": "",
             "module": "Sortable.create(...)"
         },
         {
             "file": "js/openGDSMobile/Sortable.js",
             "line": 955,
-            "class": "OGDSM.mapLayerList",
+            "class": "",
             "module": "Sortable.create(...)"
         },
         {
@@ -1243,7 +1235,7 @@
             },
             "access": "private",
             "tagname": "",
-            "class": "OGDSM.mapLayerList",
+            "class": "",
             "module": "Sortable.create(...)"
         },
         {
@@ -1262,7 +1254,7 @@
             },
             "access": "private",
             "tagname": "",
-            "class": "OGDSM.mapLayerList",
+            "class": "",
             "module": "Sortable.create(...)"
         },
         {
@@ -1282,41 +1274,7 @@
                     "optional": true
                 }
             ],
-            "class": "OGDSM.mapLayerList",
-            "module": "Sortable.create(...)"
-        },
-        {
-            "file": "js/openGDSMobile/tmp.js",
-            "line": 166,
-            "description": "getMap Method get map object about OpenLayers3.",
-            "itemtype": "method",
-            "name": "getMap",
-            "return": {
-                "description": "Retrun is OpenLayers object.",
-                "type": "ol.Map"
-            },
-            "class": "OGDSM.mapLayerList",
-            "module": "Sortable.create(...)"
-        },
-        {
-            "file": "js/openGDSMobile/tmp.js",
-            "line": 207,
-            "description": "레이어 목록 추가 - (이름 변경 및 레이어 내용 변경...)\nAdd list.",
-            "itemtype": "method",
-            "name": "addList",
-            "params": [
-                {
-                    "name": "obj",
-                    "description": "- openlayers3 layer object",
-                    "type": "Ol3 layer object"
-                },
-                {
-                    "name": "label",
-                    "description": "- list name",
-                    "type": "String"
-                }
-            ],
-            "class": "OGDSM.mapLayerList",
+            "class": "",
             "module": "Sortable.create(...)"
         }
     ],

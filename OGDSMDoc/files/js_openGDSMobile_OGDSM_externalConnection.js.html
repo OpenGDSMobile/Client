@@ -171,6 +171,7 @@
                                 theme : &#x27;c&#x27;,
                                 textonlt : &#x27;false&#x27;
                             });
+                            layerName = layerName.replace(/[ \{\}\[\]\/?.,;:|\)*~&#x60;!^\-_+┼&lt;&gt;@\#$%&amp;\&#x27;\&quot;\\\(\=]/gi,&#x27;&#x27;);
                             $.ajax({
                                 type : &#x27;POST&#x27;,
                                 url : fullAddr,

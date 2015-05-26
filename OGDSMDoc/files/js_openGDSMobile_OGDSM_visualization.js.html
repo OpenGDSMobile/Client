@@ -424,6 +424,9 @@
                             var obj = this.layerCheck(layerName);
                             if (obj !== false) {
                                 this.getMap().removeLayer(obj);
+                                if (typeof (this.layerListObj) !== &#x27;undefined&#x27;) {
+                                    this.layerListObj.removelist(layerName);
+                                }
                             }
                         };
                         /**

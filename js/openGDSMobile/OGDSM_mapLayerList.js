@@ -241,3 +241,15 @@ OGDSM.mapLayerList.prototype.listManager = function (obj, label, color, type) {
     $('#' + label + 'delete').bind('click', deleteEvent);
     $('input[name=listCheckBox]').bind('click', checkBoxEvent);
 };
+
+
+OGDSM.mapLayerList.prototype.removelist = function (layerName) {
+    'use strict';
+    var labels = this.getLabels(),
+        objs = this.getLayersObj();
+    var layerNum = $.inArray(layerName, labels);
+
+    labels.splice(layerNum, 1);
+    objs.splice(layerNum, 1);
+    $('#layer' + layerName).remove();
+};

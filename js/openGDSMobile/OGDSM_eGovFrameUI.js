@@ -322,7 +322,7 @@ OGDSM.eGovFrameUI.prototype.baseMapRadioBox = function (OGDSMObj, rootDiv, optio
     if (options !== null) {
         supportMap = options.split(' ');
     }
-    mapRadioNameObj = this.autoRadioBox(rootDiv, 'mapType', 'radioMapType', supportMap, supportMap, ['h']);
+    mapRadioNameObj = this.autoRadioBox(rootDiv, 'mapType', supportMap, supportMap, ['h']);
 
     mapRadioNameObj.change(function () {
         OGDSMObj.changeBaseMap($(this).val());

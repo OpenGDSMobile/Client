@@ -412,7 +412,7 @@
                             if (options !== null) {
                                 supportMap = options.split(&#x27; &#x27;);
                             }
-                            mapRadioNameObj = this.autoRadioBox(rootDiv, &#x27;mapType&#x27;, &#x27;radioMapType&#x27;, supportMap, supportMap, [&#x27;h&#x27;]);
+                            mapRadioNameObj = this.autoRadioBox(rootDiv, &#x27;mapType&#x27;, supportMap, supportMap, [&#x27;h&#x27;]);
 
                             mapRadioNameObj.change(function () {
                                 OGDSMObj.changeBaseMap($(this).val());

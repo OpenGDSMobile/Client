@@ -332,6 +332,17 @@
                             $(&#x27;input[name=listCheckBox]&#x27;).bind(&#x27;click&#x27;, checkBoxEvent);
                         };
 
+
+                        OGDSM.mapLayerList.prototype.removelist = function (layerName) {
+                            &#x27;use strict&#x27;;
+                            var labels = this.getLabels(),
+                                objs = this.getLayersObj();
+                            var layerNum = $.inArray(layerName, labels);
+
+                            labels.splice(layerNum, 1);
+                            objs.splice(layerNum, 1);
+                            $(&#x27;#layer&#x27; + layerName).remove();
+                        };
                             </pre>
                         </div>
                     </div>

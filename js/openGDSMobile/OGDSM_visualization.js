@@ -39,7 +39,6 @@ OGDSM.namesapce('visualization');
             OGDSM.visualization.updateLayoutSetting();
         });
         if (defaults.layerListDiv !== null) {
-            console.log(defaults.layerlistDiv);
             this.layerListObj = new OGDSM.mapLayerList(this, defaults.layerListDiv);
         }
         if (defaults.attrTableDiv !== null) {
@@ -334,6 +333,9 @@ OGDSM.visualization.prototype.removeMap = function (layerName) {
     var obj = this.layerCheck(layerName);
     if (obj !== false) {
         this.getMap().removeLayer(obj);
+        if (typeof (this.layerListObj) !== 'undefined') {
+            this.layerListObj.removelist(layerName);
+        }
     }
 };
 /**
