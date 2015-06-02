@@ -88,7 +88,6 @@ OGDSM.jsonToArray = function (obj, x, y) {
  * Sortable
  * author	RubaXa   <trash@rubaxa.org>
  * license MIT
- * @module Sortable.create(...)
  */
 (function (factory) {
 	"use strict";
@@ -1141,10 +1140,10 @@ OGDSM.namesapce('visualization');
     "use strict";
     var mapObj;
     /**
-    * 오픈레이어3 지도 시각화 객체 (OpenLayers3 Map Visualization Class)
+    * 오픈레이어3 지도 시각화 객체
     * @class OGDSM.visualization
     * @constructor
-    * @param {String} mapDiv - 지도 DIV 아이디 이름 (Map div id)
+    * @param {String} mapDiv - 지도 DIV 아이디 이름
     * @param {JSON Object} options - 옵션 JSON 객체 키 값{layerListDiv=null, attrTableDiv=null, attrAddr=''}<br>
   layerListDiv : 레이어 관리 리스트 DIV 아이디 이름<br>
   attrTableDiv : 속성 시각화 DIV 아이디 이름<br>
@@ -1185,7 +1184,7 @@ OGDSM.namesapce('visualization');
     OGDSM.visualization.prototype = {
         constructor : OGDSM.visualization,
         /**
-         * 지도 객체 받기(Get map object about OpenLayers3)
+         * 지도 객체 받기
          * @method getMap
          * @return {ol.Map} 오픈레이어3 객체
          */
@@ -1193,9 +1192,9 @@ OGDSM.namesapce('visualization');
             return this.mapObj;
         },
         /**
-         * 지도 레이어 존재 여부 확인(Current layers check)
+         * 지도 레이어 존재 여부 확인
          * @method layerCheck
-         * @param {String} layerName - 레이어 타이틀
+         * @param {String} layerName - 레이어 이름
          * @return {OpenLayer3 Layer Object | Boolean} 레이어가 있을 경우 : 레이어 객체, 없을 경우 : false
          */
         layerCheck : function (layerName) {
@@ -1209,7 +1208,7 @@ OGDSM.namesapce('visualization');
             return false;
         },
         /**
-         * 지도 레이어 인덱스 값(Current layers index value)
+         * 지도 레이어 인덱스 값
          * @method indexOf
          * @param {ol3 layers object} layers - 레이어 객체
          * @return {Number} 레이어 인덱스 값
@@ -1228,11 +1227,11 @@ OGDSM.namesapce('visualization');
 }(OGDSM));
 
 /**
- * OpenGDS 모바일 맵 초기화(OGDSM Mobile map view)
+ * OpenGDS 모바일 맵 초기화
  * @method olMapView
- * @param {Array}  latlng  - 지도 초기 위,경도 값 (옵션) [default : [37.582200, 127.010031] ]
- * @param {String} mapType - 배경 지도 초기 값 (옵션) [default : 'OSM']
- * @param {String} baseProj  - 지도 투영 값 (옵션)   [default : 'EPSG:3857']
+ * @param {Array}  latlng  - 지도 초기 위,경도 값 (옵션) [default=[37.582200, 127.010031] ]
+ * @param {String} mapType - 배경 지도 초기 값 (옵션) [default='OSM']
+ * @param {String} baseProj  - 지도 투영 값 (옵션)   [default='EPSG:3857']
  * @return {ol.Map} openlayers3 ol.Map 객체
  */
 OGDSM.visualization.prototype.olMapView = function (latlng, mapType, baseProj) {
@@ -1279,9 +1278,9 @@ OGDSM.visualization.prototype.olMapView = function (latlng, mapType, baseProj) {
 
 
 /**
- * 배경지도 변경(Base map change)
+ * 배경지도 변경
  * @method changeBaseMap
- * @param {String} mapStyle - 지도 스타일 ("OSM" | "VWorld" | "VWorld_m" | "VWorld_h")
+ * @param {String} mapStyle - 지도 스타일 이름 ("OSM" | "VWorld" | "VWorld_m" | "VWorld_h")
  */
 OGDSM.visualization.prototype.changeBaseMap = function (mapStyle) {
     "use strict";
@@ -1365,7 +1364,7 @@ OGDSM.visualization.prototype.changeBaseMap = function (mapStyle) {
 };
 
 /**
- * 지도 GPS 트래킹 스위치(Map geolocation tracking)
+ * 지도 GPS 트래킹 스위치
  * @method trackingGeoLocation
  * @param {boolean} sw - Geolocation 스위치 (true | false)
  **/
@@ -1390,7 +1389,7 @@ OGDSM.visualization.prototype.trackingGeoLocation = function (sw) {
     }
 };
 /**
- * 모바일 해상도에 맞는 지도 레이아웃 업데이트(OGDSM Mobile screen update layout)
+ * 해상도에 맞는 지도 레이아웃
  * @method updateLayoutSetting
  * @param {String} mapDiv - 지도 DIV 아이디 이름
  **/
@@ -1402,10 +1401,10 @@ OGDSM.visualization.prototype.updateLayoutSetting = function (mapDiv) {
     }
 };
 /**
- * WMS 및 WFS 맵 레이어 추가(Add map layer WMS/WFS)
+ * WMS 및 WFS 맵 레이어 추가
  * @method addMap
  * @param {ol Map Object} data - 오픈레이어3 지도 객체
- * @param {String} type - WFS 객체 타입 [polygon(default) | point]
+ * @param {String} type - WFS 객체 타입 [default=polygon | point]
  */
 OGDSM.visualization.prototype.addMap = function (data, type) {
     'use strict';
@@ -1434,7 +1433,7 @@ OGDSM.visualization.prototype.addMap = function (data, type) {
     }
 };
 /**
- * 이미지 레이어 시각화(Image layer visualization)
+ * 이미지 레이어 시각화
  * @method imageLayer
  * @param {String} imgURL - 이미지 주소
  * @param {String} imgTitle - 이미지 타이틀
@@ -1460,9 +1459,9 @@ OGDSM.visualization.prototype.imageLayer = function (imgURL, imgTitle, imgSize, 
     this.getMap().addLayer(imgLayer);
 };
 /**
- * 맵 레이어 삭제(Remove map layer)
+ * 맵 레이어 삭제
  * @method removeMap
- * @param {String} layerName - 레이어 타이틀
+ * @param {String} layerName - 레이어 이름
  */
 OGDSM.visualization.prototype.removeMap = function (layerName) {
     'use strict';
@@ -1475,9 +1474,9 @@ OGDSM.visualization.prototype.removeMap = function (layerName) {
     }
 };
 /**
- * 맵 레이어 시각화 여부(Map layer visualization flag)
+ * 맵 레이어 시각화 여부
  * @method setVisible
- * @param {String} layerName - 레이어 타이틀
+ * @param {String} layerName - 레이어 이름
  * @param {Boolean} flag - 시각화 스위치 [true | false}
  */
 OGDSM.visualization.prototype.setVisible = function (layerName, flag) {
@@ -1488,11 +1487,11 @@ OGDSM.visualization.prototype.setVisible = function (layerName, flag) {
     }
 };
 /**
- * WFS 스타일 변경(WFS style change)
+ * WFS 스타일 변경
  * @method changeWFSStyle
- * @param {String} layerName - 오픈레이어3 레이어 타이틀
- * @param {Hex Color, String or Array} colors ( Hex color )
- * @param {JSON Object} options - 옵션 JSON 객체 키 값 {type:'polygon', opt : '0.5', attr: null, range: null, xyData: null}
+ * @param {String} layerName - 오픈레이어3 레이어 이름
+ * @param {Hex Color, String or Array} colors - 변경할 색상
+ * @param {JSON Object} options - 옵션 JSON 객체 키 값 {type:'polygon', opt : '0.5', attr: null, range: null, xyData: null}<br>
   type(String) : 객체 타입 (polygon, point)<br>
   opt(Number) : 레이어 투명도 <br>
   attr(String) : 속성 이름 <br>
@@ -1584,12 +1583,12 @@ OGDSM.visualization.prototype.changeWFSStyle = function (layerName, colors, opti
     map.setOpacity(defaults.opt);
 };
 /**
- * 가로 막대 차트 시각화(Bar Chart Visualization based on D3.js)
+ * 가로 막대 차트 시각화
  * @method barChart
  * @param {String} divId - 막대 차트 시각화할 DIV 아이디 이름
  * @param {Array} data - 데이터 값 2차원 배열 (0 : x, 1 : y)
  * @param {Array} range - 데이터 범위 1차원 배열
- * @param {Array} color - 데이터 색 범위 1차원 배열 default : #000000 (range와 배열 길이 같아야함)
+ * @param {Array} color - 데이터 색 범위 1차원 배열 [default=#000000 (range와 배열 길이 같아야함)]
  */
 OGDSM.visualization.prototype.barChart = function (divId, data, range, color) {
     'use strict';
@@ -1700,9 +1699,9 @@ OGDSM.namesapce('externalConnection');
  * @param {String} addr - 주소
  * @param {String} workspace - 워크스페이스
  * @param {String} layerName - 레이어 이름
- * @param {JSON Object} options - 옵션 JSON 객체 키 값{type='polygon', color='rgba(0, 0, 0, 0.0)', callback : function () {}}
-  type(String) : 레이어 타입( polygon | point)
-  color(String) : 색상 rgba
+ * @param {JSON Object} options - 옵션 JSON 객체 키 값{type='polygon', color='rgba(0, 0, 0, 0.0)', callback=function () {}}<br>
+  type(String) : 레이어 타입( polygon | point)<br>
+  color(String) : 색상 rgba<br>
   callback(Function) : 요청 후 색상 변경시 콜백 함수
  */
 OGDSM.externalConnection.prototype.geoServerWFSLoad = function (obj, addr, workspace, layerName, options) {
@@ -1756,7 +1755,7 @@ OGDSM.externalConnection.prototype.geoServerWFSLoad = function (obj, addr, works
         theme : 'c',
         textonlt : 'false'
     });
-    layerName = layerName.replace(/[ \{\}\[\]\/?.,;:|\)*~`!^\-_+┼<>@\#$%&\'\"\\\(\=]/gi,'');
+    layerName = layerName.replace(/[ \{\}\[\]\/?.,;:|\)*~`!^\-+┼<>@\#$%&\'\"\\\(\=]/gi,'');
     $.ajax({
         type : 'POST',
         url : fullAddr,
@@ -1785,9 +1784,9 @@ OGDSM.externalConnection.prototype.geoServerWFSLoad = function (obj, addr, works
  * @param {String} addr - 주소
  * @param {String} ws - 워크스페이스
  * @param {String} layerName - 레이어 이름
- * @param {JSON Object} options - 옵션 JSON 객체 키 값{type='polygon', epsg='epsg3857'}
-  type(String) : 레이어 타입( polygon | point)
-  epsg(String) : EPSG
+ * @param {JSON Object} options - 옵션 JSON 객체 키 값{type='polygon', epsg='epsg3857'}<br>
+  type(String) : 레이어 타입( polygon | point)<br>
+  epsg(String) : EPSG String<br>
  * @return {ol.layer.Vector} vectorSource - OpenLayers3 백터 객체
  */
 OGDSM.externalConnection.prototype.geoServerWFS = function (addr, ws, layerName, options) {
@@ -1860,7 +1859,7 @@ OGDSM.externalConnection.prototype.geoServerWFS = function (addr, ws, layerName,
 /**
  * VWorld WMS 데이터 요청
  * @method vworldWMSLoad
- * @param {String} apiKey - api 키
+ * @param {String} apiKey - API 키
  * @param {String} domain - 도메인
  * @param {String} data - WMS 레이어 이름
  * @return {ol.layer.Tile} OpenLayers 타일 객체
@@ -1936,7 +1935,7 @@ OGDSM.externalConnection.prototype.seoulEnvironmentLoad = function (addr, apiKey
  * 데이터 포털 환경 데이터 요청
  * @method seoulEnvironmentLoad
  * @param {String} addr - 주소
- * @param {String} apiKey - api 키
+ * @param {String} apiKey - API 키
  * @param {String} envType - 환경 정보 이름
  * @param {date} date - 날짜
  * @param {time} time - 시간
@@ -1981,8 +1980,8 @@ OGDSM.namesapce('eGovFrameUI');
 (function (OGDSM) {
     'use strict';
     /**
-     * 전자정부표준프레임워크 UX 컴포넌트 자동 생성 객체(e-Goverement Framework UX Component Automatic Create Class)
-     * @class OGDSM.eGovFramUI
+     * 전자정부표준프레임워크 UX 컴포넌트 자동 생성 객체
+     * @class OGDSM.eGovFrameUI
      * @constructor
      * @param {String} theme - eGovframework 테마 a~g (default c)
      */
@@ -2002,17 +2001,17 @@ OGDSM.namesapce('eGovFrameUI');
 
 
 /**
- * 버튼 자동 생성( Auto Create about Button)
+ * 버튼 자동 생성
  * @method autoButton
  * @param {String} divId - 최상위 DIV 아이디 이름
  * @param {String} linkId - 생성될 버튼 아이디 이름
  * @param {String} buttonTitle - 버튼 이름
  * @param {String} url - 링크 주소
- * @param {JSON Object} options - 옵션 JSON 객체 키 값{theme=this.dataTheme, corners=true, inline=false, mini=false}
-  theme(String) : 테마
-  corners(Boolean) : 모서리 둥글게 여부
-  inline(Boolean) : 가로 정렬 여부
-  mini(Boolean) : 버튼 크기
+ * @param {JSON Object} options - 옵션 JSON 객체 키 값{theme=this.dataTheme, corners=true, inline=false, mini=false}<br>
+  theme(String) : 테마<br>
+  corners(Boolean) : 모서리 둥글게 여부<br>
+  inline(Boolean) : 가로 정렬 여부<br>
+  mini(Boolean) : 버튼 크기<br>
  * @return {jQuery Object} 제이쿼리 아이디 버튼 객체
  */
 OGDSM.eGovFrameUI.prototype.autoButton = function (rootDivId, linkId, buttonTitle, url, options) {
@@ -2044,16 +2043,16 @@ OGDSM.eGovFrameUI.prototype.autoButton = function (rootDivId, linkId, buttonTitl
 };
 
 /**
- * 체크박스 자동 생성(Auto Create about Check Box)
+ * 체크박스 자동 생성
  * @method autoCheckBox
  * @param {String} divId - 최상위 DIV 아이디 이름
  * @param {String} chkId - 생성될 체크박스 아이디 이름
  * @param {String | Array} labels - 체크박스 라벨
- * @param {String | Array) values - 체크박스 값
- * @param {JSON Object} options - 옵션 JSON 객체 키 값{theme=this.dataTheme, horizontal=true, checkName : chkId + 'Name'}
-  theme(String) : 테마
-  horizontal(Boolean) : 체크박스 수평 여부
-  checkName(String) : 체크박스 그룹 이름
+ * @param {String | Array} values - 체크박스 값
+ * @param {JSON Object} options - 옵션 JSON 객체 키 값{theme=this.dataTheme, horizontal=true, checkName=chkId + 'Name'}<br>
+  theme(String) : 테마<br>
+  horizontal(Boolean) : 체크박스 수평 여부<br>
+  checkName(String) : 체크박스 그룹 이름<br>
  * @return {jQuery Object} 제이쿼리 체크박스 그룹 이름 객체
  */
 OGDSM.eGovFrameUI.prototype.autoCheckBox = function (rootDivId, chkId, labels, values, options) {
@@ -2100,16 +2099,16 @@ OGDSM.eGovFrameUI.prototype.autoCheckBox = function (rootDivId, chkId, labels, v
 };
 
 /**
- * 라디오 박스 자동 생성(Auto Create about Radio Box)
+ * 라디오 박스 자동 생성
  * @method autoRadioBox
  * @param {String} divId - 최상위 DIV 아이디 이름
  * @param {String} radioId - 생성될 라디오박스 아이디 이름
  * @param {String | Array} labels - 라디오박스 라벨
- * @param {String | Array) values - 라디오박스 값
- * @param {JSON Object} options - 옵션 JSON 객체 키 값{theme=this.dataTheme, horizontal=true, radioName : radioId + 'Name'}
-  theme(String) : 테마
-  horizontal(Boolean) : 라디오박스 수평 여부
-  radioName(String) : 라디오박스 그룹 이름
+ * @param {String | Array} values - 라디오박스 값
+ * @param {JSON Object} options - 옵션 JSON 객체 키 값{theme=this.dataTheme, horizontal=true, radioName=radioId + 'Name'}<br>
+  theme(String) : 테마<br>
+  horizontal(Boolean) : 라디오박스 수평 여부<br>
+  radioName(String) : 라디오박스 그룹 이름<br>
  * @return {jQuery Object} 제이쿼리 그룹 이름 객체
  */
 OGDSM.eGovFrameUI.prototype.autoRadioBox = function (rootDivId, radioId, labels, values, options) {
@@ -2160,18 +2159,17 @@ OGDSM.eGovFrameUI.prototype.autoRadioBox = function (rootDivId, radioId, labels,
 
 /**
  * 셀렉트 자동 생성
- * Auto Create about Select.
  * @method autoSelect
  * @param {String} divId - 최상위 DIV 아이디 이름
  * @param {String} selectId - 생성될 선택 아이디 이름
  * @param {String | Array} text - 선택 라벨 텍스트
- * @param {String | Array) values - 선택 값
- * @param {JSON Object} options - 옵션 JSON 객체 키 값{firstName='', theme=this.dataTheme, corners=true, inline=false, selected:0}
-  firstName(String) : 첫번째 값
-  theme(String) : 테마
-  corners(Boolean) : 테두리 둥글게 여부
-  inline(Boolean) : 가로 정렬 여부
-  selected(Boolean) : 처음 선택된 인덱스 값
+ * @param {String | Array} values - 선택 값
+ * @param {JSON Object} options - 옵션 JSON 객체 키 값{firstName='', theme=this.dataTheme, corners=true, inline=false, selected:0}<br>
+  firstName(String) : 첫번째 값<br>
+  theme(String) : 테마<br>
+  corners(Boolean) : 테두리 둥글게 여부<br>
+  inline(Boolean) : 가로 정렬 여부<br>
+  selected(Boolean) : 처음 선택된 인덱스 값<br>
  * @return {jQuery Object} 제이쿼리 그룹 이름 객체
  */
 OGDSM.eGovFrameUI.prototype.autoSelect = function (rootDivId, selectId, selectName, text, values, options) {
@@ -2208,14 +2206,14 @@ OGDSM.eGovFrameUI.prototype.autoSelect = function (rootDivId, selectId, selectNa
 };
 
 /**
- * 스위치 자동 생성(Auto Create about Switch based on Select)
- * @method autoSelect
+ * 스위치 자동 생성
+ * @method autoSwitch
  * @param {String} divId - 최상위 DIV 아이디 이름
  * @param {String} switchId - 생성될 스위치 아이디 이름
- * @param {JSON Object} options - 옵션 JSON 객체 키 값{theme=this.dataTheme, track_theme=this.dataTheme, switchName=switchId+'Name'}
-  theme(String) : 테마
-  track-theme(String) : 버튼 테마
-  switchName(String) : 스위치 그룹 이름
+ * @param {JSON Object} options - 옵션 JSON 객체 키 값{theme=this.dataTheme, track_theme=this.dataTheme, switchName=switchId+'Name'}<br>
+  theme(String) : 테마<br>
+  track-theme(String) : 버튼 테마<br>
+  switchName(String) : 스위치 그룹 이름<br>
  * @return {jQuery Object} 제이쿼리 아이디 객체
  */
 OGDSM.eGovFrameUI.prototype.autoSwitch = function (rootDivId, switchId, switchName, options) {
@@ -2250,7 +2248,7 @@ OGDSM.eGovFrameUI.prototype.autoSwitch = function (rootDivId, switchId, switchNa
 };
 
 /**
- * 시간 폼 태그 생성 (User Interface Create about time input)
+ * 시간 태그 생성
  * @method timeInput
  * @param {String} divId - 최상위 DIV 아이디 이름
  * @return {jQuery Object} 제이쿼리 아이디 이름 객체
@@ -2266,7 +2264,7 @@ OGDSM.eGovFrameUI.prototype.timeInput = function (divId) {
 };
 
 /**
- * 날짜 폼 태그 생성(User Interface Create about visualization type)
+ * 날짜 태그 생성
  * @method DateInput
  * @param {String} divId - 최상위 DIV 아이디 이름
  * @return {jQuery Object} 제이쿼리 아이디 이름 객체 (Date YYYY/MM/DD)
@@ -2283,7 +2281,7 @@ OGDSM.eGovFrameUI.prototype.dateInput = function (divId) {
 
 /**************Custom UI Create *******************/
 /**
- * 배경 맵 선택 사용자 인터페이스 자동 생성: 라디오 박스 (Auto Create about Map Type User Interface)
+ * 배경 맵 선택 사용자 인터페이스 자동 생성: 라디오 박스
  * @method baseMapRadioBox
  * @param {OGDSM Object} OGDSMObj - OpenGDS모바일 시각화 객체
  * @param {String}       rootDiv - 최상위 DIV 아이디 이름
@@ -2306,7 +2304,7 @@ OGDSM.eGovFrameUI.prototype.baseMapRadioBox = function (OGDSMObj, rootDiv, optio
     });
 };
 /**
- * 배경 맵 선택 사용자 인터페이스 자동 생성: 셀렉트(Auto Create about Map Type User Interface)
+ * 배경 맵 선택 사용자 인터페이스 자동 생성: 셀렉트 박스
  * @method baseMapSelect
  * @param {OGDSM Object} OGDSMObj - OpenGDS모바일 시각화 객체
  * @param {String}       rootDiv - 최상위 DIV 아이디 이름
@@ -2333,7 +2331,7 @@ OGDSM.eGovFrameUI.prototype.baseMapSelect = function (OGDSMObj, rootDiv, options
 };
 
 /**
- * 브이월드 WMS API 리스트 요청 인터페이스(VWorld WMS API List).
+ * 브이월드 WMS API 리스트 요청 인터페이스
  * @method vworldWMSList
  * @param {String} divId - 최상위 DIV 아이디 이름
  * @param {String} theme - 테마 default : this.dataTheme
@@ -2540,7 +2538,7 @@ OGDSM.eGovFrameUI.prototype.seoulEnvironment = function (divId, options) {
     var name;
     var defaults = {
         theme : this.dataTheme,
-        path : './images/'
+        path : './images/openGDSMobile/'
     };
     for (name in defaults) {
         if (defaults.hasOwnProperty(name)) {
@@ -2589,7 +2587,7 @@ OGDSM.eGovFrameUI.prototype.dataProtalEnvironment = function (divId, options) {
     var name, i;
     var defaults = {
         theme : this.dataTheme,
-        path : './images/'
+        path : './images/openGDSMobile/'
     };
     for (name in defaults) {
         if (defaults.hasOwnProperty(name)) {
@@ -2607,7 +2605,8 @@ OGDSM.eGovFrameUI.prototype.dataProtalEnvironment = function (divId, options) {
         '<img src="' + defaults.path + 'input_bt_co.png" width=30>'
     ],
         environmentValues = ['pm10Value', 'pm25Value', 'so2value', 'o3Value', 'no2Value', 'coValue'],
-        areaTypes = ['인천', '서울', '경기', '강원', '충남', '세종', '충북', '대전', '경북', '전북', '대구', '울산', '전남', '광주', '경남', '부산', '제주'];
+        areaTypes = ['인천', '서울', '경기', '강원', '충남', '세종', '충북', '대전', '경북', '전북', '대구', '울산', '전남', '광주', '경남', '부산', '제주'],
+        areaValues = ['incheon', 'seoul', 'gyeonggi', 'gangwon', 'chungnam', 'sejong', 'chungbuk', 'daejeon', 'gyeongbuk', 'jeonbuk', 'daegu', 'ulsan', 'jeonnam', 'gwangju', 'gyeongnam', 'busan', 'jeju'];
     var rootDiv = $('#' + divId),
         visualType = this.autoRadioBox(divId, 'visualType', ['맵', '차트'], ['map', 'chart'], {horizontal : true}),
         areaRadio,
@@ -2616,12 +2615,12 @@ OGDSM.eGovFrameUI.prototype.dataProtalEnvironment = function (divId, options) {
     for (i = 0; i < areaTypes.length - 2; i += 3) {
         areaRadio = this.autoRadioBox(divId, 'areaType',
                                       [areaTypes[i], areaTypes[i + 1], areaTypes[i + 2]],
-                                      [areaTypes[i], areaTypes[i + 1], areaTypes[i + 2]],
+                                      [areaValues[i], areaValues[i + 1], areaValues[i + 2]],
                                       {horizontal : true});
     }
     areaRadio = this.autoRadioBox(divId, 'areaType',
                                   [areaTypes[areaTypes.length - 2], areaTypes[areaTypes.length - 1]],
-                                  [areaTypes[areaTypes.length - 2], areaTypes[areaTypes.length - 1]],
+                                  [areaValues[areaValues.length - 2], areaValues[areaValues.length - 1]],
                                   {horizontal : true});
     for (i = 0; i < environmentValues.length; i += 3) {
         environmentType = this.autoRadioBox(divId, 'areenvTypeaType',
@@ -2784,7 +2783,7 @@ OGDSM.namesapce('mapLayerList');
 /**
  * 레이어 목록 관리
  * @method listManager
- * @param {ol3 layer object} obj - 레이어 목록에 추가할 openlayers3 레이어 객체
+ * @param {ol3 layer object} obj - 레이어 목록에 추가할 Openlayers3 레이어 객체
  * @param {String} label - 목록 이름
  * @param {String} color - 레이어 색상 (ex: rgb(255,255,255))
  * @param {String} type - 객체 타입 (polygon | point | line)
@@ -2876,7 +2875,11 @@ OGDSM.mapLayerList.prototype.listManager = function (obj, label, color, type) {
     $('input[name=listCheckBox]').bind('click', checkBoxEvent);
 };
 
-
+/**
+ * 레이어 목록 삭제
+ * @method removelist
+ * @param {String} layerName - 레이어 이름
+ */
 OGDSM.mapLayerList.prototype.removelist = function (layerName) {
     'use strict';
     var labels = this.getLabels(),
@@ -2887,6 +2890,7 @@ OGDSM.mapLayerList.prototype.removelist = function (layerName) {
     objs.splice(layerNum, 1);
     $('#layer' + layerName).remove();
 };
+
 /*jslint devel: true, vars : true plusplus : true*/
 /*global $, jQuery, ol, OGDSM*/
 

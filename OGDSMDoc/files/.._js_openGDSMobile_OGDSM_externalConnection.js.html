@@ -2,7 +2,7 @@
 <html lang="en" class="yui-overrride">
 <head>
     <meta charset="utf-8">
-    <title>js/openGDSMobile/OGDSM_externalConnection.js</title>
+    <title>../js/openGDSMobile/OGDSM_externalConnection.js</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700' rel='stylesheet' type='text/css'>
@@ -18,7 +18,7 @@
             <h1 class="blue-main-title"></h1>
         </div>
         <div class="yui3-u-1-4 version project-version">
-            API Docs for: 
+            API Docs for:
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -32,25 +32,24 @@
                             <li><a href="#api-classes">Classes</a></li>
                             <li><a href="#api-modules">Modules</a></li>
                         </ul>
-                
+
                         <div id="api-tabview-filter">
                             <input type="search" id="api-filter" placeholder="Type to filter APIs">
                         </div>
-                
+
                         <div id="api-tabview-panel">
                             <ul id="api-classes" class="apis classes">
                                 <li><a href="../classes/OGDSM.html">OGDSM</a></li>
                                 <li><a href="../classes/OGDSM.attributeTable.html">OGDSM.attributeTable</a></li>
-                                <li><a href="../classes/OGDSM.eGovFramUI.html">OGDSM.eGovFramUI</a></li>
+                                <li><a href="../classes/OGDSM.eGovFrameUI.html">OGDSM.eGovFrameUI</a></li>
                                 <li><a href="../classes/OGDSM.externalConnection.html">OGDSM.externalConnection</a></li>
                                 <li><a href="../classes/OGDSM.mapLayerList.html">OGDSM.mapLayerList</a></li>
                                 <li><a href="../classes/OGDSM.visualization.html">OGDSM.visualization</a></li>
                             </ul>
-                
+
                             <ul id="api-modules" class="apis modules">
                                 <li><a href="../modules/OGDSM.jsontoArray.html">OGDSM.jsontoArray</a></li>
                                 <li><a href="../modules/OGDSM.namespace.html">OGDSM.namespace</a></li>
-                                <li><a href="../modules/Sortable.create(...).html">Sortable.create(...)</a></li>
                             </ul>
                         </div>
                     </div>
@@ -64,12 +63,12 @@
                         <input type="checkbox" id="api-show-inherited" checked>
                         Inherited
                     </label>
-            
+
                     <label for="api-show-protected">
                         <input type="checkbox" id="api-show-protected">
                         Protected
                     </label>
-            
+
                     <label for="api-show-private">
                         <input type="checkbox" id="api-show-private">
                         Private
@@ -78,14 +77,14 @@
                         <input type="checkbox" id="api-show-deprecated">
                         Deprecated
                     </label>
-            
+
                 </div>
-            
+
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1 class="file-heading">File: js/openGDSMobile/OGDSM_externalConnection.js</h1>
-                        
+                        <h1 class="file-heading">File: ../js/openGDSMobile/OGDSM_externalConnection.js</h1>
+
                         <div class="file">
                             <pre class="code prettyprint linenums">
                         /** GeoServer, Public data, VWorld Connect Class **/
@@ -100,7 +99,7 @@
                              * @constructor
                              */
                             OGDSM.externalConnection = function () {
-                        
+
                             };
                             OGDSM.externalConnection.prototype = {
                                 constructor : OGDSM.externalConnection
@@ -115,9 +114,9 @@
                          * @param {String} addr - 주소
                          * @param {String} workspace - 워크스페이스
                          * @param {String} layerName - 레이어 이름
-                         * @param {JSON Object} options - 옵션 JSON 객체 키 값{type=&#x27;polygon&#x27;, color=&#x27;rgba(0, 0, 0, 0.0)&#x27;, callback : function () {}}
-                          type(String) : 레이어 타입( polygon | point)
-                          color(String) : 색상 rgba
+                         * @param {JSON Object} options - 옵션 JSON 객체 키 값{type=&#x27;polygon&#x27;, color=&#x27;rgba(0, 0, 0, 0.0)&#x27;, callback=function () {}}&lt;br&gt;
+                          type(String) : 레이어 타입( polygon | point)&lt;br&gt;
+                          color(String) : 색상 rgba&lt;br&gt;
                           callback(Function) : 요청 후 색상 변경시 콜백 함수
                          */
                         OGDSM.externalConnection.prototype.geoServerWFSLoad = function (obj, addr, workspace, layerName, options) {
@@ -200,9 +199,9 @@
                          * @param {String} addr - 주소
                          * @param {String} ws - 워크스페이스
                          * @param {String} layerName - 레이어 이름
-                         * @param {JSON Object} options - 옵션 JSON 객체 키 값{type=&#x27;polygon&#x27;, epsg=&#x27;epsg3857&#x27;}
-                          type(String) : 레이어 타입( polygon | point)
-                          epsg(String) : EPSG
+                         * @param {JSON Object} options - 옵션 JSON 객체 키 값{type=&#x27;polygon&#x27;, epsg=&#x27;epsg3857&#x27;}&lt;br&gt;
+                          type(String) : 레이어 타입( polygon | point)&lt;br&gt;
+                          epsg(String) : EPSG String&lt;br&gt;
                          * @return {ol.layer.Vector} vectorSource - OpenLayers3 백터 객체
                          */
                         OGDSM.externalConnection.prototype.geoServerWFS = function (addr, ws, layerName, options) {
@@ -275,7 +274,7 @@
                         /**
                          * VWorld WMS 데이터 요청
                          * @method vworldWMSLoad
-                         * @param {String} apiKey - api 키
+                         * @param {String} apiKey - API 키
                          * @param {String} domain - 도메인
                          * @param {String} data - WMS 레이어 이름
                          * @return {ol.layer.Tile} OpenLayers 타일 객체
@@ -351,7 +350,7 @@
                          * 데이터 포털 환경 데이터 요청
                          * @method seoulEnvironmentLoad
                          * @param {String} addr - 주소
-                         * @param {String} apiKey - api 키
+                         * @param {String} apiKey - API 키
                          * @param {String} envType - 환경 정보 이름
                          * @param {date} date - 날짜
                          * @param {time} time - 시간

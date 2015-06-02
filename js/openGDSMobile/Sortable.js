@@ -3,7 +3,6 @@
  * Sortable
  * author	RubaXa   <trash@rubaxa.org>
  * license MIT
- * @module Sortable.create(...)
  */
 (function (factory) {
 	"use strict";

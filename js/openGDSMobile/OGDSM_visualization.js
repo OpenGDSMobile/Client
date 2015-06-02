@@ -5,10 +5,10 @@ OGDSM.namesapce('visualization');
     "use strict";
     var mapObj;
     /**
-    * 오픈레이어3 지도 시각화 객체 (OpenLayers3 Map Visualization Class)
+    * 오픈레이어3 지도 시각화 객체
     * @class OGDSM.visualization
     * @constructor
-    * @param {String} mapDiv - 지도 DIV 아이디 이름 (Map div id)
+    * @param {String} mapDiv - 지도 DIV 아이디 이름
     * @param {JSON Object} options - 옵션 JSON 객체 키 값{layerListDiv=null, attrTableDiv=null, attrAddr=''}<br>
   layerListDiv : 레이어 관리 리스트 DIV 아이디 이름<br>
   attrTableDiv : 속성 시각화 DIV 아이디 이름<br>
@@ -49,7 +49,7 @@ OGDSM.namesapce('visualization');
     OGDSM.visualization.prototype = {
         constructor : OGDSM.visualization,
         /**
-         * 지도 객체 받기(Get map object about OpenLayers3)
+         * 지도 객체 받기
          * @method getMap
          * @return {ol.Map} 오픈레이어3 객체
          */
@@ -57,9 +57,9 @@ OGDSM.namesapce('visualization');
             return this.mapObj;
         },
         /**
-         * 지도 레이어 존재 여부 확인(Current layers check)
+         * 지도 레이어 존재 여부 확인
          * @method layerCheck
-         * @param {String} layerName - 레이어 타이틀
+         * @param {String} layerName - 레이어 이름
          * @return {OpenLayer3 Layer Object | Boolean} 레이어가 있을 경우 : 레이어 객체, 없을 경우 : false
          */
         layerCheck : function (layerName) {
@@ -73,7 +73,7 @@ OGDSM.namesapce('visualization');
             return false;
         },
         /**
-         * 지도 레이어 인덱스 값(Current layers index value)
+         * 지도 레이어 인덱스 값
          * @method indexOf
          * @param {ol3 layers object} layers - 레이어 객체
          * @return {Number} 레이어 인덱스 값
@@ -92,11 +92,11 @@ OGDSM.namesapce('visualization');
 }(OGDSM));
 
 /**
- * OpenGDS 모바일 맵 초기화(OGDSM Mobile map view)
+ * OpenGDS 모바일 맵 초기화
  * @method olMapView
- * @param {Array}  latlng  - 지도 초기 위,경도 값 (옵션) [default : [37.582200, 127.010031] ]
- * @param {String} mapType - 배경 지도 초기 값 (옵션) [default : 'OSM']
- * @param {String} baseProj  - 지도 투영 값 (옵션)   [default : 'EPSG:3857']
+ * @param {Array}  latlng  - 지도 초기 위,경도 값 (옵션) [default=[37.582200, 127.010031] ]
+ * @param {String} mapType - 배경 지도 초기 값 (옵션) [default='OSM']
+ * @param {String} baseProj  - 지도 투영 값 (옵션)   [default='EPSG:3857']
  * @return {ol.Map} openlayers3 ol.Map 객체
  */
 OGDSM.visualization.prototype.olMapView = function (latlng, mapType, baseProj) {
@@ -143,9 +143,9 @@ OGDSM.visualization.prototype.olMapView = function (latlng, mapType, baseProj) {
 
 
 /**
- * 배경지도 변경(Base map change)
+ * 배경지도 변경
  * @method changeBaseMap
- * @param {String} mapStyle - 지도 스타일 ("OSM" | "VWorld" | "VWorld_m" | "VWorld_h")
+ * @param {String} mapStyle - 지도 스타일 이름 ("OSM" | "VWorld" | "VWorld_m" | "VWorld_h")
  */
 OGDSM.visualization.prototype.changeBaseMap = function (mapStyle) {
     "use strict";
@@ -229,7 +229,7 @@ OGDSM.visualization.prototype.changeBaseMap = function (mapStyle) {
 };
 
 /**
- * 지도 GPS 트래킹 스위치(Map geolocation tracking)
+ * 지도 GPS 트래킹 스위치
  * @method trackingGeoLocation
  * @param {boolean} sw - Geolocation 스위치 (true | false)
  **/
@@ -254,7 +254,7 @@ OGDSM.visualization.prototype.trackingGeoLocation = function (sw) {
     }
 };
 /**
- * 모바일 해상도에 맞는 지도 레이아웃 업데이트(OGDSM Mobile screen update layout)
+ * 해상도에 맞는 지도 레이아웃
  * @method updateLayoutSetting
  * @param {String} mapDiv - 지도 DIV 아이디 이름
  **/
@@ -266,10 +266,10 @@ OGDSM.visualization.prototype.updateLayoutSetting = function (mapDiv) {
     }
 };
 /**
- * WMS 및 WFS 맵 레이어 추가(Add map layer WMS/WFS)
+ * WMS 및 WFS 맵 레이어 추가
  * @method addMap
  * @param {ol Map Object} data - 오픈레이어3 지도 객체
- * @param {String} type - WFS 객체 타입 [polygon(default) | point]
+ * @param {String} type - WFS 객체 타입 [default=polygon | point]
  */
 OGDSM.visualization.prototype.addMap = function (data, type) {
     'use strict';
@@ -298,7 +298,7 @@ OGDSM.visualization.prototype.addMap = function (data, type) {
     }
 };
 /**
- * 이미지 레이어 시각화(Image layer visualization)
+ * 이미지 레이어 시각화
  * @method imageLayer
  * @param {String} imgURL - 이미지 주소
  * @param {String} imgTitle - 이미지 타이틀
@@ -324,9 +324,9 @@ OGDSM.visualization.prototype.imageLayer = function (imgURL, imgTitle, imgSize, 
     this.getMap().addLayer(imgLayer);
 };
 /**
- * 맵 레이어 삭제(Remove map layer)
+ * 맵 레이어 삭제
  * @method removeMap
- * @param {String} layerName - 레이어 타이틀
+ * @param {String} layerName - 레이어 이름
  */
 OGDSM.visualization.prototype.removeMap = function (layerName) {
     'use strict';
@@ -339,9 +339,9 @@ OGDSM.visualization.prototype.removeMap = function (layerName) {
     }
 };
 /**
- * 맵 레이어 시각화 여부(Map layer visualization flag)
+ * 맵 레이어 시각화 여부
  * @method setVisible
- * @param {String} layerName - 레이어 타이틀
+ * @param {String} layerName - 레이어 이름
  * @param {Boolean} flag - 시각화 스위치 [true | false}
  */
 OGDSM.visualization.prototype.setVisible = function (layerName, flag) {
@@ -352,11 +352,11 @@ OGDSM.visualization.prototype.setVisible = function (layerName, flag) {
     }
 };
 /**
- * WFS 스타일 변경(WFS style change)
+ * WFS 스타일 변경
  * @method changeWFSStyle
- * @param {String} layerName - 오픈레이어3 레이어 타이틀
- * @param {Hex Color, String or Array} colors ( Hex color )
- * @param {JSON Object} options - 옵션 JSON 객체 키 값 {type:'polygon', opt : '0.5', attr: null, range: null, xyData: null}
+ * @param {String} layerName - 오픈레이어3 레이어 이름
+ * @param {Hex Color, String or Array} colors - 변경할 색상
+ * @param {JSON Object} options - 옵션 JSON 객체 키 값 {type:'polygon', opt : '0.5', attr: null, range: null, xyData: null}<br>
   type(String) : 객체 타입 (polygon, point)<br>
   opt(Number) : 레이어 투명도 <br>
   attr(String) : 속성 이름 <br>
@@ -448,12 +448,12 @@ OGDSM.visualization.prototype.changeWFSStyle = function (layerName, colors, opti
     map.setOpacity(defaults.opt);
 };
 /**
- * 가로 막대 차트 시각화(Bar Chart Visualization based on D3.js)
+ * 가로 막대 차트 시각화
  * @method barChart
  * @param {String} divId - 막대 차트 시각화할 DIV 아이디 이름
  * @param {Array} data - 데이터 값 2차원 배열 (0 : x, 1 : y)
  * @param {Array} range - 데이터 범위 1차원 배열
- * @param {Array} color - 데이터 색 범위 1차원 배열 default : #000000 (range와 배열 길이 같아야함)
+ * @param {Array} color - 데이터 색 범위 1차원 배열 [default=#000000 (range와 배열 길이 같아야함)]
  */
 OGDSM.visualization.prototype.barChart = function (divId, data, range, color) {
     'use strict';

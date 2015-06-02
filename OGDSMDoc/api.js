@@ -3,15 +3,14 @@ YUI.add("yuidoc-meta", function(Y) {
     "classes": [
         "OGDSM",
         "OGDSM.attributeTable",
-        "OGDSM.eGovFramUI",
+        "OGDSM.eGovFrameUI",
         "OGDSM.externalConnection",
         "OGDSM.mapLayerList",
         "OGDSM.visualization"
     ],
     "modules": [
         "OGDSM.jsontoArray",
-        "OGDSM.namespace",
-        "Sortable.create(...)"
+        "OGDSM.namespace"
     ],
     "allModules": [
         {
@@ -23,11 +22,6 @@ YUI.add("yuidoc-meta", function(Y) {
             "displayName": "OGDSM.namespace",
             "name": "OGDSM.namespace",
             "description": "OGDSM 네임스페이스 모듈 (OGDSM 'namespace' module)\n\n- 사용 방법 (Use)\n      OGDSM.namesace('example');\n      OGDSM.example=(function(){\n        //Source Code\n      }());"
-        },
-        {
-            "displayName": "Sortable.create(...)",
-            "name": "Sortable.create(...)",
-            "description": "OGDSM Layer list sorting open source\nSortable\nauthor\tRubaXa   <trash@rubaxa.org>\nlicense MIT"
         }
     ]
 } };

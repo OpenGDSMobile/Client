@@ -150,7 +150,7 @@ OGDSM.namesapce('mapLayerList');
 /**
  * 레이어 목록 관리
  * @method listManager
- * @param {ol3 layer object} obj - 레이어 목록에 추가할 openlayers3 레이어 객체
+ * @param {ol3 layer object} obj - 레이어 목록에 추가할 Openlayers3 레이어 객체
  * @param {String} label - 목록 이름
  * @param {String} color - 레이어 색상 (ex: rgb(255,255,255))
  * @param {String} type - 객체 타입 (polygon | point | line)
@@ -242,7 +242,11 @@ OGDSM.mapLayerList.prototype.listManager = function (obj, label, color, type) {
     $('input[name=listCheckBox]').bind('click', checkBoxEvent);
 };
 
-
+/**
+ * 레이어 목록 삭제
+ * @method removelist
+ * @param {String} layerName - 레이어 이름
+ */
 OGDSM.mapLayerList.prototype.removelist = function (layerName) {
     'use strict';
     var labels = this.getLabels(),

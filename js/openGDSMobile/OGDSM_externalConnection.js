@@ -25,9 +25,9 @@ OGDSM.namesapce('externalConnection');
  * @param {String} addr - 주소
  * @param {String} workspace - 워크스페이스
  * @param {String} layerName - 레이어 이름
- * @param {JSON Object} options - 옵션 JSON 객체 키 값{type='polygon', color='rgba(0, 0, 0, 0.0)', callback : function () {}}
-  type(String) : 레이어 타입( polygon | point)
-  color(String) : 색상 rgba
+ * @param {JSON Object} options - 옵션 JSON 객체 키 값{type='polygon', color='rgba(0, 0, 0, 0.0)', callback=function () {}}<br>
+  type(String) : 레이어 타입( polygon | point)<br>
+  color(String) : 색상 rgba<br>
   callback(Function) : 요청 후 색상 변경시 콜백 함수
  */
 OGDSM.externalConnection.prototype.geoServerWFSLoad = function (obj, addr, workspace, layerName, options) {
@@ -81,7 +81,7 @@ OGDSM.externalConnection.prototype.geoServerWFSLoad = function (obj, addr, works
         theme : 'c',
         textonlt : 'false'
     });
-    layerName = layerName.replace(/[ \{\}\[\]\/?.,;:|\)*~`!^\-_+┼<>@\#$%&\'\"\\\(\=]/gi,'');
+    layerName = layerName.replace(/[ \{\}\[\]\/?.,;:|\)*~`!^\-+┼<>@\#$%&\'\"\\\(\=]/gi,'');
     $.ajax({
         type : 'POST',
         url : fullAddr,
@@ -110,9 +110,9 @@ OGDSM.externalConnection.prototype.geoServerWFSLoad = function (obj, addr, works
  * @param {String} addr - 주소
  * @param {String} ws - 워크스페이스
  * @param {String} layerName - 레이어 이름
- * @param {JSON Object} options - 옵션 JSON 객체 키 값{type='polygon', epsg='epsg3857'}
-  type(String) : 레이어 타입( polygon | point)
-  epsg(String) : EPSG
+ * @param {JSON Object} options - 옵션 JSON 객체 키 값{type='polygon', epsg='epsg3857'}<br>
+  type(String) : 레이어 타입( polygon | point)<br>
+  epsg(String) : EPSG String<br>
  * @return {ol.layer.Vector} vectorSource - OpenLayers3 백터 객체
  */
 OGDSM.externalConnection.prototype.geoServerWFS = function (addr, ws, layerName, options) {
@@ -185,7 +185,7 @@ OGDSM.externalConnection.prototype.geoServerWFS = function (addr, ws, layerName,
 /**
  * VWorld WMS 데이터 요청
  * @method vworldWMSLoad
- * @param {String} apiKey - api 키
+ * @param {String} apiKey - API 키
  * @param {String} domain - 도메인
  * @param {String} data - WMS 레이어 이름
  * @return {ol.layer.Tile} OpenLayers 타일 객체
@@ -261,7 +261,7 @@ OGDSM.externalConnection.prototype.seoulEnvironmentLoad = function (addr, apiKey
  * 데이터 포털 환경 데이터 요청
  * @method seoulEnvironmentLoad
  * @param {String} addr - 주소
- * @param {String} apiKey - api 키
+ * @param {String} apiKey - API 키
  * @param {String} envType - 환경 정보 이름
  * @param {date} date - 날짜
  * @param {time} time - 시간

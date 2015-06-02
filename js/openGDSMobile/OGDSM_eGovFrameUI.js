@@ -4,8 +4,8 @@ OGDSM.namesapce('eGovFrameUI');
 (function (OGDSM) {
     'use strict';
     /**
-     * 전자정부표준프레임워크 UX 컴포넌트 자동 생성 객체(e-Goverement Framework UX Component Automatic Create Class)
-     * @class OGDSM.eGovFramUI
+     * 전자정부표준프레임워크 UX 컴포넌트 자동 생성 객체
+     * @class OGDSM.eGovFrameUI
      * @constructor
      * @param {String} theme - eGovframework 테마 a~g (default c)
      */
@@ -25,17 +25,17 @@ OGDSM.namesapce('eGovFrameUI');
 
 
 /**
- * 버튼 자동 생성( Auto Create about Button)
+ * 버튼 자동 생성
  * @method autoButton
  * @param {String} divId - 최상위 DIV 아이디 이름
  * @param {String} linkId - 생성될 버튼 아이디 이름
  * @param {String} buttonTitle - 버튼 이름
  * @param {String} url - 링크 주소
- * @param {JSON Object} options - 옵션 JSON 객체 키 값{theme=this.dataTheme, corners=true, inline=false, mini=false}
-  theme(String) : 테마
-  corners(Boolean) : 모서리 둥글게 여부
-  inline(Boolean) : 가로 정렬 여부
-  mini(Boolean) : 버튼 크기
+ * @param {JSON Object} options - 옵션 JSON 객체 키 값{theme=this.dataTheme, corners=true, inline=false, mini=false}<br>
+  theme(String) : 테마<br>
+  corners(Boolean) : 모서리 둥글게 여부<br>
+  inline(Boolean) : 가로 정렬 여부<br>
+  mini(Boolean) : 버튼 크기<br>
  * @return {jQuery Object} 제이쿼리 아이디 버튼 객체
  */
 OGDSM.eGovFrameUI.prototype.autoButton = function (rootDivId, linkId, buttonTitle, url, options) {
@@ -67,16 +67,16 @@ OGDSM.eGovFrameUI.prototype.autoButton = function (rootDivId, linkId, buttonTitl
 };
 
 /**
- * 체크박스 자동 생성(Auto Create about Check Box)
+ * 체크박스 자동 생성
  * @method autoCheckBox
  * @param {String} divId - 최상위 DIV 아이디 이름
  * @param {String} chkId - 생성될 체크박스 아이디 이름
  * @param {String | Array} labels - 체크박스 라벨
- * @param {String | Array) values - 체크박스 값
- * @param {JSON Object} options - 옵션 JSON 객체 키 값{theme=this.dataTheme, horizontal=true, checkName : chkId + 'Name'}
-  theme(String) : 테마
-  horizontal(Boolean) : 체크박스 수평 여부
-  checkName(String) : 체크박스 그룹 이름
+ * @param {String | Array} values - 체크박스 값
+ * @param {JSON Object} options - 옵션 JSON 객체 키 값{theme=this.dataTheme, horizontal=true, checkName=chkId + 'Name'}<br>
+  theme(String) : 테마<br>
+  horizontal(Boolean) : 체크박스 수평 여부<br>
+  checkName(String) : 체크박스 그룹 이름<br>
  * @return {jQuery Object} 제이쿼리 체크박스 그룹 이름 객체
  */
 OGDSM.eGovFrameUI.prototype.autoCheckBox = function (rootDivId, chkId, labels, values, options) {
@@ -123,16 +123,16 @@ OGDSM.eGovFrameUI.prototype.autoCheckBox = function (rootDivId, chkId, labels, v
 };
 
 /**
- * 라디오 박스 자동 생성(Auto Create about Radio Box)
+ * 라디오 박스 자동 생성
  * @method autoRadioBox
  * @param {String} divId - 최상위 DIV 아이디 이름
  * @param {String} radioId - 생성될 라디오박스 아이디 이름
  * @param {String | Array} labels - 라디오박스 라벨
- * @param {String | Array) values - 라디오박스 값
- * @param {JSON Object} options - 옵션 JSON 객체 키 값{theme=this.dataTheme, horizontal=true, radioName : radioId + 'Name'}
-  theme(String) : 테마
-  horizontal(Boolean) : 라디오박스 수평 여부
-  radioName(String) : 라디오박스 그룹 이름
+ * @param {String | Array} values - 라디오박스 값
+ * @param {JSON Object} options - 옵션 JSON 객체 키 값{theme=this.dataTheme, horizontal=true, radioName=radioId + 'Name'}<br>
+  theme(String) : 테마<br>
+  horizontal(Boolean) : 라디오박스 수평 여부<br>
+  radioName(String) : 라디오박스 그룹 이름<br>
  * @return {jQuery Object} 제이쿼리 그룹 이름 객체
  */
 OGDSM.eGovFrameUI.prototype.autoRadioBox = function (rootDivId, radioId, labels, values, options) {
@@ -183,18 +183,17 @@ OGDSM.eGovFrameUI.prototype.autoRadioBox = function (rootDivId, radioId, labels,
 
 /**
  * 셀렉트 자동 생성
- * Auto Create about Select.
  * @method autoSelect
  * @param {String} divId - 최상위 DIV 아이디 이름
  * @param {String} selectId - 생성될 선택 아이디 이름
  * @param {String | Array} text - 선택 라벨 텍스트
- * @param {String | Array) values - 선택 값
- * @param {JSON Object} options - 옵션 JSON 객체 키 값{firstName='', theme=this.dataTheme, corners=true, inline=false, selected:0}
-  firstName(String) : 첫번째 값
-  theme(String) : 테마
-  corners(Boolean) : 테두리 둥글게 여부
-  inline(Boolean) : 가로 정렬 여부
-  selected(Boolean) : 처음 선택된 인덱스 값
+ * @param {String | Array} values - 선택 값
+ * @param {JSON Object} options - 옵션 JSON 객체 키 값{firstName='', theme=this.dataTheme, corners=true, inline=false, selected:0}<br>
+  firstName(String) : 첫번째 값<br>
+  theme(String) : 테마<br>
+  corners(Boolean) : 테두리 둥글게 여부<br>
+  inline(Boolean) : 가로 정렬 여부<br>
+  selected(Boolean) : 처음 선택된 인덱스 값<br>
  * @return {jQuery Object} 제이쿼리 그룹 이름 객체
  */
 OGDSM.eGovFrameUI.prototype.autoSelect = function (rootDivId, selectId, selectName, text, values, options) {
@@ -231,14 +230,14 @@ OGDSM.eGovFrameUI.prototype.autoSelect = function (rootDivId, selectId, selectNa
 };
 
 /**
- * 스위치 자동 생성(Auto Create about Switch based on Select)
- * @method autoSelect
+ * 스위치 자동 생성
+ * @method autoSwitch
  * @param {String} divId - 최상위 DIV 아이디 이름
  * @param {String} switchId - 생성될 스위치 아이디 이름
- * @param {JSON Object} options - 옵션 JSON 객체 키 값{theme=this.dataTheme, track_theme=this.dataTheme, switchName=switchId+'Name'}
-  theme(String) : 테마
-  track-theme(String) : 버튼 테마
-  switchName(String) : 스위치 그룹 이름
+ * @param {JSON Object} options - 옵션 JSON 객체 키 값{theme=this.dataTheme, track_theme=this.dataTheme, switchName=switchId+'Name'}<br>
+  theme(String) : 테마<br>
+  track-theme(String) : 버튼 테마<br>
+  switchName(String) : 스위치 그룹 이름<br>
  * @return {jQuery Object} 제이쿼리 아이디 객체
  */
 OGDSM.eGovFrameUI.prototype.autoSwitch = function (rootDivId, switchId, switchName, options) {
@@ -273,7 +272,7 @@ OGDSM.eGovFrameUI.prototype.autoSwitch = function (rootDivId, switchId, switchNa
 };
 
 /**
- * 시간 폼 태그 생성 (User Interface Create about time input)
+ * 시간 태그 생성
  * @method timeInput
  * @param {String} divId - 최상위 DIV 아이디 이름
  * @return {jQuery Object} 제이쿼리 아이디 이름 객체
@@ -289,7 +288,7 @@ OGDSM.eGovFrameUI.prototype.timeInput = function (divId) {
 };
 
 /**
- * 날짜 폼 태그 생성(User Interface Create about visualization type)
+ * 날짜 태그 생성
  * @method DateInput
  * @param {String} divId - 최상위 DIV 아이디 이름
  * @return {jQuery Object} 제이쿼리 아이디 이름 객체 (Date YYYY/MM/DD)
@@ -306,7 +305,7 @@ OGDSM.eGovFrameUI.prototype.dateInput = function (divId) {
 
 /**************Custom UI Create *******************/
 /**
- * 배경 맵 선택 사용자 인터페이스 자동 생성: 라디오 박스 (Auto Create about Map Type User Interface)
+ * 배경 맵 선택 사용자 인터페이스 자동 생성: 라디오 박스
  * @method baseMapRadioBox
  * @param {OGDSM Object} OGDSMObj - OpenGDS모바일 시각화 객체
  * @param {String}       rootDiv - 최상위 DIV 아이디 이름
@@ -329,7 +328,7 @@ OGDSM.eGovFrameUI.prototype.baseMapRadioBox = function (OGDSMObj, rootDiv, optio
     });
 };
 /**
- * 배경 맵 선택 사용자 인터페이스 자동 생성: 셀렉트(Auto Create about Map Type User Interface)
+ * 배경 맵 선택 사용자 인터페이스 자동 생성: 셀렉트 박스
  * @method baseMapSelect
  * @param {OGDSM Object} OGDSMObj - OpenGDS모바일 시각화 객체
  * @param {String}       rootDiv - 최상위 DIV 아이디 이름
@@ -356,7 +355,7 @@ OGDSM.eGovFrameUI.prototype.baseMapSelect = function (OGDSMObj, rootDiv, options
 };
 
 /**
- * 브이월드 WMS API 리스트 요청 인터페이스(VWorld WMS API List).
+ * 브이월드 WMS API 리스트 요청 인터페이스
  * @method vworldWMSList
  * @param {String} divId - 최상위 DIV 아이디 이름
  * @param {String} theme - 테마 default : this.dataTheme
@@ -563,7 +562,7 @@ OGDSM.eGovFrameUI.prototype.seoulEnvironment = function (divId, options) {
     var name;
     var defaults = {
         theme : this.dataTheme,
-        path : './images/'
+        path : './images/openGDSMobile/'
     };
     for (name in defaults) {
         if (defaults.hasOwnProperty(name)) {
@@ -612,7 +611,7 @@ OGDSM.eGovFrameUI.prototype.dataProtalEnvironment = function (divId, options) {
     var name, i;
     var defaults = {
         theme : this.dataTheme,
-        path : './images/'
+        path : './images/openGDSMobile/'
     };
     for (name in defaults) {
         if (defaults.hasOwnProperty(name)) {
@@ -630,7 +629,8 @@ OGDSM.eGovFrameUI.prototype.dataProtalEnvironment = function (divId, options) {
         '<img src="' + defaults.path + 'input_bt_co.png" width=30>'
     ],
         environmentValues = ['pm10Value', 'pm25Value', 'so2value', 'o3Value', 'no2Value', 'coValue'],
-        areaTypes = ['인천', '서울', '경기', '강원', '충남', '세종', '충북', '대전', '경북', '전북', '대구', '울산', '전남', '광주', '경남', '부산', '제주'];
+        areaTypes = ['인천', '서울', '경기', '강원', '충남', '세종', '충북', '대전', '경북', '전북', '대구', '울산', '전남', '광주', '경남', '부산', '제주'],
+        areaValues = ['incheon', 'seoul', 'gyeonggi', 'gangwon', 'chungnam', 'sejong', 'chungbuk', 'daejeon', 'gyeongbuk', 'jeonbuk', 'daegu', 'ulsan', 'jeonnam', 'gwangju', 'gyeongnam', 'busan', 'jeju'];
     var rootDiv = $('#' + divId),
         visualType = this.autoRadioBox(divId, 'visualType', ['맵', '차트'], ['map', 'chart'], {horizontal : true}),
         areaRadio,
@@ -639,12 +639,12 @@ OGDSM.eGovFrameUI.prototype.dataProtalEnvironment = function (divId, options) {
     for (i = 0; i < areaTypes.length - 2; i += 3) {
         areaRadio = this.autoRadioBox(divId, 'areaType',
                                       [areaTypes[i], areaTypes[i + 1], areaTypes[i + 2]],
-                                      [areaTypes[i], areaTypes[i + 1], areaTypes[i + 2]],
+                                      [areaValues[i], areaValues[i + 1], areaValues[i + 2]],
                                       {horizontal : true});
     }
     areaRadio = this.autoRadioBox(divId, 'areaType',
                                   [areaTypes[areaTypes.length - 2], areaTypes[areaTypes.length - 1]],
-                                  [areaTypes[areaTypes.length - 2], areaTypes[areaTypes.length - 1]],
+                                  [areaValues[areaValues.length - 2], areaValues[areaValues.length - 1]],
                                   {horizontal : true});
     for (i = 0; i < environmentValues.length; i += 3) {
         environmentType = this.autoRadioBox(divId, 'areenvTypeaType',
