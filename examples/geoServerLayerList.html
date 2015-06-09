@@ -3,12 +3,14 @@
 <html>
     <head>
         <base href="../">
-        <title>VWworld 데이터 시각화</title>
+        <title>GeoServer 레이어 리스트</title>
         <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
         <link rel="stylesheet" href="./css/egovframework/mbl/cmm/jquery.mobile-1.3.2.css">   <!-- jQuery Mobile -->
         <link rel="stylesheet" href="./css/egovframework/mbl/cmm/EgovMobile-1.3.2.css">      <!-- eGov Mobile -->
         <link type="text/css" rel="stylesheet" href="./css/ol3/ol.css">                      <!-- OpenLayers 3 -->
+        <link rel="stylesheet" href="http://cdn.datatables.net/1.10.7/css/jquery.dataTables.min.css">      <!-- Data Table Plug-in -->
+
         <link rel="stylesheet" href="css/syntaxhighlighter/shCore.css">
         <link rel="stylesheet" href="css/syntaxhighlighter/shCoreDefault.css">
 
@@ -20,6 +22,7 @@
         <script type="text/javascript" src="./js/proj4js/2.2.2/proj4.js"></script>                         <!-- Proj4js -->
         <script type="text/javascript" src="./js/ol3/ol.js"></script>                                      <!-- OpenLayers 3 -->
         <script type="text/javascript" src="./js/d3/d3.js"></script>                                       <!-- D3.js -->
+        <script type="text/javascript" src="http://cdn.datatables.net/1.10.7/js/jquery.dataTables.min.js"></script> <!-- Data Table jQuery Plug-in-->
         <script type="text/javascript" src="./js/OpenGDSMobileLib/openGDSMobileClient1.2.min.js"></script> <!-- OpenGDS Mobile -->
 
         <script type="text/javascript" src="./js/syntaxhighlighter/shCore.js"></script>
@@ -30,44 +33,21 @@
             html, body{
                 height:100%;
             }
-            .OGDSPosTopCenter{
-            	position : absolute;
-            	z-index : 999;
-                width : 200px;
-            	top : 25px;
-            	left : 45%;
-            	right : 45%;
-            }
         </style>
 
         <script>
             SyntaxHighlighter.all();
             var obj = null;
-            function vworldWMSUI() {
-                    $('#vworldSelect').empty();
-                    var ui = new OGDSM.eGovFrameUI();
-                    var externalServer = new OGDSM.externalConnection('vworldWMS');
-                    var wmsListIds = ui.vworldWMSList('vworldSelect');
-                    var processBtn = ui.autoButton('vworldSelect', 'vworldProcess', 'Process', '#', {
-                        theme : 'b'
-                    });
-                    processBtn.click(function () {
-                        var i, data = [];
-                        for (i = 0; i < wmsListIds.length; i++) {
-                            var tmpData = $('#' + wmsListIds[i] + ' option:selected').val();
-                            if (tmpData !== '') {
-                                data.push(tmpData);
-                            }
-                        }
-                        var wmsData = externalServer.vworldWMSLoad(
-                            "9E21E5EE-67D4-36B9-85BB-E153321EEE65", "http://localhost", data);
-                        obj.addMap(wmsData);
-                        $('#vworldList').popup('close');
-                    });
+            var serverAddr = 'http://113.198.80.9/MobileWebMapping';
+            function success(data){
+            	for(var i in data){
+                	$('#listName').append(data[i]);
+                	$('#listName').append('<br>');
+            	}
             }
             $(function(){
-                obj = new OGDSM.visualization('map');
-                obj.olMapView([127.010031, 37.582200], 'OSM', 'EPSG:900913');
+                var externalServer = new OGDSM.externalConnection();
+                externalServer.getLayersGeoServer(serverAddr+'/getLayerNames.do','opengds', success);
             });
         </script>
     </head>
@@ -78,11 +58,12 @@
                 OpenGDS Mobile Client Example
             </div>
             <div data-role="content" style="padding:0; margin:0;">
-                <div id="map" style="width:100%; height:400px;"></div>
-	            <a href="#vworldList" data-role="button" data-rel="popup" data-mini="true" data-inline="true" class="OGDSPosTopCenter" data-position-to="window" onclick="vworldWMSUI()">브이월드 WMS 데이터</a>
-                <h3 style="margin-left:10px;">VWworld WMS 데이터 시각화</h3>
+            	<h3>워크스페이스 이름 : opengds</h3>
+            	<p id="listName" style="margin-left:30px;"></p>
+
+                <h3 style="margin-left:10px;">GeoServer 레이어 리스트</h3>
                 <p style="font-size:12px; margin-left:25px;">
-                설명~~
+                  서버에 설치된 GeoServer의 특정 워크스페이스의 데이터 목록을 받아옴
                 </p>
                 <p style="margin-left:25px;">Code</p>
                 <pre class="brush:html;">
@@ -104,73 +85,36 @@
         &lt;script type="text/javascript" src="js/ol3/ol.js"&gt;&lt;/script&gt;                                      <!-- OpenLayers 3 -->
         &lt;script type="text/javascript" src="js/d3/d3.js"&gt;&lt;/script&gt;                                       <!-- D3.js -->
         &lt;script type="text/javascript" src="js/OpenGDSMobileLib/openGDSMobileClient1.2.min.js"&gt;&lt;/script&gt; <!-- OpenGDS Mobile -->
-        &lt;style&gt;
-            ... (CSS 내용)
-        &lt;/style&gt;
         &lt;script&gt;
             ... (script 내용)
         &lt;/script&gt;
     &lt;/head&gt;
     &lt;body&gt;
-        &lt;div id="map" style="width:100%; height:400px;"&gt;
-        &lt;a href="#vworldList" data-role="button" data-rel="popup" data-mini="true" data-inline="true" class="OGDSPosTopCenter" data-position-to="window" onclick="vworldWMSUI()"&gt;브이월드 WMS 데이터&lt;/a&gt;
-        &lt;div data-role="popup" id="vworldList" data-overlay-theme="b" style="padding: 15px"&gt;
-                &lt;p>서로 다른 레이어 최대 5개 선택 가능&lt;/p&gt;
-                &lt;div id="vworldSelect"> &lt;/div&gt;
-        &lt;/div&lt;
+        &lt;h3&gt;워크스페이스 이름 : opengds&lt;/h3&gt;
+        &lt;p id="listName" style="margin-left:30px;"&gt;&lt;/p&gt;
+        &lt;/div&gt;
     &lt;/body&gt;
 &lt;/html&gt;
-                </pre>
-                <p style="margin-left:25px;">CSS 내용</p>
-                <pre class="brush:css;">
-                .OGDSPosTopCenter{
-                    position : absolute;
-                    z-index : 999;
-                    width : 200px;
-                    top : 25px;
-                    left : 45%;
-                    right : 45%;
-                }
                 </pre>
                 <p style="margin-left:25px;">script 내용</p>
                 <pre class="brush:js;">
             var obj = null;
-
-            function vworldWMSUI() {
-                $('#vworldSelect').empty();
-                var ui = new OGDSM.eGovFrameUI();
-                var externalServer = new OGDSM.externalConnection('vworldWMS');
-                var wmsListIds = ui.vworldWMSList('vworldSelect');
-                var processBtn = ui.autoButton('vworldSelect', 'vworldProcess', 'Process', '#', {
-                    theme : 'b'
-                });
-                processBtn.click(function () {
-                    var i, data = [];
-                    for (i = 0; i < wmsListIds.length; i++) {
-                        var tmpData = $('#' + wmsListIds[i] + ' option:selected').val();
-                        if (tmpData !== '') {
-                            data.push(tmpData);
-                        }
-                    }
-                    var wmsData = externalServer.vworldWMSLoad("9E21E5EE-67D4-36B9-85BB-E153321EEE65", "http://localhost", data);
-                    obj.addMap(wmsData);
-                    $('#vworldList').popup('close');
-                });
+            var serverAddr = 'http://113.198.80.9/MobileWebMapping';
+            function success(data){
+            	for(var i in data){
+                	$('#listName').append(data[i]);
+                	$('#listName').append('<br>');
+            	}
             }
             $(function(){
-                obj = new OGDSM.visualization('map');
-                obj.olMapView([127.010031, 37.582200], 'OSM', 'EPSG:900913');
+                var externalServer = new OGDSM.externalConnection();
+                externalServer.getLayersGeoServer(serverAddr+'/getLayerNames.do','opengds', success);
             });
-
                 </pre>
+            </div>
 
-            </div>
-            <!-- Vworld WMS -->
-            <div data-role="popup" id="vworldList" data-overlay-theme="b" style="padding: 15px">
-                <p>서로 다른 레이어 최대 5개 선택 가능</p>
-                <div id="vworldSelect"> </div>
-            </div>
+
 
         </div>
-    </body>
+	</body>
 </html>

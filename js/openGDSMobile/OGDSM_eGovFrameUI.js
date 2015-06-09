@@ -289,7 +289,7 @@ OGDSM.eGovFrameUI.prototype.timeInput = function (divId) {
 
 /**
  * 날짜 태그 생성
- * @method DateInput
+ * @method dateInput
  * @param {String} divId - 최상위 DIV 아이디 이름
  * @return {jQuery Object} 제이쿼리 아이디 이름 객체 (Date YYYY/MM/DD)
  */
@@ -598,14 +598,14 @@ OGDSM.eGovFrameUI.prototype.seoulEnvironment = function (divId, options) {
 
 /**
  * 데이터 포털 환경정보 요청 인터페이스
- * @method dataProtalEnvironment
+ * @method dataPortalEnvironment
  * @param {String} divId - 최상위 DIV 아이디 이름
  * @param {JSON Object} options - 옵션 JSON 객체 키 값{theme=this.dataTheme, path='./images/'}
   theme(String) : 테마
   path(String) : 이미지 위치
  * @return {String} 생성된 객체 배열 [visualType, areaType, environmentType]
  */
-OGDSM.eGovFrameUI.prototype.dataProtalEnvironment = function (divId, options) {
+OGDSM.eGovFrameUI.prototype.dataPortalEnvironment = function (divId, options) {
     'use strict';
     options = (typeof (options) !== 'undefined') ? options : {};
     var name, i;

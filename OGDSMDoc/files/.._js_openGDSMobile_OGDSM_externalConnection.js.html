@@ -170,7 +170,7 @@
                                 theme : &#x27;c&#x27;,
                                 textonlt : &#x27;false&#x27;
                             });
-                            layerName = layerName.replace(/[ \{\}\[\]\/?.,;:|\)*~&#x60;!^\-_+┼&lt;&gt;@\#$%&amp;\&#x27;\&quot;\\\(\=]/gi,&#x27;&#x27;);
+                            layerName = layerName.replace(/[ \{\}\[\]\/?.,;:|\)*~&#x60;!^\-+┼&lt;&gt;@\#$%&amp;\&#x27;\&quot;\\\(\=]/gi,&#x27;&#x27;);
                             $.ajax({
                                 type : &#x27;POST&#x27;,
                                 url : fullAddr,
@@ -348,12 +348,11 @@
 
                         /**
                          * 데이터 포털 환경 데이터 요청
-                         * @method seoulEnvironmentLoad
+                         * @method dataPortalEnvironmentLoad
                          * @param {String} addr - 주소
                          * @param {String} apiKey - API 키
                          * @param {String} envType - 환경 정보 이름
-                         * @param {date} date - 날짜
-                         * @param {time} time - 시간
+                         * @param {date} area - 지역
                          * @param {function} callback - 성공 콜백 함수
                          */
                         OGDSM.externalConnection.prototype.dataPortalEnvironmentLoad = function (addr, apiKey, envType, area, callback) {
@@ -389,6 +388,41 @@
                             });
                         };
 
+
+
+                        /**
+                         * geoServer 데이터 리스트 요청
+                         * @method getLayersGeoServer
+                         * @param {String} addr - 서버 주소
+                         * @param {String} wsName - 워크스페이스 이름
+                         * @param {Function} callback - 성공 콜백 함수
+                         */
+                        OGDSM.externalConnection.prototype.getLayersGeoServer = function (addr, wsName, callback) {
+                            &#x27;use strict&#x27;;
+                            var parm = { wsName : wsName };
+                            $.mobile.loading(&#x27;show&#x27;, {
+                                text : &#x27;Loading&#x27;,
+                                textVisible : &#x27;true&#x27;,
+                                theme : &#x27;c&#x27;,
+                                textonlt : &#x27;false&#x27;
+                            });
+                            $.ajax({
+                                type : &#x27;POST&#x27;,
+                                url : addr,
+                                data : JSON.stringify(parm),
+                                contentType : &#x27;application/json;charset=UTF-8&#x27;,
+                                dataType : &#x27;json&#x27;,
+                                success : function (msg) {
+                                    var resultData = msg.data;
+                                    $.mobile.loading(&#x27;hide&#x27;);
+                                    callback(resultData);
+                                },
+
+                                error : function (e) {
+                                    console.log(e);
+                                }
+                            });
+                        };
                             </pre>
                         </div>
                     </div>

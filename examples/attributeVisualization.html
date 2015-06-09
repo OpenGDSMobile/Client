@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <base href="../">
+        <title>속성정보 시각화</title>
+        <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+        <link rel="stylesheet" href="./css/egovframework/mbl/cmm/jquery.mobile-1.3.2.css">   <!-- jQuery Mobile -->
+        <link rel="stylesheet" href="./css/egovframework/mbl/cmm/EgovMobile-1.3.2.css">      <!-- eGov Mobile -->
+        <link type="text/css" rel="stylesheet" href="./css/ol3/ol.css">                      <!-- OpenLayers 3 -->
+        <link rel="stylesheet" href="http://cdn.datatables.net/1.10.7/css/jquery.dataTables.min.css">      <!-- Data Table Plug-in -->
+
+        <link rel="stylesheet" href="css/syntaxhighlighter/shCore.css">
+        <link rel="stylesheet" href="css/syntaxhighlighter/shCoreDefault.css">
+
+        <script type="text/javascript" src="./js/egovframework/mbl/cmm/jquery-1.9.1.min.js"></script>      <!-- jQuery -->
+        <script type="text/javascript" src="./js/egovframework/mbl/cmm/jquery.mobile-1.3.2.min.js"></script> <!-- jQuery Mobile -->
+        <script type="text/javascript" src="./js/egovframework/mbl/cmm/EgovMobile-1.3.2.js"></script>      <!-- eGov Mobile -->
+
+        <!-- Proj, OpenLayers3, D3 -->
+        <script type="text/javascript" src="./js/proj4js/2.2.2/proj4.js"></script>                         <!-- Proj4js -->
+        <script type="text/javascript" src="./js/ol3/ol.js"></script>                                      <!-- OpenLayers 3 -->
+        <script type="text/javascript" src="./js/d3/d3.js"></script>                                       <!-- D3.js -->
+        <script type="text/javascript" src="http://cdn.datatables.net/1.10.7/js/jquery.dataTables.min.js"></script> <!-- Data Table jQuery Plug-in-->
+        <script type="text/javascript" src="./js/OpenGDSMobileLib/openGDSMobileClient1.2.min.js"></script> <!-- OpenGDS Mobile -->
+
+        <script type="text/javascript" src="./js/syntaxhighlighter/shCore.js"></script>
+        <script type="text/javascript" src="./js/syntaxhighlighter/shBrushXml.js"></script>
+        <script type="text/javascript" src="./js/syntaxhighlighter/shBrushJScript.js"></script>
+        <script type="text/javascript" src="./js/syntaxhighlighter/shBrushCss.js"></script>
+        <style>
+            html, body{
+                height:100%;
+            }
+
+	        .OGDSPosBottomCenter{
+	            position : absolute;
+	            width : 100%;
+	            z-index : 1000;
+	            top : 450px;
+	            left : 45%;
+	            right : 45%;
+	        }
+	        .OGDSPosTransTopDownHide{
+	            transition: top 0.1s ease;
+	            position : absolute;
+	            width : 100%;
+	            height : 10%;
+	            background : rgba(255,255,255,.5);
+	            z-index: 10001;
+	            top :-70%;
+	        }
+	        .OGDSPosTransTopDownShow{
+	            transition: top 0.1s ease;
+	            position : absolute;
+	            width : 100%;
+	            height : 10%;
+	            background : rgba(255,255,255,.5);
+	            z-index: 10001;
+	            top :0%;
+	        }
+	        #tableTab{
+	            list-style:none;
+	            position:relative;
+	            margin:0px;
+	            z-index:2;
+	            top:1px;
+	            display:table;
+	            border-left:1px solid #f5ab36;
+	        }
+	        #tableTab li {
+	            float:left;
+	        }
+	        #tableTab li a{
+	            background:#ffd89b;
+	            color:#222;
+	            display:block;
+	            padding:6px 15px;
+	            text-decoration:none;
+	            border-right:1px solid #f5ab36;
+	            border-top:1px solid #f5ab36;
+	            border-right:1px solid #f5ab36;
+	            margin:0;
+	        }
+	        #tableTab li a.selected {
+	            border-bottom:1px solid #fff;
+	            color:#344385;background:#fff;
+	        }
+        </style>
+
+        <script>
+            SyntaxHighlighter.all();
+            var obj = null;
+            var serverAddr = 'http://113.198.80.9/MobileWebMapping';
+            function mapAttrUI() {
+                var ui = new OGDSM.eGovFrameUI();
+                var radioObj = ui.autoRadioBox('dataViewCheckBox', 'dataViewSelect', ['공간정보', '속성정보'], ['map', 'attr'], {horizontal : true});
+                radioObj.bind('change', function () {
+                    if ($(this).val() === 'attr') {
+                        $('#attributeTable').removeClass('OGDSPosTransTopDownHide');
+                        $('#attributeTable').addClass('OGDSPosTransTopDownShow');
+                    } else {
+                        $('#attributeTable').removeClass('OGDSPosTransTopDownShow');
+                        $('#attributeTable').addClass('OGDSPosTransTopDownHide');
+
+                    }
+                });
+            }
+            $(function(){
+            	obj = new OGDSM.visualization('map', {
+                    attrTableDiv : 'attributeTable',
+                    attrAddr : serverAddr + '/attrTable.do'
+                });
+                obj.olMapView([127.010031, 37.582200]);
+            	mapAttrUI();
+                var r = Math.floor(Math.random() * 256),
+                g = Math.floor(Math.random() * 256),
+                b = Math.floor(Math.random() * 256);
+	            var color = 'rgb(' + r + ',' + g + ',' + b + ')';
+	            var addr = 'http://113.198.80.9';
+	            var externalServer = new OGDSM.externalConnection();
+	            externalServer.geoServerWFSLoad(obj, addr, 'opengds', 'seoul_sig', {color : color});
+            });
+        </script>
+    </head>
+
+    <body>
+        <div data-role="page">
+            <div data-role="header" data-theme="b">
+                OpenGDS Mobile Client Example
+            </div>
+            <div data-role="content" style="padding:0; margin:0;">
+                <div id="map" style="width:100%; height:500px;">
+                	<div id="dataViewCheckBox" class="OGDSPosBottomCenter"></div>
+            		<div id="attributeTable" class="OGDSPosTransTopDownHide"></div>
+                </div>
+                <h3 style="margin-left:10px;">속성정보 시각화</h3>
+                <p style="font-size:12px; margin-left:25px;">
+                	OGDSM.visualization의 옵션을 통해 설정 가능<br>
+                	PostgreSQL/PostGIS에 접속 인터페이스를 제공하고 있으며, 테이블 이름을 통해 속성 정보를 받아옴 ※ 서버 필요
+                </p>
+                <p style="margin-left:25px;">Code</p>
+                <pre class="brush:html;">
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;meta http-equiv="Content-Type" content="text/html;charset=utf-8" /&gt;
+        &lt;meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"&gt;
+        &lt;link rel="stylesheet" href="css/egovframework/mbl/cmm/jquery.mobile-1.3.2.css"&gt;   <!-- jQuery Mobile -->
+        &lt;link rel="stylesheet" href="css/egovframework/mbl/cmm/EgovMobile-1.3.2.css"&gt;      <!-- eGov Mobile -->
+        &lt;link type="text/css" rel="stylesheet" href="css/ol3/ol.css"&gt;                      <!-- OpenLayers 3 -->
+
+        &lt;script type="text/javascript" src="js/egovframework/mbl/cmm/jquery-1.9.1.min.js"&gt;&lt;/script&gt;      <!-- jQuery -->
+        &lt;script type="text/javascript" src="js/egovframework/mbl/cmm/jquery.mobile-1.3.2.min.js"&gt;&lt;/script&gt; <!-- jQuery Mobile -->
+        &lt;script type="text/javascript" src="js/egovframework/mbl/cmm/EgovMobile-1.3.2.js"&gt;&lt;/script&gt;      <!-- eGov Mobile -->
+
+        <!-- Proj, OpenLayers3, D3 -->
+        &lt;script type="text/javascript" src="js/proj4js/2.2.2/proj4.js"&gt;&lt;/script&gt;                         <!-- Proj4js -->
+        &lt;script type="text/javascript" src="js/ol3/ol.js"&gt;&lt;/script&gt;                                      <!-- OpenLayers 3 -->
+        &lt;script type="text/javascript" src="js/d3/d3.js"&gt;&lt;/script&gt;                                       <!-- D3.js -->
+        &lt;script type="text/javascript" src="js/OpenGDSMobileLib/openGDSMobileClient1.2.min.js"&gt;&lt;/script&gt; <!-- OpenGDS Mobile -->
+        &lt;script&gt;
+            ... (script 내용)
+        &lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;div id="map" style="width:100%; height:500px;"&gt;
+        &lt;div id="dataViewCheckBox" class="OGDSPosBottomCenter"&gt;&lt;/div&gt;
+        &lt;div id="attributeTable" class="OGDSPosTransTopDownHide"&gt;&lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+                </pre>
+                <p style="margin-left:25px;">CSS 내용</p>
+                <pre class="brush:css;">
+                 .OGDSPosBottomCenter{
+		            position : absolute;
+		            width : 100%;
+		            z-index : 1000;
+		            top : 450px;
+		            left : 45%;
+		            right : 45%;
+		        }
+		        .OGDSPosTransTopDownHide{
+		            transition: top 0.1s ease;
+		            position : absolute;
+		            width : 100%;
+		            height : 10%;
+		            background : rgba(255,255,255,.5);
+		            z-index: 10001;
+		            top :-70%;
+		        }
+		        .OGDSPosTransTopDownShow{
+		            transition: top 0.1s ease;
+		            position : absolute;
+		            width : 100%;
+		            height : 10%;
+		            background : rgba(255,255,255,.5);
+		            z-index: 10001;
+		            top :0%;
+		        }
+		        #tableTab{
+		            list-style:none;
+		            position:relative;
+		            margin:0px;
+		            z-index:2;
+		            top:1px;
+		            display:table;
+		            border-left:1px solid #f5ab36;
+		        }
+		        #tableTab li {
+		            float:left;
+		        }
+		        #tableTab li a{
+		            background:#ffd89b;
+		            color:#222;
+		            display:block;
+		            padding:6px 15px;
+		            text-decoration:none;
+		            border-right:1px solid #f5ab36;
+		            border-top:1px solid #f5ab36;
+		            border-right:1px solid #f5ab36;
+		            margin:0;
+		        }
+		        #tableTab li a.selected {
+		            border-bottom:1px solid #fff;
+		            color:#344385;background:#fff;
+		        }
+                </pre>
+                <p style="margin-left:25px;">script 내용</p>
+                <pre class="brush:js;">
+            var obj = null;
+            var serverAddr = 'http://113.198.80.9/MobileWebMapping'
+            function mapAttrUI() {
+                var ui = new OGDSM.eGovFrameUI();
+                var radioObj = ui.autoRadioBox('dataViewCheckBox', 'dataViewSelect', ['공간정보', '속성정보'], ['map', 'attr'], {horizontal : true});
+                radioObj.bind('change', function () {
+                    if ($(this).val() === 'attr') {
+                        $('#attributeTable').removeClass('OGDSPosTransTopDownHide');
+                        $('#attributeTable').addClass('OGDSPosTransTopDownShow');
+                    } else {
+                        $('#attributeTable').removeClass('OGDSPosTransTopDownShow');
+                        $('#attributeTable').addClass('OGDSPosTransTopDownHide');
+
+                    }
+                });
+            }
+            $(function(){
+            	obj = new OGDSM.visualization('map', {
+                    attrTableDiv : 'attributeTable',
+                    attrAddr : serverAddr + '/attrTable.do'
+                });
+                obj.olMapView([127.010031, 37.582200]);
+            	mapAttrUI();
+                var r = Math.floor(Math.random() * 256),
+                g = Math.floor(Math.random() * 256),
+                b = Math.floor(Math.random() * 256);
+	            var color = 'rgb(' + r + ',' + g + ',' + b + ')';
+	            var addr = 'http://113.198.80.9';
+	            var externalServer = new OGDSM.externalConnection();
+	            externalServer.geoServerWFSLoad(obj, addr, 'opengds', 'seoul_sig', {color : color});
+            });
+                </pre>
+            </div>
+
+
+
+        </div>
+	</body>
+</html>

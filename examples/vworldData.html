@@ -3,7 +3,7 @@
 <html>
     <head>
         <base href="../">
-        <title>레이어 관리 예제</title>
+        <title>VWworld 데이터 시각화 예제</title>
         <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
         <link rel="stylesheet" href="./css/egovframework/mbl/cmm/jquery.mobile-1.3.2.css">   <!-- jQuery Mobile -->
@@ -30,29 +30,44 @@
             html, body{
                 height:100%;
             }
+            .OGDSPosTopCenter{
+            	position : absolute;
+            	z-index : 999;
+                width : 200px;
+            	top : 25px;
+            	left : 45%;
+            	right : 45%;
+            }
         </style>
 
         <script>
             SyntaxHighlighter.all();
             var obj = null;
+            function vworldWMSUI() {
+                    $('#vworldSelect').empty();
+                    var ui = new OGDSM.eGovFrameUI();
+                    var externalServer = new OGDSM.externalConnection('vworldWMS');
+                    var wmsListIds = ui.vworldWMSList('vworldSelect');
+                    var processBtn = ui.autoButton('vworldSelect', 'vworldProcess', '시각화', '#', {
+                        theme : 'b'
+                    });
+                    processBtn.click(function () {
+                        var i, data = [];
+                        for (i = 0; i < wmsListIds.length; i++) {
+                            var tmpData = $('#' + wmsListIds[i] + ' option:selected').val();
+                            if (tmpData !== '') {
+                                data.push(tmpData);
+                            }
+                        }
+                        var wmsData = externalServer.vworldWMSLoad(
+                            "9E21E5EE-67D4-36B9-85BB-E153321EEE65", "http://localhost", data);
+                        obj.addMap(wmsData);
+                        $('#vworldList').popup('close');
+                    });
+            }
             $(function(){
-                obj = new OGDSM.visualization('map', {
-                    layerListDiv : 'layerList'
-                });
-                obj.olMapView([127.010031, 37.582200]);
-
-                var r = Math.floor(Math.random() * 256),
-                    g = Math.floor(Math.random() * 256),
-                    b = Math.floor(Math.random() * 256);
-                var color = 'rgb(' + r + ',' + g + ',' + b + ')';
-                var addr = 'http://113.198.80.9';
-                var externalServer = new OGDSM.externalConnection();
-                externalServer.geoServerWFSLoad(obj, addr, 'opengds', 'seoul_sig', {color : color});
-                r = Math.floor(Math.random() * 256),
-                g = Math.floor(Math.random() * 256),
-                b = Math.floor(Math.random() * 256);
-                color = 'rgb(' + r + ',' + g + ',' + b + ')';
-                externalServer.geoServerWFSLoad(obj, addr, 'opengds', 'seoul_emd', {color : color});
+                obj = new OGDSM.visualization('map');
+                obj.olMapView([127.010031, 37.582200], 'OSM', 'EPSG:900913');
             });
         </script>
     </head>
@@ -64,11 +79,11 @@
             </div>
             <div data-role="content" style="padding:0; margin:0;">
                 <div id="map" style="width:100%; height:400px;"></div>
-
-                <h3 style="margin-left:10px;">레이어 관리</h3>
+	            <a href="#vworldList" data-role="button" data-rel="popup" data-mini="true" data-inline="true" class="OGDSPosTopCenter" data-position-to="window" onclick="vworldWMSUI()">브이월드 WMS 데이터</a>
+                <h3 style="margin-left:10px;">VWworld WMS 데이터 시각화</h3>
                 <p style="font-size:12px; margin-left:25px;">
-                  시각화된 레이어를 확인/관리하는 기능<br>
-                  레이어 타입, 레이어 순서, 투명도, 삭제, 시각화 유무를 확인 및 변경 가능
+                 국가 공간정보 오픈플랫폼인 VWorld에서 API로 제공되고 있는 WMS 데이터를 시각화할 수 있는<br>
+                 사용자 인터페이스 및 데이터 로드를 제공 ※ API 키 필요
                 </p>
                 <p style="margin-left:25px;">Code</p>
                 <pre class="brush:html;">
@@ -90,44 +105,72 @@
         &lt;script type="text/javascript" src="js/ol3/ol.js"&gt;&lt;/script&gt;                                      <!-- OpenLayers 3 -->
         &lt;script type="text/javascript" src="js/d3/d3.js"&gt;&lt;/script&gt;                                       <!-- D3.js -->
         &lt;script type="text/javascript" src="js/OpenGDSMobileLib/openGDSMobileClient1.2.min.js"&gt;&lt;/script&gt; <!-- OpenGDS Mobile -->
+        &lt;style&gt;
+            ... (CSS 내용)
+        &lt;/style&gt;
         &lt;script&gt;
             ... (script 내용)
         &lt;/script&gt;
     &lt;/head&gt;
     &lt;body&gt;
         &lt;div id="map" style="width:100%; height:400px;"&gt;
-        &lt;div id="layerList"&gt; &lt;/div&gt;
+        &lt;a href="#vworldList" data-role="button" data-rel="popup" data-mini="true" data-inline="true" class="OGDSPosTopCenter" data-position-to="window" onclick="vworldWMSUI()"&gt;브이월드 WMS 데이터&lt;/a&gt;
+        &lt;div data-role="popup" id="vworldList" data-overlay-theme="b" style="padding: 15px"&gt;
+                &lt;p>서로 다른 레이어 최대 5개 선택 가능&lt;/p&gt;
+                &lt;div id="vworldSelect"> &lt;/div&gt;
+        &lt;/div&lt;
     &lt;/body&gt;
 &lt;/html&gt;
                 </pre>
+                <p style="margin-left:25px;">CSS 내용</p>
+                <pre class="brush:css;">
+                .OGDSPosTopCenter{
+                    position : absolute;
+                    z-index : 999;
+                    width : 200px;
+                    top : 25px;
+                    left : 45%;
+                    right : 45%;
+                }
+                </pre>
                 <p style="margin-left:25px;">script 내용</p>
                 <pre class="brush:js;">
-
             var obj = null;
-            $(function(){
-                obj = new OGDSM.visualization('map', {
-                    layerListDiv : 'layerList'
-                });
-                obj.olMapView([127.010031, 37.582200]);
 
-                var r = Math.floor(Math.random() * 256),
-                    g = Math.floor(Math.random() * 256),
-                    b = Math.floor(Math.random() * 256);
-                var color = 'rgb(' + r + ',' + g + ',' + b + ')';
-                var addr = 'http://113.198.80.9';
-                var externalServer = new OGDSM.externalConnection();
-                externalServer.geoServerWFSLoad(obj, addr, 'opengds', 'seoul_sig', {color : color});
-                r = Math.floor(Math.random() * 256),
-                g = Math.floor(Math.random() * 256),
-                b = Math.floor(Math.random() * 256);
-                color = 'rgb(' + r + ',' + g + ',' + b + ')';
-                externalServer.geoServerWFSLoad(obj, addr, 'opengds', 'seoul_emd', {color : color});
+            function vworldWMSUI() {
+                $('#vworldSelect').empty();
+                var ui = new OGDSM.eGovFrameUI();
+                var externalServer = new OGDSM.externalConnection('vworldWMS');
+                var wmsListIds = ui.vworldWMSList('vworldSelect');
+                var processBtn = ui.autoButton('vworldSelect', 'vworldProcess', '시각화', '#', {
+                    theme : 'b'
+                });
+                processBtn.click(function () {
+                    var i, data = [];
+                    for (i = 0; i < wmsListIds.length; i++) {
+                        var tmpData = $('#' + wmsListIds[i] + ' option:selected').val();
+                        if (tmpData !== '') {
+                            data.push(tmpData);
+                        }
+                    }
+                    var wmsData = externalServer.vworldWMSLoad("9E21E5EE-67D4-36B9-85BB-E153321EEE65", "http://localhost", data);
+                    obj.addMap(wmsData);
+                    $('#vworldList').popup('close');
+                });
+            }
+            $(function(){
+                obj = new OGDSM.visualization('map');
+                obj.olMapView([127.010031, 37.582200], 'OSM', 'EPSG:900913');
             });
+
                 </pre>
 
             </div>
-
-            <div id="layerList"></div>
+            <!-- Vworld WMS -->
+            <div data-role="popup" id="vworldList" data-overlay-theme="b" style="padding: 15px">
+                <p>서로 다른 레이어 최대 5개 선택 가능</p>
+                <div id="vworldSelect"> </div>
+            </div>
 
         </div>
     </body>

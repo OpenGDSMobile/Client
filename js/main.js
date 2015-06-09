@@ -133,7 +133,7 @@ function createPublicPortalUI() {
     'use strict';
     $('#setting').empty();
     var ui = new OGDSM.eGovFrameUI();
-    var envIds = ui.dataProtalEnvironment('setting');
+    var envIds = ui.dataPortalEnvironment('setting');
     var processBtn = ui.autoButton('setting', 'vworldProcess', 'Process', '#', {
         theme : 'a'
     });

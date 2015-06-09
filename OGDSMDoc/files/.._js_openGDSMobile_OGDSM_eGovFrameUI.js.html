@@ -378,7 +378,7 @@
 
                         /**
                          * 날짜 태그 생성
-                         * @method DateInput
+                         * @method dateInput
                          * @param {String} divId - 최상위 DIV 아이디 이름
                          * @return {jQuery Object} 제이쿼리 아이디 이름 객체 (Date YYYY/MM/DD)
                          */
@@ -687,14 +687,14 @@
 
                         /**
                          * 데이터 포털 환경정보 요청 인터페이스
-                         * @method dataProtalEnvironment
+                         * @method dataPortalEnvironment
                          * @param {String} divId - 최상위 DIV 아이디 이름
                          * @param {JSON Object} options - 옵션 JSON 객체 키 값{theme=this.dataTheme, path=&#x27;./images/&#x27;}
                           theme(String) : 테마
                           path(String) : 이미지 위치
                          * @return {String} 생성된 객체 배열 [visualType, areaType, environmentType]
                          */
-                        OGDSM.eGovFrameUI.prototype.dataProtalEnvironment = function (divId, options) {
+                        OGDSM.eGovFrameUI.prototype.dataPortalEnvironment = function (divId, options) {
                             &#x27;use strict&#x27;;
                             options = (typeof (options) !== &#x27;undefined&#x27;) ? options : {};
                             var name, i;
@@ -718,7 +718,8 @@
                                 &#x27;&lt;img src=&quot;&#x27; + defaults.path + &#x27;input_bt_co.png&quot; width=30&gt;&#x27;
                             ],
                                 environmentValues = [&#x27;pm10Value&#x27;, &#x27;pm25Value&#x27;, &#x27;so2value&#x27;, &#x27;o3Value&#x27;, &#x27;no2Value&#x27;, &#x27;coValue&#x27;],
-                                areaTypes = [&#x27;인천&#x27;, &#x27;서울&#x27;, &#x27;경기&#x27;, &#x27;강원&#x27;, &#x27;충남&#x27;, &#x27;세종&#x27;, &#x27;충북&#x27;, &#x27;대전&#x27;, &#x27;경북&#x27;, &#x27;전북&#x27;, &#x27;대구&#x27;, &#x27;울산&#x27;, &#x27;전남&#x27;, &#x27;광주&#x27;, &#x27;경남&#x27;, &#x27;부산&#x27;, &#x27;제주&#x27;];
+                                areaTypes = [&#x27;인천&#x27;, &#x27;서울&#x27;, &#x27;경기&#x27;, &#x27;강원&#x27;, &#x27;충남&#x27;, &#x27;세종&#x27;, &#x27;충북&#x27;, &#x27;대전&#x27;, &#x27;경북&#x27;, &#x27;전북&#x27;, &#x27;대구&#x27;, &#x27;울산&#x27;, &#x27;전남&#x27;, &#x27;광주&#x27;, &#x27;경남&#x27;, &#x27;부산&#x27;, &#x27;제주&#x27;],
+                                areaValues = [&#x27;incheon&#x27;, &#x27;seoul&#x27;, &#x27;gyeonggi&#x27;, &#x27;gangwon&#x27;, &#x27;chungnam&#x27;, &#x27;sejong&#x27;, &#x27;chungbuk&#x27;, &#x27;daejeon&#x27;, &#x27;gyeongbuk&#x27;, &#x27;jeonbuk&#x27;, &#x27;daegu&#x27;, &#x27;ulsan&#x27;, &#x27;jeonnam&#x27;, &#x27;gwangju&#x27;, &#x27;gyeongnam&#x27;, &#x27;busan&#x27;, &#x27;jeju&#x27;];
                             var rootDiv = $(&#x27;#&#x27; + divId),
                                 visualType = this.autoRadioBox(divId, &#x27;visualType&#x27;, [&#x27;맵&#x27;, &#x27;차트&#x27;], [&#x27;map&#x27;, &#x27;chart&#x27;], {horizontal : true}),
                                 areaRadio,
@@ -727,12 +728,12 @@
                             for (i = 0; i &lt; areaTypes.length - 2; i += 3) {
                                 areaRadio = this.autoRadioBox(divId, &#x27;areaType&#x27;,
                                                               [areaTypes[i], areaTypes[i + 1], areaTypes[i + 2]],
-                                                              [areaTypes[i], areaTypes[i + 1], areaTypes[i + 2]],
+                                                              [areaValues[i], areaValues[i + 1], areaValues[i + 2]],
                                                               {horizontal : true});
                             }
                             areaRadio = this.autoRadioBox(divId, &#x27;areaType&#x27;,
                                                           [areaTypes[areaTypes.length - 2], areaTypes[areaTypes.length - 1]],
-                                                          [areaTypes[areaTypes.length - 2], areaTypes[areaTypes.length - 1]],
+                                                          [areaValues[areaValues.length - 2], areaValues[areaValues.length - 1]],
                                                           {horizontal : true});
                             for (i = 0; i &lt; environmentValues.length; i += 3) {
                                 environmentType = this.autoRadioBox(divId, &#x27;areenvTypeaType&#x27;,

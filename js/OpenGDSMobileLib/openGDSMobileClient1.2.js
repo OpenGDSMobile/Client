@@ -1933,12 +1933,11 @@ OGDSM.externalConnection.prototype.seoulEnvironmentLoad = function (addr, apiKey
 
 /**
  * 데이터 포털 환경 데이터 요청
- * @method seoulEnvironmentLoad
+ * @method dataPortalEnvironmentLoad
  * @param {String} addr - 주소
  * @param {String} apiKey - API 키
  * @param {String} envType - 환경 정보 이름
- * @param {date} date - 날짜
- * @param {time} time - 시간
+ * @param {date} area - 지역
  * @param {function} callback - 성공 콜백 함수
  */
 OGDSM.externalConnection.prototype.dataPortalEnvironmentLoad = function (addr, apiKey, envType, area, callback) {
@@ -1974,6 +1973,41 @@ OGDSM.externalConnection.prototype.dataPortalEnvironmentLoad = function (addr, a
     });
 };
 
+
+
+/**
+ * geoServer 데이터 리스트 요청
+ * @method getLayersGeoServer
+ * @param {String} addr - 서버 주소
+ * @param {String} wsName - 워크스페이스 이름
+ * @param {Function} callback - 성공 콜백 함수
+ */
+OGDSM.externalConnection.prototype.getLayersGeoServer = function (addr, wsName, callback) {
+    'use strict';
+    var parm = { wsName : wsName };
+    $.mobile.loading('show', {
+        text : 'Loading',
+        textVisible : 'true',
+        theme : 'c',
+        textonlt : 'false'
+    });
+    $.ajax({
+        type : 'POST',
+        url : addr,
+        data : JSON.stringify(parm),
+        contentType : 'application/json;charset=UTF-8',
+        dataType : 'json',
+        success : function (msg) {
+            var resultData = msg.data;
+            $.mobile.loading('hide');
+            callback(resultData);
+        },
+
+        error : function (e) {
+            console.log(e);
+        }
+    });
+};
 /*jslint devel: true, vars : true */
 /*global $, jQuery, ol, OGDSM*/
 OGDSM.namesapce('eGovFrameUI');
@@ -2265,7 +2299,7 @@ OGDSM.eGovFrameUI.prototype.timeInput = function (divId) {
 
 /**
  * 날짜 태그 생성
- * @method DateInput
+ * @method dateInput
  * @param {String} divId - 최상위 DIV 아이디 이름
  * @return {jQuery Object} 제이쿼리 아이디 이름 객체 (Date YYYY/MM/DD)
  */
@@ -2574,14 +2608,14 @@ OGDSM.eGovFrameUI.prototype.seoulEnvironment = function (divId, options) {
 
 /**
  * 데이터 포털 환경정보 요청 인터페이스
- * @method dataProtalEnvironment
+ * @method dataPortalEnvironment
  * @param {String} divId - 최상위 DIV 아이디 이름
  * @param {JSON Object} options - 옵션 JSON 객체 키 값{theme=this.dataTheme, path='./images/'}
   theme(String) : 테마
   path(String) : 이미지 위치
  * @return {String} 생성된 객체 배열 [visualType, areaType, environmentType]
  */
-OGDSM.eGovFrameUI.prototype.dataProtalEnvironment = function (divId, options) {
+OGDSM.eGovFrameUI.prototype.dataPortalEnvironment = function (divId, options) {
     'use strict';
     options = (typeof (options) !== 'undefined') ? options : {};
     var name, i;

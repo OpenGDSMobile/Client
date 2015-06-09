@@ -3,7 +3,7 @@
 <html>
     <head>
         <base href="../">
-        <title>VWworld 데이터 시각화</title>
+        <title>서울 열린 데이터 광장 예제</title>
         <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
         <link rel="stylesheet" href="./css/egovframework/mbl/cmm/jquery.mobile-1.3.2.css">   <!-- jQuery Mobile -->
@@ -45,11 +45,11 @@
             var obj = null;
             function seoulOpenDataUI() {
                 $('#setting').empty();
-                var serverAddr = 'http://113.198.80.9';
+                var serverAddr = 'http://113.198.80.9/MobileWebMapping';
                 var geoServerAddr = 'http://113.198.80.9';
                 var ui = new OGDSM.eGovFrameUI();
-                var envIds = ui.seoulEnvironment('setting', {path : '../images/openGDSMobile/'});
-                var processBtn = ui.autoButton('setting', 'vworldProcess', 'Process', '#', {
+                var envIds = ui.seoulEnvironment('setting', {path : './images/openGDSMobile/'});
+                var processBtn = ui.autoButton('setting', 'vworldProcess', '시각화', '#', {
                     theme : 'a'
                 });
                 var externalServer = new OGDSM.externalConnection();
@@ -92,7 +92,7 @@
                         if (visualType === 'map') {
                             externalServer.geoServerWFSLoad(obj, geoServerAddr, 'opengds', 'seoul_sig', {
                                 callback : function (layer) {
-                                    obj.changeWFSStyle('seoulsig', colors, {
+                                    obj.changeWFSStyle('seoul_sig', colors, {
                                         opt : 0.6,
                                         attr : 'sig_kor_nm',
                                         range : ranges,
@@ -124,7 +124,8 @@
 	            <a href="#setting" data-role="button" data-rel="popup" data-mini="true" data-inline="true" class="OGDSPosTopCenter" data-position-to="window" onclick="seoulOpenDataUI()">서울 열린 데이터 광장(환경데이터)</a>
                 <h3 style="margin-left:10px;">서울 열린 데이터 광장(환경데이터)</h3>
                 <p style="font-size:12px; margin-left:25px;">
-                설명~~
+                  서울 열린 데이터 광장에서 제공되고 있는 실시간 환경 데이터를 시각화할 수 있도록 제공<br>
+                	사용자 인터페이스를 제공하고 있으며, 어플리케이션 서버와 통신하여 원하는 지역에 대한 환경 데이터 결과를 JSON 형식으로 보내줌 ※ 서버 필요
                 </p>
                 <p style="margin-left:25px;">Code</p>
                 <pre class="brush:html;">
@@ -208,7 +209,7 @@
                 var geoServerAddr = 'http://113.198.80.9';
                 var ui = new OGDSM.eGovFrameUI();
                 var envIds = ui.seoulEnvironment('setting', {path : '../images/openGDSMobile/'});
-                var processBtn = ui.autoButton('setting', 'vworldProcess', 'Process', '#', {
+                var processBtn = ui.autoButton('setting', 'vworldProcess', '시각화', '#', {
                     theme : 'a'
                 });
                 var externalServer = new OGDSM.externalConnection();

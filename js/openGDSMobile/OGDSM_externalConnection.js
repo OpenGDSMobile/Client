@@ -259,12 +259,11 @@ OGDSM.externalConnection.prototype.seoulEnvironmentLoad = function (addr, apiKey
 
 /**
  * 데이터 포털 환경 데이터 요청
- * @method seoulEnvironmentLoad
+ * @method dataPortalEnvironmentLoad
  * @param {String} addr - 주소
  * @param {String} apiKey - API 키
  * @param {String} envType - 환경 정보 이름
- * @param {date} date - 날짜
- * @param {time} time - 시간
+ * @param {date} area - 지역
  * @param {function} callback - 성공 콜백 함수
  */
 OGDSM.externalConnection.prototype.dataPortalEnvironmentLoad = function (addr, apiKey, envType, area, callback) {
@@ -296,6 +295,42 @@ OGDSM.externalConnection.prototype.dataPortalEnvironmentLoad = function (addr, a
         error : function (e) {
             console.log(e);
             $.mobile.loading('hide');
+        }
+    });
+};
+
+
+
+/**
+ * geoServer 데이터 리스트 요청
+ * @method getLayersGeoServer
+ * @param {String} addr - 서버 주소
+ * @param {String} wsName - 워크스페이스 이름
+ * @param {Function} callback - 성공 콜백 함수
+ */
+OGDSM.externalConnection.prototype.getLayersGeoServer = function (addr, wsName, callback) {
+    'use strict';
+    var parm = { wsName : wsName };
+    $.mobile.loading('show', {
+        text : 'Loading',
+        textVisible : 'true',
+        theme : 'c',
+        textonlt : 'false'
+    });
+    $.ajax({
+        type : 'POST',
+        url : addr,
+        data : JSON.stringify(parm),
+        contentType : 'application/json;charset=UTF-8',
+        dataType : 'json',
+        success : function (msg) {
+            var resultData = msg.data;
+            $.mobile.loading('hide');
+            callback(resultData);
+        },
+
+        error : function (e) {
+            console.log(e);
         }
     });
 };
