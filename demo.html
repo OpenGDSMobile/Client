@@ -21,7 +21,7 @@
 
     <!-- Proj, OpenLayers3, D3 -->
     <script type="text/javascript" src="./js/proj4js/2.2.2/proj4.js"></script>                         <!-- Proj4js -->
-    <script type="text/javascript" src="./js/ol3/ol.js"></script>                                      <!-- OpenLayers 3 -->
+    <script type="text/javascript" src="./js/ol3/ol-debug.js"></script>                                      <!-- OpenLayers 3 -->
     <script type="text/javascript" src="./js/d3/d3.js"></script>                                       <!-- D3.js -->
 
     <script type="text/javascript" src="./js/openGDSMobile/OGDSM.js"></script>
@@ -171,7 +171,9 @@
 
         <div id="mapSelect" class="OGDSPosTopRight"></div>
 
-        <div id="layerList"></div>
+        <div id="layerList">
+            <!--<a href="#" data-role="button" data-icon="arrow-r" data-iconpos="right">레이어</a>-->
+        </div>
 
         <div id="dataViewCheckBox" class="OGDSPosBottomCenter"></div>
 
@@ -262,7 +264,6 @@
             <li><a href="#" onclick="wfsLoad('sejong_population_wgs84')">인구 데이터(세종특별시2013.1.-2014.2.)</a></li>
             <li><a href="#" onclick="wfsLoad('seoul_sig')">서울특별시(구 단위)</a></li>
             <li><a href="#" onclick="wfsLoad('seoul_emd')">서울특별시(동 단위)</a></li>
-            <li><a href="#" onclick="wfsLoad('seoul_env_position')">서울특별시(동 단위)</a></li>
             <li><a href="#" onclick="wfsLoad('incheon_emd')">인천광역시(동 단위)</a></li>
             <li><a href="#" onclick="wfsLoad('sejong_emd')">세종시(동 단위)</a></li>
             <li><a href="#" onclick="wfsLoad('daejong_emd')">대전광역시(동 단위)</a></li>

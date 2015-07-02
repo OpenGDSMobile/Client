@@ -90,8 +90,8 @@ OGDSM.externalConnection.prototype.geoServerWFSLoad = function (obj, addr, works
         success : function (msg) {
             var wfsLayer = new ol.layer.Vector({
                 title : layerName,
-                source : new ol.source.GeoJSON({
-                    object: msg
+                source : new ol.source.Vector({
+                    features : (new ol.format.GeoJSON()).readFeatures(msg)
                 }),
                 style : objStyles
             });

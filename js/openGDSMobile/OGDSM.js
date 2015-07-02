@@ -82,3 +82,23 @@ OGDSM.jsonToArray = function (obj, x, y) {
     return xyAxis;
 };
 
+
+/**
+ * OGDSM options 파라미터 적용 모듈
+ * - 사용 방법(Use)
+ *       OGDSM.applyOptions(defaults, options);
+ *
+ * @module OGDSM.applyOptions
+ */
+OGDSM.applyOptions = function (defaults, options) {
+    'use strict';
+    var name = null;
+    for (name in defaults) {
+        if (defaults.hasOwnProperty(name)) {
+            if (options.hasOwnProperty(name)) {
+                defaults[name] = options[name];
+            }
+        }
+    }
+    return defaults;
+};

@@ -1,0 +1,1 @@
+{"connect":"SFTP","host":"113.198.80.9","port":"22","user":"intruder","remoteRoot":"/var/www/opengdsDev","privateKeyFile":"","pwd":"intruder321","savepwd":"checked"}

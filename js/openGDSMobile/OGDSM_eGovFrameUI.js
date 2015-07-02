@@ -52,13 +52,6 @@ OGDSM.eGovFrameUI.prototype.autoButton = function (rootDivId, linkId, buttonTitl
         inline : false,
         mini : false
     };
-    for (name in defaults) {
-        if (defaults.hasOwnProperty(name)) {
-            if (options.hasOwnProperty(name)) {
-                defaults[name] = options[name];
-            }
-        }
-	}
     html += 'data-theme="' + defaults.theme + '" data-corners="' + defaults.corners + '" data-inline="' + defaults.inline + '" data-mini="' + defaults.mini + '"';
     html += '>' + buttonTitle + '</a>';
     rootDiv.append(html);

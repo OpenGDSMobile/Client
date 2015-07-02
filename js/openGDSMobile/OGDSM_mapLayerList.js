@@ -12,76 +12,81 @@ OGDSM.namesapce('mapLayerList');
      * @param {OGDSM.visualization} obj - OGDSM 시각화 객체
      * @param {String} listDiv - 생성할 list DIV 이름
      */
-    OGDSM.mapLayerList = function (obj, listDiv) {
+    OGDSM.mapLayerList = function (obj, listDiv, options) {
+        options = (typeof (options) !== 'undefined') ? options : {};
         this.listDiv = listDiv;
         this.visualizationObj = obj;
         var thisObj = this;
-        var handleList = null, listSize = 200, buttonSize = 120,
-            element = document.getElementById(listDiv),
-            listElement = document.createElement('div'),
+        var defaults = {
+            listWidthSize : 200,
+            buttonSize : 100,
+            btnType : 'text',
+            btnHTML : '레이어',
+            bgColor : 'rgba(255, 255, 255, 0.0)',
+            listColor : 'rgba(255, 255, 255, 0.0)',
+            titleColor : 'rgba(255, 255, 255, 1.0)',
+            TitleHTML : '<span style="font-weight:bold;">레이어 목록</span>',
+            buttonId : null
+        };
+        defaults = OGDSM.applyOptions(defaults, options);
+        var handleList = null,
+            rootElement = document.getElementById(listDiv),
             buttonElement = document.createElement('div'),
             listTitleElement = document.createElement('div'),
             listRootElement = document.createElement('div'),
             listUlElement = document.createElement('ul'),
-            btnText = '레이어목록 보이기',
-            elementCSS = 'position : absolute; background : rgba(255,255,255,0.0); top: 0px;  z-index : 1;',
-            olCustomListCSS = 'float : left; padding : 1px;	background : rgba(255,255,255,0.0); ' +
-            'width : ' + listSize + 'px;',
-            olCustomButtonCSS = 'cursor:pointer; position : absolute; width:' + buttonSize + 'px; height: 50px;',
-            listTitleCSS = 'width: 100%; text-align:center;',
+            rootElementCSS = 'position : absolute; top: 0px;  z-index : 1; background : ' + defaults.bgColor + ';',
+            buttonCSS = 'cursor:pointer; position : absolute; left :' +
+                            defaults.listWidthSize + 'px;' + 'width : ' + defaults.buttonSize + 'px;',
+            listRootCSS = 'float : left; padding : 1px;	background : ' +
+                            defaults.listColor + ';' + 'width : ' + defaults.listWidthSize + 'px;',
+            listTitleCSS = 'width: 100%; margin-bottom:10px; text-align:center; background :' + defaults.titleColor + ';',
             listUlCSS = 'list-style:none; padding:0; margin:0;',
-            listSlideHideCSS = elementCSS + ' left: ' + -(listSize + 3) + 'px; transition: left 0.1s ease;',
-            listSlideShowCSS = elementCSS + ' left: 0px; transition: left 0.1s ease;',
-            buttonFontShowCSS = 'font-size : 90%; font-weight : bold; color : rgba(0, 0, 0,1.0); text-align:center;',
-            buttonFontHideCSS = 'font-size : 90%; font-weight : bold; color : rgba(0, 0, 0,.5); text-align:center;',
-            buttonSlideShowCSS = olCustomButtonCSS + 'background: rgba(255, 255, 255, 0.5); left:' + (listSize + 2) + 'px; ' +
-            'transition : background 0.1s ease, left 0.1s ease;' + buttonFontShowCSS,
-            buttonSlideHideCSS = olCustomButtonCSS + 'background: rgba(0, 0, 0, .0); left:' + (listSize - buttonSize) + 'px; ' +
-            'transition : background 0.1s ease, left 0.1s ease;' + buttonFontHideCSS;
+            listSlideHideCSS = ' left: ' + -(defaults.listWidthSize) + 'px; transition: left 0.1s ease;',
+            listSlideShowCSS = ' left: 0px; transition: left 0.1s ease;';
+
+            //buttonFontShowCSS = 'font-size : 90%; font-weight : bold; color : rgba(0, 0, 0,1.0); text-align:center;',
+            //buttonFontHideCSS = 'font-size : 90%; font-weight : bold; color : rgba(0, 0, 0,.5); text-align:center;',
+            //buttonSlideShowCSS = olCustomButtonCSS + 'background: rgba(255, 255, 255, 0.5); left:' + (listSize + 2) + 'px; ' +
+            //'transition : background 0.1s ease, left 0.1s ease;' + buttonFontShowCSS,
+            //buttonSlideHideCSS = olCustomButtonCSS + 'background: rgba(0, 0, 0, .0); left:' + (listSize - buttonSize) + 'px; ' +
+            //'transition : background 0.1s ease, left 0.1s ease;' + buttonFontHideCSS;
+
 
         handleList = function (e) {
-            var listControl = document.getElementById('listControl');
-            if (btnText === '레이어목록 보이기') {
-                btnText = '레이어목록 숨기기';
-                element.style.cssText = listSlideShowCSS;
-                buttonElement.style.cssText = buttonSlideHideCSS;
-
+            if (this.value === 'hide') {
+                this.value = 'show';
+                rootElement.style.cssText = rootElementCSS + listSlideShowCSS;
             } else {
-                btnText = '레이어목록 보이기';
-                element.style.cssText = listSlideHideCSS;
-                buttonElement.style.cssText = buttonSlideShowCSS;
+                this.value = 'hide';
+                rootElement.style.cssText = rootElementCSS + listSlideHideCSS;
             }
-            buttonElement.innerHTML = btnText;
         };
-
+        buttonElement.value = 'hide';
+        buttonElement.id = listDiv + 'Button';
+        buttonElement.style.cssText = buttonCSS;
+        if (defaults.btnType === 'text') {
+            buttonElement.innerHTML = defaults.btnHTML;
+        }
         buttonElement.addEventListener('click', handleList, false);
         buttonElement.addEventListener('touchstart', handleList, false);
 
-        element.style.cssText = listSlideHideCSS;
-        listElement.id = listDiv + 'Root';
-        listElement.style.cssText = olCustomListCSS;
+
 
         listTitleElement.style.cssText = listTitleCSS;
-        listTitleElement.setAttribute('class', 'ui-body-a');
-        listTitleElement.innerHTML = '<h4>레이어 목록</h4>';
-
-        listRootElement.id = listDiv + 'Div';
+        listTitleElement.innerHTML = defaults.TitleHTML;
         listUlElement.id = listDiv + 'Contents';
         listUlElement.style.cssText = listUlCSS;
 
-        listElement.appendChild(listTitleElement);
-        listElement.appendChild(listRootElement);
+
+        listRootElement.id = listDiv + 'Root';
+        listRootElement.style.cssText = listRootCSS;
+        listRootElement.appendChild(listTitleElement);
         listRootElement.appendChild(listUlElement);
 
-        buttonElement.id = listDiv + 'Button';
-        buttonElement.className = 'ol-unselectable';
-        buttonElement.style.cssText = buttonSlideShowCSS;
-        buttonElement.innerHTML = btnText;
-        buttonElement.setAttribute('data-role', 'button');
-
-        element.appendChild(listElement);
-        element.appendChild(buttonElement);
-
+        rootElement.style.cssText = rootElementCSS + listSlideHideCSS;
+        rootElement.appendChild(buttonElement);
+        rootElement.appendChild(listRootElement);
 
         this.ulObj = Sortable.create(document.getElementById(this.listDiv + 'Contents'), {
             animation: 150,
@@ -109,7 +114,9 @@ OGDSM.namesapce('mapLayerList');
                     labels[length - evt.newIndex] = changeValue;
                     objs[length - evt.newIndex] = changeObj;
                 }
-
+                for (i = 0; i < objs.length; i++) {
+                    layers.pop();
+                }
                 for (i = 0; i < objs.length; i++) {
                     layers.setAt(i + 1, objs[i]);
                 }
@@ -117,6 +124,7 @@ OGDSM.namesapce('mapLayerList');
                 thisObj.setLabels(labels);
             }
         });
+
     };
     OGDSM.mapLayerList.prototype = {
         constructor : OGDSM.mapLayerList,
@@ -193,20 +201,21 @@ OGDSM.mapLayerList.prototype.listManager = function (obj, label, color, type) {
     }
     var sublabel = label;
     if (label.length > 8) {
-        sublabel = sublabel.substr(0, 8) + '...';
+        sublabel = sublabel.substr(0, 10) + '...';
     }
-
     olList.prepend('<li id="layer' + label + '" style="float:left">' +
-                   '<div style="width:15%; float:left; margin-top:4px;">' +
+                   '<fieldset data-role="controlgroup" data-type="horizontal" style="margin:0px">' +
+                   '<div style="width:15%; float:left;">' +
                    '<canvas id="' + label + 'canvas" width="100%" height=30px; class="drag-handle" ></canvas>' +
-                   '</div> <div style="width:70%; float:left; padding:0px; margin:0px;">' +
-                   '<input type="checkbox" name="listCheckBox" data-corners="false" data-mini="true" style="width:100px;" class="custom" ' +
+                   '</div> <div id="chkRoot' + label + '" style="width:70%; float:left; padding:0px; margin:0px;">' +
+                   '<input type="checkbox" name="listCheckBox" data-corners="false" data-mini="true" style="width:100%;" class="custom" ' +
                    'id="' + 'visualSW' + thisObj.getLabels().length + '" data-label="' + label + '" checked/>' +
-                   '<label for="' + 'visualSW' + thisObj.getLabels().length + '">' + sublabel + '</label>' +
-                   '</div> <div style="width:15%; float:left; padding:0px; margin:0px;">' +
-                   '<a data-role="button" data-rel="popup" data-theme="b" data-corners="false" data-mini="true" data-transition="pop"' +
-                   'data-label="' + label + '" href="#popup' + label + '">　</a>' +
+                   '<label for="' + 'visualSW' + thisObj.getLabels().length + '" style="width:100%">' + sublabel + '</label>' +
+                   '</div> <div style="width:15%; float:left;">' +
+                   '<a id="hrefRoot' + label + '" data-role="button" data-rel="popup" data-theme="b" data-corners="false"' +
+                   'data-mini="true" data-transition="pop"' + 'data-label="' + label + '" href="#popup' + label + '">　</a>' +
                    '</div>' +
+                   '</fieldset>' +
                    '<div data-role="popup" id="popup' + label + '" style="width:' + 200 + 'px">' +
                    '<input type="range" value="100" min="0" max="100" data-highlight="true" class="layer-manager"' +
                    'id="' + label + 'slider" data-label="' + label + '">' +
@@ -214,7 +223,8 @@ OGDSM.mapLayerList.prototype.listManager = function (obj, label, color, type) {
                    'id="' + label + 'delete" data-label="' + label + '">Delete</a>' +
                    '</div>' +
                    '</li>');
-
+    console.log($('#chkRoot' + label + ' > div'));
+    // margin:0px;
     var labelCanvas = document.getElementById(label + 'canvas').getContext('2d');
     if (type === 'polygon') {
         labelCanvas.fillStyle = color;
@@ -240,6 +250,9 @@ OGDSM.mapLayerList.prototype.listManager = function (obj, label, color, type) {
     $('#' + label + 'slider').bind('change', sliderEvent);
     $('#' + label + 'delete').bind('click', deleteEvent);
     $('input[name=listCheckBox]').bind('click', checkBoxEvent);
+    $('#chkRoot' + label + ' > div').css('width', '98%');
+    $('#hrefRoot' + label + ' > span').css('margin', '-1.5px');
+
 };
 
 /**

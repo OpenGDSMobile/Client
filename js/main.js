@@ -1,6 +1,6 @@
 /*jslint devel: true, vars: true, plusplus: true*/
 /*global $, jQuery, ol, OGDSM*/
-
+//test
 var openGDSMObj;
 var serverAddr = 'http://113.198.80.60/OpenGDSMobileApplicationServer1.0';
 var geoServerAddr = 'http://113.198.80.9';
