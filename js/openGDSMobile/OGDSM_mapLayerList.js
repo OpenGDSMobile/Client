@@ -208,12 +208,13 @@ OGDSM.mapLayerList.prototype.listManager = function (obj, label, color, type) {
                    '<div style="width:15%; float:left;">' +
                    '<canvas id="' + label + 'canvas" width="100%" height=30px; class="drag-handle" ></canvas>' +
                    '</div> <div id="chkRoot' + label + '" style="width:70%; float:left; padding:0px; margin:0px;">' +
-                   '<input type="checkbox" name="listCheckBox" data-corners="false" data-mini="true" style="width:100%;" class="custom" ' +
+                   '<input type="checkbox" name="listCheckBox" data-corners="false" data-mini="true" class="custom" ' +
                    'id="' + 'visualSW' + thisObj.getLabels().length + '" data-label="' + label + '" checked/>' +
                    '<label for="' + 'visualSW' + thisObj.getLabels().length + '" style="width:100%">' + sublabel + '</label>' +
                    '</div> <div style="width:15%; float:left;">' +
-                   '<a id="hrefRoot' + label + '" data-role="button" data-rel="popup" data-theme="b" data-corners="false"' +
-                   'data-mini="true" data-transition="pop"' + 'data-label="' + label + '" href="#popup' + label + '">　</a>' +
+                   '<a id="hrefRoot' + label + '" data-role="button" data-rel="popup" data-theme="b" data-icon="gear"' +
+                   'data-corners="false" data-mini="true" data-transition="pop"' +
+                   'data-label="' + label + '" href="#popup' + label + '">　</a>' +
                    '</div>' +
                    '</fieldset>' +
                    '<div data-role="popup" id="popup' + label + '" style="width:' + 200 + 'px">' +
