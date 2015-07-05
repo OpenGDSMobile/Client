@@ -52,6 +52,8 @@ OGDSM.eGovFrameUI.prototype.autoButton = function (rootDivId, linkId, buttonTitl
         inline : false,
         mini : false
     };
+
+    defaults = OGDSM.applyOptions(defaults, options);
     html += 'data-theme="' + defaults.theme + '" data-corners="' + defaults.corners + '" data-inline="' + defaults.inline + '" data-mini="' + defaults.mini + '"';
     html += '>' + buttonTitle + '</a>';
     rootDiv.append(html);
@@ -84,13 +86,7 @@ OGDSM.eGovFrameUI.prototype.autoCheckBox = function (rootDivId, chkId, labels, v
             theme : this.dataTheme,
             horizontal : false
         };
-    for (name in defaults) {
-        if (defaults.hasOwnProperty(name)) {
-            if (options.hasOwnProperty(name)) {
-                defaults[name] = options[name];
-            }
-        }
-	}
+    defaults = OGDSM.applyOptions(defaults, options);
     html = '';
     if (Array.isArray(labels)) {
         html += '<fieldset data-role="controlgroup" ';
@@ -143,14 +139,7 @@ OGDSM.eGovFrameUI.prototype.autoRadioBox = function (rootDivId, radioId, labels,
         horizontal : false,
         theme : this.dataTheme
     };
-    for (name in defaults) {
-        if (defaults.hasOwnProperty(name)) {
-            if (options.hasOwnProperty(name)) {
-                defaults[name] = options[name];
-            }
-        }
-	}
-
+    defaults = OGDSM.applyOptions(defaults, options);
     if (defaults.horizontal) {
         html += 'data-theme="' + defaults.theme + '" data-type="horizontal">';
     } else {
@@ -198,17 +187,12 @@ OGDSM.eGovFrameUI.prototype.autoSelect = function (rootDivId, selectId, selectNa
         theme : this.dataTheme,
         corners : true,
         inline : false,
-        selected : 0
+        selected : 0,
+        mini : false
     };
-    for (name in defaults) {
-        if (defaults.hasOwnProperty(name)) {
-            if (options.hasOwnProperty(name)) {
-                defaults[name] = options[name];
-            }
-        }
-	}
-    html = '<select name="' + selectName + '" id="' + selectId + '" ' +
-           'data-theme="' + defaults.theme + '" data-corners="' + defaults.corners + '" data-inline="' + defaults.inline + '">';
+    defaults = OGDSM.applyOptions(defaults, options);
+    html = '<select name="' + selectName + '" id="' + selectId + '" ' + 'data-mini="' + defaults.mini +
+           '" data-theme="' + defaults.theme + '" data-corners="' + defaults.corners + '" data-inline="' + defaults.inline + '">';
     html += '<option value=""> ' + defaults.firstName + '</option>';
 
     for (i = 0; i < text.length; i += 1) {
@@ -247,13 +231,7 @@ OGDSM.eGovFrameUI.prototype.autoSwitch = function (rootDivId, switchId, switchNa
         track_theme : this.dataTheme,
         switchName : switchId + 'Name'
     };
-    for (name in defaults) {
-        if (defaults.hasOwnProperty(name)) {
-            if (options.hasOwnProperty(name)) {
-                defaults[name] = options[name];
-            }
-        }
-	}
+    defaults = OGDSM.applyOptions(defaults, options);
     html = '<select name="' + defaults.switchName + '" id="' + switchId + '" data-theme="' + defaults.theme +
            '" data-track-theme="' + defaults.track_theme + '" data-role="slider" data-inline="true">';
     html += '<option value="off">Off</option>';
@@ -339,7 +317,8 @@ OGDSM.eGovFrameUI.prototype.baseMapSelect = function (OGDSMObj, rootDiv, options
     mapRadioNameObj = this.autoSelect(rootDiv, 'mapType', 'selectMapType', supportMap, supportMap, {
         firstName : '맵 선택',
         selected : supportMap[0],
-        inline : true
+        inline : true,
+        mini : true
     });
     OGDSMObj.changeBaseMap(supportMap[0]);
     mapRadioNameObj.change(function () {
@@ -557,13 +536,7 @@ OGDSM.eGovFrameUI.prototype.seoulEnvironment = function (divId, options) {
         theme : this.dataTheme,
         path : './images/openGDSMobile/'
     };
-    for (name in defaults) {
-        if (defaults.hasOwnProperty(name)) {
-            if (options.hasOwnProperty(name)) {
-                defaults[name] = options[name];
-            }
-        }
-	}
+    defaults = OGDSM.applyOptions(defaults, options);
     var environmentImages = [
         '<img src="' + defaults.path + 'input_bt_pm10.png" width=30>',
         '<img src="' + defaults.path + 'input_bt_pm25.png" width=30>',
@@ -606,13 +579,7 @@ OGDSM.eGovFrameUI.prototype.dataPortalEnvironment = function (divId, options) {
         theme : this.dataTheme,
         path : './images/openGDSMobile/'
     };
-    for (name in defaults) {
-        if (defaults.hasOwnProperty(name)) {
-            if (options.hasOwnProperty(name)) {
-                defaults[name] = options[name];
-            }
-        }
-	}
+    defaults = OGDSM.applyOptions(defaults, options);
     var environmentImages = [
         '<img src="' + defaults.path + 'input_bt_pm10.png" width=30>',
         '<img src="' + defaults.path + 'input_bt_pm25.png" width=30>',

@@ -20,13 +20,12 @@ OGDSM.namesapce('mapLayerList');
         var defaults = {
             listWidthSize : 200,
             buttonSize : 100,
-            btnType : 'text',
+            btnType : 'img',
             btnHTML : '레이어',
             bgColor : 'rgba(255, 255, 255, 0.0)',
             listColor : 'rgba(255, 255, 255, 0.0)',
             titleColor : 'rgba(255, 255, 255, 1.0)',
-            TitleHTML : '<span style="font-weight:bold;">레이어 목록</span>',
-            buttonId : null
+            TitleHTML : '<span style="font-weight:bold;">레이어 목록</span>'
         };
         defaults = OGDSM.applyOptions(defaults, options);
         var handleList = null,
@@ -40,33 +39,33 @@ OGDSM.namesapce('mapLayerList');
                             defaults.listWidthSize + 'px;' + 'width : ' + defaults.buttonSize + 'px;',
             listRootCSS = 'float : left; padding : 1px;	background : ' +
                             defaults.listColor + ';' + 'width : ' + defaults.listWidthSize + 'px;',
-            listTitleCSS = 'width: 100%; margin-bottom:10px; text-align:center; background :' + defaults.titleColor + ';',
+            listTitleCSS = 'width: 100%; margin-bottom:10px; margin-top:10px; text-align:center; background :' + defaults.titleColor + ';',
             listUlCSS = 'list-style:none; padding:0; margin:0;',
             listSlideHideCSS = ' left: ' + -(defaults.listWidthSize) + 'px; transition: left 0.1s ease;',
             listSlideShowCSS = ' left: 0px; transition: left 0.1s ease;';
 
-            //buttonFontShowCSS = 'font-size : 90%; font-weight : bold; color : rgba(0, 0, 0,1.0); text-align:center;',
-            //buttonFontHideCSS = 'font-size : 90%; font-weight : bold; color : rgba(0, 0, 0,.5); text-align:center;',
-            //buttonSlideShowCSS = olCustomButtonCSS + 'background: rgba(255, 255, 255, 0.5); left:' + (listSize + 2) + 'px; ' +
-            //'transition : background 0.1s ease, left 0.1s ease;' + buttonFontShowCSS,
-            //buttonSlideHideCSS = olCustomButtonCSS + 'background: rgba(0, 0, 0, .0); left:' + (listSize - buttonSize) + 'px; ' +
-            //'transition : background 0.1s ease, left 0.1s ease;' + buttonFontHideCSS;
+        var buttonSlideShowCSS = 'left:' + (defaults.listWidthSize) + 'px; ' + 'transition : background 0.1s ease, left 0.1s ease;',
+            buttonSlideHideCSS = 'left:' + (defaults.listWidthSize - 25) + 'px; ' + 'transition : background 0.1s ease, left 0.1s ease;';
 
 
         handleList = function (e) {
             if (this.value === 'hide') {
                 this.value = 'show';
                 rootElement.style.cssText = rootElementCSS + listSlideShowCSS;
+                buttonElement.style.cssText = buttonCSS + buttonSlideHideCSS;
             } else {
                 this.value = 'hide';
                 rootElement.style.cssText = rootElementCSS + listSlideHideCSS;
+                buttonElement.style.cssText = buttonCSS + buttonSlideShowCSS;
             }
         };
         buttonElement.value = 'hide';
         buttonElement.id = listDiv + 'Button';
-        buttonElement.style.cssText = buttonCSS;
+        buttonElement.style.cssText = buttonCSS + buttonSlideShowCSS;
         if (defaults.btnType === 'text') {
             buttonElement.innerHTML = defaults.btnHTML;
+        } else {
+            buttonElement.innerHTML = '<a href="#" data-role="button" data-icon="grid" data-iconpos="notext" data-corners="false"></a>';
         }
         buttonElement.addEventListener('click', handleList, false);
         buttonElement.addEventListener('touchstart', handleList, false);
@@ -88,6 +87,7 @@ OGDSM.namesapce('mapLayerList');
         rootElement.appendChild(buttonElement);
         rootElement.appendChild(listRootElement);
 
+        $('#' + listDiv + 'Button').trigger('create');
         this.ulObj = Sortable.create(document.getElementById(this.listDiv + 'Contents'), {
             animation: 150,
             handle: '.drag-handle',
@@ -252,7 +252,7 @@ OGDSM.mapLayerList.prototype.listManager = function (obj, label, color, type) {
     $('#' + label + 'delete').bind('click', deleteEvent);
     $('input[name=listCheckBox]').bind('click', checkBoxEvent);
     $('#chkRoot' + label + ' > div').css('width', '98%');
-    $('#hrefRoot' + label + ' > span').css('margin', '-1.5px');
+    //$('#hrefRoot' + label + ' > span').css('margin', '-1.5px');
 
 };
 

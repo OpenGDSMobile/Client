@@ -1,6 +1,5 @@
 /*jslint devel: true, vars: true, plusplus: true*/
 /*global $, jQuery, ol, OGDSM*/
-//test
 var openGDSMObj;
 var serverAddr = 'http://113.198.80.60/OpenGDSMobileApplicationServer1.0';
 var geoServerAddr = 'http://113.198.80.9';
@@ -9,7 +8,6 @@ var geoServerAddr = 'http://113.198.80.9';
 function mapSelectUI(openGDSMObj) {
     'use strict';
     var ui = new OGDSM.eGovFrameUI();
-    //ui.baseMapRadioBox(openGDSMObj, 'mapSelect', 'OSM VWorld VWorld_m VWorld_s VWorld_g'); //현재.... 데이터 체크...
     ui.baseMapSelect(openGDSMObj, 'mapSelect', 'OSM VWorld VWorld_m VWorld_s VWorld_g'); //현재.... 데이터 체크...
 }
 //데이터 라디오 버튼 사용자 인터페이스 생성 함수
@@ -36,7 +34,7 @@ function vworldWMSUI() {
     var ui = new OGDSM.eGovFrameUI();
     var externalServer = new OGDSM.externalConnection('vworldWMS');
     var wmsListIds = ui.vworldWMSList('vworldSelect');
-    var processBtn = ui.autoButton('vworldSelect', 'vworldProcess', 'Process', '#', {
+    var processBtn = ui.autoButton('vworldSelect', 'vworldProcess', '시각화', '#', {
         theme : 'a'
     });
     processBtn.click(function () {
@@ -71,7 +69,7 @@ function createSeoulPublicAreaEnvUI() {
     $('#setting').empty();
     var ui = new OGDSM.eGovFrameUI();
     var envIds = ui.seoulEnvironment('setting');
-    var processBtn = ui.autoButton('setting', 'vworldProcess', 'Process', '#', {
+    var processBtn = ui.autoButton('setting', 'vworldProcess', '시각화', '#', {
         theme : 'a'
     });
     var externalServer = new OGDSM.externalConnection();
@@ -134,7 +132,7 @@ function createPublicPortalUI() {
     $('#setting').empty();
     var ui = new OGDSM.eGovFrameUI();
     var envIds = ui.dataPortalEnvironment('setting');
-    var processBtn = ui.autoButton('setting', 'vworldProcess', 'Process', '#', {
+    var processBtn = ui.autoButton('setting', 'vworldProcess', '시각화', '#', {
         theme : 'a'
     });
     var externalServer = new OGDSM.externalConnection();
