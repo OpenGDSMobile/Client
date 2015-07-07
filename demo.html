@@ -31,6 +31,8 @@
     <script type="text/javascript" src="./js/openGDSMobile/OGDSM_mapLayerList.js"></script>
     <script type="text/javascript" src="./js/openGDSMobile/OGDSM_visualization.js"></script>
     <script type="text/javascript" src="./js/openGDSMobile/Sortable.js"></script>
+
+    <script type="text/javascript" src="./examples/globalValues.js"></script>
     <script type="text/javascript" src="./js/main.js"></script>
 
 	<style>
@@ -66,13 +68,8 @@
             height : 400px;
             overflow-y: auto;
         }
-        /* openGDS Mobile CSS */
-        .OGDSMPosTopLeft{
-            position : absolute;
-            z-index : 10000;
-            top : 0px;
-            left : 10px;
-        }
+/* openGDS Mobile CSS */
+        /* basemap select*/
         .OGDSPosTopRight{
             position : absolute;
             z-index : 1000;
@@ -80,23 +77,24 @@
             left : auto;
             right : 10px;
         }
+        /* attribute checkbox*/
         .OGDSPosBottomRight{
             position : absolute;
-            width : 100%;
             z-index : 1000;
             bottom : 8px;
-            left : auto;
-            right : 10px;
-            text-align : right;
+            right : 0px;
         }
-        .OGDSPosBottomCenter{
+        .OGDSPosTransLeftHide{
+            transition: right 0.1s ease;
             position : absolute;
-            width : 100%;
-            z-index : 1000;
-            bottom : 8px;
-            left : 45%;
-            right : 45%;
+            right : -110px;
         }
+        .OGDSPosTransLeftShow{
+            transition: right 0.1s ease;
+            position : absolute;
+            right : 0px;
+        }
+        /* data list button*/
         .OGDSPosTopCenter{
             position : absolute;
             z-index : 999;
@@ -169,8 +167,14 @@
         </div>
         <div id="mapSelect" class="OGDSPosTopRight"></div>
         <div id="layerList"></div>
-        <div id="dataViewCheckBox" class="OGDSPosBottomCenter"></div>
-        <div id="attributeTable" class="OGDSPosTransTopDownHide"></div>
+        <div id="dataViewCheckBox" class="OGDSPosBottomRight OGDSPosTransLeftHide">
+            <fieldset data-role="controlgroup" data-type="horizontal">
+                <input type="checkbox" id="attrChk" data-theme="g"> <label for="attrChk">속성정보</label>
+                <input type="checkbox" id="attrEditChk" data-theme="a"> <label for="attrEditChk">편집모드</label>
+            </fieldset>
+        </div>
+        <div id="attributeTable" class="OGDSPosTransTopDownHide">
+        </div>
 	</div>
 
     <!---custom div-->
@@ -221,10 +225,10 @@
 		style="width:250px; text-align:center; align:center;">
 		</div>
 <!-- Data Table -->
-		<div data-role="panel" data-display="overlay" data-position="right" id="publicDataView">
+		<!--<div data-role="panel" data-display="overlay" data-position="right" id="publicDataView">
 			<table id="dataTable">
 			</table>
-		</div>
+		</div>-->
 <!-- Public Data Select -->
 		<div data-role="popup" id="dataSelect" data-overlay-theme="a">
 		  <div id="range">

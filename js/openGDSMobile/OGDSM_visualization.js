@@ -9,10 +9,11 @@ OGDSM.namesapce('visualization');
     * @class OGDSM.visualization
     * @constructor
     * @param {String} mapDiv - 지도 DIV 아이디 이름
-    * @param {JSON Object} options - 옵션 JSON 객체 키 값{layerListDiv=null, attrTableDiv=null, attrAddr=''}<br>
-  layerListDiv : 레이어 관리 리스트 DIV 아이디 이름<br>
-  attrTableDiv : 속성 시각화 DIV 아이디 이름<br>
-  attrAddr : 속성 시각화 서버 주소<br>
+    * @param {JSON Object} options - 옵션 JSON 객체 키 값<br>
+    {layerListDiv:null, attrTableDiv:null, attrAddr:''}<br>
+    layerListDiv : 레이어 관리 리스트 DIV<br>
+    attrTableDiv : 속성 시각화 DIV 아이디 이름<br>
+    attrAddr : 속성 시각화 서버 주소<br>
     */
     OGDSM.visualization = function (mapDiv, options) {
         options = (typeof (options) !== 'undefined') ? options : {};
@@ -38,11 +39,13 @@ OGDSM.namesapce('visualization');
         $(window).on('resize', function () {
             OGDSM.visualization.updateLayoutSetting();
         });
-        if (defaults.layerListDiv !== null) {
-            this.layerListObj = new OGDSM.mapLayerList(this, defaults.layerListDiv);
-        }
         if (defaults.attrTableDiv !== null) {
             this.attrTableObj = new OGDSM.attributeTable(defaults.attrTableDiv, defaults.attrAddr);
+        }
+        if (defaults.layerListDiv !== null) {
+            this.layerListObj = new OGDSM.mapLayerList(this, defaults.layerListDiv, {
+                attrObj : this.attrTableObj
+            });
         }
         // Orientation...
     };
@@ -86,6 +89,14 @@ OGDSM.namesapce('visualization');
                 }
             }
             return -1;
+        },
+        /**
+         * 속성정보 객체
+         * @method getAttrObj
+         * @return {attributeTable Object} 속성정보 객체
+         */
+        getAttrObj : function () {
+            return this.attrTableObj;
         }
     };
     return OGDSM.visualization;
@@ -288,7 +299,7 @@ OGDSM.visualization.prototype.addMap = function (data, type) {
             } else {
                 color =  'rgb(0, 0, 0)';
             }
-            this.layerListObj.listManager(data, data.get('title'), color, type);
+            this.layerListObj.addList(data, data.get('title'), color, type);
         }
         if (typeof (this.attrTableObj) !== 'undefined') {
             this.attrTableObj.addAttribute(data.get('title'));
@@ -334,7 +345,7 @@ OGDSM.visualization.prototype.removeMap = function (layerName) {
     if (obj !== false) {
         this.getMap().removeLayer(obj);
         if (typeof (this.layerListObj) !== 'undefined') {
-            this.layerListObj.removelist(layerName);
+            this.layerListObj.removeList(layerName);
         }
     }
 };

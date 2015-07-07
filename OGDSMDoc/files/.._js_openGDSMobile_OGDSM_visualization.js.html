@@ -48,6 +48,7 @@
                             </ul>
 
                             <ul id="api-modules" class="apis modules">
+                                <li><a href="../modules/OGDSM.applyOptions.html">OGDSM.applyOptions</a></li>
                                 <li><a href="../modules/OGDSM.jsontoArray.html">OGDSM.jsontoArray</a></li>
                                 <li><a href="../modules/OGDSM.namespace.html">OGDSM.namespace</a></li>
                             </ul>
@@ -98,10 +99,11 @@
                             * @class OGDSM.visualization
                             * @constructor
                             * @param {String} mapDiv - 지도 DIV 아이디 이름
-                            * @param {JSON Object} options - 옵션 JSON 객체 키 값{layerListDiv=null, attrTableDiv=null, attrAddr=&#x27;&#x27;}&lt;br&gt;
-                          layerListDiv : 레이어 관리 리스트 DIV 아이디 이름&lt;br&gt;
-                          attrTableDiv : 속성 시각화 DIV 아이디 이름&lt;br&gt;
-                          attrAddr : 속성 시각화 서버 주소&lt;br&gt;
+                            * @param {JSON Object} options - 옵션 JSON 객체 키 값&lt;br&gt;
+                            {layerListDiv:null, attrTableDiv:null, attrAddr:&#x27;&#x27;}&lt;br&gt;
+                            layerListDiv : 레이어 관리 리스트 DIV&lt;br&gt;
+                            attrTableDiv : 속성 시각화 DIV 아이디 이름&lt;br&gt;
+                            attrAddr : 속성 시각화 서버 주소&lt;br&gt;
                             */
                             OGDSM.visualization = function (mapDiv, options) {
                                 options = (typeof (options) !== &#x27;undefined&#x27;) ? options : {};
@@ -127,11 +129,13 @@
                                 $(window).on(&#x27;resize&#x27;, function () {
                                     OGDSM.visualization.updateLayoutSetting();
                                 });
-                                if (defaults.layerListDiv !== null) {
-                                    this.layerListObj = new OGDSM.mapLayerList(this, defaults.layerListDiv);
-                                }
                                 if (defaults.attrTableDiv !== null) {
                                     this.attrTableObj = new OGDSM.attributeTable(defaults.attrTableDiv, defaults.attrAddr);
+                                }
+                                if (defaults.layerListDiv !== null) {
+                                    this.layerListObj = new OGDSM.mapLayerList(this, defaults.layerListDiv, {
+                                        attrObj : this.attrTableObj
+                                    });
                                 }
                                 // Orientation...
                             };
@@ -175,6 +179,14 @@
                                         }
                                     }
                                     return -1;
+                                },
+                                /**
+                                 * 속성정보 객체
+                                 * @method getAttrObj
+                                 * @return {attributeTable Object} 속성정보 객체
+                                 */
+                                getAttrObj : function () {
+                                    return this.attrTableObj;
                                 }
                             };
                             return OGDSM.visualization;
@@ -377,7 +389,7 @@
                                     } else {
                                         color =  &#x27;rgb(0, 0, 0)&#x27;;
                                     }
-                                    this.layerListObj.listManager(data, data.get(&#x27;title&#x27;), color, type);
+                                    this.layerListObj.addList(data, data.get(&#x27;title&#x27;), color, type);
                                 }
                                 if (typeof (this.attrTableObj) !== &#x27;undefined&#x27;) {
                                     this.attrTableObj.addAttribute(data.get(&#x27;title&#x27;));
@@ -423,7 +435,7 @@
                             if (obj !== false) {
                                 this.getMap().removeLayer(obj);
                                 if (typeof (this.layerListObj) !== &#x27;undefined&#x27;) {
-                                    this.layerListObj.removelist(layerName);
+                                    this.layerListObj.removeList(layerName);
                                 }
                             }
                         };

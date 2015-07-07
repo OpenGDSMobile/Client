@@ -48,6 +48,7 @@
                             </ul>
 
                             <ul id="api-modules" class="apis modules">
+                                <li><a href="../modules/OGDSM.applyOptions.html">OGDSM.applyOptions</a></li>
                                 <li><a href="../modules/OGDSM.jsontoArray.html">OGDSM.jsontoArray</a></li>
                                 <li><a href="../modules/OGDSM.namespace.html">OGDSM.namespace</a></li>
                             </ul>
@@ -120,7 +121,8 @@
                          * @param {String} linkId - 생성될 버튼 아이디 이름
                          * @param {String} buttonTitle - 버튼 이름
                          * @param {String} url - 링크 주소
-                         * @param {JSON Object} options - 옵션 JSON 객체 키 값{theme=this.dataTheme, corners=true, inline=false, mini=false}&lt;br&gt;
+                         * @param {JSON Object} options - 옵션 JSON 객체 키 값&lt;br&gt;
+                          {theme:this.dataTheme, corners:true, inline:false, mini:false}&lt;br&gt;
                           theme(String) : 테마&lt;br&gt;
                           corners(Boolean) : 모서리 둥글게 여부&lt;br&gt;
                           inline(Boolean) : 가로 정렬 여부&lt;br&gt;
@@ -141,13 +143,8 @@
                                 inline : false,
                                 mini : false
                             };
-                            for (name in defaults) {
-                                if (defaults.hasOwnProperty(name)) {
-                                    if (options.hasOwnProperty(name)) {
-                                        defaults[name] = options[name];
-                                    }
-                                }
-                        	}
+
+                            defaults = OGDSM.applyOptions(defaults, options);
                             html += &#x27;data-theme=&quot;&#x27; + defaults.theme + &#x27;&quot; data-corners=&quot;&#x27; + defaults.corners + &#x27;&quot; data-inline=&quot;&#x27; + defaults.inline + &#x27;&quot; data-mini=&quot;&#x27; + defaults.mini + &#x27;&quot;&#x27;;
                             html += &#x27;&gt;&#x27; + buttonTitle + &#x27;&lt;/a&gt;&#x27;;
                             rootDiv.append(html);
@@ -162,7 +159,8 @@
                          * @param {String} chkId - 생성될 체크박스 아이디 이름
                          * @param {String | Array} labels - 체크박스 라벨
                          * @param {String | Array} values - 체크박스 값
-                         * @param {JSON Object} options - 옵션 JSON 객체 키 값{theme=this.dataTheme, horizontal=true, checkName=chkId + &#x27;Name&#x27;}&lt;br&gt;
+                         * @param {JSON Object} options - 옵션 JSON 객체 키 값&lt;br&gt;
+                          {theme:this.dataTheme, horizontal:true, checkName:chkId + &#x27;Name&#x27;}&lt;br&gt;
                           theme(String) : 테마&lt;br&gt;
                           horizontal(Boolean) : 체크박스 수평 여부&lt;br&gt;
                           checkName(String) : 체크박스 그룹 이름&lt;br&gt;
@@ -180,13 +178,7 @@
                                     theme : this.dataTheme,
                                     horizontal : false
                                 };
-                            for (name in defaults) {
-                                if (defaults.hasOwnProperty(name)) {
-                                    if (options.hasOwnProperty(name)) {
-                                        defaults[name] = options[name];
-                                    }
-                                }
-                        	}
+                            defaults = OGDSM.applyOptions(defaults, options);
                             html = &#x27;&#x27;;
                             if (Array.isArray(labels)) {
                                 html += &#x27;&lt;fieldset data-role=&quot;controlgroup&quot; &#x27;;
@@ -218,7 +210,8 @@
                          * @param {String} radioId - 생성될 라디오박스 아이디 이름
                          * @param {String | Array} labels - 라디오박스 라벨
                          * @param {String | Array} values - 라디오박스 값
-                         * @param {JSON Object} options - 옵션 JSON 객체 키 값{theme=this.dataTheme, horizontal=true, radioName=radioId + &#x27;Name&#x27;}&lt;br&gt;
+                         * @param {JSON Object} options - 옵션 JSON 객체 키 값&lt;br&gt;
+                          {theme:this.dataTheme, horizontal:true, radioName:radioId + &#x27;Name&#x27;}&lt;br&gt;
                           theme(String) : 테마&lt;br&gt;
                           horizontal(Boolean) : 라디오박스 수평 여부&lt;br&gt;
                           radioName(String) : 라디오박스 그룹 이름&lt;br&gt;
@@ -239,14 +232,7 @@
                                 horizontal : false,
                                 theme : this.dataTheme
                             };
-                            for (name in defaults) {
-                                if (defaults.hasOwnProperty(name)) {
-                                    if (options.hasOwnProperty(name)) {
-                                        defaults[name] = options[name];
-                                    }
-                                }
-                        	}
-
+                            defaults = OGDSM.applyOptions(defaults, options);
                             if (defaults.horizontal) {
                                 html += &#x27;data-theme=&quot;&#x27; + defaults.theme + &#x27;&quot; data-type=&quot;horizontal&quot;&gt;&#x27;;
                             } else {
@@ -277,7 +263,8 @@
                          * @param {String} selectId - 생성될 선택 아이디 이름
                          * @param {String | Array} text - 선택 라벨 텍스트
                          * @param {String | Array} values - 선택 값
-                         * @param {JSON Object} options - 옵션 JSON 객체 키 값{firstName=&#x27;&#x27;, theme=this.dataTheme, corners=true, inline=false, selected:0}&lt;br&gt;
+                         * @param {JSON Object} options - 옵션 JSON 객체 키 값&lt;br&gt;
+                          {firstName:&#x27;&#x27;, theme:this.dataTheme, corners:true, inline:false, selected:0}&lt;br&gt;
                           firstName(String) : 첫번째 값&lt;br&gt;
                           theme(String) : 테마&lt;br&gt;
                           corners(Boolean) : 테두리 둥글게 여부&lt;br&gt;
@@ -294,17 +281,12 @@
                                 theme : this.dataTheme,
                                 corners : true,
                                 inline : false,
-                                selected : 0
+                                selected : 0,
+                                mini : false
                             };
-                            for (name in defaults) {
-                                if (defaults.hasOwnProperty(name)) {
-                                    if (options.hasOwnProperty(name)) {
-                                        defaults[name] = options[name];
-                                    }
-                                }
-                        	}
-                            html = &#x27;&lt;select name=&quot;&#x27; + selectName + &#x27;&quot; id=&quot;&#x27; + selectId + &#x27;&quot; &#x27; +
-                                   &#x27;data-theme=&quot;&#x27; + defaults.theme + &#x27;&quot; data-corners=&quot;&#x27; + defaults.corners + &#x27;&quot; data-inline=&quot;&#x27; + defaults.inline + &#x27;&quot;&gt;&#x27;;
+                            defaults = OGDSM.applyOptions(defaults, options);
+                            html = &#x27;&lt;select name=&quot;&#x27; + selectName + &#x27;&quot; id=&quot;&#x27; + selectId + &#x27;&quot; &#x27; + &#x27;data-mini=&quot;&#x27; + defaults.mini +
+                                   &#x27;&quot; data-theme=&quot;&#x27; + defaults.theme + &#x27;&quot; data-corners=&quot;&#x27; + defaults.corners + &#x27;&quot; data-inline=&quot;&#x27; + defaults.inline + &#x27;&quot;&gt;&#x27;;
                             html += &#x27;&lt;option value=&quot;&quot;&gt; &#x27; + defaults.firstName + &#x27;&lt;/option&gt;&#x27;;
 
                             for (i = 0; i &lt; text.length; i += 1) {
@@ -323,7 +305,8 @@
                          * @method autoSwitch
                          * @param {String} divId - 최상위 DIV 아이디 이름
                          * @param {String} switchId - 생성될 스위치 아이디 이름
-                         * @param {JSON Object} options - 옵션 JSON 객체 키 값{theme=this.dataTheme, track_theme=this.dataTheme, switchName=switchId+&#x27;Name&#x27;}&lt;br&gt;
+                         * @param {JSON Object} options - 옵션 JSON 객체 키 값&lt;br&gt;
+                          {theme:this.dataTheme, track_theme:this.dataTheme, switchName:switchId+&#x27;Name&#x27;}&lt;br&gt;
                           theme(String) : 테마&lt;br&gt;
                           track-theme(String) : 버튼 테마&lt;br&gt;
                           switchName(String) : 스위치 그룹 이름&lt;br&gt;
@@ -343,13 +326,7 @@
                                 track_theme : this.dataTheme,
                                 switchName : switchId + &#x27;Name&#x27;
                             };
-                            for (name in defaults) {
-                                if (defaults.hasOwnProperty(name)) {
-                                    if (options.hasOwnProperty(name)) {
-                                        defaults[name] = options[name];
-                                    }
-                                }
-                        	}
+                            defaults = OGDSM.applyOptions(defaults, options);
                             html = &#x27;&lt;select name=&quot;&#x27; + defaults.switchName + &#x27;&quot; id=&quot;&#x27; + switchId + &#x27;&quot; data-theme=&quot;&#x27; + defaults.theme +
                                    &#x27;&quot; data-track-theme=&quot;&#x27; + defaults.track_theme + &#x27;&quot; data-role=&quot;slider&quot; data-inline=&quot;true&quot;&gt;&#x27;;
                             html += &#x27;&lt;option value=&quot;off&quot;&gt;Off&lt;/option&gt;&#x27;;
@@ -393,15 +370,15 @@
                         };
 
                         /**************Custom UI Create *******************/
+
                         /**
                          * 배경 맵 선택 사용자 인터페이스 자동 생성: 라디오 박스
                          * @method baseMapRadioBox
                          * @param {OGDSM Object} OGDSMObj - OpenGDS모바일 시각화 객체
                          * @param {String}       rootDiv - 최상위 DIV 아이디 이름
-                         * @param {Array}        options - 제공할 지도 타입
+                         * @param {String}       options - 제공할 지도 타입 (스페이스바로 타입 구분) [OSM VWorld VWorld_m VWorld_s VWorld_g]
                          */
                         OGDSM.eGovFrameUI.prototype.baseMapRadioBox = function (OGDSMObj, rootDiv, options) {
-                        //var mapRadioNameObj = uiTest.autoRadioBox(&#x27;mapSelect&#x27;,&#x27;mapType&#x27;, &#x27;radioMap&#x27;, [&#x27;OSM&#x27;,&#x27;VWorld&#x27;], [&#x27;OSM&#x27;,&#x27;VWorld&#x27;], [&#x27;h&#x27;]);
                             &#x27;use strict&#x27;;
                             options = (typeof (options) !== &#x27;undefined&#x27;) ? options : null;
                             var mapRadioNameObj,
@@ -410,8 +387,9 @@
                             if (options !== null) {
                                 supportMap = options.split(&#x27; &#x27;);
                             }
-                            mapRadioNameObj = this.autoRadioBox(rootDiv, &#x27;mapType&#x27;, supportMap, supportMap, [&#x27;h&#x27;]);
-
+                            mapRadioNameObj = this.autoRadioBox(rootDiv, &#x27;mapType&#x27;, supportMap, supportMap, {
+                                horizontal : true
+                            });
                             mapRadioNameObj.change(function () {
                                 OGDSMObj.changeBaseMap($(this).val());
                             });
@@ -421,7 +399,7 @@
                          * @method baseMapSelect
                          * @param {OGDSM Object} OGDSMObj - OpenGDS모바일 시각화 객체
                          * @param {String}       rootDiv - 최상위 DIV 아이디 이름
-                         * @param {Array}        options - 제공할 지도 타입
+                         * @param {String}       options - 제공할 지도 타입 (스페이스바로 타입 구분) [OSM VWorld VWorld_m VWorld_s VWorld_g]
                          */
                         OGDSM.eGovFrameUI.prototype.baseMapSelect = function (OGDSMObj, rootDiv, options) {
                             &#x27;use strict&#x27;;
@@ -435,7 +413,8 @@
                             mapRadioNameObj = this.autoSelect(rootDiv, &#x27;mapType&#x27;, &#x27;selectMapType&#x27;, supportMap, supportMap, {
                                 firstName : &#x27;맵 선택&#x27;,
                                 selected : supportMap[0],
-                                inline : true
+                                inline : true,
+                                mini : true
                             });
                             OGDSMObj.changeBaseMap(supportMap[0]);
                             mapRadioNameObj.change(function () {
@@ -640,9 +619,10 @@
                          * 서울 열린 데이터 광장 환경정보 요청 인터페이스
                          * @method seoulEnvironment
                          * @param {String} divId - 최상위 DIV 아이디 이름
-                         * @param {JSON Object} options - 옵션 JSON 객체 키 값{theme=this.dataTheme, path=&#x27;./images/&#x27;}
-                          theme(String) : 테마
-                          path(String) : 이미지 위치
+                         * @param {JSON Object} options - 옵션 JSON 객체 키 값&lt;br&gt;
+                          {theme:this.dataTheme, path:&#x27;./images/&#x27;}&lt;br&gt;
+                          theme(String) : 테마&lt;br&gt;
+                          path(String) : 이미지 위치&lt;br&gt;
                          * @return {String} 생성된 객체 배열 [visualType, date, time, environmentType]
                          */
                         OGDSM.eGovFrameUI.prototype.seoulEnvironment = function (divId, options) {
@@ -653,13 +633,7 @@
                                 theme : this.dataTheme,
                                 path : &#x27;./images/openGDSMobile/&#x27;
                             };
-                            for (name in defaults) {
-                                if (defaults.hasOwnProperty(name)) {
-                                    if (options.hasOwnProperty(name)) {
-                                        defaults[name] = options[name];
-                                    }
-                                }
-                        	}
+                            defaults = OGDSM.applyOptions(defaults, options);
                             var environmentImages = [
                                 &#x27;&lt;img src=&quot;&#x27; + defaults.path + &#x27;input_bt_pm10.png&quot; width=30&gt;&#x27;,
                                 &#x27;&lt;img src=&quot;&#x27; + defaults.path + &#x27;input_bt_pm25.png&quot; width=30&gt;&#x27;,
@@ -689,9 +663,10 @@
                          * 데이터 포털 환경정보 요청 인터페이스
                          * @method dataPortalEnvironment
                          * @param {String} divId - 최상위 DIV 아이디 이름
-                         * @param {JSON Object} options - 옵션 JSON 객체 키 값{theme=this.dataTheme, path=&#x27;./images/&#x27;}
-                          theme(String) : 테마
-                          path(String) : 이미지 위치
+                         * @param {JSON Object} options - 옵션 JSON 객체 키 값&lt;br&gt;
+                          {theme:this.dataTheme, path:&#x27;./images/&#x27;}&lt;br&gt;
+                          theme(String) : 테마&lt;br&gt;
+                          path(String) : 이미지 위치&lt;br&gt;
                          * @return {String} 생성된 객체 배열 [visualType, areaType, environmentType]
                          */
                         OGDSM.eGovFrameUI.prototype.dataPortalEnvironment = function (divId, options) {
@@ -702,13 +677,7 @@
                                 theme : this.dataTheme,
                                 path : &#x27;./images/openGDSMobile/&#x27;
                             };
-                            for (name in defaults) {
-                                if (defaults.hasOwnProperty(name)) {
-                                    if (options.hasOwnProperty(name)) {
-                                        defaults[name] = options[name];
-                                    }
-                                }
-                        	}
+                            defaults = OGDSM.applyOptions(defaults, options);
                             var environmentImages = [
                                 &#x27;&lt;img src=&quot;&#x27; + defaults.path + &#x27;input_bt_pm10.png&quot; width=30&gt;&#x27;,
                                 &#x27;&lt;img src=&quot;&#x27; + defaults.path + &#x27;input_bt_pm25.png&quot; width=30&gt;&#x27;,
@@ -719,7 +688,8 @@
                             ],
                                 environmentValues = [&#x27;pm10Value&#x27;, &#x27;pm25Value&#x27;, &#x27;so2value&#x27;, &#x27;o3Value&#x27;, &#x27;no2Value&#x27;, &#x27;coValue&#x27;],
                                 areaTypes = [&#x27;인천&#x27;, &#x27;서울&#x27;, &#x27;경기&#x27;, &#x27;강원&#x27;, &#x27;충남&#x27;, &#x27;세종&#x27;, &#x27;충북&#x27;, &#x27;대전&#x27;, &#x27;경북&#x27;, &#x27;전북&#x27;, &#x27;대구&#x27;, &#x27;울산&#x27;, &#x27;전남&#x27;, &#x27;광주&#x27;, &#x27;경남&#x27;, &#x27;부산&#x27;, &#x27;제주&#x27;],
-                                areaValues = [&#x27;incheon&#x27;, &#x27;seoul&#x27;, &#x27;gyeonggi&#x27;, &#x27;gangwon&#x27;, &#x27;chungnam&#x27;, &#x27;sejong&#x27;, &#x27;chungbuk&#x27;, &#x27;daejeon&#x27;, &#x27;gyeongbuk&#x27;, &#x27;jeonbuk&#x27;, &#x27;daegu&#x27;, &#x27;ulsan&#x27;, &#x27;jeonnam&#x27;, &#x27;gwangju&#x27;, &#x27;gyeongnam&#x27;, &#x27;busan&#x27;, &#x27;jeju&#x27;];
+                                areaValues = [&#x27;인천&#x27;, &#x27;서울&#x27;, &#x27;경기&#x27;, &#x27;강원&#x27;, &#x27;충남&#x27;, &#x27;세종&#x27;, &#x27;충북&#x27;, &#x27;대전&#x27;, &#x27;경북&#x27;, &#x27;전북&#x27;, &#x27;대구&#x27;, &#x27;울산&#x27;, &#x27;전남&#x27;, &#x27;광주&#x27;, &#x27;경남&#x27;, &#x27;부산&#x27;, &#x27;제주&#x27;];
+                                //areaValues = [&#x27;incheon&#x27;, &#x27;seoul&#x27;, &#x27;gyeonggi&#x27;, &#x27;gangwon&#x27;, &#x27;chungnam&#x27;, &#x27;sejong&#x27;, &#x27;chungbuk&#x27;, &#x27;daejeon&#x27;, &#x27;gyeongbuk&#x27;, &#x27;jeonbuk&#x27;, &#x27;daegu&#x27;, &#x27;ulsan&#x27;, &#x27;jeonnam&#x27;, &#x27;gwangju&#x27;, &#x27;gyeongnam&#x27;, &#x27;busan&#x27;, &#x27;jeju&#x27;];
                             var rootDiv = $(&#x27;#&#x27; + divId),
                                 visualType = this.autoRadioBox(divId, &#x27;visualType&#x27;, [&#x27;맵&#x27;, &#x27;차트&#x27;], [&#x27;map&#x27;, &#x27;chart&#x27;], {horizontal : true}),
                                 areaRadio,

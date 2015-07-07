@@ -25,7 +25,8 @@ OGDSM.namesapce('externalConnection');
  * @param {String} addr - 주소
  * @param {String} workspace - 워크스페이스
  * @param {String} layerName - 레이어 이름
- * @param {JSON Object} options - 옵션 JSON 객체 키 값{type='polygon', color='rgba(0, 0, 0, 0.0)', callback=function () {}}<br>
+ * @param {JSON Object} options - 옵션 JSON 객체 키 값<br>
+  {type:'polygon', color:'rgba(0, 0, 0, 0.0)', callback:function () {}}<br>
   type(String) : 레이어 타입( polygon | point)<br>
   color(String) : 색상 rgba<br>
   callback(Function) : 요청 후 색상 변경시 콜백 함수
@@ -110,7 +111,8 @@ OGDSM.externalConnection.prototype.geoServerWFSLoad = function (obj, addr, works
  * @param {String} addr - 주소
  * @param {String} ws - 워크스페이스
  * @param {String} layerName - 레이어 이름
- * @param {JSON Object} options - 옵션 JSON 객체 키 값{type='polygon', epsg='epsg3857'}<br>
+ * @param {JSON Object} options - 옵션 JSON 객체 키 값<br>
+  {type:'polygon', epsg:'epsg3857'}<br>
   type(String) : 레이어 타입( polygon | point)<br>
   epsg(String) : EPSG String<br>
  * @return {ol.layer.Vector} vectorSource - OpenLayers3 백터 객체

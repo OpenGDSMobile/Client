@@ -9,10 +9,16 @@ YUI.add("yuidoc-meta", function(Y) {
         "OGDSM.visualization"
     ],
     "modules": [
+        "OGDSM.applyOptions",
         "OGDSM.jsontoArray",
         "OGDSM.namespace"
     ],
     "allModules": [
+        {
+            "displayName": "OGDSM.applyOptions",
+            "name": "OGDSM.applyOptions",
+            "description": "OGDSM options 파라미터 적용 모듈\n- 사용 방법(Use)\n      OGDSM.applyOptions(defaults, options);"
+        },
         {
             "displayName": "OGDSM.jsontoArray",
             "name": "OGDSM.jsontoArray",

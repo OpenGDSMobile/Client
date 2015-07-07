@@ -17,7 +17,7 @@ OGDSM.namesapce('attributeTable');
         var rootElement = document.getElementById(rootDiv),
             ulElement = document.createElement('ul'),
             contentsElement = document.createElement('div');
-        var contentsCSS = 'width: 100%; height: 100%; background: rgba(255, 255, 255, 1); margin: 0px;',
+        var contentsCSS = 'width: 100%; height: 100%; background: rgba(255, 255, 255, 0.0); margin: 0px;',
             ulCSS = 'list-style: none; position: relative; margin: 0px; z-index: 2; top: 1px; display: table; border-left: 1px solid #f5ab36;';
 
         ulElement.id = rootDiv + 'Tab';
@@ -45,41 +45,44 @@ OGDSM.attributeTable.prototype.addAttribute = function (layerName) {
     var rootDiv = this.rootDiv,
         tabs = $('#' + rootDiv + 'Tab'),
         contents = $('#' + rootDiv + 'Contents');
-    var aBaseCSS = 'background:#ffd89b; color: #222; display:block; padding:6px 15px; text-decoration:none; border-right:1px solid #f5ab36;' +
-               'border-top:1px solid #f5ab36; border-right:1px solid #f5ab36; margin:0;',
-        backgroundNotSelected = '#ffd89b',
-        colorNotSelected = '#222',
-        backgroundSelected = '#fff',
+    var aBaseCSS = 'display:block; padding:6px 15px; text-decoration:none; border-right:1px solid #000;' +
+                   'border-top:1px solid #000; margin:0;',
+        backgroundNotSelected = '#fff',
+        backgroundSelected = '#ffd89b',
         colorSelected = '#344385',
-        borderSelected = '1px solid #fff';
+        borderSelected = '1px solid #fff',
+        textInputCSS = 'background-color: transparent; border:0px solid; font-size:15px;';
     function tabClickEvent(e) {
         $('#' + rootDiv + 'Tab a').css('border-bottom', '');
-        $('#' + rootDiv + 'Tab a').css('color', colorNotSelected);
         $('#' + rootDiv + 'Tab a').css('background', backgroundNotSelected);
         $(e.currentTarget).css('border-bottom', borderSelected);
         $(e.currentTarget).css('background', backgroundSelected);
-        $(e.currentTarget).css('color', colorSelected);
         $('.attrTable').hide();
-        $('#divAttrTable' + layerName).css('display', 'block');
+        $('#attrContent' + layerName).css('display', 'block');
     }
-    tabs.prepend('<li id="attrTab' + layerName + '" style="float:left;"><a href="#" style="' + aBaseCSS + '">' + layerName + '</a></li>');
-    $('#' + rootDiv + 'Tab a').css('border-bottom', '');
-    $('#' + rootDiv + 'Tab a').css('color', colorNotSelected);
+
+    /******* Add tab ***********/
+    tabs.prepend('<li id="attrTab' + layerName + '" style="float:left;">' +
+                 '<a href="#" style="' + aBaseCSS + '">' + layerName + '</a></li>');
     $('#' + rootDiv + 'Tab a').css('background', backgroundNotSelected);
     $('#attrTab' + layerName + ' a').css('border-bottom', borderSelected);
     $('#attrTab' + layerName + ' a').css('background', backgroundSelected);
     $('#attrTab' + layerName + ' a').css('color', colorSelected);
 
+    /******* Add Content ***********/
     var attrDivHeight = $('#' + rootDiv + 'Contents').height();
-    contents.prepend('<div id="divAttrTable' + layerName + '" class="attrTable"><table id="attrTable' + layerName + '" class="display compact" cellspacing="0" width="100%">' +
+    contents.prepend('<div id="attrContent' + layerName + '" class="attrTable">' +
+                     '<table id="attrTable' + layerName + '" class="display compact" cellspacing="0" width="100%">' +
                      '<thead style="width:100%;"><tr></tr></thead>' +
-                     '<tbody></tbody></table></div>');
+                     '<tbody style="text-align:center"></tbody></table></div>');
 
+    /******* Event *******************/
     $('.attrTable').hide();
-    $('#divAttrTable' + layerName).css('display', 'block');
+    $('#attrContent' + layerName).css('display', 'block');
     $('#attrTab' + layerName + ' a').bind('click', tabClickEvent);
-    var parm = '{"tableName":"' + layerName + '"}';
-    parm = JSON.parse(parm);
+
+    var parm = {};
+    parm.tableName = layerName;
     function createTableCol(attrContents, i, tableBody, tableTh) {
         $.each(attrContents, function (key, value) {
             if (key === 'geom') {
@@ -89,7 +92,10 @@ OGDSM.attributeTable.prototype.addAttribute = function (layerName) {
                 tableTh.append('<th>' + key + '</th>');
             }
             var newCell = tableBody.find('tr:last');
-            newCell.append('<td>' + value + '</td>');
+            newCell.append('<td>' +
+                           '<input type="text" value="' + value + '" class="editSW" style="' + textInputCSS + '"' +
+                           'disabled=true>' +
+                           '</td>');
         });
     }
     $.ajax({
@@ -104,7 +110,8 @@ OGDSM.attributeTable.prototype.addAttribute = function (layerName) {
                 console.log('Not attribute information');
                 return -1;
             }
-            var tableDiv = $('#attrTable' + layerName),
+
+            var tableDiv = $('#attrContent' + layerName),
                 tableTh = tableDiv.find('thead').find('tr'),
                 tableBody = tableDiv.find('tbody');
             for (i = 0; i < attrContents.length; i++) {
@@ -125,7 +132,7 @@ OGDSM.attributeTable.prototype.addAttribute = function (layerName) {
             $(window).on('resize', function () {
                 var attrDivHeight = $('#' + rootDiv + 'Contents').height();
                 var thHeight = $('thead').height() + 7;
-                $('.divAttrTable table').DataTable({
+                $('#attrTable' + layerName).DataTable({
                     'paging' : false,
                     'scrollY' : attrDivHeight - thHeight,
                     'scrollX' : true,
@@ -138,4 +145,29 @@ OGDSM.attributeTable.prototype.addAttribute = function (layerName) {
             console.log(e);
         }
     });
+};
+
+/**
+ * 속성 정보 삭제
+ * @method removeAttribute
+ * @param {String}  layerName   - 데이터 베이스 테이블 이름
+ */
+OGDSM.attributeTable.prototype.removeAttribute = function (layerName) {
+    'use strict';
+    $('#' + 'attrTab' + layerName).remove();
+    $('#' + 'attrContent' + layerName).remove();
+};
+/**
+ * 속성 정보 수정
+ * @method removeAttribute
+ * @param {boolean}  sw   - 수정 스위치
+ */
+OGDSM.attributeTable.prototype.editAttribute = function (sw) {
+    'use strict';
+    var textInput = $('.editSW');
+    if (sw === true) {
+        textInput.attr('disabled', false);
+    } else {
+        textInput.attr('disabled', true);
+    }
 };

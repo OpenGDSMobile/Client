@@ -48,6 +48,7 @@
                             </ul>
 
                             <ul id="api-modules" class="apis modules">
+                                <li><a href="../modules/OGDSM.applyOptions.html">OGDSM.applyOptions</a></li>
                                 <li><a href="../modules/OGDSM.jsontoArray.html">OGDSM.jsontoArray</a></li>
                                 <li><a href="../modules/OGDSM.namespace.html">OGDSM.namespace</a></li>
                             </ul>
@@ -94,84 +95,105 @@
                         (function (OGDSM) {
                             &quot;use strict&quot;;
                             var arrlayerObjs = [], arrlabels = [];
+                            var attrObj = null;
                             /**
                              * 오픈레이어 맵 레이어 목록 객체
                              * @class OGDSM.mapLayerList
                              * @constructor
                              * @param {OGDSM.visualization} obj - OGDSM 시각화 객체
                              * @param {String} listDiv - 생성할 list DIV 이름
+                             * @param {JSON Object} options - 옵션 JSON 객체 키 값&lt;br&gt;
+                             {listWidthSize:200, buttonSize:100, btnType:&#x27;img&#x27;, btnHTML:&#x27;레이어&#x27;, bgColor: &#x27;rgb(255, 255, 255, 0.0), &lt;br&gt;
+                              listColor: &#x27;rgba(255,255,255, 0.0)&#x27;, titleColor: &#x27;rgba(255, 255, 255, 1.0)&#x27;, titleHTML: &#x27;레이어 목록&#x27;, attrObj: null}&lt;br&gt;
+                              listWidthSize : 리스트 너비&lt;br&gt;
+                              buttonSize: 리스트 On/Off 버튼 사이즈&lt;br&gt;
+                              btnSW : true&lt;br&gt;
+                              btnType : 버튼 타입 (text | img)&lt;br&gt;
+                              bgColor : 전체 배경 색 &lt;br&gt;
+                              listColor : 리스트 배경 색&lt;br&gt;
+                              titleColor : 타이틀 배경 색 &lt;br&gt;
+                              titleHTML : 타이틀 내용 &lt;br&gt;
+                              attrObj : 속성정보 시각화 객체 &lt;br&gt;
                              */
-                            OGDSM.mapLayerList = function (obj, listDiv) {
+                            OGDSM.mapLayerList = function (obj, listDiv, options) {
+                                options = (typeof (options) !== &#x27;undefined&#x27;) ? options : {};
+                                var defaults = {
+                                    listWidthSize : 200,
+                                    buttonSize : 100,
+                                    btnSW : true, //향후 추가...
+                                    btnType : &#x27;img&#x27;,
+                                    btnHTML : &#x27;&lt;span style=&quot;font-size:15&quot;&gt;레이어&lt;/span&gt;&#x27;,
+                                    bgColor : &#x27;rgba(255, 255, 255, 0.0)&#x27;,
+                                    listColor : &#x27;rgba(255, 255, 255, 0.0)&#x27;,
+                                    titleColor : &#x27;rgba(255, 255, 255, 1.0)&#x27;,
+                                    titleHTML : &#x27;&lt;span style=&quot;font-weight:bold;&quot;&gt;레이어 목록&lt;/span&gt;&#x27;,
+                                    attrObj : null
+                                };
+                                defaults = OGDSM.applyOptions(defaults, options);
                                 this.listDiv = listDiv;
                                 this.visualizationObj = obj;
+                                this.attrObj = defaults.attrObj;
                                 var thisObj = this;
-                                var handleList = null, listSize = 200, buttonSize = 120,
-                                    element = document.getElementById(listDiv),
-                                    listElement = document.createElement(&#x27;div&#x27;),
+                                var handleList = null,
+                                    rootElement = document.getElementById(listDiv),
                                     buttonElement = document.createElement(&#x27;div&#x27;),
                                     listTitleElement = document.createElement(&#x27;div&#x27;),
                                     listRootElement = document.createElement(&#x27;div&#x27;),
                                     listUlElement = document.createElement(&#x27;ul&#x27;),
-                                    btnText = &#x27;레이어목록 보이기&#x27;,
-                                    elementCSS = &#x27;position : absolute; background : rgba(255,255,255,0.0); top: 0px;  z-index : 1;&#x27;,
-                                    olCustomListCSS = &#x27;float : left; padding : 1px;	background : rgba(255,255,255,0.0); &#x27; +
-                                    &#x27;width : &#x27; + listSize + &#x27;px;&#x27;,
-                                    olCustomButtonCSS = &#x27;cursor:pointer; position : absolute; width:&#x27; + buttonSize + &#x27;px; height: 50px;&#x27;,
-                                    listTitleCSS = &#x27;width: 100%; text-align:center;&#x27;,
+                                    rootElementCSS = &#x27;position : absolute; top: 0px;  z-index : 1; background : &#x27; + defaults.bgColor + &#x27;;&#x27;,
+                                    buttonCSS = &#x27;cursor:pointer; position : absolute; left :&#x27; +
+                                                    defaults.listWidthSize + &#x27;px;&#x27; + &#x27;width : &#x27; + defaults.buttonSize + &#x27;px;&#x27;,
+                                    listRootCSS = &#x27;float : left; padding : 1px;	background : &#x27; +
+                                                    defaults.listColor + &#x27;;&#x27; + &#x27;width : &#x27; + defaults.listWidthSize + &#x27;px;&#x27;,
+                                    listTitleCSS = &#x27;width: 100%; margin-bottom:10px; margin-top:10px; text-align:center; background :&#x27; + defaults.titleColor + &#x27;;&#x27;,
                                     listUlCSS = &#x27;list-style:none; padding:0; margin:0;&#x27;,
-                                    listSlideHideCSS = elementCSS + &#x27; left: &#x27; + -(listSize + 3) + &#x27;px; transition: left 0.1s ease;&#x27;,
-                                    listSlideShowCSS = elementCSS + &#x27; left: 0px; transition: left 0.1s ease;&#x27;,
-                                    buttonFontShowCSS = &#x27;font-size : 90%; font-weight : bold; color : rgba(0, 0, 0,1.0); text-align:center;&#x27;,
-                                    buttonFontHideCSS = &#x27;font-size : 90%; font-weight : bold; color : rgba(0, 0, 0,.5); text-align:center;&#x27;,
-                                    buttonSlideShowCSS = olCustomButtonCSS + &#x27;background: rgba(255, 255, 255, 0.5); left:&#x27; + (listSize + 2) + &#x27;px; &#x27; +
-                                    &#x27;transition : background 0.1s ease, left 0.1s ease;&#x27; + buttonFontShowCSS,
-                                    buttonSlideHideCSS = olCustomButtonCSS + &#x27;background: rgba(0, 0, 0, .0); left:&#x27; + (listSize - buttonSize) + &#x27;px; &#x27; +
-                                    &#x27;transition : background 0.1s ease, left 0.1s ease;&#x27; + buttonFontHideCSS;
+                                    listSlideHideCSS = &#x27; left: &#x27; + -(defaults.listWidthSize) + &#x27;px; transition: left 0.1s ease;&#x27;,
+                                    listSlideShowCSS = &#x27; left: 0px; transition: left 0.1s ease;&#x27;;
+
+                                var buttonSlideShowCSS = &#x27;left:&#x27; + (defaults.listWidthSize) + &#x27;px; &#x27; + &#x27;transition : background 0.1s ease, left 0.1s ease;&#x27;,
+                                    buttonSlideHideCSS = &#x27;left:&#x27; + (defaults.listWidthSize - 25) + &#x27;px; &#x27; + &#x27;transition : background 0.1s ease, left 0.1s ease;&#x27;;
+
 
                                 handleList = function (e) {
-                                    var listControl = document.getElementById(&#x27;listControl&#x27;);
-                                    if (btnText === &#x27;레이어목록 보이기&#x27;) {
-                                        btnText = &#x27;레이어목록 숨기기&#x27;;
-                                        element.style.cssText = listSlideShowCSS;
-                                        buttonElement.style.cssText = buttonSlideHideCSS;
-
+                                    if (this.value === &#x27;hide&#x27;) {
+                                        this.value = &#x27;show&#x27;;
+                                        rootElement.style.cssText = rootElementCSS + listSlideShowCSS;
+                                        buttonElement.style.cssText = buttonCSS + buttonSlideHideCSS;
                                     } else {
-                                        btnText = &#x27;레이어목록 보이기&#x27;;
-                                        element.style.cssText = listSlideHideCSS;
-                                        buttonElement.style.cssText = buttonSlideShowCSS;
+                                        this.value = &#x27;hide&#x27;;
+                                        rootElement.style.cssText = rootElementCSS + listSlideHideCSS;
+                                        buttonElement.style.cssText = buttonCSS + buttonSlideShowCSS;
                                     }
-                                    buttonElement.innerHTML = btnText;
                                 };
-
+                                buttonElement.value = &#x27;hide&#x27;;
+                                buttonElement.id = listDiv + &#x27;Button&#x27;;
+                                buttonElement.style.cssText = buttonCSS + buttonSlideShowCSS;
+                                if (defaults.btnType === &#x27;text&#x27;) {
+                                    buttonElement.innerHTML = defaults.btnHTML;
+                                } else {
+                                    buttonElement.innerHTML = &#x27;&lt;a href=&quot;#&quot; data-role=&quot;button&quot; data-icon=&quot;grid&quot; data-iconpos=&quot;notext&quot; data-corners=&quot;false&quot;&gt;&lt;/a&gt;&#x27;;
+                                }
                                 buttonElement.addEventListener(&#x27;click&#x27;, handleList, false);
                                 buttonElement.addEventListener(&#x27;touchstart&#x27;, handleList, false);
 
-                                element.style.cssText = listSlideHideCSS;
-                                listElement.id = listDiv + &#x27;Root&#x27;;
-                                listElement.style.cssText = olCustomListCSS;
+
 
                                 listTitleElement.style.cssText = listTitleCSS;
-                                listTitleElement.setAttribute(&#x27;class&#x27;, &#x27;ui-body-a&#x27;);
-                                listTitleElement.innerHTML = &#x27;&lt;h4&gt;레이어 목록&lt;/h4&gt;&#x27;;
-
-                                listRootElement.id = listDiv + &#x27;Div&#x27;;
+                                listTitleElement.innerHTML = defaults.titleHTML;
                                 listUlElement.id = listDiv + &#x27;Contents&#x27;;
                                 listUlElement.style.cssText = listUlCSS;
 
-                                listElement.appendChild(listTitleElement);
-                                listElement.appendChild(listRootElement);
+
+                                listRootElement.id = listDiv + &#x27;Root&#x27;;
+                                listRootElement.style.cssText = listRootCSS;
+                                listRootElement.appendChild(listTitleElement);
                                 listRootElement.appendChild(listUlElement);
 
-                                buttonElement.id = listDiv + &#x27;Button&#x27;;
-                                buttonElement.className = &#x27;ol-unselectable&#x27;;
-                                buttonElement.style.cssText = buttonSlideShowCSS;
-                                buttonElement.innerHTML = btnText;
-                                buttonElement.setAttribute(&#x27;data-role&#x27;, &#x27;button&#x27;);
+                                rootElement.style.cssText = rootElementCSS + listSlideHideCSS;
+                                rootElement.appendChild(buttonElement);
+                                rootElement.appendChild(listRootElement);
 
-                                element.appendChild(listElement);
-                                element.appendChild(buttonElement);
-
-
+                                $(&#x27;#&#x27; + listDiv + &#x27;Button&#x27;).trigger(&#x27;create&#x27;);
                                 this.ulObj = Sortable.create(document.getElementById(this.listDiv + &#x27;Contents&#x27;), {
                                     animation: 150,
                                     handle: &#x27;.drag-handle&#x27;,
@@ -198,7 +220,9 @@
                                             labels[length - evt.newIndex] = changeValue;
                                             objs[length - evt.newIndex] = changeObj;
                                         }
-
+                                        for (i = 0; i &lt; objs.length; i++) {
+                                            layers.pop();
+                                        }
                                         for (i = 0; i &lt; objs.length; i++) {
                                             layers.setAt(i + 1, objs[i]);
                                         }
@@ -206,6 +230,7 @@
                                         thisObj.setLabels(labels);
                                     }
                                 });
+
                             };
                             OGDSM.mapLayerList.prototype = {
                                 constructor : OGDSM.mapLayerList,
@@ -237,21 +262,22 @@
                             return OGDSM.mapLayerList;
                         }(OGDSM));
                         /**
-                         * 레이어 목록 관리
-                         * @method listManager
+                         * 레이어 목록 추가
+                         * @method addList
                          * @param {ol3 layer object} obj - 레이어 목록에 추가할 Openlayers3 레이어 객체
                          * @param {String} label - 목록 이름
                          * @param {String} color - 레이어 색상 (ex: rgb(255,255,255))
                          * @param {String} type - 객체 타입 (polygon | point | line)
                          */
-                        OGDSM.mapLayerList.prototype.listManager = function (obj, label, color, type) {
+                        OGDSM.mapLayerList.prototype.addList = function (obj, label, color, type) {
                             &#x27;use strict&#x27;;
                             type = (typeof (type) !== &#x27;undefined&#x27;) ? type : null;
                             var i, olList = $(&#x27;#&#x27; + this.listDiv + &#x27;Contents&#x27;),
                                 thisObj = this,
                                 labels = this.getLabels(),
                                 objs = this.getLayersObj(),
-                                ogdsmObj = this.visualizationObj;
+                                ogdsmObj = this.visualizationObj,
+                                attrObj = this.attrObj;
                             this.setLayerObj(obj);
                             this.setLabel(label);
                             function sliderEvent(e, u) {
@@ -270,7 +296,12 @@
                                 thisObj.setLayersObj(objs);
                                 thisObj.setLabels(labels);
                                 $(&#x27;#layer&#x27; + layerName).remove();
-                                $(&#x27;#popup&#x27; + layerName).hide();
+                                $(&#x27;#popup&#x27; + layerName).remove();
+                                //$(&#x27;#popup&#x27; + layerName + &#x27;-screen&#x27;).remove();
+                                //$(&#x27;#popup&#x27; + layerName + &#x27;-popup&#x27;).remove();
+                                if (attrObj !==  null) {
+                                    attrObj.removeAttribute(layerName);
+                                }
                             }
                             function checkBoxEvent(e, u) {
                                 var layerName = e.currentTarget.getAttribute(&#x27;data-label&#x27;);
@@ -281,21 +312,23 @@
                                 }
                             }
                             var sublabel = label;
-                            if (label.length &gt; 8) {
-                                sublabel = sublabel.substr(0, 8) + &#x27;...&#x27;;
+                            if (label.length &gt; 10) {
+                                sublabel = sublabel.substr(0, 10) + &#x27;...&#x27;;
                             }
-
                             olList.prepend(&#x27;&lt;li id=&quot;layer&#x27; + label + &#x27;&quot; style=&quot;float:left&quot;&gt;&#x27; +
-                                           &#x27;&lt;div style=&quot;width:15%; float:left; margin-top:4px;&quot;&gt;&#x27; +
+                                           &#x27;&lt;fieldset data-role=&quot;controlgroup&quot; data-type=&quot;horizontal&quot; style=&quot;margin:0px&quot;&gt;&#x27; +
+                                           &#x27;&lt;div style=&quot;width:15%; float:left;&quot;&gt;&#x27; +
                                            &#x27;&lt;canvas id=&quot;&#x27; + label + &#x27;canvas&quot; width=&quot;100%&quot; height=30px; class=&quot;drag-handle&quot; &gt;&lt;/canvas&gt;&#x27; +
-                                           &#x27;&lt;/div&gt; &lt;div style=&quot;width:70%; float:left; padding:0px; margin:0px;&quot;&gt;&#x27; +
-                                           &#x27;&lt;input type=&quot;checkbox&quot; name=&quot;listCheckBox&quot; data-corners=&quot;false&quot; data-mini=&quot;true&quot; style=&quot;width:100px;&quot; class=&quot;custom&quot; &#x27; +
+                                           &#x27;&lt;/div&gt; &lt;div id=&quot;chkRoot&#x27; + label + &#x27;&quot; style=&quot;width:70%; float:left; padding:0px; margin:0px;&quot;&gt;&#x27; +
+                                           &#x27;&lt;input type=&quot;checkbox&quot; name=&quot;listCheckBox&quot; data-corners=&quot;false&quot; data-mini=&quot;true&quot; class=&quot;custom&quot; &#x27; +
                                            &#x27;id=&quot;&#x27; + &#x27;visualSW&#x27; + thisObj.getLabels().length + &#x27;&quot; data-label=&quot;&#x27; + label + &#x27;&quot; checked/&gt;&#x27; +
-                                           &#x27;&lt;label for=&quot;&#x27; + &#x27;visualSW&#x27; + thisObj.getLabels().length + &#x27;&quot;&gt;&#x27; + sublabel + &#x27;&lt;/label&gt;&#x27; +
-                                           &#x27;&lt;/div&gt; &lt;div style=&quot;width:15%; float:left; padding:0px; margin:0px;&quot;&gt;&#x27; +
-                                           &#x27;&lt;a data-role=&quot;button&quot; data-rel=&quot;popup&quot; data-theme=&quot;b&quot; data-corners=&quot;false&quot; data-mini=&quot;true&quot; data-transition=&quot;pop&quot;&#x27; +
+                                           &#x27;&lt;label for=&quot;&#x27; + &#x27;visualSW&#x27; + thisObj.getLabels().length + &#x27;&quot; style=&quot;width:100%&quot;&gt;&#x27; + sublabel + &#x27;&lt;/label&gt;&#x27; +
+                                           &#x27;&lt;/div&gt; &lt;div style=&quot;width:15%; float:left;&quot;&gt;&#x27; +
+                                           &#x27;&lt;a id=&quot;hrefRoot&#x27; + label + &#x27;&quot; data-role=&quot;button&quot; data-rel=&quot;popup&quot; data-theme=&quot;b&quot; data-icon=&quot;gear&quot;&#x27; +
+                                           &#x27;data-corners=&quot;false&quot; data-mini=&quot;true&quot; data-transition=&quot;pop&quot;&#x27; +
                                            &#x27;data-label=&quot;&#x27; + label + &#x27;&quot; href=&quot;#popup&#x27; + label + &#x27;&quot;&gt;　&lt;/a&gt;&#x27; +
                                            &#x27;&lt;/div&gt;&#x27; +
+                                           &#x27;&lt;/fieldset&gt;&#x27; +
                                            &#x27;&lt;div data-role=&quot;popup&quot; id=&quot;popup&#x27; + label + &#x27;&quot; style=&quot;width:&#x27; + 200 + &#x27;px&quot;&gt;&#x27; +
                                            &#x27;&lt;input type=&quot;range&quot; value=&quot;100&quot; min=&quot;0&quot; max=&quot;100&quot; data-highlight=&quot;true&quot; class=&quot;layer-manager&quot;&#x27; +
                                            &#x27;id=&quot;&#x27; + label + &#x27;slider&quot; data-label=&quot;&#x27; + label + &#x27;&quot;&gt;&#x27; +
@@ -303,7 +336,6 @@
                                            &#x27;id=&quot;&#x27; + label + &#x27;delete&quot; data-label=&quot;&#x27; + label + &#x27;&quot;&gt;Delete&lt;/a&gt;&#x27; +
                                            &#x27;&lt;/div&gt;&#x27; +
                                            &#x27;&lt;/li&gt;&#x27;);
-
                             var labelCanvas = document.getElementById(label + &#x27;canvas&#x27;).getContext(&#x27;2d&#x27;);
                             if (type === &#x27;polygon&#x27;) {
                                 labelCanvas.fillStyle = color;
@@ -329,14 +361,16 @@
                             $(&#x27;#&#x27; + label + &#x27;slider&#x27;).bind(&#x27;change&#x27;, sliderEvent);
                             $(&#x27;#&#x27; + label + &#x27;delete&#x27;).bind(&#x27;click&#x27;, deleteEvent);
                             $(&#x27;input[name=listCheckBox]&#x27;).bind(&#x27;click&#x27;, checkBoxEvent);
+                            $(&#x27;#chkRoot&#x27; + label + &#x27; &gt; div&#x27;).css(&#x27;width&#x27;, &#x27;98%&#x27;);
+                            //$(&#x27;#hrefRoot&#x27; + label + &#x27; &gt; span&#x27;).css(&#x27;margin&#x27;, &#x27;-1.5px&#x27;);
                         };
 
                         /**
                          * 레이어 목록 삭제
-                         * @method removelist
+                         * @method removeList
                          * @param {String} layerName - 레이어 이름
                          */
-                        OGDSM.mapLayerList.prototype.removelist = function (layerName) {
+                        OGDSM.mapLayerList.prototype.removeList = function (layerName) {
                             &#x27;use strict&#x27;;
                             var labels = this.getLabels(),
                                 objs = this.getLayersObj();
@@ -345,6 +379,7 @@
                             labels.splice(layerNum, 1);
                             objs.splice(layerNum, 1);
                             $(&#x27;#layer&#x27; + layerName).remove();
+                            $(&#x27;#popup&#x27; + layerName).remove();
                         };
 
                             </pre>

@@ -48,6 +48,7 @@
                             </ul>
 
                             <ul id="api-modules" class="apis modules">
+                                <li><a href="../modules/OGDSM.applyOptions.html">OGDSM.applyOptions</a></li>
                                 <li><a href="../modules/OGDSM.jsontoArray.html">OGDSM.jsontoArray</a></li>
                                 <li><a href="../modules/OGDSM.namespace.html">OGDSM.namespace</a></li>
                             </ul>
@@ -88,10 +89,10 @@
 
 
                                 <div class="foundat">
-                                    Defined in: <a href="../files/.._js_openGDSMobile_OGDSM_mapLayerList.js.html#l8"><code>..&#x2F;js&#x2F;openGDSMobile&#x2F;OGDSM_mapLayerList.js:8</code></a>
+                                    Defined in: <a href="../files/.._js_openGDSMobile_OGDSM_mapLayerList.js.html#l9"><code>..&#x2F;js&#x2F;openGDSMobile&#x2F;OGDSM_mapLayerList.js:9</code></a>
                                 </div>
 
-                                    Module: <a href="../modules/OGDSM.jsontoArray.html">OGDSM.jsontoArray</a>
+                                    Module: <a href="../modules/OGDSM.applyOptions.html">OGDSM.applyOptions</a>
 
                         </div>
 
@@ -110,7 +111,7 @@
                                   <div class="meta method-meta">
                                       <p>
                                           Defined in
-                                      <a href="../files/.._js_openGDSMobile_OGDSM_mapLayerList.js.html#l8"><code>..&#x2F;js&#x2F;openGDSMobile&#x2F;OGDSM_mapLayerList.js:8</code></a>
+                                      <a href="../files/.._js_openGDSMobile_OGDSM_mapLayerList.js.html#l9"><code>..&#x2F;js&#x2F;openGDSMobile&#x2F;OGDSM_mapLayerList.js:9</code></a>
                                   </p>
 
 
@@ -128,6 +129,9 @@
                                                 </li>
                                                 <li class="arg">
                                                         <code>listDiv</code>
+                                                </li>
+                                                <li class="arg">
+                                                        <code>options</code>
                                                 </li>
                                             </ul><span class="paren">)</span>
                                         </div>
@@ -175,6 +179,30 @@
                                                     </div>
 
                                                 </li>
+                                                <li class="param">
+                                                        <code class="param-name">options</code>
+                                                        <span class="type">JSON Object</span>
+
+
+                                                    <div class="param-description">
+                                                        <ul>
+                                <li>옵션 JSON 객체 키 값<br>
+                                  {listWidthSize:200, buttonSize:100, btnType:&#39;img&#39;, btnHTML:&#39;레이어&#39;, bgColor: &#39;rgb(255, 255, 255, 0.0), <br>
+                                   listColor: &#39;rgba(255,255,255, 0.0)&#39;, titleColor: &#39;rgba(255, 255, 255, 1.0)&#39;, titleHTML: &#39;레이어 목록&#39;, attrObj: null}<br>
+                                   listWidthSize : 리스트 너비<br>
+                                   buttonSize: 리스트 On/Off 버튼 사이즈<br>
+                                   btnSW : true<br>
+                                   btnType : 버튼 타입 (text | img)<br>
+                                   bgColor : 전체 배경 색 <br>
+                                   listColor : 리스트 배경 색<br>
+                                   titleColor : 타이틀 배경 색 <br>
+                                   titleHTML : 타이틀 내용 <br>
+                                   attrObj : 속성정보 시각화 객체 <br></li>
+                                </ul>
+
+                                                    </div>
+
+                                                </li>
                                             </ul>
                                         </div>
 
@@ -199,11 +227,11 @@
 
                                             <ul class="index-list methods">
                                                     <li class="index-item method">
-                                                        <a href="#method_listManager">listManager</a>
+                                                        <a href="#method_addList">addList</a>
 
                                                     </li>
                                                     <li class="index-item method">
-                                                        <a href="#method_removelist">removelist</a>
+                                                        <a href="#method_removeList">removeList</a>
 
                                                     </li>
                                             </ul>
@@ -216,13 +244,13 @@
                                     <div id="methods" class="api-class-tabpanel">
                                         <h2 class="off-left">Methods</h2>
 
-                                            <div id="method_listManager" class="method item">
-                                              <h3 class="blue-method-name">listManager</h3>
+                                            <div id="method_addList" class="method item">
+                                              <h3 class="blue-method-name">addList</h3>
 
                                               <div class="meta method-meta">
                                                   <p>
                                                       Defined in
-                                                  <a href="../files/.._js_openGDSMobile_OGDSM_mapLayerList.js.html#l150"><code>..&#x2F;js&#x2F;openGDSMobile&#x2F;OGDSM_mapLayerList.js:150</code></a>
+                                                  <a href="../files/.._js_openGDSMobile_OGDSM_mapLayerList.js.html#l174"><code>..&#x2F;js&#x2F;openGDSMobile&#x2F;OGDSM_mapLayerList.js:174</code></a>
                                               </p>
 
 
@@ -231,7 +259,7 @@
 
                                               <h3>Syntax</h3>
                                               <div class="blue-method-syntax">
-                                              <h3 class="name"><code>listManager</code></h3>
+                                              <h3 class="name"><code>addList</code></h3>
 
                                                     <div class="args">
                                                         <span class="paren">(</span><ul class="args-list inline commas">
@@ -260,7 +288,7 @@
                                               </div>
                                                 <div class="description">
                                                   <h3>Summary</h3>
-                                                    <p>레이어 목록 관리</p>
+                                                    <p>레이어 목록 추가</p>
 
                                                 </div>
 
@@ -326,13 +354,13 @@
 
 
                                             </div>
-                                            <div id="method_removelist" class="method item">
-                                              <h3 class="blue-method-name">removelist</h3>
+                                            <div id="method_removeList" class="method item">
+                                              <h3 class="blue-method-name">removeList</h3>
 
                                               <div class="meta method-meta">
                                                   <p>
                                                       Defined in
-                                                  <a href="../files/.._js_openGDSMobile_OGDSM_mapLayerList.js.html#l245"><code>..&#x2F;js&#x2F;openGDSMobile&#x2F;OGDSM_mapLayerList.js:245</code></a>
+                                                  <a href="../files/.._js_openGDSMobile_OGDSM_mapLayerList.js.html#l278"><code>..&#x2F;js&#x2F;openGDSMobile&#x2F;OGDSM_mapLayerList.js:278</code></a>
                                               </p>
 
 
@@ -341,7 +369,7 @@
 
                                               <h3>Syntax</h3>
                                               <div class="blue-method-syntax">
-                                              <h3 class="name"><code>removelist</code></h3>
+                                              <h3 class="name"><code>removeList</code></h3>
 
                                                     <div class="args">
                                                         <span class="paren">(</span><ul class="args-list inline commas">

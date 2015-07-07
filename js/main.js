@@ -1,8 +1,6 @@
 /*jslint devel: true, vars: true, plusplus: true*/
-/*global $, jQuery, ol, OGDSM*/
+/*global $, jQuery, ol, OGDSM, geoServerAddr, serverAddr*/
 var openGDSMObj;
-var serverAddr = 'http://113.198.80.60/OpenGDSMobileApplicationServer1.0';
-var geoServerAddr = 'http://113.198.80.9';
 
 //배경지도 라디오 버튼 사용자 인터페이스 생성 함수
 function mapSelectUI(openGDSMObj) {
@@ -13,19 +11,36 @@ function mapSelectUI(openGDSMObj) {
 //데이터 라디오 버튼 사용자 인터페이스 생성 함수
 function mapAttrUI() {
     'use strict';
-    var ui = new OGDSM.eGovFrameUI();
-    var radioObj = ui.autoRadioBox('dataViewCheckBox', 'dataViewSelect', ['공간정보', '속성정보'], ['map', 'attr'], {horizontal : true});
-    radioObj.bind('change', function () {
-        if ($(this).val() === 'attr') {
+    var attrChk = $('#attrChk');
+    var attrEditChk = $('#attrEditChk');
+    attrChk.click(function () {
+        var chk = $(this).is(':checked');
+        if (chk === true) {
+            $('#dataViewCheckBox').removeClass('OGDSPosTransLeftHide');
+            $('#dataViewCheckBox').addClass('OGDSPosTransLeftShow');
+
             $('#attributeTable').removeClass('OGDSPosTransTopDownHide');
             $('#attributeTable').addClass('OGDSPosTransTopDownShow');
+
         } else {
+            $('#dataViewCheckBox').removeClass('OGDSPosTransLeftShow');
+            $('#dataViewCheckBox').addClass('OGDSPosTransLeftHide');
+
             $('#attributeTable').removeClass('OGDSPosTransTopDownShow');
             $('#attributeTable').addClass('OGDSPosTransTopDownHide');
-
         }
     });
+    attrEditChk.click(function () {
+        var chk = $(this).is(':checked'),
+            attrObj = openGDSMObj.getAttrObj();
+        if (chk === true) {
+            attrObj.editAttribute(true);
+        } else {
+            attrObj.editAttribute(false);
 
+        }
+
+    });
 }
 //브이월드 WMS 데이터 선택 사용자 인터페이스 생성 / 시각화 함수
 function vworldWMSUI() {
@@ -57,10 +72,9 @@ function wfsLoad(str, type) {
         g = Math.floor(Math.random() * 256),
         b = Math.floor(Math.random() * 256);
     var color = 'rgb(' + r + ',' + g + ',' + b + ')';
-    var addr = 'http://113.198.80.9';
     var externalServer = new OGDSM.externalConnection();
     var ui = new OGDSM.eGovFrameUI();
-    externalServer.geoServerWFSLoad(openGDSMObj, addr, 'opengds', str, { type : type, color : color});
+    externalServer.geoServerWFSLoad(openGDSMObj, geoServerAddr, 'opengds', str, { type : type, color : color});
 
 }
 //서울 열린데이터 광장 데이터 선택 사용자 인터페이스 생성 / 시각화 함수
@@ -192,17 +206,19 @@ function createPublicPortalUI() {
 }
 $(function () {
     'use strict';
-    //openGDSMObj = new OGDSM.visualization('map', 'layerList', 'attributeTable'); //map div, layerList switch
     openGDSMObj = new OGDSM.visualization('map', {
         layerListDiv : 'layerList',
         attrTableDiv : 'attributeTable',
         attrAddr : serverAddr + '/attrTable.do'
     }); //map div, layerList switch
     openGDSMObj.olMapView([127.010031, 37.582200], 'OSM', 'EPSG:900913'); //VWorld
-    /*openGDSMObj.olMapView([127.010031, 37.582200], 'OSM'); *///VWorld
-    openGDSMObj.trackingGeoLocation(true);
+    //openGDSMObj.trackingGeoLocation(true);
+
     mapSelectUI(openGDSMObj);
     mapAttrUI();
+
+    wfsLoad('seoul_sig');
+
 
     /***************************************************/
     $("#d3View").attr('width', $(window).width() - 100);

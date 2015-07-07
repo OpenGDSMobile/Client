@@ -5,29 +5,45 @@ OGDSM.namesapce('mapLayerList');
 (function (OGDSM) {
     "use strict";
     var arrlayerObjs = [], arrlabels = [];
+    var attrObj = null;
     /**
      * 오픈레이어 맵 레이어 목록 객체
      * @class OGDSM.mapLayerList
      * @constructor
      * @param {OGDSM.visualization} obj - OGDSM 시각화 객체
      * @param {String} listDiv - 생성할 list DIV 이름
+     * @param {JSON Object} options - 옵션 JSON 객체 키 값<br>
+     {listWidthSize:200, buttonSize:100, btnType:'img', btnHTML:'레이어', bgColor: 'rgb(255, 255, 255, 0.0), <br>
+      listColor: 'rgba(255,255,255, 0.0)', titleColor: 'rgba(255, 255, 255, 1.0)', titleHTML: '레이어 목록', attrObj: null}<br>
+      listWidthSize : 리스트 너비<br>
+      buttonSize: 리스트 On/Off 버튼 사이즈<br>
+      btnSW : true<br>
+      btnType : 버튼 타입 (text | img)<br>
+      bgColor : 전체 배경 색 <br>
+      listColor : 리스트 배경 색<br>
+      titleColor : 타이틀 배경 색 <br>
+      titleHTML : 타이틀 내용 <br>
+      attrObj : 속성정보 시각화 객체 <br>
      */
     OGDSM.mapLayerList = function (obj, listDiv, options) {
         options = (typeof (options) !== 'undefined') ? options : {};
-        this.listDiv = listDiv;
-        this.visualizationObj = obj;
-        var thisObj = this;
         var defaults = {
             listWidthSize : 200,
             buttonSize : 100,
+            btnSW : true, //향후 추가...
             btnType : 'img',
-            btnHTML : '레이어',
+            btnHTML : '<span style="font-size:15">레이어</span>',
             bgColor : 'rgba(255, 255, 255, 0.0)',
             listColor : 'rgba(255, 255, 255, 0.0)',
             titleColor : 'rgba(255, 255, 255, 1.0)',
-            TitleHTML : '<span style="font-weight:bold;">레이어 목록</span>'
+            titleHTML : '<span style="font-weight:bold;">레이어 목록</span>',
+            attrObj : null
         };
         defaults = OGDSM.applyOptions(defaults, options);
+        this.listDiv = listDiv;
+        this.visualizationObj = obj;
+        this.attrObj = defaults.attrObj;
+        var thisObj = this;
         var handleList = null,
             rootElement = document.getElementById(listDiv),
             buttonElement = document.createElement('div'),
@@ -73,7 +89,7 @@ OGDSM.namesapce('mapLayerList');
 
 
         listTitleElement.style.cssText = listTitleCSS;
-        listTitleElement.innerHTML = defaults.TitleHTML;
+        listTitleElement.innerHTML = defaults.titleHTML;
         listUlElement.id = listDiv + 'Contents';
         listUlElement.style.cssText = listUlCSS;
 
@@ -156,21 +172,22 @@ OGDSM.namesapce('mapLayerList');
     return OGDSM.mapLayerList;
 }(OGDSM));
 /**
- * 레이어 목록 관리
- * @method listManager
+ * 레이어 목록 추가
+ * @method addList
  * @param {ol3 layer object} obj - 레이어 목록에 추가할 Openlayers3 레이어 객체
  * @param {String} label - 목록 이름
  * @param {String} color - 레이어 색상 (ex: rgb(255,255,255))
  * @param {String} type - 객체 타입 (polygon | point | line)
  */
-OGDSM.mapLayerList.prototype.listManager = function (obj, label, color, type) {
+OGDSM.mapLayerList.prototype.addList = function (obj, label, color, type) {
     'use strict';
     type = (typeof (type) !== 'undefined') ? type : null;
     var i, olList = $('#' + this.listDiv + 'Contents'),
         thisObj = this,
         labels = this.getLabels(),
         objs = this.getLayersObj(),
-        ogdsmObj = this.visualizationObj;
+        ogdsmObj = this.visualizationObj,
+        attrObj = this.attrObj;
     this.setLayerObj(obj);
     this.setLabel(label);
     function sliderEvent(e, u) {
@@ -189,7 +206,12 @@ OGDSM.mapLayerList.prototype.listManager = function (obj, label, color, type) {
         thisObj.setLayersObj(objs);
         thisObj.setLabels(labels);
         $('#layer' + layerName).remove();
-        $('#popup' + layerName).hide();
+        $('#popup' + layerName).remove();
+        //$('#popup' + layerName + '-screen').remove();
+        //$('#popup' + layerName + '-popup').remove();
+        if (attrObj !==  null) {
+            attrObj.removeAttribute(layerName);
+        }
     }
     function checkBoxEvent(e, u) {
         var layerName = e.currentTarget.getAttribute('data-label');
@@ -200,7 +222,7 @@ OGDSM.mapLayerList.prototype.listManager = function (obj, label, color, type) {
         }
     }
     var sublabel = label;
-    if (label.length > 8) {
+    if (label.length > 10) {
         sublabel = sublabel.substr(0, 10) + '...';
     }
     olList.prepend('<li id="layer' + label + '" style="float:left">' +
@@ -224,8 +246,6 @@ OGDSM.mapLayerList.prototype.listManager = function (obj, label, color, type) {
                    'id="' + label + 'delete" data-label="' + label + '">Delete</a>' +
                    '</div>' +
                    '</li>');
-    console.log($('#chkRoot' + label + ' > div'));
-    // margin:0px;
     var labelCanvas = document.getElementById(label + 'canvas').getContext('2d');
     if (type === 'polygon') {
         labelCanvas.fillStyle = color;
@@ -253,15 +273,14 @@ OGDSM.mapLayerList.prototype.listManager = function (obj, label, color, type) {
     $('input[name=listCheckBox]').bind('click', checkBoxEvent);
     $('#chkRoot' + label + ' > div').css('width', '98%');
     //$('#hrefRoot' + label + ' > span').css('margin', '-1.5px');
-
 };
 
 /**
  * 레이어 목록 삭제
- * @method removelist
+ * @method removeList
  * @param {String} layerName - 레이어 이름
  */
-OGDSM.mapLayerList.prototype.removelist = function (layerName) {
+OGDSM.mapLayerList.prototype.removeList = function (layerName) {
     'use strict';
     var labels = this.getLabels(),
         objs = this.getLayersObj();
@@ -270,4 +289,5 @@ OGDSM.mapLayerList.prototype.removelist = function (layerName) {
     labels.splice(layerNum, 1);
     objs.splice(layerNum, 1);
     $('#layer' + layerName).remove();
+    $('#popup' + layerName).remove();
 };

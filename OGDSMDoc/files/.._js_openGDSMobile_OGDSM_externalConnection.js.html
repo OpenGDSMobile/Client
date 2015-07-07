@@ -48,6 +48,7 @@
                             </ul>
 
                             <ul id="api-modules" class="apis modules">
+                                <li><a href="../modules/OGDSM.applyOptions.html">OGDSM.applyOptions</a></li>
                                 <li><a href="../modules/OGDSM.jsontoArray.html">OGDSM.jsontoArray</a></li>
                                 <li><a href="../modules/OGDSM.namespace.html">OGDSM.namespace</a></li>
                             </ul>
@@ -114,7 +115,8 @@
                          * @param {String} addr - 주소
                          * @param {String} workspace - 워크스페이스
                          * @param {String} layerName - 레이어 이름
-                         * @param {JSON Object} options - 옵션 JSON 객체 키 값{type=&#x27;polygon&#x27;, color=&#x27;rgba(0, 0, 0, 0.0)&#x27;, callback=function () {}}&lt;br&gt;
+                         * @param {JSON Object} options - 옵션 JSON 객체 키 값&lt;br&gt;
+                          {type:&#x27;polygon&#x27;, color:&#x27;rgba(0, 0, 0, 0.0)&#x27;, callback:function () {}}&lt;br&gt;
                           type(String) : 레이어 타입( polygon | point)&lt;br&gt;
                           color(String) : 색상 rgba&lt;br&gt;
                           callback(Function) : 요청 후 색상 변경시 콜백 함수
@@ -179,8 +181,8 @@
                                 success : function (msg) {
                                     var wfsLayer = new ol.layer.Vector({
                                         title : layerName,
-                                        source : new ol.source.GeoJSON({
-                                            object: msg
+                                        source : new ol.source.Vector({
+                                            features : (new ol.format.GeoJSON()).readFeatures(msg)
                                         }),
                                         style : objStyles
                                     });
@@ -199,7 +201,8 @@
                          * @param {String} addr - 주소
                          * @param {String} ws - 워크스페이스
                          * @param {String} layerName - 레이어 이름
-                         * @param {JSON Object} options - 옵션 JSON 객체 키 값{type=&#x27;polygon&#x27;, epsg=&#x27;epsg3857&#x27;}&lt;br&gt;
+                         * @param {JSON Object} options - 옵션 JSON 객체 키 값&lt;br&gt;
+                          {type:&#x27;polygon&#x27;, epsg:&#x27;epsg3857&#x27;}&lt;br&gt;
                           type(String) : 레이어 타입( polygon | point)&lt;br&gt;
                           epsg(String) : EPSG String&lt;br&gt;
                          * @return {ol.layer.Vector} vectorSource - OpenLayers3 백터 객체
@@ -423,6 +426,7 @@
                                 }
                             });
                         };
+
                             </pre>
                         </div>
                     </div>

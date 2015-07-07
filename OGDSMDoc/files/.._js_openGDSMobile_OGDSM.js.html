@@ -48,6 +48,7 @@
                             </ul>
 
                             <ul id="api-modules" class="apis modules">
+                                <li><a href="../modules/OGDSM.applyOptions.html">OGDSM.applyOptions</a></li>
                                 <li><a href="../modules/OGDSM.jsontoArray.html">OGDSM.jsontoArray</a></li>
                                 <li><a href="../modules/OGDSM.namespace.html">OGDSM.namespace</a></li>
                             </ul>
@@ -171,6 +172,26 @@
                             return xyAxis;
                         };
 
+
+                        /**
+                         * OGDSM options 파라미터 적용 모듈
+                         * - 사용 방법(Use)
+                         *       OGDSM.applyOptions(defaults, options);
+                         *
+                         * @module OGDSM.applyOptions
+                         */
+                        OGDSM.applyOptions = function (defaults, options) {
+                            &#x27;use strict&#x27;;
+                            var name = null;
+                            for (name in defaults) {
+                                if (defaults.hasOwnProperty(name)) {
+                                    if (options.hasOwnProperty(name)) {
+                                        defaults[name] = options[name];
+                                    }
+                                }
+                            }
+                            return defaults;
+                        };
 
                             </pre>
                         </div>

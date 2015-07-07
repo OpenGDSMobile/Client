@@ -83,6 +83,26 @@ OGDSM.jsonToArray = function (obj, x, y) {
 };
 
 
+/**
+ * OGDSM options 파라미터 적용 모듈
+ * - 사용 방법(Use)
+ *       OGDSM.applyOptions(defaults, options);
+ *
+ * @module OGDSM.applyOptions
+ */
+OGDSM.applyOptions = function (defaults, options) {
+    'use strict';
+    var name = null;
+    for (name in defaults) {
+        if (defaults.hasOwnProperty(name)) {
+            if (options.hasOwnProperty(name)) {
+                defaults[name] = options[name];
+            }
+        }
+    }
+    return defaults;
+};
+
 /**!
  * OGDSM Layer list sorting open source
  * Sortable
@@ -1144,10 +1164,11 @@ OGDSM.namesapce('visualization');
     * @class OGDSM.visualization
     * @constructor
     * @param {String} mapDiv - 지도 DIV 아이디 이름
-    * @param {JSON Object} options - 옵션 JSON 객체 키 값{layerListDiv=null, attrTableDiv=null, attrAddr=''}<br>
-  layerListDiv : 레이어 관리 리스트 DIV 아이디 이름<br>
-  attrTableDiv : 속성 시각화 DIV 아이디 이름<br>
-  attrAddr : 속성 시각화 서버 주소<br>
+    * @param {JSON Object} options - 옵션 JSON 객체 키 값<br>
+    {layerListDiv:null, attrTableDiv:null, attrAddr:''}<br>
+    layerListDiv : 레이어 관리 리스트 DIV<br>
+    attrTableDiv : 속성 시각화 DIV 아이디 이름<br>
+    attrAddr : 속성 시각화 서버 주소<br>
     */
     OGDSM.visualization = function (mapDiv, options) {
         options = (typeof (options) !== 'undefined') ? options : {};
@@ -1173,11 +1194,13 @@ OGDSM.namesapce('visualization');
         $(window).on('resize', function () {
             OGDSM.visualization.updateLayoutSetting();
         });
-        if (defaults.layerListDiv !== null) {
-            this.layerListObj = new OGDSM.mapLayerList(this, defaults.layerListDiv);
-        }
         if (defaults.attrTableDiv !== null) {
             this.attrTableObj = new OGDSM.attributeTable(defaults.attrTableDiv, defaults.attrAddr);
+        }
+        if (defaults.layerListDiv !== null) {
+            this.layerListObj = new OGDSM.mapLayerList(this, defaults.layerListDiv, {
+                attrObj : this.attrTableObj
+            });
         }
         // Orientation...
     };
@@ -1221,6 +1244,14 @@ OGDSM.namesapce('visualization');
                 }
             }
             return -1;
+        },
+        /**
+         * 속성정보 객체
+         * @method getAttrObj
+         * @return {attributeTable Object} 속성정보 객체
+         */
+        getAttrObj : function () {
+            return this.attrTableObj;
         }
     };
     return OGDSM.visualization;
@@ -1423,7 +1454,7 @@ OGDSM.visualization.prototype.addMap = function (data, type) {
             } else {
                 color =  'rgb(0, 0, 0)';
             }
-            this.layerListObj.listManager(data, data.get('title'), color, type);
+            this.layerListObj.addList(data, data.get('title'), color, type);
         }
         if (typeof (this.attrTableObj) !== 'undefined') {
             this.attrTableObj.addAttribute(data.get('title'));
@@ -1469,7 +1500,7 @@ OGDSM.visualization.prototype.removeMap = function (layerName) {
     if (obj !== false) {
         this.getMap().removeLayer(obj);
         if (typeof (this.layerListObj) !== 'undefined') {
-            this.layerListObj.removelist(layerName);
+            this.layerListObj.removeList(layerName);
         }
     }
 };
@@ -1699,7 +1730,8 @@ OGDSM.namesapce('externalConnection');
  * @param {String} addr - 주소
  * @param {String} workspace - 워크스페이스
  * @param {String} layerName - 레이어 이름
- * @param {JSON Object} options - 옵션 JSON 객체 키 값{type='polygon', color='rgba(0, 0, 0, 0.0)', callback=function () {}}<br>
+ * @param {JSON Object} options - 옵션 JSON 객체 키 값<br>
+  {type:'polygon', color:'rgba(0, 0, 0, 0.0)', callback:function () {}}<br>
   type(String) : 레이어 타입( polygon | point)<br>
   color(String) : 색상 rgba<br>
   callback(Function) : 요청 후 색상 변경시 콜백 함수
@@ -1764,8 +1796,8 @@ OGDSM.externalConnection.prototype.geoServerWFSLoad = function (obj, addr, works
         success : function (msg) {
             var wfsLayer = new ol.layer.Vector({
                 title : layerName,
-                source : new ol.source.GeoJSON({
-                    object: msg
+                source : new ol.source.Vector({
+                    features : (new ol.format.GeoJSON()).readFeatures(msg)
                 }),
                 style : objStyles
             });
@@ -1784,7 +1816,8 @@ OGDSM.externalConnection.prototype.geoServerWFSLoad = function (obj, addr, works
  * @param {String} addr - 주소
  * @param {String} ws - 워크스페이스
  * @param {String} layerName - 레이어 이름
- * @param {JSON Object} options - 옵션 JSON 객체 키 값{type='polygon', epsg='epsg3857'}<br>
+ * @param {JSON Object} options - 옵션 JSON 객체 키 값<br>
+  {type:'polygon', epsg:'epsg3857'}<br>
   type(String) : 레이어 타입( polygon | point)<br>
   epsg(String) : EPSG String<br>
  * @return {ol.layer.Vector} vectorSource - OpenLayers3 백터 객체
@@ -2042,7 +2075,8 @@ OGDSM.namesapce('eGovFrameUI');
  * @param {String} linkId - 생성될 버튼 아이디 이름
  * @param {String} buttonTitle - 버튼 이름
  * @param {String} url - 링크 주소
- * @param {JSON Object} options - 옵션 JSON 객체 키 값{theme=this.dataTheme, corners=true, inline=false, mini=false}<br>
+ * @param {JSON Object} options - 옵션 JSON 객체 키 값<br>
+  {theme:this.dataTheme, corners:true, inline:false, mini:false}<br>
   theme(String) : 테마<br>
   corners(Boolean) : 모서리 둥글게 여부<br>
   inline(Boolean) : 가로 정렬 여부<br>
@@ -2063,13 +2097,8 @@ OGDSM.eGovFrameUI.prototype.autoButton = function (rootDivId, linkId, buttonTitl
         inline : false,
         mini : false
     };
-    for (name in defaults) {
-        if (defaults.hasOwnProperty(name)) {
-            if (options.hasOwnProperty(name)) {
-                defaults[name] = options[name];
-            }
-        }
-	}
+
+    defaults = OGDSM.applyOptions(defaults, options);
     html += 'data-theme="' + defaults.theme + '" data-corners="' + defaults.corners + '" data-inline="' + defaults.inline + '" data-mini="' + defaults.mini + '"';
     html += '>' + buttonTitle + '</a>';
     rootDiv.append(html);
@@ -2084,7 +2113,8 @@ OGDSM.eGovFrameUI.prototype.autoButton = function (rootDivId, linkId, buttonTitl
  * @param {String} chkId - 생성될 체크박스 아이디 이름
  * @param {String | Array} labels - 체크박스 라벨
  * @param {String | Array} values - 체크박스 값
- * @param {JSON Object} options - 옵션 JSON 객체 키 값{theme=this.dataTheme, horizontal=true, checkName=chkId + 'Name'}<br>
+ * @param {JSON Object} options - 옵션 JSON 객체 키 값<br>
+  {theme:this.dataTheme, horizontal:true, checkName:chkId + 'Name'}<br>
   theme(String) : 테마<br>
   horizontal(Boolean) : 체크박스 수평 여부<br>
   checkName(String) : 체크박스 그룹 이름<br>
@@ -2102,13 +2132,7 @@ OGDSM.eGovFrameUI.prototype.autoCheckBox = function (rootDivId, chkId, labels, v
             theme : this.dataTheme,
             horizontal : false
         };
-    for (name in defaults) {
-        if (defaults.hasOwnProperty(name)) {
-            if (options.hasOwnProperty(name)) {
-                defaults[name] = options[name];
-            }
-        }
-	}
+    defaults = OGDSM.applyOptions(defaults, options);
     html = '';
     if (Array.isArray(labels)) {
         html += '<fieldset data-role="controlgroup" ';
@@ -2140,7 +2164,8 @@ OGDSM.eGovFrameUI.prototype.autoCheckBox = function (rootDivId, chkId, labels, v
  * @param {String} radioId - 생성될 라디오박스 아이디 이름
  * @param {String | Array} labels - 라디오박스 라벨
  * @param {String | Array} values - 라디오박스 값
- * @param {JSON Object} options - 옵션 JSON 객체 키 값{theme=this.dataTheme, horizontal=true, radioName=radioId + 'Name'}<br>
+ * @param {JSON Object} options - 옵션 JSON 객체 키 값<br>
+  {theme:this.dataTheme, horizontal:true, radioName:radioId + 'Name'}<br>
   theme(String) : 테마<br>
   horizontal(Boolean) : 라디오박스 수평 여부<br>
   radioName(String) : 라디오박스 그룹 이름<br>
@@ -2161,14 +2186,7 @@ OGDSM.eGovFrameUI.prototype.autoRadioBox = function (rootDivId, radioId, labels,
         horizontal : false,
         theme : this.dataTheme
     };
-    for (name in defaults) {
-        if (defaults.hasOwnProperty(name)) {
-            if (options.hasOwnProperty(name)) {
-                defaults[name] = options[name];
-            }
-        }
-	}
-
+    defaults = OGDSM.applyOptions(defaults, options);
     if (defaults.horizontal) {
         html += 'data-theme="' + defaults.theme + '" data-type="horizontal">';
     } else {
@@ -2199,7 +2217,8 @@ OGDSM.eGovFrameUI.prototype.autoRadioBox = function (rootDivId, radioId, labels,
  * @param {String} selectId - 생성될 선택 아이디 이름
  * @param {String | Array} text - 선택 라벨 텍스트
  * @param {String | Array} values - 선택 값
- * @param {JSON Object} options - 옵션 JSON 객체 키 값{firstName='', theme=this.dataTheme, corners=true, inline=false, selected:0}<br>
+ * @param {JSON Object} options - 옵션 JSON 객체 키 값<br>
+  {firstName:'', theme:this.dataTheme, corners:true, inline:false, selected:0}<br>
   firstName(String) : 첫번째 값<br>
   theme(String) : 테마<br>
   corners(Boolean) : 테두리 둥글게 여부<br>
@@ -2216,17 +2235,12 @@ OGDSM.eGovFrameUI.prototype.autoSelect = function (rootDivId, selectId, selectNa
         theme : this.dataTheme,
         corners : true,
         inline : false,
-        selected : 0
+        selected : 0,
+        mini : false
     };
-    for (name in defaults) {
-        if (defaults.hasOwnProperty(name)) {
-            if (options.hasOwnProperty(name)) {
-                defaults[name] = options[name];
-            }
-        }
-	}
-    html = '<select name="' + selectName + '" id="' + selectId + '" ' +
-           'data-theme="' + defaults.theme + '" data-corners="' + defaults.corners + '" data-inline="' + defaults.inline + '">';
+    defaults = OGDSM.applyOptions(defaults, options);
+    html = '<select name="' + selectName + '" id="' + selectId + '" ' + 'data-mini="' + defaults.mini +
+           '" data-theme="' + defaults.theme + '" data-corners="' + defaults.corners + '" data-inline="' + defaults.inline + '">';
     html += '<option value=""> ' + defaults.firstName + '</option>';
 
     for (i = 0; i < text.length; i += 1) {
@@ -2245,7 +2259,8 @@ OGDSM.eGovFrameUI.prototype.autoSelect = function (rootDivId, selectId, selectNa
  * @method autoSwitch
  * @param {String} divId - 최상위 DIV 아이디 이름
  * @param {String} switchId - 생성될 스위치 아이디 이름
- * @param {JSON Object} options - 옵션 JSON 객체 키 값{theme=this.dataTheme, track_theme=this.dataTheme, switchName=switchId+'Name'}<br>
+ * @param {JSON Object} options - 옵션 JSON 객체 키 값<br>
+  {theme:this.dataTheme, track_theme:this.dataTheme, switchName:switchId+'Name'}<br>
   theme(String) : 테마<br>
   track-theme(String) : 버튼 테마<br>
   switchName(String) : 스위치 그룹 이름<br>
@@ -2265,13 +2280,7 @@ OGDSM.eGovFrameUI.prototype.autoSwitch = function (rootDivId, switchId, switchNa
         track_theme : this.dataTheme,
         switchName : switchId + 'Name'
     };
-    for (name in defaults) {
-        if (defaults.hasOwnProperty(name)) {
-            if (options.hasOwnProperty(name)) {
-                defaults[name] = options[name];
-            }
-        }
-	}
+    defaults = OGDSM.applyOptions(defaults, options);
     html = '<select name="' + defaults.switchName + '" id="' + switchId + '" data-theme="' + defaults.theme +
            '" data-track-theme="' + defaults.track_theme + '" data-role="slider" data-inline="true">';
     html += '<option value="off">Off</option>';
@@ -2315,15 +2324,15 @@ OGDSM.eGovFrameUI.prototype.dateInput = function (divId) {
 };
 
 /**************Custom UI Create *******************/
+
 /**
  * 배경 맵 선택 사용자 인터페이스 자동 생성: 라디오 박스
  * @method baseMapRadioBox
  * @param {OGDSM Object} OGDSMObj - OpenGDS모바일 시각화 객체
  * @param {String}       rootDiv - 최상위 DIV 아이디 이름
- * @param {Array}        options - 제공할 지도 타입
+ * @param {String}       options - 제공할 지도 타입 (스페이스바로 타입 구분) [OSM VWorld VWorld_m VWorld_s VWorld_g]
  */
 OGDSM.eGovFrameUI.prototype.baseMapRadioBox = function (OGDSMObj, rootDiv, options) {
-//var mapRadioNameObj = uiTest.autoRadioBox('mapSelect','mapType', 'radioMap', ['OSM','VWorld'], ['OSM','VWorld'], ['h']);
     'use strict';
     options = (typeof (options) !== 'undefined') ? options : null;
     var mapRadioNameObj,
@@ -2332,8 +2341,9 @@ OGDSM.eGovFrameUI.prototype.baseMapRadioBox = function (OGDSMObj, rootDiv, optio
     if (options !== null) {
         supportMap = options.split(' ');
     }
-    mapRadioNameObj = this.autoRadioBox(rootDiv, 'mapType', supportMap, supportMap, ['h']);
-
+    mapRadioNameObj = this.autoRadioBox(rootDiv, 'mapType', supportMap, supportMap, {
+        horizontal : true
+    });
     mapRadioNameObj.change(function () {
         OGDSMObj.changeBaseMap($(this).val());
     });
@@ -2343,7 +2353,7 @@ OGDSM.eGovFrameUI.prototype.baseMapRadioBox = function (OGDSMObj, rootDiv, optio
  * @method baseMapSelect
  * @param {OGDSM Object} OGDSMObj - OpenGDS모바일 시각화 객체
  * @param {String}       rootDiv - 최상위 DIV 아이디 이름
- * @param {Array}        options - 제공할 지도 타입
+ * @param {String}       options - 제공할 지도 타입 (스페이스바로 타입 구분) [OSM VWorld VWorld_m VWorld_s VWorld_g]
  */
 OGDSM.eGovFrameUI.prototype.baseMapSelect = function (OGDSMObj, rootDiv, options) {
     'use strict';
@@ -2357,7 +2367,8 @@ OGDSM.eGovFrameUI.prototype.baseMapSelect = function (OGDSMObj, rootDiv, options
     mapRadioNameObj = this.autoSelect(rootDiv, 'mapType', 'selectMapType', supportMap, supportMap, {
         firstName : '맵 선택',
         selected : supportMap[0],
-        inline : true
+        inline : true,
+        mini : true
     });
     OGDSMObj.changeBaseMap(supportMap[0]);
     mapRadioNameObj.change(function () {
@@ -2562,9 +2573,10 @@ OGDSM.eGovFrameUI.prototype.vworldWMSList = function (divId, theme) {
  * 서울 열린 데이터 광장 환경정보 요청 인터페이스
  * @method seoulEnvironment
  * @param {String} divId - 최상위 DIV 아이디 이름
- * @param {JSON Object} options - 옵션 JSON 객체 키 값{theme=this.dataTheme, path='./images/'}
-  theme(String) : 테마
-  path(String) : 이미지 위치
+ * @param {JSON Object} options - 옵션 JSON 객체 키 값<br>
+  {theme:this.dataTheme, path:'./images/'}<br>
+  theme(String) : 테마<br>
+  path(String) : 이미지 위치<br>
  * @return {String} 생성된 객체 배열 [visualType, date, time, environmentType]
  */
 OGDSM.eGovFrameUI.prototype.seoulEnvironment = function (divId, options) {
@@ -2575,13 +2587,7 @@ OGDSM.eGovFrameUI.prototype.seoulEnvironment = function (divId, options) {
         theme : this.dataTheme,
         path : './images/openGDSMobile/'
     };
-    for (name in defaults) {
-        if (defaults.hasOwnProperty(name)) {
-            if (options.hasOwnProperty(name)) {
-                defaults[name] = options[name];
-            }
-        }
-	}
+    defaults = OGDSM.applyOptions(defaults, options);
     var environmentImages = [
         '<img src="' + defaults.path + 'input_bt_pm10.png" width=30>',
         '<img src="' + defaults.path + 'input_bt_pm25.png" width=30>',
@@ -2611,9 +2617,10 @@ OGDSM.eGovFrameUI.prototype.seoulEnvironment = function (divId, options) {
  * 데이터 포털 환경정보 요청 인터페이스
  * @method dataPortalEnvironment
  * @param {String} divId - 최상위 DIV 아이디 이름
- * @param {JSON Object} options - 옵션 JSON 객체 키 값{theme=this.dataTheme, path='./images/'}
-  theme(String) : 테마
-  path(String) : 이미지 위치
+ * @param {JSON Object} options - 옵션 JSON 객체 키 값<br>
+  {theme:this.dataTheme, path:'./images/'}<br>
+  theme(String) : 테마<br>
+  path(String) : 이미지 위치<br>
  * @return {String} 생성된 객체 배열 [visualType, areaType, environmentType]
  */
 OGDSM.eGovFrameUI.prototype.dataPortalEnvironment = function (divId, options) {
@@ -2624,13 +2631,7 @@ OGDSM.eGovFrameUI.prototype.dataPortalEnvironment = function (divId, options) {
         theme : this.dataTheme,
         path : './images/openGDSMobile/'
     };
-    for (name in defaults) {
-        if (defaults.hasOwnProperty(name)) {
-            if (options.hasOwnProperty(name)) {
-                defaults[name] = options[name];
-            }
-        }
-	}
+    defaults = OGDSM.applyOptions(defaults, options);
     var environmentImages = [
         '<img src="' + defaults.path + 'input_bt_pm10.png" width=30>',
         '<img src="' + defaults.path + 'input_bt_pm25.png" width=30>',
@@ -2674,84 +2675,105 @@ OGDSM.namesapce('mapLayerList');
 (function (OGDSM) {
     "use strict";
     var arrlayerObjs = [], arrlabels = [];
+    var attrObj = null;
     /**
      * 오픈레이어 맵 레이어 목록 객체
      * @class OGDSM.mapLayerList
      * @constructor
      * @param {OGDSM.visualization} obj - OGDSM 시각화 객체
      * @param {String} listDiv - 생성할 list DIV 이름
+     * @param {JSON Object} options - 옵션 JSON 객체 키 값<br>
+     {listWidthSize:200, buttonSize:100, btnType:'img', btnHTML:'레이어', bgColor: 'rgb(255, 255, 255, 0.0), <br>
+      listColor: 'rgba(255,255,255, 0.0)', titleColor: 'rgba(255, 255, 255, 1.0)', titleHTML: '레이어 목록', attrObj: null}<br>
+      listWidthSize : 리스트 너비<br>
+      buttonSize: 리스트 On/Off 버튼 사이즈<br>
+      btnSW : true<br>
+      btnType : 버튼 타입 (text | img)<br>
+      bgColor : 전체 배경 색 <br>
+      listColor : 리스트 배경 색<br>
+      titleColor : 타이틀 배경 색 <br>
+      titleHTML : 타이틀 내용 <br>
+      attrObj : 속성정보 시각화 객체 <br>
      */
-    OGDSM.mapLayerList = function (obj, listDiv) {
+    OGDSM.mapLayerList = function (obj, listDiv, options) {
+        options = (typeof (options) !== 'undefined') ? options : {};
+        var defaults = {
+            listWidthSize : 200,
+            buttonSize : 100,
+            btnSW : true, //향후 추가...
+            btnType : 'img',
+            btnHTML : '<span style="font-size:15">레이어</span>',
+            bgColor : 'rgba(255, 255, 255, 0.0)',
+            listColor : 'rgba(255, 255, 255, 0.0)',
+            titleColor : 'rgba(255, 255, 255, 1.0)',
+            titleHTML : '<span style="font-weight:bold;">레이어 목록</span>',
+            attrObj : null
+        };
+        defaults = OGDSM.applyOptions(defaults, options);
         this.listDiv = listDiv;
         this.visualizationObj = obj;
+        this.attrObj = defaults.attrObj;
         var thisObj = this;
-        var handleList = null, listSize = 200, buttonSize = 120,
-            element = document.getElementById(listDiv),
-            listElement = document.createElement('div'),
+        var handleList = null,
+            rootElement = document.getElementById(listDiv),
             buttonElement = document.createElement('div'),
             listTitleElement = document.createElement('div'),
             listRootElement = document.createElement('div'),
             listUlElement = document.createElement('ul'),
-            btnText = '레이어목록 보이기',
-            elementCSS = 'position : absolute; background : rgba(255,255,255,0.0); top: 0px;  z-index : 1;',
-            olCustomListCSS = 'float : left; padding : 1px;	background : rgba(255,255,255,0.0); ' +
-            'width : ' + listSize + 'px;',
-            olCustomButtonCSS = 'cursor:pointer; position : absolute; width:' + buttonSize + 'px; height: 50px;',
-            listTitleCSS = 'width: 100%; text-align:center;',
+            rootElementCSS = 'position : absolute; top: 0px;  z-index : 1; background : ' + defaults.bgColor + ';',
+            buttonCSS = 'cursor:pointer; position : absolute; left :' +
+                            defaults.listWidthSize + 'px;' + 'width : ' + defaults.buttonSize + 'px;',
+            listRootCSS = 'float : left; padding : 1px;	background : ' +
+                            defaults.listColor + ';' + 'width : ' + defaults.listWidthSize + 'px;',
+            listTitleCSS = 'width: 100%; margin-bottom:10px; margin-top:10px; text-align:center; background :' + defaults.titleColor + ';',
             listUlCSS = 'list-style:none; padding:0; margin:0;',
-            listSlideHideCSS = elementCSS + ' left: ' + -(listSize + 3) + 'px; transition: left 0.1s ease;',
-            listSlideShowCSS = elementCSS + ' left: 0px; transition: left 0.1s ease;',
-            buttonFontShowCSS = 'font-size : 90%; font-weight : bold; color : rgba(0, 0, 0,1.0); text-align:center;',
-            buttonFontHideCSS = 'font-size : 90%; font-weight : bold; color : rgba(0, 0, 0,.5); text-align:center;',
-            buttonSlideShowCSS = olCustomButtonCSS + 'background: rgba(255, 255, 255, 0.5); left:' + (listSize + 2) + 'px; ' +
-            'transition : background 0.1s ease, left 0.1s ease;' + buttonFontShowCSS,
-            buttonSlideHideCSS = olCustomButtonCSS + 'background: rgba(0, 0, 0, .0); left:' + (listSize - buttonSize) + 'px; ' +
-            'transition : background 0.1s ease, left 0.1s ease;' + buttonFontHideCSS;
+            listSlideHideCSS = ' left: ' + -(defaults.listWidthSize) + 'px; transition: left 0.1s ease;',
+            listSlideShowCSS = ' left: 0px; transition: left 0.1s ease;';
+
+        var buttonSlideShowCSS = 'left:' + (defaults.listWidthSize) + 'px; ' + 'transition : background 0.1s ease, left 0.1s ease;',
+            buttonSlideHideCSS = 'left:' + (defaults.listWidthSize - 25) + 'px; ' + 'transition : background 0.1s ease, left 0.1s ease;';
+
 
         handleList = function (e) {
-            var listControl = document.getElementById('listControl');
-            if (btnText === '레이어목록 보이기') {
-                btnText = '레이어목록 숨기기';
-                element.style.cssText = listSlideShowCSS;
-                buttonElement.style.cssText = buttonSlideHideCSS;
-
+            if (this.value === 'hide') {
+                this.value = 'show';
+                rootElement.style.cssText = rootElementCSS + listSlideShowCSS;
+                buttonElement.style.cssText = buttonCSS + buttonSlideHideCSS;
             } else {
-                btnText = '레이어목록 보이기';
-                element.style.cssText = listSlideHideCSS;
-                buttonElement.style.cssText = buttonSlideShowCSS;
+                this.value = 'hide';
+                rootElement.style.cssText = rootElementCSS + listSlideHideCSS;
+                buttonElement.style.cssText = buttonCSS + buttonSlideShowCSS;
             }
-            buttonElement.innerHTML = btnText;
         };
-
+        buttonElement.value = 'hide';
+        buttonElement.id = listDiv + 'Button';
+        buttonElement.style.cssText = buttonCSS + buttonSlideShowCSS;
+        if (defaults.btnType === 'text') {
+            buttonElement.innerHTML = defaults.btnHTML;
+        } else {
+            buttonElement.innerHTML = '<a href="#" data-role="button" data-icon="grid" data-iconpos="notext" data-corners="false"></a>';
+        }
         buttonElement.addEventListener('click', handleList, false);
         buttonElement.addEventListener('touchstart', handleList, false);
 
-        element.style.cssText = listSlideHideCSS;
-        listElement.id = listDiv + 'Root';
-        listElement.style.cssText = olCustomListCSS;
+
 
         listTitleElement.style.cssText = listTitleCSS;
-        listTitleElement.setAttribute('class', 'ui-body-a');
-        listTitleElement.innerHTML = '<h4>레이어 목록</h4>';
-
-        listRootElement.id = listDiv + 'Div';
+        listTitleElement.innerHTML = defaults.titleHTML;
         listUlElement.id = listDiv + 'Contents';
         listUlElement.style.cssText = listUlCSS;
 
-        listElement.appendChild(listTitleElement);
-        listElement.appendChild(listRootElement);
+
+        listRootElement.id = listDiv + 'Root';
+        listRootElement.style.cssText = listRootCSS;
+        listRootElement.appendChild(listTitleElement);
         listRootElement.appendChild(listUlElement);
 
-        buttonElement.id = listDiv + 'Button';
-        buttonElement.className = 'ol-unselectable';
-        buttonElement.style.cssText = buttonSlideShowCSS;
-        buttonElement.innerHTML = btnText;
-        buttonElement.setAttribute('data-role', 'button');
+        rootElement.style.cssText = rootElementCSS + listSlideHideCSS;
+        rootElement.appendChild(buttonElement);
+        rootElement.appendChild(listRootElement);
 
-        element.appendChild(listElement);
-        element.appendChild(buttonElement);
-
-
+        $('#' + listDiv + 'Button').trigger('create');
         this.ulObj = Sortable.create(document.getElementById(this.listDiv + 'Contents'), {
             animation: 150,
             handle: '.drag-handle',
@@ -2778,7 +2800,9 @@ OGDSM.namesapce('mapLayerList');
                     labels[length - evt.newIndex] = changeValue;
                     objs[length - evt.newIndex] = changeObj;
                 }
-
+                for (i = 0; i < objs.length; i++) {
+                    layers.pop();
+                }
                 for (i = 0; i < objs.length; i++) {
                     layers.setAt(i + 1, objs[i]);
                 }
@@ -2786,6 +2810,7 @@ OGDSM.namesapce('mapLayerList');
                 thisObj.setLabels(labels);
             }
         });
+
     };
     OGDSM.mapLayerList.prototype = {
         constructor : OGDSM.mapLayerList,
@@ -2817,21 +2842,22 @@ OGDSM.namesapce('mapLayerList');
     return OGDSM.mapLayerList;
 }(OGDSM));
 /**
- * 레이어 목록 관리
- * @method listManager
+ * 레이어 목록 추가
+ * @method addList
  * @param {ol3 layer object} obj - 레이어 목록에 추가할 Openlayers3 레이어 객체
  * @param {String} label - 목록 이름
  * @param {String} color - 레이어 색상 (ex: rgb(255,255,255))
  * @param {String} type - 객체 타입 (polygon | point | line)
  */
-OGDSM.mapLayerList.prototype.listManager = function (obj, label, color, type) {
+OGDSM.mapLayerList.prototype.addList = function (obj, label, color, type) {
     'use strict';
     type = (typeof (type) !== 'undefined') ? type : null;
     var i, olList = $('#' + this.listDiv + 'Contents'),
         thisObj = this,
         labels = this.getLabels(),
         objs = this.getLayersObj(),
-        ogdsmObj = this.visualizationObj;
+        ogdsmObj = this.visualizationObj,
+        attrObj = this.attrObj;
     this.setLayerObj(obj);
     this.setLabel(label);
     function sliderEvent(e, u) {
@@ -2850,7 +2876,12 @@ OGDSM.mapLayerList.prototype.listManager = function (obj, label, color, type) {
         thisObj.setLayersObj(objs);
         thisObj.setLabels(labels);
         $('#layer' + layerName).remove();
-        $('#popup' + layerName).hide();
+        $('#popup' + layerName).remove();
+        //$('#popup' + layerName + '-screen').remove();
+        //$('#popup' + layerName + '-popup').remove();
+        if (attrObj !==  null) {
+            attrObj.removeAttribute(layerName);
+        }
     }
     function checkBoxEvent(e, u) {
         var layerName = e.currentTarget.getAttribute('data-label');
@@ -2861,21 +2892,23 @@ OGDSM.mapLayerList.prototype.listManager = function (obj, label, color, type) {
         }
     }
     var sublabel = label;
-    if (label.length > 8) {
-        sublabel = sublabel.substr(0, 8) + '...';
+    if (label.length > 10) {
+        sublabel = sublabel.substr(0, 10) + '...';
     }
-
     olList.prepend('<li id="layer' + label + '" style="float:left">' +
-                   '<div style="width:15%; float:left; margin-top:4px;">' +
+                   '<fieldset data-role="controlgroup" data-type="horizontal" style="margin:0px">' +
+                   '<div style="width:15%; float:left;">' +
                    '<canvas id="' + label + 'canvas" width="100%" height=30px; class="drag-handle" ></canvas>' +
-                   '</div> <div style="width:70%; float:left; padding:0px; margin:0px;">' +
-                   '<input type="checkbox" name="listCheckBox" data-corners="false" data-mini="true" style="width:100px;" class="custom" ' +
+                   '</div> <div id="chkRoot' + label + '" style="width:70%; float:left; padding:0px; margin:0px;">' +
+                   '<input type="checkbox" name="listCheckBox" data-corners="false" data-mini="true" class="custom" ' +
                    'id="' + 'visualSW' + thisObj.getLabels().length + '" data-label="' + label + '" checked/>' +
-                   '<label for="' + 'visualSW' + thisObj.getLabels().length + '">' + sublabel + '</label>' +
-                   '</div> <div style="width:15%; float:left; padding:0px; margin:0px;">' +
-                   '<a data-role="button" data-rel="popup" data-theme="b" data-corners="false" data-mini="true" data-transition="pop"' +
+                   '<label for="' + 'visualSW' + thisObj.getLabels().length + '" style="width:100%">' + sublabel + '</label>' +
+                   '</div> <div style="width:15%; float:left;">' +
+                   '<a id="hrefRoot' + label + '" data-role="button" data-rel="popup" data-theme="b" data-icon="gear"' +
+                   'data-corners="false" data-mini="true" data-transition="pop"' +
                    'data-label="' + label + '" href="#popup' + label + '">　</a>' +
                    '</div>' +
+                   '</fieldset>' +
                    '<div data-role="popup" id="popup' + label + '" style="width:' + 200 + 'px">' +
                    '<input type="range" value="100" min="0" max="100" data-highlight="true" class="layer-manager"' +
                    'id="' + label + 'slider" data-label="' + label + '">' +
@@ -2883,7 +2916,6 @@ OGDSM.mapLayerList.prototype.listManager = function (obj, label, color, type) {
                    'id="' + label + 'delete" data-label="' + label + '">Delete</a>' +
                    '</div>' +
                    '</li>');
-
     var labelCanvas = document.getElementById(label + 'canvas').getContext('2d');
     if (type === 'polygon') {
         labelCanvas.fillStyle = color;
@@ -2909,14 +2941,16 @@ OGDSM.mapLayerList.prototype.listManager = function (obj, label, color, type) {
     $('#' + label + 'slider').bind('change', sliderEvent);
     $('#' + label + 'delete').bind('click', deleteEvent);
     $('input[name=listCheckBox]').bind('click', checkBoxEvent);
+    $('#chkRoot' + label + ' > div').css('width', '98%');
+    //$('#hrefRoot' + label + ' > span').css('margin', '-1.5px');
 };
 
 /**
  * 레이어 목록 삭제
- * @method removelist
+ * @method removeList
  * @param {String} layerName - 레이어 이름
  */
-OGDSM.mapLayerList.prototype.removelist = function (layerName) {
+OGDSM.mapLayerList.prototype.removeList = function (layerName) {
     'use strict';
     var labels = this.getLabels(),
         objs = this.getLayersObj();
@@ -2925,6 +2959,7 @@ OGDSM.mapLayerList.prototype.removelist = function (layerName) {
     labels.splice(layerNum, 1);
     objs.splice(layerNum, 1);
     $('#layer' + layerName).remove();
+    $('#popup' + layerName).remove();
 };
 
 /*jslint devel: true, vars : true plusplus : true*/
@@ -2946,7 +2981,7 @@ OGDSM.namesapce('attributeTable');
         var rootElement = document.getElementById(rootDiv),
             ulElement = document.createElement('ul'),
             contentsElement = document.createElement('div');
-        var contentsCSS = 'width: 100%; height: 100%; background: rgba(255, 255, 255, 1); margin: 0px;',
+        var contentsCSS = 'width: 100%; height: 100%; background: rgba(255, 255, 255, 0.0); margin: 0px;',
             ulCSS = 'list-style: none; position: relative; margin: 0px; z-index: 2; top: 1px; display: table; border-left: 1px solid #f5ab36;';
 
         ulElement.id = rootDiv + 'Tab';
@@ -2974,41 +3009,44 @@ OGDSM.attributeTable.prototype.addAttribute = function (layerName) {
     var rootDiv = this.rootDiv,
         tabs = $('#' + rootDiv + 'Tab'),
         contents = $('#' + rootDiv + 'Contents');
-    var aBaseCSS = 'background:#ffd89b; color: #222; display:block; padding:6px 15px; text-decoration:none; border-right:1px solid #f5ab36;' +
-               'border-top:1px solid #f5ab36; border-right:1px solid #f5ab36; margin:0;',
-        backgroundNotSelected = '#ffd89b',
-        colorNotSelected = '#222',
-        backgroundSelected = '#fff',
+    var aBaseCSS = 'display:block; padding:6px 15px; text-decoration:none; border-right:1px solid #000;' +
+                   'border-top:1px solid #000; margin:0;',
+        backgroundNotSelected = '#fff',
+        backgroundSelected = '#ffd89b',
         colorSelected = '#344385',
-        borderSelected = '1px solid #fff';
+        borderSelected = '1px solid #fff',
+        textInputCSS = 'background-color: transparent; border:0px solid; font-size:15px;';
     function tabClickEvent(e) {
         $('#' + rootDiv + 'Tab a').css('border-bottom', '');
-        $('#' + rootDiv + 'Tab a').css('color', colorNotSelected);
         $('#' + rootDiv + 'Tab a').css('background', backgroundNotSelected);
         $(e.currentTarget).css('border-bottom', borderSelected);
         $(e.currentTarget).css('background', backgroundSelected);
-        $(e.currentTarget).css('color', colorSelected);
         $('.attrTable').hide();
-        $('#divAttrTable' + layerName).css('display', 'block');
+        $('#attrContent' + layerName).css('display', 'block');
     }
-    tabs.prepend('<li id="attrTab' + layerName + '" style="float:left;"><a href="#" style="' + aBaseCSS + '">' + layerName + '</a></li>');
-    $('#' + rootDiv + 'Tab a').css('border-bottom', '');
-    $('#' + rootDiv + 'Tab a').css('color', colorNotSelected);
+
+    /******* Add tab ***********/
+    tabs.prepend('<li id="attrTab' + layerName + '" style="float:left;">' +
+                 '<a href="#" style="' + aBaseCSS + '">' + layerName + '</a></li>');
     $('#' + rootDiv + 'Tab a').css('background', backgroundNotSelected);
     $('#attrTab' + layerName + ' a').css('border-bottom', borderSelected);
     $('#attrTab' + layerName + ' a').css('background', backgroundSelected);
     $('#attrTab' + layerName + ' a').css('color', colorSelected);
 
+    /******* Add Content ***********/
     var attrDivHeight = $('#' + rootDiv + 'Contents').height();
-    contents.prepend('<div id="divAttrTable' + layerName + '" class="attrTable"><table id="attrTable' + layerName + '" class="display compact" cellspacing="0" width="100%">' +
+    contents.prepend('<div id="attrContent' + layerName + '" class="attrTable">' +
+                     '<table id="attrTable' + layerName + '" class="display compact" cellspacing="0" width="100%">' +
                      '<thead style="width:100%;"><tr></tr></thead>' +
-                     '<tbody></tbody></table></div>');
+                     '<tbody style="text-align:center"></tbody></table></div>');
 
+    /******* Event *******************/
     $('.attrTable').hide();
-    $('#divAttrTable' + layerName).css('display', 'block');
+    $('#attrContent' + layerName).css('display', 'block');
     $('#attrTab' + layerName + ' a').bind('click', tabClickEvent);
-    var parm = '{"tableName":"' + layerName + '"}';
-    parm = JSON.parse(parm);
+
+    var parm = {};
+    parm.tableName = layerName;
     function createTableCol(attrContents, i, tableBody, tableTh) {
         $.each(attrContents, function (key, value) {
             if (key === 'geom') {
@@ -3018,7 +3056,10 @@ OGDSM.attributeTable.prototype.addAttribute = function (layerName) {
                 tableTh.append('<th>' + key + '</th>');
             }
             var newCell = tableBody.find('tr:last');
-            newCell.append('<td>' + value + '</td>');
+            newCell.append('<td>' +
+                           '<input type="text" value="' + value + '" class="editSW" style="' + textInputCSS + '"' +
+                           'disabled=true>' +
+                           '</td>');
         });
     }
     $.ajax({
@@ -3033,7 +3074,8 @@ OGDSM.attributeTable.prototype.addAttribute = function (layerName) {
                 console.log('Not attribute information');
                 return -1;
             }
-            var tableDiv = $('#attrTable' + layerName),
+
+            var tableDiv = $('#attrContent' + layerName),
                 tableTh = tableDiv.find('thead').find('tr'),
                 tableBody = tableDiv.find('tbody');
             for (i = 0; i < attrContents.length; i++) {
@@ -3054,7 +3096,7 @@ OGDSM.attributeTable.prototype.addAttribute = function (layerName) {
             $(window).on('resize', function () {
                 var attrDivHeight = $('#' + rootDiv + 'Contents').height();
                 var thHeight = $('thead').height() + 7;
-                $('.divAttrTable table').DataTable({
+                $('#attrTable' + layerName).DataTable({
                     'paging' : false,
                     'scrollY' : attrDivHeight - thHeight,
                     'scrollX' : true,
@@ -3067,4 +3109,29 @@ OGDSM.attributeTable.prototype.addAttribute = function (layerName) {
             console.log(e);
         }
     });
+};
+
+/**
+ * 속성 정보 삭제
+ * @method removeAttribute
+ * @param {String}  layerName   - 데이터 베이스 테이블 이름
+ */
+OGDSM.attributeTable.prototype.removeAttribute = function (layerName) {
+    'use strict';
+    $('#' + 'attrTab' + layerName).remove();
+    $('#' + 'attrContent' + layerName).remove();
+};
+/**
+ * 속성 정보 수정
+ * @method removeAttribute
+ * @param {boolean}  sw   - 수정 스위치
+ */
+OGDSM.attributeTable.prototype.editAttribute = function (sw) {
+    'use strict';
+    var textInput = $('.editSW');
+    if (sw === true) {
+        textInput.attr('disabled', false);
+    } else {
+        textInput.attr('disabled', true);
+    }
 };

@@ -48,6 +48,7 @@
                             </ul>
 
                             <ul id="api-modules" class="apis modules">
+                                <li><a href="../modules/OGDSM.applyOptions.html">OGDSM.applyOptions</a></li>
                                 <li><a href="../modules/OGDSM.jsontoArray.html">OGDSM.jsontoArray</a></li>
                                 <li><a href="../modules/OGDSM.namespace.html">OGDSM.namespace</a></li>
                             </ul>
@@ -106,7 +107,7 @@
                                 var rootElement = document.getElementById(rootDiv),
                                     ulElement = document.createElement(&#x27;ul&#x27;),
                                     contentsElement = document.createElement(&#x27;div&#x27;);
-                                var contentsCSS = &#x27;width: 100%; height: 100%; background: rgba(255, 255, 255, 1); margin: 0px;&#x27;,
+                                var contentsCSS = &#x27;width: 100%; height: 100%; background: rgba(255, 255, 255, 0.0); margin: 0px;&#x27;,
                                     ulCSS = &#x27;list-style: none; position: relative; margin: 0px; z-index: 2; top: 1px; display: table; border-left: 1px solid #f5ab36;&#x27;;
 
                                 ulElement.id = rootDiv + &#x27;Tab&#x27;;
@@ -134,41 +135,44 @@
                             var rootDiv = this.rootDiv,
                                 tabs = $(&#x27;#&#x27; + rootDiv + &#x27;Tab&#x27;),
                                 contents = $(&#x27;#&#x27; + rootDiv + &#x27;Contents&#x27;);
-                            var aBaseCSS = &#x27;background:#ffd89b; color: #222; display:block; padding:6px 15px; text-decoration:none; border-right:1px solid #f5ab36;&#x27; +
-                                       &#x27;border-top:1px solid #f5ab36; border-right:1px solid #f5ab36; margin:0;&#x27;,
-                                backgroundNotSelected = &#x27;#ffd89b&#x27;,
-                                colorNotSelected = &#x27;#222&#x27;,
-                                backgroundSelected = &#x27;#fff&#x27;,
+                            var aBaseCSS = &#x27;display:block; padding:6px 15px; text-decoration:none; border-right:1px solid #000;&#x27; +
+                                           &#x27;border-top:1px solid #000; margin:0;&#x27;,
+                                backgroundNotSelected = &#x27;#fff&#x27;,
+                                backgroundSelected = &#x27;#ffd89b&#x27;,
                                 colorSelected = &#x27;#344385&#x27;,
-                                borderSelected = &#x27;1px solid #fff&#x27;;
+                                borderSelected = &#x27;1px solid #fff&#x27;,
+                                textInputCSS = &#x27;background-color: transparent; border:0px solid; font-size:15px;&#x27;;
                             function tabClickEvent(e) {
                                 $(&#x27;#&#x27; + rootDiv + &#x27;Tab a&#x27;).css(&#x27;border-bottom&#x27;, &#x27;&#x27;);
-                                $(&#x27;#&#x27; + rootDiv + &#x27;Tab a&#x27;).css(&#x27;color&#x27;, colorNotSelected);
                                 $(&#x27;#&#x27; + rootDiv + &#x27;Tab a&#x27;).css(&#x27;background&#x27;, backgroundNotSelected);
                                 $(e.currentTarget).css(&#x27;border-bottom&#x27;, borderSelected);
                                 $(e.currentTarget).css(&#x27;background&#x27;, backgroundSelected);
-                                $(e.currentTarget).css(&#x27;color&#x27;, colorSelected);
                                 $(&#x27;.attrTable&#x27;).hide();
-                                $(&#x27;#divAttrTable&#x27; + layerName).css(&#x27;display&#x27;, &#x27;block&#x27;);
+                                $(&#x27;#attrContent&#x27; + layerName).css(&#x27;display&#x27;, &#x27;block&#x27;);
                             }
-                            tabs.prepend(&#x27;&lt;li id=&quot;attrTab&#x27; + layerName + &#x27;&quot; style=&quot;float:left;&quot;&gt;&lt;a href=&quot;#&quot; style=&quot;&#x27; + aBaseCSS + &#x27;&quot;&gt;&#x27; + layerName + &#x27;&lt;/a&gt;&lt;/li&gt;&#x27;);
-                            $(&#x27;#&#x27; + rootDiv + &#x27;Tab a&#x27;).css(&#x27;border-bottom&#x27;, &#x27;&#x27;);
-                            $(&#x27;#&#x27; + rootDiv + &#x27;Tab a&#x27;).css(&#x27;color&#x27;, colorNotSelected);
+
+                            /******* Add tab ***********/
+                            tabs.prepend(&#x27;&lt;li id=&quot;attrTab&#x27; + layerName + &#x27;&quot; style=&quot;float:left;&quot;&gt;&#x27; +
+                                         &#x27;&lt;a href=&quot;#&quot; style=&quot;&#x27; + aBaseCSS + &#x27;&quot;&gt;&#x27; + layerName + &#x27;&lt;/a&gt;&lt;/li&gt;&#x27;);
                             $(&#x27;#&#x27; + rootDiv + &#x27;Tab a&#x27;).css(&#x27;background&#x27;, backgroundNotSelected);
                             $(&#x27;#attrTab&#x27; + layerName + &#x27; a&#x27;).css(&#x27;border-bottom&#x27;, borderSelected);
                             $(&#x27;#attrTab&#x27; + layerName + &#x27; a&#x27;).css(&#x27;background&#x27;, backgroundSelected);
                             $(&#x27;#attrTab&#x27; + layerName + &#x27; a&#x27;).css(&#x27;color&#x27;, colorSelected);
 
+                            /******* Add Content ***********/
                             var attrDivHeight = $(&#x27;#&#x27; + rootDiv + &#x27;Contents&#x27;).height();
-                            contents.prepend(&#x27;&lt;div id=&quot;divAttrTable&#x27; + layerName + &#x27;&quot; class=&quot;attrTable&quot;&gt;&lt;table id=&quot;attrTable&#x27; + layerName + &#x27;&quot; class=&quot;display compact&quot; cellspacing=&quot;0&quot; width=&quot;100%&quot;&gt;&#x27; +
+                            contents.prepend(&#x27;&lt;div id=&quot;attrContent&#x27; + layerName + &#x27;&quot; class=&quot;attrTable&quot;&gt;&#x27; +
+                                             &#x27;&lt;table id=&quot;attrTable&#x27; + layerName + &#x27;&quot; class=&quot;display compact&quot; cellspacing=&quot;0&quot; width=&quot;100%&quot;&gt;&#x27; +
                                              &#x27;&lt;thead style=&quot;width:100%;&quot;&gt;&lt;tr&gt;&lt;/tr&gt;&lt;/thead&gt;&#x27; +
-                                             &#x27;&lt;tbody&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/div&gt;&#x27;);
+                                             &#x27;&lt;tbody style=&quot;text-align:center&quot;&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/div&gt;&#x27;);
 
+                            /******* Event *******************/
                             $(&#x27;.attrTable&#x27;).hide();
-                            $(&#x27;#divAttrTable&#x27; + layerName).css(&#x27;display&#x27;, &#x27;block&#x27;);
+                            $(&#x27;#attrContent&#x27; + layerName).css(&#x27;display&#x27;, &#x27;block&#x27;);
                             $(&#x27;#attrTab&#x27; + layerName + &#x27; a&#x27;).bind(&#x27;click&#x27;, tabClickEvent);
-                            var parm = &#x27;{&quot;tableName&quot;:&quot;&#x27; + layerName + &#x27;&quot;}&#x27;;
-                            parm = JSON.parse(parm);
+
+                            var parm = {};
+                            parm.tableName = layerName;
                             function createTableCol(attrContents, i, tableBody, tableTh) {
                                 $.each(attrContents, function (key, value) {
                                     if (key === &#x27;geom&#x27;) {
@@ -178,7 +182,10 @@
                                         tableTh.append(&#x27;&lt;th&gt;&#x27; + key + &#x27;&lt;/th&gt;&#x27;);
                                     }
                                     var newCell = tableBody.find(&#x27;tr:last&#x27;);
-                                    newCell.append(&#x27;&lt;td&gt;&#x27; + value + &#x27;&lt;/td&gt;&#x27;);
+                                    newCell.append(&#x27;&lt;td&gt;&#x27; +
+                                                   &#x27;&lt;input type=&quot;text&quot; value=&quot;&#x27; + value + &#x27;&quot; class=&quot;editSW&quot; style=&quot;&#x27; + textInputCSS + &#x27;&quot;&#x27; +
+                                                   &#x27;disabled=true&gt;&#x27; +
+                                                   &#x27;&lt;/td&gt;&#x27;);
                                 });
                             }
                             $.ajax({
@@ -193,7 +200,8 @@
                                         console.log(&#x27;Not attribute information&#x27;);
                                         return -1;
                                     }
-                                    var tableDiv = $(&#x27;#attrTable&#x27; + layerName),
+
+                                    var tableDiv = $(&#x27;#attrContent&#x27; + layerName),
                                         tableTh = tableDiv.find(&#x27;thead&#x27;).find(&#x27;tr&#x27;),
                                         tableBody = tableDiv.find(&#x27;tbody&#x27;);
                                     for (i = 0; i &lt; attrContents.length; i++) {
@@ -214,7 +222,7 @@
                                     $(window).on(&#x27;resize&#x27;, function () {
                                         var attrDivHeight = $(&#x27;#&#x27; + rootDiv + &#x27;Contents&#x27;).height();
                                         var thHeight = $(&#x27;thead&#x27;).height() + 7;
-                                        $(&#x27;.divAttrTable table&#x27;).DataTable({
+                                        $(&#x27;#attrTable&#x27; + layerName).DataTable({
                                             &#x27;paging&#x27; : false,
                                             &#x27;scrollY&#x27; : attrDivHeight - thHeight,
                                             &#x27;scrollX&#x27; : true,
@@ -229,6 +237,30 @@
                             });
                         };
 
+                        /**
+                         * 속성 정보 삭제
+                         * @method removeAttribute
+                         * @param {String}  layerName   - 데이터 베이스 테이블 이름
+                         */
+                        OGDSM.attributeTable.prototype.removeAttribute = function (layerName) {
+                            &#x27;use strict&#x27;;
+                            $(&#x27;#&#x27; + &#x27;attrTab&#x27; + layerName).remove();
+                            $(&#x27;#&#x27; + &#x27;attrContent&#x27; + layerName).remove();
+                        };
+                        /**
+                         * 속성 정보 수정
+                         * @method removeAttribute
+                         * @param {boolean}  sw   - 수정 스위치
+                         */
+                        OGDSM.attributeTable.prototype.editAttribute = function (sw) {
+                            &#x27;use strict&#x27;;
+                            var textInput = $(&#x27;.editSW&#x27;);
+                            if (sw === true) {
+                                textInput.attr(&#x27;disabled&#x27;, false);
+                            } else {
+                                textInput.attr(&#x27;disabled&#x27;, true);
+                            }
+                        };
                             </pre>
                         </div>
                     </div>

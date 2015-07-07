@@ -5,7 +5,8 @@
             "name": "../js/openGDSMobile/OGDSM.js",
             "modules": {
                 "OGDSM.namespace": 1,
-                "OGDSM.jsontoArray": 1
+                "OGDSM.jsontoArray": 1,
+                "OGDSM.applyOptions": 1
             },
             "classes": {
                 "OGDSM": 1
@@ -81,6 +82,17 @@
         "OGDSM.jsontoArray": {
             "name": "OGDSM.jsontoArray",
             "submodules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {},
+            "tag": "module",
+            "file": "../js/openGDSMobile/OGDSM.js",
+            "line": 64,
+            "description": "OGDSM JSON 객체 배열 변환 모듈 (OGDSM json to Array module)\n- 사용 방법(Use)\n      OGDSM.jsonToArray(jsonData, array[0], array[1]);"
+        },
+        "OGDSM.applyOptions": {
+            "name": "OGDSM.applyOptions",
+            "submodules": {},
             "classes": {
                 "OGDSM": 1,
                 "OGDSM.attributeTable": 1,
@@ -94,7 +106,7 @@
             "tag": "module",
             "file": "../js/openGDSMobile/OGDSM_visualization.js",
             "line": 7,
-            "description": "OGDSM JSON 객체 배열 변환 모듈 (OGDSM json to Array module)\n- 사용 방법(Use)\n      OGDSM.jsonToArray(jsonData, array[0], array[1]);"
+            "description": "OGDSM options 파라미터 적용 모듈\n- 사용 방법(Use)\n      OGDSM.applyOptions(defaults, options);"
         }
     },
     "classes": {
@@ -106,7 +118,7 @@
             "extensions": [],
             "plugin_for": [],
             "extension_for": [],
-            "module": "OGDSM.jsontoArray",
+            "module": "OGDSM.applyOptions",
             "file": "../js/openGDSMobile/OGDSM.js",
             "line": 22,
             "description": "OGDS Mobile Super Class",
@@ -120,7 +132,7 @@
             "extensions": [],
             "plugin_for": [],
             "extension_for": [],
-            "module": "OGDSM.jsontoArray",
+            "module": "OGDSM.applyOptions",
             "namespace": "",
             "file": "../js/openGDSMobile/OGDSM_attributeTable.js",
             "line": 7,
@@ -147,7 +159,7 @@
             "extensions": [],
             "plugin_for": [],
             "extension_for": [],
-            "module": "OGDSM.jsontoArray",
+            "module": "OGDSM.applyOptions",
             "namespace": "",
             "file": "../js/openGDSMobile/OGDSM_eGovFrameUI.js",
             "line": 6,
@@ -169,7 +181,7 @@
             "extensions": [],
             "plugin_for": [],
             "extension_for": [],
-            "module": "OGDSM.jsontoArray",
+            "module": "OGDSM.applyOptions",
             "namespace": "",
             "file": "../js/openGDSMobile/OGDSM_externalConnection.js",
             "line": 7,
@@ -184,10 +196,10 @@
             "extensions": [],
             "plugin_for": [],
             "extension_for": [],
-            "module": "OGDSM.jsontoArray",
+            "module": "OGDSM.applyOptions",
             "namespace": "",
             "file": "../js/openGDSMobile/OGDSM_mapLayerList.js",
-            "line": 8,
+            "line": 9,
             "description": "오픈레이어 맵 레이어 목록 객체",
             "is_constructor": 1,
             "params": [
@@ -200,6 +212,11 @@
                     "name": "listDiv",
                     "description": "- 생성할 list DIV 이름",
                     "type": "String"
+                },
+                {
+                    "name": "options",
+                    "description": "- 옵션 JSON 객체 키 값<br>\n    {listWidthSize:200, buttonSize:100, btnType:'img', btnHTML:'레이어', bgColor: 'rgb(255, 255, 255, 0.0), <br>\n     listColor: 'rgba(255,255,255, 0.0)', titleColor: 'rgba(255, 255, 255, 1.0)', titleHTML: '레이어 목록', attrObj: null}<br>\n     listWidthSize : 리스트 너비<br>\n     buttonSize: 리스트 On/Off 버튼 사이즈<br>\n     btnSW : true<br>\n     btnType : 버튼 타입 (text | img)<br>\n     bgColor : 전체 배경 색 <br>\n     listColor : 리스트 배경 색<br>\n     titleColor : 타이틀 배경 색 <br>\n     titleHTML : 타이틀 내용 <br>\n     attrObj : 속성정보 시각화 객체 <br>",
+                    "type": "JSON Object"
                 }
             ]
         },
@@ -211,7 +228,7 @@
             "extensions": [],
             "plugin_for": [],
             "extension_for": [],
-            "module": "OGDSM.jsontoArray",
+            "module": "OGDSM.applyOptions",
             "namespace": "",
             "file": "../js/openGDSMobile/OGDSM_visualization.js",
             "line": 7,
@@ -225,7 +242,7 @@
                 },
                 {
                     "name": "options",
-                    "description": "- 옵션 JSON 객체 키 값{layerListDiv=null, attrTableDiv=null, attrAddr=''}<br>\n layerListDiv : 레이어 관리 리스트 DIV 아이디 이름<br>\n attrTableDiv : 속성 시각화 DIV 아이디 이름<br>\n attrAddr : 속성 시각화 서버 주소<br>",
+                    "description": "- 옵션 JSON 객체 키 값<br>\n   {layerListDiv:null, attrTableDiv:null, attrAddr:''}<br>\n   layerListDiv : 레이어 관리 리스트 DIV<br>\n   attrTableDiv : 속성 시각화 DIV 아이디 이름<br>\n   attrAddr : 속성 시각화 서버 주소<br>",
                     "type": "JSON Object"
                 }
             ]
@@ -246,7 +263,57 @@
                 }
             ],
             "class": "OGDSM.attributeTable",
-            "module": "OGDSM.jsontoArray"
+            "module": "OGDSM.applyOptions"
+        },
+        {
+            "file": "../js/openGDSMobile/OGDSM_attributeTable.js",
+            "line": 64,
+            "class": "OGDSM.attributeTable",
+            "module": "OGDSM.applyOptions"
+        },
+        {
+            "file": "../js/openGDSMobile/OGDSM_attributeTable.js",
+            "line": 72,
+            "class": "OGDSM.attributeTable",
+            "module": "OGDSM.applyOptions"
+        },
+        {
+            "file": "../js/openGDSMobile/OGDSM_attributeTable.js",
+            "line": 79,
+            "class": "OGDSM.attributeTable",
+            "module": "OGDSM.applyOptions"
+        },
+        {
+            "file": "../js/openGDSMobile/OGDSM_attributeTable.js",
+            "line": 150,
+            "description": "속성 정보 삭제",
+            "itemtype": "method",
+            "name": "removeAttribute",
+            "params": [
+                {
+                    "name": "layerName",
+                    "description": "- 데이터 베이스 테이블 이름",
+                    "type": "String"
+                }
+            ],
+            "class": "OGDSM.attributeTable",
+            "module": "OGDSM.applyOptions"
+        },
+        {
+            "file": "../js/openGDSMobile/OGDSM_attributeTable.js",
+            "line": 160,
+            "description": "속성 정보 수정",
+            "itemtype": "method",
+            "name": "removeAttribute",
+            "params": [
+                {
+                    "name": "sw",
+                    "description": "- 수정 스위치",
+                    "type": "Boolean"
+                }
+            ],
+            "class": "OGDSM.attributeTable",
+            "module": "OGDSM.applyOptions"
         },
         {
             "file": "../js/openGDSMobile/OGDSM_eGovFrameUI.js",
@@ -277,7 +344,7 @@
                 },
                 {
                     "name": "options",
-                    "description": "- 옵션 JSON 객체 키 값{theme=this.dataTheme, corners=true, inline=false, mini=false}<br>\n theme(String) : 테마<br>\n corners(Boolean) : 모서리 둥글게 여부<br>\n inline(Boolean) : 가로 정렬 여부<br>\n mini(Boolean) : 버튼 크기<br>",
+                    "description": "- 옵션 JSON 객체 키 값<br>\n {theme:this.dataTheme, corners:true, inline:false, mini:false}<br>\n theme(String) : 테마<br>\n corners(Boolean) : 모서리 둥글게 여부<br>\n inline(Boolean) : 가로 정렬 여부<br>\n mini(Boolean) : 버튼 크기<br>",
                     "type": "JSON Object"
                 }
             ],
@@ -286,11 +353,11 @@
                 "type": "JQuery Object"
             },
             "class": "OGDSM.eGovFrameUI",
-            "module": "OGDSM.jsontoArray"
+            "module": "OGDSM.applyOptions"
         },
         {
             "file": "../js/openGDSMobile/OGDSM_eGovFrameUI.js",
-            "line": 69,
+            "line": 65,
             "description": "체크박스 자동 생성",
             "itemtype": "method",
             "name": "autoCheckBox",
@@ -317,7 +384,7 @@
                 },
                 {
                     "name": "options",
-                    "description": "- 옵션 JSON 객체 키 값{theme=this.dataTheme, horizontal=true, checkName=chkId + 'Name'}<br>\n theme(String) : 테마<br>\n horizontal(Boolean) : 체크박스 수평 여부<br>\n checkName(String) : 체크박스 그룹 이름<br>",
+                    "description": "- 옵션 JSON 객체 키 값<br>\n {theme:this.dataTheme, horizontal:true, checkName:chkId + 'Name'}<br>\n theme(String) : 테마<br>\n horizontal(Boolean) : 체크박스 수평 여부<br>\n checkName(String) : 체크박스 그룹 이름<br>",
                     "type": "JSON Object"
                 }
             ],
@@ -326,11 +393,11 @@
                 "type": "JQuery Object"
             },
             "class": "OGDSM.eGovFrameUI",
-            "module": "OGDSM.jsontoArray"
+            "module": "OGDSM.applyOptions"
         },
         {
             "file": "../js/openGDSMobile/OGDSM_eGovFrameUI.js",
-            "line": 125,
+            "line": 116,
             "description": "라디오 박스 자동 생성",
             "itemtype": "method",
             "name": "autoRadioBox",
@@ -357,7 +424,7 @@
                 },
                 {
                     "name": "options",
-                    "description": "- 옵션 JSON 객체 키 값{theme=this.dataTheme, horizontal=true, radioName=radioId + 'Name'}<br>\n theme(String) : 테마<br>\n horizontal(Boolean) : 라디오박스 수평 여부<br>\n radioName(String) : 라디오박스 그룹 이름<br>",
+                    "description": "- 옵션 JSON 객체 키 값<br>\n {theme:this.dataTheme, horizontal:true, radioName:radioId + 'Name'}<br>\n theme(String) : 테마<br>\n horizontal(Boolean) : 라디오박스 수평 여부<br>\n radioName(String) : 라디오박스 그룹 이름<br>",
                     "type": "JSON Object"
                 }
             ],
@@ -366,11 +433,11 @@
                 "type": "JQuery Object"
             },
             "class": "OGDSM.eGovFrameUI",
-            "module": "OGDSM.jsontoArray"
+            "module": "OGDSM.applyOptions"
         },
         {
             "file": "../js/openGDSMobile/OGDSM_eGovFrameUI.js",
-            "line": 184,
+            "line": 169,
             "description": "셀렉트 자동 생성",
             "itemtype": "method",
             "name": "autoSelect",
@@ -397,7 +464,7 @@
                 },
                 {
                     "name": "options",
-                    "description": "- 옵션 JSON 객체 키 값{firstName='', theme=this.dataTheme, corners=true, inline=false, selected:0}<br>\n firstName(String) : 첫번째 값<br>\n theme(String) : 테마<br>\n corners(Boolean) : 테두리 둥글게 여부<br>\n inline(Boolean) : 가로 정렬 여부<br>\n selected(Boolean) : 처음 선택된 인덱스 값<br>",
+                    "description": "- 옵션 JSON 객체 키 값<br>\n {firstName:'', theme:this.dataTheme, corners:true, inline:false, selected:0}<br>\n firstName(String) : 첫번째 값<br>\n theme(String) : 테마<br>\n corners(Boolean) : 테두리 둥글게 여부<br>\n inline(Boolean) : 가로 정렬 여부<br>\n selected(Boolean) : 처음 선택된 인덱스 값<br>",
                     "type": "JSON Object"
                 }
             ],
@@ -406,11 +473,11 @@
                 "type": "JQuery Object"
             },
             "class": "OGDSM.eGovFrameUI",
-            "module": "OGDSM.jsontoArray"
+            "module": "OGDSM.applyOptions"
         },
         {
             "file": "../js/openGDSMobile/OGDSM_eGovFrameUI.js",
-            "line": 232,
+            "line": 213,
             "description": "스위치 자동 생성",
             "itemtype": "method",
             "name": "autoSwitch",
@@ -427,7 +494,7 @@
                 },
                 {
                     "name": "options",
-                    "description": "- 옵션 JSON 객체 키 값{theme=this.dataTheme, track_theme=this.dataTheme, switchName=switchId+'Name'}<br>\n theme(String) : 테마<br>\n track-theme(String) : 버튼 테마<br>\n switchName(String) : 스위치 그룹 이름<br>",
+                    "description": "- 옵션 JSON 객체 키 값<br>\n {theme:this.dataTheme, track_theme:this.dataTheme, switchName:switchId+'Name'}<br>\n theme(String) : 테마<br>\n track-theme(String) : 버튼 테마<br>\n switchName(String) : 스위치 그룹 이름<br>",
                     "type": "JSON Object"
                 }
             ],
@@ -436,11 +503,11 @@
                 "type": "JQuery Object"
             },
             "class": "OGDSM.eGovFrameUI",
-            "module": "OGDSM.jsontoArray"
+            "module": "OGDSM.applyOptions"
         },
         {
             "file": "../js/openGDSMobile/OGDSM_eGovFrameUI.js",
-            "line": 274,
+            "line": 250,
             "description": "시간 태그 생성",
             "itemtype": "method",
             "name": "timeInput",
@@ -456,11 +523,11 @@
                 "type": "JQuery Object"
             },
             "class": "OGDSM.eGovFrameUI",
-            "module": "OGDSM.jsontoArray"
+            "module": "OGDSM.applyOptions"
         },
         {
             "file": "../js/openGDSMobile/OGDSM_eGovFrameUI.js",
-            "line": 290,
+            "line": 266,
             "description": "날짜 태그 생성",
             "itemtype": "method",
             "name": "dateInput",
@@ -476,17 +543,17 @@
                 "type": "JQuery Object"
             },
             "class": "OGDSM.eGovFrameUI",
-            "module": "OGDSM.jsontoArray"
+            "module": "OGDSM.applyOptions"
         },
         {
             "file": "../js/openGDSMobile/OGDSM_eGovFrameUI.js",
-            "line": 306,
+            "line": 282,
             "class": "OGDSM.eGovFrameUI",
-            "module": "OGDSM.jsontoArray"
+            "module": "OGDSM.applyOptions"
         },
         {
             "file": "../js/openGDSMobile/OGDSM_eGovFrameUI.js",
-            "line": 307,
+            "line": 284,
             "description": "배경 맵 선택 사용자 인터페이스 자동 생성: 라디오 박스",
             "itemtype": "method",
             "name": "baseMapRadioBox",
@@ -503,16 +570,16 @@
                 },
                 {
                     "name": "options",
-                    "description": "- 제공할 지도 타입",
-                    "type": "Array"
+                    "description": "- 제공할 지도 타입 (스페이스바로 타입 구분) [OSM VWorld VWorld_m VWorld_s VWorld_g]",
+                    "type": "String"
                 }
             ],
             "class": "OGDSM.eGovFrameUI",
-            "module": "OGDSM.jsontoArray"
+            "module": "OGDSM.applyOptions"
         },
         {
             "file": "../js/openGDSMobile/OGDSM_eGovFrameUI.js",
-            "line": 330,
+            "line": 307,
             "description": "배경 맵 선택 사용자 인터페이스 자동 생성: 셀렉트 박스",
             "itemtype": "method",
             "name": "baseMapSelect",
@@ -529,16 +596,16 @@
                 },
                 {
                     "name": "options",
-                    "description": "- 제공할 지도 타입",
-                    "type": "Array"
+                    "description": "- 제공할 지도 타입 (스페이스바로 타입 구분) [OSM VWorld VWorld_m VWorld_s VWorld_g]",
+                    "type": "String"
                 }
             ],
             "class": "OGDSM.eGovFrameUI",
-            "module": "OGDSM.jsontoArray"
+            "module": "OGDSM.applyOptions"
         },
         {
             "file": "../js/openGDSMobile/OGDSM_eGovFrameUI.js",
-            "line": 357,
+            "line": 335,
             "description": "브이월드 WMS API 리스트 요청 인터페이스",
             "itemtype": "method",
             "name": "vworldWMSList",
@@ -559,11 +626,11 @@
                 "type": "Array"
             },
             "class": "OGDSM.eGovFrameUI",
-            "module": "OGDSM.jsontoArray"
+            "module": "OGDSM.applyOptions"
         },
         {
             "file": "../js/openGDSMobile/OGDSM_eGovFrameUI.js",
-            "line": 550,
+            "line": 528,
             "description": "서울 열린 데이터 광장 환경정보 요청 인터페이스",
             "itemtype": "method",
             "name": "seoulEnvironment",
@@ -575,7 +642,7 @@
                 },
                 {
                     "name": "options",
-                    "description": "- 옵션 JSON 객체 키 값{theme=this.dataTheme, path='./images/'}\n theme(String) : 테마\n path(String) : 이미지 위치",
+                    "description": "- 옵션 JSON 객체 키 값<br>\n {theme:this.dataTheme, path:'./images/'}<br>\n theme(String) : 테마<br>\n path(String) : 이미지 위치<br>",
                     "type": "JSON Object"
                 }
             ],
@@ -584,11 +651,11 @@
                 "type": "String"
             },
             "class": "OGDSM.eGovFrameUI",
-            "module": "OGDSM.jsontoArray"
+            "module": "OGDSM.applyOptions"
         },
         {
             "file": "../js/openGDSMobile/OGDSM_eGovFrameUI.js",
-            "line": 599,
+            "line": 572,
             "description": "데이터 포털 환경정보 요청 인터페이스",
             "itemtype": "method",
             "name": "dataPortalEnvironment",
@@ -600,7 +667,7 @@
                 },
                 {
                     "name": "options",
-                    "description": "- 옵션 JSON 객체 키 값{theme=this.dataTheme, path='./images/'}\n theme(String) : 테마\n path(String) : 이미지 위치",
+                    "description": "- 옵션 JSON 객체 키 값<br>\n {theme:this.dataTheme, path:'./images/'}<br>\n theme(String) : 테마<br>\n path(String) : 이미지 위치<br>",
                     "type": "JSON Object"
                 }
             ],
@@ -609,13 +676,13 @@
                 "type": "String"
             },
             "class": "OGDSM.eGovFrameUI",
-            "module": "OGDSM.jsontoArray"
+            "module": "OGDSM.applyOptions"
         },
         {
             "file": "../js/openGDSMobile/OGDSM_externalConnection.js",
             "line": 1,
             "class": "OGDSM.externalConnection",
-            "module": "OGDSM.jsontoArray"
+            "module": "OGDSM.applyOptions"
         },
         {
             "file": "../js/openGDSMobile/OGDSM_externalConnection.js",
@@ -646,16 +713,16 @@
                 },
                 {
                     "name": "options",
-                    "description": "- 옵션 JSON 객체 키 값{type='polygon', color='rgba(0, 0, 0, 0.0)', callback=function () {}}<br>\n type(String) : 레이어 타입( polygon | point)<br>\n color(String) : 색상 rgba<br>\n callback(Function) : 요청 후 색상 변경시 콜백 함수",
+                    "description": "- 옵션 JSON 객체 키 값<br>\n {type:'polygon', color:'rgba(0, 0, 0, 0.0)', callback:function () {}}<br>\n type(String) : 레이어 타입( polygon | point)<br>\n color(String) : 색상 rgba<br>\n callback(Function) : 요청 후 색상 변경시 콜백 함수",
                     "type": "JSON Object"
                 }
             ],
             "class": "OGDSM.externalConnection",
-            "module": "OGDSM.jsontoArray"
+            "module": "OGDSM.applyOptions"
         },
         {
             "file": "../js/openGDSMobile/OGDSM_externalConnection.js",
-            "line": 107,
+            "line": 108,
             "description": "GeoServer WFS 요청 (OpenLayers3 ol.source.ServerVector)",
             "itemtype": "method",
             "name": "geoServerWFS",
@@ -677,7 +744,7 @@
                 },
                 {
                     "name": "options",
-                    "description": "- 옵션 JSON 객체 키 값{type='polygon', epsg='epsg3857'}<br>\n type(String) : 레이어 타입( polygon | point)<br>\n epsg(String) : EPSG String<br>",
+                    "description": "- 옵션 JSON 객체 키 값<br>\n {type:'polygon', epsg:'epsg3857'}<br>\n type(String) : 레이어 타입( polygon | point)<br>\n epsg(String) : EPSG String<br>",
                     "type": "JSON Object"
                 }
             ],
@@ -686,11 +753,11 @@
                 "type": "ol.layer.Vector"
             },
             "class": "OGDSM.externalConnection",
-            "module": "OGDSM.jsontoArray"
+            "module": "OGDSM.applyOptions"
         },
         {
             "file": "../js/openGDSMobile/OGDSM_externalConnection.js",
-            "line": 185,
+            "line": 187,
             "description": "VWorld WMS 데이터 요청",
             "itemtype": "method",
             "name": "vworldWMSLoad",
@@ -716,11 +783,11 @@
                 "type": "ol.layer.Tile"
             },
             "class": "OGDSM.externalConnection",
-            "module": "OGDSM.jsontoArray"
+            "module": "OGDSM.applyOptions"
         },
         {
             "file": "../js/openGDSMobile/OGDSM_externalConnection.js",
-            "line": 215,
+            "line": 217,
             "description": "서울 열린 데이터 광장 환경 데이터 요청",
             "itemtype": "method",
             "name": "seoulEnvironmentLoad",
@@ -757,11 +824,11 @@
                 }
             ],
             "class": "OGDSM.externalConnection",
-            "module": "OGDSM.jsontoArray"
+            "module": "OGDSM.applyOptions"
         },
         {
             "file": "../js/openGDSMobile/OGDSM_externalConnection.js",
-            "line": 260,
+            "line": 262,
             "description": "데이터 포털 환경 데이터 요청",
             "itemtype": "method",
             "name": "dataPortalEnvironmentLoad",
@@ -793,11 +860,11 @@
                 }
             ],
             "class": "OGDSM.externalConnection",
-            "module": "OGDSM.jsontoArray"
+            "module": "OGDSM.applyOptions"
         },
         {
             "file": "../js/openGDSMobile/OGDSM_externalConnection.js",
-            "line": 304,
+            "line": 306,
             "description": "geoServer 데이터 리스트 요청",
             "itemtype": "method",
             "name": "getLayersGeoServer",
@@ -819,14 +886,14 @@
                 }
             ],
             "class": "OGDSM.externalConnection",
-            "module": "OGDSM.jsontoArray"
+            "module": "OGDSM.applyOptions"
         },
         {
             "file": "../js/openGDSMobile/OGDSM_mapLayerList.js",
-            "line": 150,
-            "description": "레이어 목록 관리",
+            "line": 174,
+            "description": "레이어 목록 추가",
             "itemtype": "method",
-            "name": "listManager",
+            "name": "addList",
             "params": [
                 {
                     "name": "obj",
@@ -850,14 +917,14 @@
                 }
             ],
             "class": "OGDSM.mapLayerList",
-            "module": "OGDSM.jsontoArray"
+            "module": "OGDSM.applyOptions"
         },
         {
             "file": "../js/openGDSMobile/OGDSM_mapLayerList.js",
-            "line": 245,
+            "line": 278,
             "description": "레이어 목록 삭제",
             "itemtype": "method",
-            "name": "removelist",
+            "name": "removeList",
             "params": [
                 {
                     "name": "layerName",
@@ -866,11 +933,11 @@
                 }
             ],
             "class": "OGDSM.mapLayerList",
-            "module": "OGDSM.jsontoArray"
+            "module": "OGDSM.applyOptions"
         },
         {
             "file": "../js/openGDSMobile/OGDSM_visualization.js",
-            "line": 51,
+            "line": 54,
             "description": "지도 객체 받기",
             "itemtype": "method",
             "name": "getMap",
@@ -879,11 +946,11 @@
                 "type": "ol.Map"
             },
             "class": "OGDSM.visualization",
-            "module": "OGDSM.jsontoArray"
+            "module": "OGDSM.applyOptions"
         },
         {
             "file": "../js/openGDSMobile/OGDSM_visualization.js",
-            "line": 59,
+            "line": 62,
             "description": "지도 레이어 존재 여부 확인",
             "itemtype": "method",
             "name": "layerCheck",
@@ -899,11 +966,11 @@
                 "type": "OpenLayer3 Layer Object | Boolean"
             },
             "class": "OGDSM.visualization",
-            "module": "OGDSM.jsontoArray"
+            "module": "OGDSM.applyOptions"
         },
         {
             "file": "../js/openGDSMobile/OGDSM_visualization.js",
-            "line": 75,
+            "line": 78,
             "description": "지도 레이어 인덱스 값",
             "itemtype": "method",
             "name": "indexOf",
@@ -919,11 +986,24 @@
                 "type": "Number"
             },
             "class": "OGDSM.visualization",
-            "module": "OGDSM.jsontoArray"
+            "module": "OGDSM.applyOptions"
         },
         {
             "file": "../js/openGDSMobile/OGDSM_visualization.js",
-            "line": 94,
+            "line": 93,
+            "description": "속성정보 객체",
+            "itemtype": "method",
+            "name": "getAttrObj",
+            "return": {
+                "description": "속성정보 객체",
+                "type": "AttributeTable Object"
+            },
+            "class": "OGDSM.visualization",
+            "module": "OGDSM.applyOptions"
+        },
+        {
+            "file": "../js/openGDSMobile/OGDSM_visualization.js",
+            "line": 105,
             "description": "OpenGDS 모바일 맵 초기화",
             "itemtype": "method",
             "name": "olMapView",
@@ -949,11 +1029,11 @@
                 "type": "ol.Map"
             },
             "class": "OGDSM.visualization",
-            "module": "OGDSM.jsontoArray"
+            "module": "OGDSM.applyOptions"
         },
         {
             "file": "../js/openGDSMobile/OGDSM_visualization.js",
-            "line": 145,
+            "line": 156,
             "description": "배경지도 변경",
             "itemtype": "method",
             "name": "changeBaseMap",
@@ -965,11 +1045,11 @@
                 }
             ],
             "class": "OGDSM.visualization",
-            "module": "OGDSM.jsontoArray"
+            "module": "OGDSM.applyOptions"
         },
         {
             "file": "../js/openGDSMobile/OGDSM_visualization.js",
-            "line": 231,
+            "line": 242,
             "description": "지도 GPS 트래킹 스위치",
             "itemtype": "method",
             "name": "trackingGeoLocation",
@@ -981,11 +1061,11 @@
                 }
             ],
             "class": "OGDSM.visualization",
-            "module": "OGDSM.jsontoArray"
+            "module": "OGDSM.applyOptions"
         },
         {
             "file": "../js/openGDSMobile/OGDSM_visualization.js",
-            "line": 256,
+            "line": 267,
             "description": "해상도에 맞는 지도 레이아웃",
             "itemtype": "method",
             "name": "updateLayoutSetting",
@@ -997,11 +1077,11 @@
                 }
             ],
             "class": "OGDSM.visualization",
-            "module": "OGDSM.jsontoArray"
+            "module": "OGDSM.applyOptions"
         },
         {
             "file": "../js/openGDSMobile/OGDSM_visualization.js",
-            "line": 268,
+            "line": 279,
             "description": "WMS 및 WFS 맵 레이어 추가",
             "itemtype": "method",
             "name": "addMap",
@@ -1018,11 +1098,11 @@
                 }
             ],
             "class": "OGDSM.visualization",
-            "module": "OGDSM.jsontoArray"
+            "module": "OGDSM.applyOptions"
         },
         {
             "file": "../js/openGDSMobile/OGDSM_visualization.js",
-            "line": 300,
+            "line": 311,
             "description": "이미지 레이어 시각화",
             "itemtype": "method",
             "name": "imageLayer",
@@ -1049,11 +1129,11 @@
                 }
             ],
             "class": "OGDSM.visualization",
-            "module": "OGDSM.jsontoArray"
+            "module": "OGDSM.applyOptions"
         },
         {
             "file": "../js/openGDSMobile/OGDSM_visualization.js",
-            "line": 326,
+            "line": 337,
             "description": "맵 레이어 삭제",
             "itemtype": "method",
             "name": "removeMap",
@@ -1065,11 +1145,11 @@
                 }
             ],
             "class": "OGDSM.visualization",
-            "module": "OGDSM.jsontoArray"
+            "module": "OGDSM.applyOptions"
         },
         {
             "file": "../js/openGDSMobile/OGDSM_visualization.js",
-            "line": 341,
+            "line": 352,
             "description": "맵 레이어 시각화 여부",
             "itemtype": "method",
             "name": "setVisible",
@@ -1086,11 +1166,11 @@
                 }
             ],
             "class": "OGDSM.visualization",
-            "module": "OGDSM.jsontoArray"
+            "module": "OGDSM.applyOptions"
         },
         {
             "file": "../js/openGDSMobile/OGDSM_visualization.js",
-            "line": 354,
+            "line": 365,
             "description": "WFS 스타일 변경",
             "itemtype": "method",
             "name": "changeWFSStyle",
@@ -1112,11 +1192,11 @@
                 }
             ],
             "class": "OGDSM.visualization",
-            "module": "OGDSM.jsontoArray"
+            "module": "OGDSM.applyOptions"
         },
         {
             "file": "../js/openGDSMobile/OGDSM_visualization.js",
-            "line": 450,
+            "line": 461,
             "description": "가로 막대 차트 시각화",
             "itemtype": "method",
             "name": "barChart",
@@ -1143,21 +1223,21 @@
                 }
             ],
             "class": "OGDSM.visualization",
-            "module": "OGDSM.jsontoArray"
+            "module": "OGDSM.applyOptions"
         },
         {
             "file": "../js/openGDSMobile/Sortable.js",
             "line": 1,
             "description": "OGDSM Layer list sorting open source\nSortable\nauthor\tRubaXa   <trash@rubaxa.org>\nlicense MIT",
             "class": "",
-            "module": "OGDSM.jsontoArray"
+            "module": "OGDSM.applyOptions"
         },
         {
             "file": "../js/openGDSMobile/Sortable.js",
             "line": 160,
             "description": "class  Sortable\nparam  {HTMLElement}  el\nparam  {Object}       [options]",
             "class": "",
-            "module": "OGDSM.jsontoArray"
+            "module": "OGDSM.applyOptions"
         },
         {
             "file": "../js/openGDSMobile/Sortable.js",
@@ -1168,7 +1248,7 @@
                 "type": "String[]"
             },
             "class": "",
-            "module": "OGDSM.jsontoArray"
+            "module": "OGDSM.applyOptions"
         },
         {
             "file": "../js/openGDSMobile/Sortable.js",
@@ -1182,14 +1262,14 @@
                 }
             ],
             "class": "",
-            "module": "OGDSM.jsontoArray"
+            "module": "OGDSM.applyOptions"
         },
         {
             "file": "../js/openGDSMobile/Sortable.js",
             "line": 764,
             "description": "Save the current sorting",
             "class": "",
-            "module": "OGDSM.jsontoArray"
+            "module": "OGDSM.applyOptions"
         },
         {
             "file": "../js/openGDSMobile/Sortable.js",
@@ -1213,7 +1293,7 @@
                 "type": "HTMLElement|null"
             },
             "class": "",
-            "module": "OGDSM.jsontoArray"
+            "module": "OGDSM.applyOptions"
         },
         {
             "file": "../js/openGDSMobile/Sortable.js",
@@ -1237,20 +1317,20 @@
                 "type": "*"
             },
             "class": "",
-            "module": "OGDSM.jsontoArray"
+            "module": "OGDSM.applyOptions"
         },
         {
             "file": "../js/openGDSMobile/Sortable.js",
             "line": 801,
             "description": "Destroy",
             "class": "",
-            "module": "OGDSM.jsontoArray"
+            "module": "OGDSM.applyOptions"
         },
         {
             "file": "../js/openGDSMobile/Sortable.js",
             "line": 954,
             "class": "",
-            "module": "OGDSM.jsontoArray"
+            "module": "OGDSM.applyOptions"
         },
         {
             "file": "../js/openGDSMobile/Sortable.js",
@@ -1270,7 +1350,7 @@
             "access": "private",
             "tagname": "",
             "class": "",
-            "module": "OGDSM.jsontoArray"
+            "module": "OGDSM.applyOptions"
         },
         {
             "file": "../js/openGDSMobile/Sortable.js",
@@ -1289,7 +1369,7 @@
             "access": "private",
             "tagname": "",
             "class": "",
-            "module": "OGDSM.jsontoArray"
+            "module": "OGDSM.applyOptions"
         },
         {
             "file": "../js/openGDSMobile/Sortable.js",
@@ -1309,7 +1389,7 @@
                 }
             ],
             "class": "",
-            "module": "OGDSM.jsontoArray"
+            "module": "OGDSM.applyOptions"
         }
     ],
     "warnings": [
@@ -1335,7 +1415,19 @@
         },
         {
             "message": "Missing item type",
-            "line": " ../js/openGDSMobile/OGDSM_eGovFrameUI.js:306"
+            "line": " ../js/openGDSMobile/OGDSM_attributeTable.js:64"
+        },
+        {
+            "message": "Missing item type",
+            "line": " ../js/openGDSMobile/OGDSM_attributeTable.js:72"
+        },
+        {
+            "message": "Missing item type",
+            "line": " ../js/openGDSMobile/OGDSM_attributeTable.js:79"
+        },
+        {
+            "message": "Missing item type",
+            "line": " ../js/openGDSMobile/OGDSM_eGovFrameUI.js:282"
         },
         {
             "message": "Missing item type",

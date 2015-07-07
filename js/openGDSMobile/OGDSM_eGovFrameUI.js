@@ -31,7 +31,8 @@ OGDSM.namesapce('eGovFrameUI');
  * @param {String} linkId - 생성될 버튼 아이디 이름
  * @param {String} buttonTitle - 버튼 이름
  * @param {String} url - 링크 주소
- * @param {JSON Object} options - 옵션 JSON 객체 키 값{theme=this.dataTheme, corners=true, inline=false, mini=false}<br>
+ * @param {JSON Object} options - 옵션 JSON 객체 키 값<br>
+  {theme:this.dataTheme, corners:true, inline:false, mini:false}<br>
   theme(String) : 테마<br>
   corners(Boolean) : 모서리 둥글게 여부<br>
   inline(Boolean) : 가로 정렬 여부<br>
@@ -68,7 +69,8 @@ OGDSM.eGovFrameUI.prototype.autoButton = function (rootDivId, linkId, buttonTitl
  * @param {String} chkId - 생성될 체크박스 아이디 이름
  * @param {String | Array} labels - 체크박스 라벨
  * @param {String | Array} values - 체크박스 값
- * @param {JSON Object} options - 옵션 JSON 객체 키 값{theme=this.dataTheme, horizontal=true, checkName=chkId + 'Name'}<br>
+ * @param {JSON Object} options - 옵션 JSON 객체 키 값<br>
+  {theme:this.dataTheme, horizontal:true, checkName:chkId + 'Name'}<br>
   theme(String) : 테마<br>
   horizontal(Boolean) : 체크박스 수평 여부<br>
   checkName(String) : 체크박스 그룹 이름<br>
@@ -118,7 +120,8 @@ OGDSM.eGovFrameUI.prototype.autoCheckBox = function (rootDivId, chkId, labels, v
  * @param {String} radioId - 생성될 라디오박스 아이디 이름
  * @param {String | Array} labels - 라디오박스 라벨
  * @param {String | Array} values - 라디오박스 값
- * @param {JSON Object} options - 옵션 JSON 객체 키 값{theme=this.dataTheme, horizontal=true, radioName=radioId + 'Name'}<br>
+ * @param {JSON Object} options - 옵션 JSON 객체 키 값<br>
+  {theme:this.dataTheme, horizontal:true, radioName:radioId + 'Name'}<br>
   theme(String) : 테마<br>
   horizontal(Boolean) : 라디오박스 수평 여부<br>
   radioName(String) : 라디오박스 그룹 이름<br>
@@ -170,7 +173,8 @@ OGDSM.eGovFrameUI.prototype.autoRadioBox = function (rootDivId, radioId, labels,
  * @param {String} selectId - 생성될 선택 아이디 이름
  * @param {String | Array} text - 선택 라벨 텍스트
  * @param {String | Array} values - 선택 값
- * @param {JSON Object} options - 옵션 JSON 객체 키 값{firstName='', theme=this.dataTheme, corners=true, inline=false, selected:0}<br>
+ * @param {JSON Object} options - 옵션 JSON 객체 키 값<br>
+  {firstName:'', theme:this.dataTheme, corners:true, inline:false, selected:0}<br>
   firstName(String) : 첫번째 값<br>
   theme(String) : 테마<br>
   corners(Boolean) : 테두리 둥글게 여부<br>
@@ -211,7 +215,8 @@ OGDSM.eGovFrameUI.prototype.autoSelect = function (rootDivId, selectId, selectNa
  * @method autoSwitch
  * @param {String} divId - 최상위 DIV 아이디 이름
  * @param {String} switchId - 생성될 스위치 아이디 이름
- * @param {JSON Object} options - 옵션 JSON 객체 키 값{theme=this.dataTheme, track_theme=this.dataTheme, switchName=switchId+'Name'}<br>
+ * @param {JSON Object} options - 옵션 JSON 객체 키 값<br>
+  {theme:this.dataTheme, track_theme:this.dataTheme, switchName:switchId+'Name'}<br>
   theme(String) : 테마<br>
   track-theme(String) : 버튼 테마<br>
   switchName(String) : 스위치 그룹 이름<br>
@@ -275,15 +280,15 @@ OGDSM.eGovFrameUI.prototype.dateInput = function (divId) {
 };
 
 /**************Custom UI Create *******************/
+
 /**
  * 배경 맵 선택 사용자 인터페이스 자동 생성: 라디오 박스
  * @method baseMapRadioBox
  * @param {OGDSM Object} OGDSMObj - OpenGDS모바일 시각화 객체
  * @param {String}       rootDiv - 최상위 DIV 아이디 이름
- * @param {Array}        options - 제공할 지도 타입
+ * @param {String}       options - 제공할 지도 타입 (스페이스바로 타입 구분) [OSM VWorld VWorld_m VWorld_s VWorld_g]
  */
 OGDSM.eGovFrameUI.prototype.baseMapRadioBox = function (OGDSMObj, rootDiv, options) {
-//var mapRadioNameObj = uiTest.autoRadioBox('mapSelect','mapType', 'radioMap', ['OSM','VWorld'], ['OSM','VWorld'], ['h']);
     'use strict';
     options = (typeof (options) !== 'undefined') ? options : null;
     var mapRadioNameObj,
@@ -292,8 +297,9 @@ OGDSM.eGovFrameUI.prototype.baseMapRadioBox = function (OGDSMObj, rootDiv, optio
     if (options !== null) {
         supportMap = options.split(' ');
     }
-    mapRadioNameObj = this.autoRadioBox(rootDiv, 'mapType', supportMap, supportMap, ['h']);
-
+    mapRadioNameObj = this.autoRadioBox(rootDiv, 'mapType', supportMap, supportMap, {
+        horizontal : true
+    });
     mapRadioNameObj.change(function () {
         OGDSMObj.changeBaseMap($(this).val());
     });
@@ -303,7 +309,7 @@ OGDSM.eGovFrameUI.prototype.baseMapRadioBox = function (OGDSMObj, rootDiv, optio
  * @method baseMapSelect
  * @param {OGDSM Object} OGDSMObj - OpenGDS모바일 시각화 객체
  * @param {String}       rootDiv - 최상위 DIV 아이디 이름
- * @param {Array}        options - 제공할 지도 타입
+ * @param {String}       options - 제공할 지도 타입 (스페이스바로 타입 구분) [OSM VWorld VWorld_m VWorld_s VWorld_g]
  */
 OGDSM.eGovFrameUI.prototype.baseMapSelect = function (OGDSMObj, rootDiv, options) {
     'use strict';
@@ -523,9 +529,10 @@ OGDSM.eGovFrameUI.prototype.vworldWMSList = function (divId, theme) {
  * 서울 열린 데이터 광장 환경정보 요청 인터페이스
  * @method seoulEnvironment
  * @param {String} divId - 최상위 DIV 아이디 이름
- * @param {JSON Object} options - 옵션 JSON 객체 키 값{theme=this.dataTheme, path='./images/'}
-  theme(String) : 테마
-  path(String) : 이미지 위치
+ * @param {JSON Object} options - 옵션 JSON 객체 키 값<br>
+  {theme:this.dataTheme, path:'./images/'}<br>
+  theme(String) : 테마<br>
+  path(String) : 이미지 위치<br>
  * @return {String} 생성된 객체 배열 [visualType, date, time, environmentType]
  */
 OGDSM.eGovFrameUI.prototype.seoulEnvironment = function (divId, options) {
@@ -566,9 +573,10 @@ OGDSM.eGovFrameUI.prototype.seoulEnvironment = function (divId, options) {
  * 데이터 포털 환경정보 요청 인터페이스
  * @method dataPortalEnvironment
  * @param {String} divId - 최상위 DIV 아이디 이름
- * @param {JSON Object} options - 옵션 JSON 객체 키 값{theme=this.dataTheme, path='./images/'}
-  theme(String) : 테마
-  path(String) : 이미지 위치
+ * @param {JSON Object} options - 옵션 JSON 객체 키 값<br>
+  {theme:this.dataTheme, path:'./images/'}<br>
+  theme(String) : 테마<br>
+  path(String) : 이미지 위치<br>
  * @return {String} 생성된 객체 배열 [visualType, areaType, environmentType]
  */
 OGDSM.eGovFrameUI.prototype.dataPortalEnvironment = function (divId, options) {
