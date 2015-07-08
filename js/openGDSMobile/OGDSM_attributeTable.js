@@ -14,6 +14,7 @@ OGDSM.namesapce('attributeTable');
     OGDSM.attributeTable = function (rootDiv, addr) {
         this.rootDiv = rootDiv;
         this.addr = addr;
+        this.editMode = false;
         var rootElement = document.getElementById(rootDiv),
             ulElement = document.createElement('ul'),
             contentsElement = document.createElement('div');
@@ -30,7 +31,10 @@ OGDSM.namesapce('attributeTable');
         rootElement.appendChild(contentsElement);
     };
     OGDSM.attributeTable.prototype = {
-        constructor : OGDSM.attributeTable
+        constructor : OGDSM.attributeTable,
+        getEditMode : function () {
+            return this.editMode;
+        }
     };
     return OGDSM.attributeTable;
 }(OGDSM));
@@ -42,9 +46,11 @@ OGDSM.namesapce('attributeTable');
  */
 OGDSM.attributeTable.prototype.addAttribute = function (layerName) {
     'use strict';
-    var rootDiv = this.rootDiv,
+    var attrObj = this,
+        rootDiv = this.rootDiv,
         tabs = $('#' + rootDiv + 'Tab'),
-        contents = $('#' + rootDiv + 'Contents');
+        contents = $('#' + rootDiv + 'Contents'),
+        tableObj = null;
     var aBaseCSS = 'display:block; padding:6px 15px; text-decoration:none; border-right:1px solid #000;' +
                    'border-top:1px solid #000; margin:0;',
         backgroundNotSelected = '#fff',
@@ -60,7 +66,35 @@ OGDSM.attributeTable.prototype.addAttribute = function (layerName) {
         $('.attrTable').hide();
         $('#attrContent' + layerName).css('display', 'block');
     }
+    function createTableCol(attrContents, i, tableBody, tableTh) {
+        $.each(attrContents, function (key, value) {
+            if (key === 'geom') {
+                return true;
+            }
+            if (i === 0) {
+                tableTh.append('<th>' + key + '</th>');
+            }
+            var newCell = tableBody.find('tr:last');
+            newCell.append('<td>' +
+                           '<input type="text" value="' + value + '" class="editSW" style="' + textInputCSS + '"' +
+                           'disabled=true>' +
+                           '</td>');
+        });
+    }
+    function tableEvent() {
+        /**********tr select ****************/
+        $('#attrTable' + layerName + ' tbody').on('click', 'tr', function () {
+            tableObj.$('tr.selected').removeClass('selected');
+            $(this).addClass('selected');
+        });
 
+        /**********page change **************/
+        $('#attrTable' + layerName).on('page.dt', function (e, settings) {
+            setTimeout(function () {
+                attrObj.editAttribute(attrObj.getEditMode());
+            }, 200);
+        });
+    }
     /******* Add tab ***********/
     tabs.prepend('<li id="attrTab' + layerName + '" style="float:left;">' +
                  '<a href="#" style="' + aBaseCSS + '">' + layerName + '</a></li>');
@@ -83,21 +117,6 @@ OGDSM.attributeTable.prototype.addAttribute = function (layerName) {
 
     var parm = {};
     parm.tableName = layerName;
-    function createTableCol(attrContents, i, tableBody, tableTh) {
-        $.each(attrContents, function (key, value) {
-            if (key === 'geom') {
-                return true;
-            }
-            if (i === 0) {
-                tableTh.append('<th>' + key + '</th>');
-            }
-            var newCell = tableBody.find('tr:last');
-            newCell.append('<td>' +
-                           '<input type="text" value="' + value + '" class="editSW" style="' + textInputCSS + '"' +
-                           'disabled=true>' +
-                           '</td>');
-        });
-    }
     $.ajax({
         type : 'POST',
         url : this.addr,
@@ -110,7 +129,6 @@ OGDSM.attributeTable.prototype.addAttribute = function (layerName) {
                 console.log('Not attribute information');
                 return -1;
             }
-
             var tableDiv = $('#attrContent' + layerName),
                 tableTh = tableDiv.find('thead').find('tr'),
                 tableBody = tableDiv.find('tbody');
@@ -121,28 +139,22 @@ OGDSM.attributeTable.prototype.addAttribute = function (layerName) {
             }
 
             var thHeight = $('thead').height() + 7;
-            $('#attrTable' + layerName).DataTable({
-                'paging' : false,
-                'scrollY' : attrDivHeight - thHeight,
-                'scrollX' : true,
-                'scrollCollapse' : true,
-                'bFilter' : false
+            tableObj = $('#attrTable' + layerName).DataTable({
+                'bFilter' : false,
+                'bLengthChange' : 10,
+                'bPaginate' : true,
+                "dom": 'rt<"bottom"ip><"clear">'
             });
-
+            tableEvent();
+            /*
             $(window).on('resize', function () {
                 var attrDivHeight = $('#' + rootDiv + 'Contents').height();
                 var thHeight = $('thead').height() + 7;
-                $('#attrTable' + layerName).DataTable({
-                    'paging' : false,
-                    'scrollY' : attrDivHeight - thHeight,
-                    'scrollX' : true,
-                    'scrollCollapse' : true,
-                    'bFilter' : false
-                });
             });
+            */
         },
-        error : function (e) {
-            console.log(e);
+        error : function (error) {
+            console.log(error);
         }
     });
 };
@@ -167,7 +179,9 @@ OGDSM.attributeTable.prototype.editAttribute = function (sw) {
     var textInput = $('.editSW');
     if (sw === true) {
         textInput.attr('disabled', false);
+        this.editMode = true;
     } else {
         textInput.attr('disabled', true);
+        this.editMode = false;
     }
 };
