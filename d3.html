@@ -19,7 +19,7 @@
 		  font: 10px sans-serif;
 		  background-color: #fff3aa;
 		  text-align: right;
-		  padding: 3px;
+		  padding: 30px;
 		  margin-left: 0px;
 		  margin-top: 20px;
 		  margin-right: 0px;
@@ -63,7 +63,8 @@
                 		
                 		//barChart('d3_chart', xyData);
                 		//vbarChart('d3_chart', xyData, 1000);
-                		lineChart('d3_chart', xyData, 1000);
+                		//lineChart('d3_chart', xyData, 0);
+                		areaChart('d3_chart', xyData, 0);
                 	},
                 	error : function (e){
                 		console.log(e);	
@@ -96,7 +97,7 @@
                 		
                 		var xyData = jsonToArray(resultData, 'totEmTco2eq', 'brNm');
                 		//vbarChart('d3_chart', xyData, 0.001);
-                		//lineChart('d3_chart', xyData, 0.001);
+                		lineChart('d3_chart', xyData, 0.001);
                 	},
                 	error : function (e){
                 		console.log(e);	

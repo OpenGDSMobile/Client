@@ -231,7 +231,7 @@ lineChart = function (divId, data, scale, range, color) {
     console.log(maxData);
     console.log(rootDiv.height());
     
-    yRange = d3.scale.linear().domain([maxData, 0]).range([0, rootDiv.height() - ySlice]);
+    yRange = d3.scale.linear().domain([0, maxData]).range([rootDiv.height()-ySlice, ySlice]);
     xRange = d3.scale.ordinal().domain(data[1]).rangePoints([0, rootDiv.width()-100]);
     
     xAxis = d3.svg.axis()
@@ -240,18 +240,17 @@ lineChart = function (divId, data, scale, range, color) {
 	        .orient('bottom');
     yAxis = d3.svg.axis()
 	        .scale(yRange)
-	        .tickSize(3)
-	        .orient('left')
-	        .tickSubdivide(true);
+	        .orient('left');
     
     var linePointInterval = (rootDiv.width()) / data[1].length;
+    var yScaleValue = (rootDiv.height()-ySlice) / maxData;
     
     var lineFunc = d3.svg.line()
     .x(function(d,i) { 
 		return (linePointInterval*i); 
 	})
     .y(function (d,i) {
-    	return (data[0][i]*scale)-ySlice; 
+    	return rootDiv.height()-(data[0][i]*yScaleValue); 
     });
     
     lineChartDiv.append('g')
@@ -264,7 +263,7 @@ lineChart = function (divId, data, scale, range, color) {
     
     lineChartDiv.append('g')
 	    .attr('class', 'y axis')
-	    .attr('transform', 'translate(30,0)')
+	    .attr('transform', 'translate(30)')
 	    .call(yAxis);
     
     lineChartDiv.append("path").attr("d", lineFunc(data[0]))
@@ -275,20 +274,21 @@ lineChart = function (divId, data, scale, range, color) {
     
     lineChartDiv.selectAll("circle").data(data[0]).enter()
 	    .append("circle")
-	    .attr("cy", function(d,i) {return (data[0][i]*scale)-ySlice; })
+	    .attr("cy", function(d,i) {return rootDiv.height()-(data[0][i]*yScaleValue); })
 	    .attr("cx", function(d,i) {return i * linePointInterval;})
-	    .attr("r",  function(d)   {return 6;})
+	    .attr("r",  function(d)   {return 5;})
 	    .attr('transform', 'translate(30,0)');
     
-    lineChartDiv.selectAll('g').data(data[0])
+    lineChartDiv.selectAll('path').data(data[0])
 	    .enter()
 	    .append('text')
 	    .attr('x',function (d,i) {
-	    	return (linePointInterval*i);
+	    	return i * linePointInterval;
 		})
 		.attr('y', function (d, i) {
-			return rootDiv.height()-(data[0][i]*scale);
+			return rootDiv.height()-(data[0][i]*yScaleValue);
 		})
+		.attr('transform', 'translate(30,10)')
 	    .attr('dy', '.15em')
 	    .attr('fill', 'black')
 	    .attr('font-size', '0.8em')
@@ -299,7 +299,110 @@ lineChart = function (divId, data, scale, range, color) {
 	        }
 	        return d;
 	    });
+};
+
+
+
+areaChart = function (divId, data, scale, range, color) {
+    'use strict';
+    range = (typeof (range) !== 'undefined') ? range : [];
+    color = (typeof (color) !== 'undefined') ? color : ['#000000'];
+
+    if( typeof(data[0][0]) === 'string'){
+    	$.each(data[0], function (idx){
+    		data[0][idx] = Number(data[0][idx]);
+    	});
+    }
+    var rootDiv = $('#' + divId),
+        maxData = d3.max(data[0]),
+        areaChartDiv = null,
+        y = null, yRange =null, xRange=null, xAxis=null, yAxis=null, ySlice=null,
+        z = null;
+        
+    rootDiv.empty();
     
+    areaChartDiv = d3.select("#" + divId).append('svg')
+        .attr('id', 'areaChart')
+        .attr('width', rootDiv.width())
+        .attr('height', rootDiv.height());
+    
+    ySlice = 50;
+    console.log(data[0]);
+    console.log(maxData);
+    console.log(rootDiv.height());
+    
+    yRange = d3.scale.linear().domain([0, maxData]).range([rootDiv.height()-ySlice, ySlice]);
+    xRange = d3.scale.ordinal().domain(data[1]).rangePoints([0, rootDiv.width()-100]);
+    
+    xAxis = d3.svg.axis()
+	        .scale(xRange)
+	        .tickSize(3)
+	        .orient('bottom');
+    yAxis = d3.svg.axis()
+	        .scale(yRange)
+	        .orient('left');
+    
+    var linePointInterval = (rootDiv.width()) / data[1].length;
+    var yScaleValue = (rootDiv.height()-ySlice) / maxData;
+    
+    
+    var areaFunc = d3.svg.area()
+    .x(function(d,i) { 
+		return (linePointInterval*i); 
+	})
+    .y0(rootDiv.height()-ySlice)
+    .y1(function (d,i) {
+    	return rootDiv.height()-(data[0][i]*yScaleValue); 
+    });
+    
+    
+    areaChartDiv.append('g')
+	    .attr('class', 'x axis')
+	    .attr('transform', 'translate(30,' + (rootDiv.height()-ySlice) + ')')
+	    .call(xAxis)
+	    .selectAll("text")
+	      .attr('transform', function(d){return "rotate(-55)";})
+	    ;
+    
+    areaChartDiv.append('g')
+	    .attr('class', 'y axis')
+	    .attr('transform', 'translate(30)')
+	    .call(yAxis);
+    
+    areaChartDiv.append("path").attr("d", areaFunc(data[0]))
+	    //.attr('stroke', 'red')
+	    .attr("class", "area")
+	    //.attr('stroke-width', 2)
+	    .attr('transform', 'translate(30,0)');
+	    
+	    
+    areaChartDiv.selectAll("circle").data(data[0]).enter()
+	    .append("circle")
+	    .attr("cy", function(d,i) {return rootDiv.height()-(data[0][i]*yScaleValue); })
+	    .attr("cx", function(d,i) {return i * linePointInterval;})
+	    .attr("r",  function(d)   {return 5;})
+	    .attr('transform', 'translate(30,0)');
+    
+    areaChartDiv.selectAll('path').data(data[0])
+	    .enter()
+	    .append('text')
+	    .attr('x',function (d,i) {
+	    	return i * linePointInterval;
+		})
+		.attr('y', function (d, i) {
+			return rootDiv.height()-(data[0][i]*yScaleValue);
+		})
+		.attr('transform', 'translate(30,10)')
+	    .attr('dy', '.15em')
+	    .attr('fill', 'black')
+	    .attr('font-size', '0.8em')
+	    .attr('font-weight', 'bold')
+	    .text(function (d) {
+	        if (d === '-' || d === '0') {
+	            return '점검중';
+	        }
+	        return d;
+	    });
 };
 
 
