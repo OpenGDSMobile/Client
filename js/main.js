@@ -99,8 +99,8 @@ function createSeoulPublicAreaEnvUI() {
             addr = serverAddr + '/SeoulOpenData.do';
         var visualType = $('input[name=' + envIds[0].attr('name') + ']:checked').val(),
             environmentType = $('input[name=' + envIds[3].attr('name') + ']:checked').val(),
-            date = envIds[1].val(),
-            time = envIds[2].val();
+            date = envIds[1].val().split('-').join(''),
+            time = envIds[2].val().substr(0, 2).concat('00');
         switch (environmentType) {
         case 'PM10':
             ranges = ranges[0];
@@ -217,8 +217,7 @@ $(function () {
     mapSelectUI(openGDSMObj);
     mapAttrUI();
 
-    wfsLoad('seoul_sig');
-
+   // wfsLoad('seoul_sig');
 
     /***************************************************/
     $("#d3View").attr('width', $(window).width() - 100);

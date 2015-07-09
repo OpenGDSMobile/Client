@@ -1734,7 +1734,7 @@ OGDSM.namesapce('externalConnection');
   {type:'polygon', color:'rgba(0, 0, 0, 0.0)', callback:function () {}}<br>
   type(String) : 레이어 타입( polygon | point)<br>
   color(String) : 색상 rgba<br>
-  callback(Function) : 요청 후 색상 변경시 콜백 함수
+  callback(Function) : 콜백 함수 function (resultData) {...}
  */
 OGDSM.externalConnection.prototype.geoServerWFSLoad = function (obj, addr, workspace, layerName, options) {
     'use strict';
@@ -1787,7 +1787,7 @@ OGDSM.externalConnection.prototype.geoServerWFSLoad = function (obj, addr, works
         theme : 'c',
         textonlt : 'false'
     });
-    layerName = layerName.replace(/[ \{\}\[\]\/?.,;:|\)*~`!^\-+┼<>@\#$%&\'\"\\\(\=]/gi,'');
+    layerName = layerName.replace(/[ \{\}\[\]\/?.,;:|\)*~`!\-+┼<>@\#$%&\'\"\\\(\=]/gi);
     $.ajax({
         type : 'POST',
         url : fullAddr,
@@ -1920,25 +1920,15 @@ OGDSM.externalConnection.prototype.vworldWMSLoad = function (apiKey, domain, dat
 };
 
 /**
- * 서울 열린 데이터 광장 환경 데이터 요청
- * @method seoulEnvironmentLoad
- * @param {String} addr - 주소
- * @param {String} apiKey - api 키
- * @param {String} envType - 환경 정보 이름
- * @param {date} date - 날짜
- * @param {time} time - 시간
- * @param {function} callback - 성공 콜백 함수
+ * 공공 데이터 요청 인터페이스
+ * @method publicDataInterface
+ * @param {String} addr - 어플리케이션 서버 요청 주소
+ * @param {JSON Object} jsonData - 데이터 요청 파라미터 {serviceName : ??(필수), serviceKey ??(필수), ...}
+ * @param {function} callback - 콜백 함수 function (resultData) {...}
+ *
  */
-OGDSM.externalConnection.prototype.seoulEnvironmentLoad = function (addr, apiKey, envType, date, time, callback) {
+OGDSM.externalConnection.prototype.publicDataInterface = function (addr, jsonData, callback) {
     'use strict';
-    var parm = '{"serviceName":"TimeAverageAirQuality",' +
-        '"keyValue":"' + apiKey + '",' +
-        '"dateValue":"' + date + '", ' +
-        '"envType":' + '"' + envType + '",' +
-        '"timeValue":"' + time + '"} ';
-    var resultData;
-    parm = JSON.parse(parm);
-    console.log(parm);
     $.mobile.loading('show', {
         text : 'Loading',
         textVisible : 'true',
@@ -1948,18 +1938,47 @@ OGDSM.externalConnection.prototype.seoulEnvironmentLoad = function (addr, apiKey
     $.ajax({
         type : 'POST',
         url : addr,
-        data : JSON.stringify(parm),
+        data : JSON.stringify(jsonData),
         contentType : "application/json;charset=UTF-8",
         dataType : 'json',
-        success : function (msg) {
-            resultData = JSON.parse(msg.data);
+        success : function (jsonResult) {
             $.mobile.loading('hide');
-            callback(resultData);
+            if (jsonResult.result === 'OK') {
+                callback(JSON.parse(jsonResult.data));
+            } else {
+                alert("데이터를 불러오는데 실패하였습니다");
+            }
         },
-        error : function (e) {
-            console.log(e);
+        error : function (error) {
             $.mobile.loading('hide');
+            console.error(error);
         }
+    });
+};
+
+
+/**
+ * 서울 열린 데이터 광장 환경 데이터 요청
+ * @method seoulEnvironmentLoad
+ * @param {String} addr - 주소
+ * @param {String} apiKey - api 키
+ * @param {String} envType - 환경 정보 이름
+ * @param {date} date - 날짜 (YYYYMMDD)
+ * @param {time} time - 시간 (HH00)
+ * @param {function} callback - 콜백 함수 function (resultData) {...}
+ */
+OGDSM.externalConnection.prototype.seoulEnvironmentLoad = function (addr, apiKey, envType, date, time, callback) {
+    'use strict';
+    var jsonData = {};
+    jsonData.serviceKey = apiKey;
+    jsonData.returnType = 'json';
+    jsonData.serviceName = 'TimeAverageAirQuality';
+    jsonData.amount = '1/100';
+    jsonData.dateTimeValue = date + time;
+    jsonData.envType = envType;
+
+    this.publicDataInterface(addr, jsonData, function (resultData) {
+        callback(resultData);
     });
 };
 
@@ -1970,50 +1989,74 @@ OGDSM.externalConnection.prototype.seoulEnvironmentLoad = function (addr, apiKey
  * @param {String} addr - 주소
  * @param {String} apiKey - API 키
  * @param {String} envType - 환경 정보 이름
- * @param {date} area - 지역
- * @param {function} callback - 성공 콜백 함수
+ * @param {String} area - 지역
+ * @param {function} callback - 콜백 함수 function (resultData) {...}
  */
 OGDSM.externalConnection.prototype.dataPortalEnvironmentLoad = function (addr, apiKey, envType, area, callback) {
     'use strict';
-    var parm = '{"serviceName":"ArpltnInforInqireSvc",' +
-            ' "keyValue":"' + apiKey + '",' +
-            '"areaType":' + '"' + encodeURIComponent(area) + '",' +
-            '"envType":' + '"' + envType + '"}';
-    var resultData;
-    parm = JSON.parse(parm);
-    console.log(parm);
-    $.mobile.loading('show', {
-        text : 'Loading',
-        textVisible : 'true',
-        theme : 'c',
-        textonlt : 'false'
-    });
-    $.ajax({
-        type : 'POST',
-        url : addr,
-        data : JSON.stringify(parm),
-        contentType : "application/json;charset=UTF-8",
-        dataType : 'json',
-        success : function (msg) {
-            resultData = JSON.parse(msg.data);
-            $.mobile.loading('hide');
-            callback(resultData);
-        },
-        error : function (e) {
-            console.log(e);
-            $.mobile.loading('hide');
-        }
+    var jsonData = {};
+    jsonData.serviceName = 'ArpltnInforInqireSvc';
+    jsonData.numOfRows = '100';
+    jsonData.serviceKey = apiKey;
+    jsonData.envType = envType;
+    jsonData.sidoName = encodeURIComponent(area);
+
+    this.publicDataInterface(addr, jsonData, function (resultData) {
+        callback(resultData);
     });
 };
 
 
+/**
+ * 데이터 포털 온실가스배출량 조회 서비스
+ * @method greenGasEmissionLoad
+ * @param {String} addr - 주소
+ * @param {String} apiKey - API 키
+ * @param {String} startDate - 시작 날짜 (YYYYMM 200701 ~ 201412 까지만 데이터 존재)
+ * @param {String} endDate - 종료 날짜 (YYYYMM 200701 ~ 201412 까지만 데이터 존재)
+ * @param {function} callback - 성공 콜백 함수
+ */
+OGDSM.externalConnection.prototype.greenGasEmissionLoad = function (addr, apiKey, startDate, endDate, callback) {
+    'use strict';
+    var jsonData = {};
+    jsonData.serviceName = 'GreenGasEmissionReport';
+    jsonData.numOfRows = '100';
+    jsonData.serviceKey = apiKey;
+    jsonData.startDate = startDate;
+    jsonData.endDate = endDate;
+
+    this.publicDataInterface(addr, jsonData, function (resultData) {
+        callback(resultData);
+    });
+};
+
+
+/**
+ * 원자력발전소 실시간 주변 방사선량
+ * @method realTimeLevelofRadiationLoad
+ * @param {String} addr - 주소
+ * @param {String} apiKey - API 키
+ * @param {String} genName - 원자력 발전소 이름 (WS, KR, YK, Plant)
+ * @param {function} callback - 성공 콜백 함수
+ */
+OGDSM.externalConnection.prototype.realTimeLevelofRadiationLoad = function (addr, apiKey, genName, callback) {
+    'use strict';
+    var jsonData = {};
+    jsonData.serviceName = 'NuclearPowerPlantRealtimeLevelofRadiation';
+    jsonData.serviceKey = apiKey;
+    jsonData.startDate = genName;
+
+    this.publicDataInterface(addr, jsonData, function (resultData) {
+        callback(resultData);
+    });
+};
 
 /**
  * geoServer 데이터 리스트 요청
  * @method getLayersGeoServer
  * @param {String} addr - 서버 주소
  * @param {String} wsName - 워크스페이스 이름
- * @param {Function} callback - 성공 콜백 함수
+ * @param {Function} callback - 콜백 함수 function (resultData) {...}
  */
 OGDSM.externalConnection.prototype.getLayersGeoServer = function (addr, wsName, callback) {
     'use strict';
@@ -2035,9 +2078,8 @@ OGDSM.externalConnection.prototype.getLayersGeoServer = function (addr, wsName, 
             $.mobile.loading('hide');
             callback(resultData);
         },
-
-        error : function (e) {
-            console.log(e);
+        error : function (error) {
+            console.error(error);
         }
     });
 };
@@ -2978,6 +3020,7 @@ OGDSM.namesapce('attributeTable');
     OGDSM.attributeTable = function (rootDiv, addr) {
         this.rootDiv = rootDiv;
         this.addr = addr;
+        this.editMode = false;
         var rootElement = document.getElementById(rootDiv),
             ulElement = document.createElement('ul'),
             contentsElement = document.createElement('div');
@@ -2994,7 +3037,10 @@ OGDSM.namesapce('attributeTable');
         rootElement.appendChild(contentsElement);
     };
     OGDSM.attributeTable.prototype = {
-        constructor : OGDSM.attributeTable
+        constructor : OGDSM.attributeTable,
+        getEditMode : function () {
+            return this.editMode;
+        }
     };
     return OGDSM.attributeTable;
 }(OGDSM));
@@ -3006,9 +3052,11 @@ OGDSM.namesapce('attributeTable');
  */
 OGDSM.attributeTable.prototype.addAttribute = function (layerName) {
     'use strict';
-    var rootDiv = this.rootDiv,
+    var attrObj = this,
+        rootDiv = this.rootDiv,
         tabs = $('#' + rootDiv + 'Tab'),
-        contents = $('#' + rootDiv + 'Contents');
+        contents = $('#' + rootDiv + 'Contents'),
+        tableObj = null;
     var aBaseCSS = 'display:block; padding:6px 15px; text-decoration:none; border-right:1px solid #000;' +
                    'border-top:1px solid #000; margin:0;',
         backgroundNotSelected = '#fff',
@@ -3024,7 +3072,35 @@ OGDSM.attributeTable.prototype.addAttribute = function (layerName) {
         $('.attrTable').hide();
         $('#attrContent' + layerName).css('display', 'block');
     }
+    function createTableCol(attrContents, i, tableBody, tableTh) {
+        $.each(attrContents, function (key, value) {
+            if (key === 'geom') {
+                return true;
+            }
+            if (i === 0) {
+                tableTh.append('<th>' + key + '</th>');
+            }
+            var newCell = tableBody.find('tr:last');
+            newCell.append('<td>' +
+                           '<input type="text" value="' + value + '" class="editSW" style="' + textInputCSS + '"' +
+                           'disabled=true>' +
+                           '</td>');
+        });
+    }
+    function tableEvent() {
+        /**********tr select ****************/
+        $('#attrTable' + layerName + ' tbody').on('click', 'tr', function () {
+            tableObj.$('tr.selected').removeClass('selected');
+            $(this).addClass('selected');
+        });
 
+        /**********page change **************/
+        $('#attrTable' + layerName).on('page.dt', function (e, settings) {
+            setTimeout(function () {
+                attrObj.editAttribute(attrObj.getEditMode());
+            }, 200);
+        });
+    }
     /******* Add tab ***********/
     tabs.prepend('<li id="attrTab' + layerName + '" style="float:left;">' +
                  '<a href="#" style="' + aBaseCSS + '">' + layerName + '</a></li>');
@@ -3047,21 +3123,6 @@ OGDSM.attributeTable.prototype.addAttribute = function (layerName) {
 
     var parm = {};
     parm.tableName = layerName;
-    function createTableCol(attrContents, i, tableBody, tableTh) {
-        $.each(attrContents, function (key, value) {
-            if (key === 'geom') {
-                return true;
-            }
-            if (i === 0) {
-                tableTh.append('<th>' + key + '</th>');
-            }
-            var newCell = tableBody.find('tr:last');
-            newCell.append('<td>' +
-                           '<input type="text" value="' + value + '" class="editSW" style="' + textInputCSS + '"' +
-                           'disabled=true>' +
-                           '</td>');
-        });
-    }
     $.ajax({
         type : 'POST',
         url : this.addr,
@@ -3074,7 +3135,6 @@ OGDSM.attributeTable.prototype.addAttribute = function (layerName) {
                 console.log('Not attribute information');
                 return -1;
             }
-
             var tableDiv = $('#attrContent' + layerName),
                 tableTh = tableDiv.find('thead').find('tr'),
                 tableBody = tableDiv.find('tbody');
@@ -3085,28 +3145,22 @@ OGDSM.attributeTable.prototype.addAttribute = function (layerName) {
             }
 
             var thHeight = $('thead').height() + 7;
-            $('#attrTable' + layerName).DataTable({
-                'paging' : false,
-                'scrollY' : attrDivHeight - thHeight,
-                'scrollX' : true,
-                'scrollCollapse' : true,
-                'bFilter' : false
+            tableObj = $('#attrTable' + layerName).DataTable({
+                'bFilter' : false,
+                'bLengthChange' : 10,
+                'bPaginate' : true,
+                "dom": 'rt<"bottom"ip><"clear">'
             });
-
+            tableEvent();
+            /*
             $(window).on('resize', function () {
                 var attrDivHeight = $('#' + rootDiv + 'Contents').height();
                 var thHeight = $('thead').height() + 7;
-                $('#attrTable' + layerName).DataTable({
-                    'paging' : false,
-                    'scrollY' : attrDivHeight - thHeight,
-                    'scrollX' : true,
-                    'scrollCollapse' : true,
-                    'bFilter' : false
-                });
             });
+            */
         },
-        error : function (e) {
-            console.log(e);
+        error : function (error) {
+            console.log(error);
         }
     });
 };
@@ -3131,7 +3185,9 @@ OGDSM.attributeTable.prototype.editAttribute = function (sw) {
     var textInput = $('.editSW');
     if (sw === true) {
         textInput.attr('disabled', false);
+        this.editMode = true;
     } else {
         textInput.attr('disabled', true);
+        this.editMode = false;
     }
 };

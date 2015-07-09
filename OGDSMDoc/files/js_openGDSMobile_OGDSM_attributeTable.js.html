@@ -2,7 +2,7 @@
 <html lang="en" class="yui-overrride">
 <head>
     <meta charset="utf-8">
-    <title>../js/openGDSMobile/OGDSM_attributeTable.js</title>
+    <title>js\openGDSMobile\OGDSM_attributeTable.js</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700' rel='stylesheet' type='text/css'>
@@ -84,7 +84,7 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1 class="file-heading">File: ../js/openGDSMobile/OGDSM_attributeTable.js</h1>
+                        <h1 class="file-heading">File: js\openGDSMobile\OGDSM_attributeTable.js</h1>
 
                         <div class="file">
                             <pre class="code prettyprint linenums">
@@ -104,6 +104,7 @@
                             OGDSM.attributeTable = function (rootDiv, addr) {
                                 this.rootDiv = rootDiv;
                                 this.addr = addr;
+                                this.editMode = false;
                                 var rootElement = document.getElementById(rootDiv),
                                     ulElement = document.createElement(&#x27;ul&#x27;),
                                     contentsElement = document.createElement(&#x27;div&#x27;);
@@ -120,7 +121,10 @@
                                 rootElement.appendChild(contentsElement);
                             };
                             OGDSM.attributeTable.prototype = {
-                                constructor : OGDSM.attributeTable
+                                constructor : OGDSM.attributeTable,
+                                getEditMode : function () {
+                                    return this.editMode;
+                                }
                             };
                             return OGDSM.attributeTable;
                         }(OGDSM));
@@ -132,9 +136,11 @@
                          */
                         OGDSM.attributeTable.prototype.addAttribute = function (layerName) {
                             &#x27;use strict&#x27;;
-                            var rootDiv = this.rootDiv,
+                            var attrObj = this,
+                                rootDiv = this.rootDiv,
                                 tabs = $(&#x27;#&#x27; + rootDiv + &#x27;Tab&#x27;),
-                                contents = $(&#x27;#&#x27; + rootDiv + &#x27;Contents&#x27;);
+                                contents = $(&#x27;#&#x27; + rootDiv + &#x27;Contents&#x27;),
+                                tableObj = null;
                             var aBaseCSS = &#x27;display:block; padding:6px 15px; text-decoration:none; border-right:1px solid #000;&#x27; +
                                            &#x27;border-top:1px solid #000; margin:0;&#x27;,
                                 backgroundNotSelected = &#x27;#fff&#x27;,
@@ -150,7 +156,35 @@
                                 $(&#x27;.attrTable&#x27;).hide();
                                 $(&#x27;#attrContent&#x27; + layerName).css(&#x27;display&#x27;, &#x27;block&#x27;);
                             }
+                            function createTableCol(attrContents, i, tableBody, tableTh) {
+                                $.each(attrContents, function (key, value) {
+                                    if (key === &#x27;geom&#x27;) {
+                                        return true;
+                                    }
+                                    if (i === 0) {
+                                        tableTh.append(&#x27;&lt;th&gt;&#x27; + key + &#x27;&lt;/th&gt;&#x27;);
+                                    }
+                                    var newCell = tableBody.find(&#x27;tr:last&#x27;);
+                                    newCell.append(&#x27;&lt;td&gt;&#x27; +
+                                                   &#x27;&lt;input type=&quot;text&quot; value=&quot;&#x27; + value + &#x27;&quot; class=&quot;editSW&quot; style=&quot;&#x27; + textInputCSS + &#x27;&quot;&#x27; +
+                                                   &#x27;disabled=true&gt;&#x27; +
+                                                   &#x27;&lt;/td&gt;&#x27;);
+                                });
+                            }
+                            function tableEvent() {
+                                /**********tr select ****************/
+                                $(&#x27;#attrTable&#x27; + layerName + &#x27; tbody&#x27;).on(&#x27;click&#x27;, &#x27;tr&#x27;, function () {
+                                    tableObj.$(&#x27;tr.selected&#x27;).removeClass(&#x27;selected&#x27;);
+                                    $(this).addClass(&#x27;selected&#x27;);
+                                });
 
+                                /**********page change **************/
+                                $(&#x27;#attrTable&#x27; + layerName).on(&#x27;page.dt&#x27;, function (e, settings) {
+                                    setTimeout(function () {
+                                        attrObj.editAttribute(attrObj.getEditMode());
+                                    }, 200);
+                                });
+                            }
                             /******* Add tab ***********/
                             tabs.prepend(&#x27;&lt;li id=&quot;attrTab&#x27; + layerName + &#x27;&quot; style=&quot;float:left;&quot;&gt;&#x27; +
                                          &#x27;&lt;a href=&quot;#&quot; style=&quot;&#x27; + aBaseCSS + &#x27;&quot;&gt;&#x27; + layerName + &#x27;&lt;/a&gt;&lt;/li&gt;&#x27;);
@@ -173,21 +207,6 @@
 
                             var parm = {};
                             parm.tableName = layerName;
-                            function createTableCol(attrContents, i, tableBody, tableTh) {
-                                $.each(attrContents, function (key, value) {
-                                    if (key === &#x27;geom&#x27;) {
-                                        return true;
-                                    }
-                                    if (i === 0) {
-                                        tableTh.append(&#x27;&lt;th&gt;&#x27; + key + &#x27;&lt;/th&gt;&#x27;);
-                                    }
-                                    var newCell = tableBody.find(&#x27;tr:last&#x27;);
-                                    newCell.append(&#x27;&lt;td&gt;&#x27; +
-                                                   &#x27;&lt;input type=&quot;text&quot; value=&quot;&#x27; + value + &#x27;&quot; class=&quot;editSW&quot; style=&quot;&#x27; + textInputCSS + &#x27;&quot;&#x27; +
-                                                   &#x27;disabled=true&gt;&#x27; +
-                                                   &#x27;&lt;/td&gt;&#x27;);
-                                });
-                            }
                             $.ajax({
                                 type : &#x27;POST&#x27;,
                                 url : this.addr,
@@ -200,7 +219,6 @@
                                         console.log(&#x27;Not attribute information&#x27;);
                                         return -1;
                                     }
-
                                     var tableDiv = $(&#x27;#attrContent&#x27; + layerName),
                                         tableTh = tableDiv.find(&#x27;thead&#x27;).find(&#x27;tr&#x27;),
                                         tableBody = tableDiv.find(&#x27;tbody&#x27;);
@@ -211,28 +229,22 @@
                                     }
 
                                     var thHeight = $(&#x27;thead&#x27;).height() + 7;
-                                    $(&#x27;#attrTable&#x27; + layerName).DataTable({
-                                        &#x27;paging&#x27; : false,
-                                        &#x27;scrollY&#x27; : attrDivHeight - thHeight,
-                                        &#x27;scrollX&#x27; : true,
-                                        &#x27;scrollCollapse&#x27; : true,
-                                        &#x27;bFilter&#x27; : false
+                                    tableObj = $(&#x27;#attrTable&#x27; + layerName).DataTable({
+                                        &#x27;bFilter&#x27; : false,
+                                        &#x27;bLengthChange&#x27; : 10,
+                                        &#x27;bPaginate&#x27; : true,
+                                        &quot;dom&quot;: &#x27;rt&lt;&quot;bottom&quot;ip&gt;&lt;&quot;clear&quot;&gt;&#x27;
                                     });
-
+                                    tableEvent();
+                                    /*
                                     $(window).on(&#x27;resize&#x27;, function () {
                                         var attrDivHeight = $(&#x27;#&#x27; + rootDiv + &#x27;Contents&#x27;).height();
                                         var thHeight = $(&#x27;thead&#x27;).height() + 7;
-                                        $(&#x27;#attrTable&#x27; + layerName).DataTable({
-                                            &#x27;paging&#x27; : false,
-                                            &#x27;scrollY&#x27; : attrDivHeight - thHeight,
-                                            &#x27;scrollX&#x27; : true,
-                                            &#x27;scrollCollapse&#x27; : true,
-                                            &#x27;bFilter&#x27; : false
-                                        });
                                     });
+                                    */
                                 },
-                                error : function (e) {
-                                    console.log(e);
+                                error : function (error) {
+                                    console.log(error);
                                 }
                             });
                         };
@@ -257,10 +269,13 @@
                             var textInput = $(&#x27;.editSW&#x27;);
                             if (sw === true) {
                                 textInput.attr(&#x27;disabled&#x27;, false);
+                                this.editMode = true;
                             } else {
                                 textInput.attr(&#x27;disabled&#x27;, true);
+                                this.editMode = false;
                             }
                         };
+
                             </pre>
                         </div>
                     </div>

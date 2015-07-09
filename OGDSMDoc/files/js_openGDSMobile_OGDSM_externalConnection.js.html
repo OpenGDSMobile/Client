@@ -2,7 +2,7 @@
 <html lang="en" class="yui-overrride">
 <head>
     <meta charset="utf-8">
-    <title>../js/openGDSMobile/OGDSM_externalConnection.js</title>
+    <title>js\openGDSMobile\OGDSM_externalConnection.js</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700' rel='stylesheet' type='text/css'>
@@ -84,7 +84,7 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1 class="file-heading">File: ../js/openGDSMobile/OGDSM_externalConnection.js</h1>
+                        <h1 class="file-heading">File: js\openGDSMobile\OGDSM_externalConnection.js</h1>
 
                         <div class="file">
                             <pre class="code prettyprint linenums">
@@ -119,7 +119,7 @@
                           {type:&#x27;polygon&#x27;, color:&#x27;rgba(0, 0, 0, 0.0)&#x27;, callback:function () {}}&lt;br&gt;
                           type(String) : 레이어 타입( polygon | point)&lt;br&gt;
                           color(String) : 색상 rgba&lt;br&gt;
-                          callback(Function) : 요청 후 색상 변경시 콜백 함수
+                          callback(Function) : 콜백 함수 function (resultData) {...}
                          */
                         OGDSM.externalConnection.prototype.geoServerWFSLoad = function (obj, addr, workspace, layerName, options) {
                             &#x27;use strict&#x27;;
@@ -172,7 +172,7 @@
                                 theme : &#x27;c&#x27;,
                                 textonlt : &#x27;false&#x27;
                             });
-                            layerName = layerName.replace(/[ \{\}\[\]\/?.,;:|\)*~&#x60;!^\-+┼&lt;&gt;@\#$%&amp;\&#x27;\&quot;\\\(\=]/gi,&#x27;&#x27;);
+                            layerName = layerName.replace(/[ \{\}\[\]\/?.,;:|\)*~&#x60;!\-+┼&lt;&gt;@\#$%&amp;\&#x27;\&quot;\\\(\=]/gi);
                             $.ajax({
                                 type : &#x27;POST&#x27;,
                                 url : fullAddr,
@@ -305,25 +305,15 @@
                         };
 
                         /**
-                         * 서울 열린 데이터 광장 환경 데이터 요청
-                         * @method seoulEnvironmentLoad
-                         * @param {String} addr - 주소
-                         * @param {String} apiKey - api 키
-                         * @param {String} envType - 환경 정보 이름
-                         * @param {date} date - 날짜
-                         * @param {time} time - 시간
-                         * @param {function} callback - 성공 콜백 함수
+                         * 공공 데이터 요청 인터페이스
+                         * @method publicDataInterface
+                         * @param {String} addr - 어플리케이션 서버 요청 주소
+                         * @param {JSON Object} jsonData - 데이터 요청 파라미터 {serviceName : ??(필수), serviceKey ??(필수), ...}
+                         * @param {function} callback - 콜백 함수 function (resultData) {...}
+                         *
                          */
-                        OGDSM.externalConnection.prototype.seoulEnvironmentLoad = function (addr, apiKey, envType, date, time, callback) {
+                        OGDSM.externalConnection.prototype.publicDataInterface = function (addr, jsonData, callback) {
                             &#x27;use strict&#x27;;
-                            var parm = &#x27;{&quot;serviceName&quot;:&quot;TimeAverageAirQuality&quot;,&#x27; +
-                                &#x27;&quot;keyValue&quot;:&quot;&#x27; + apiKey + &#x27;&quot;,&#x27; +
-                                &#x27;&quot;dateValue&quot;:&quot;&#x27; + date + &#x27;&quot;, &#x27; +
-                                &#x27;&quot;envType&quot;:&#x27; + &#x27;&quot;&#x27; + envType + &#x27;&quot;,&#x27; +
-                                &#x27;&quot;timeValue&quot;:&quot;&#x27; + time + &#x27;&quot;} &#x27;;
-                            var resultData;
-                            parm = JSON.parse(parm);
-                            console.log(parm);
                             $.mobile.loading(&#x27;show&#x27;, {
                                 text : &#x27;Loading&#x27;,
                                 textVisible : &#x27;true&#x27;,
@@ -333,18 +323,47 @@
                             $.ajax({
                                 type : &#x27;POST&#x27;,
                                 url : addr,
-                                data : JSON.stringify(parm),
+                                data : JSON.stringify(jsonData),
                                 contentType : &quot;application/json;charset=UTF-8&quot;,
                                 dataType : &#x27;json&#x27;,
-                                success : function (msg) {
-                                    resultData = JSON.parse(msg.data);
+                                success : function (jsonResult) {
                                     $.mobile.loading(&#x27;hide&#x27;);
-                                    callback(resultData);
+                                    if (jsonResult.result === &#x27;OK&#x27;) {
+                                        callback(JSON.parse(jsonResult.data));
+                                    } else {
+                                        alert(&quot;데이터를 불러오는데 실패하였습니다&quot;);
+                                    }
                                 },
-                                error : function (e) {
-                                    console.log(e);
+                                error : function (error) {
                                     $.mobile.loading(&#x27;hide&#x27;);
+                                    console.error(error);
                                 }
+                            });
+                        };
+
+
+                        /**
+                         * 서울 열린 데이터 광장 환경 데이터 요청
+                         * @method seoulEnvironmentLoad
+                         * @param {String} addr - 주소
+                         * @param {String} apiKey - api 키
+                         * @param {String} envType - 환경 정보 이름
+                         * @param {date} date - 날짜 (YYYYMMDD)
+                         * @param {time} time - 시간 (HH00)
+                         * @param {function} callback - 콜백 함수 function (resultData) {...}
+                         */
+                        OGDSM.externalConnection.prototype.seoulEnvironmentLoad = function (addr, apiKey, envType, date, time, callback) {
+                            &#x27;use strict&#x27;;
+                            var jsonData = {};
+                            jsonData.serviceKey = apiKey;
+                            jsonData.returnType = &#x27;json&#x27;;
+                            jsonData.serviceName = &#x27;TimeAverageAirQuality&#x27;;
+                            jsonData.amount = &#x27;1/100&#x27;;
+                            jsonData.dateTimeValue = date + time;
+                            jsonData.envType = envType;
+
+                            this.publicDataInterface(addr, jsonData, function (resultData) {
+                                callback(resultData);
                             });
                         };
 
@@ -355,50 +374,74 @@
                          * @param {String} addr - 주소
                          * @param {String} apiKey - API 키
                          * @param {String} envType - 환경 정보 이름
-                         * @param {date} area - 지역
-                         * @param {function} callback - 성공 콜백 함수
+                         * @param {String} area - 지역
+                         * @param {function} callback - 콜백 함수 function (resultData) {...}
                          */
                         OGDSM.externalConnection.prototype.dataPortalEnvironmentLoad = function (addr, apiKey, envType, area, callback) {
                             &#x27;use strict&#x27;;
-                            var parm = &#x27;{&quot;serviceName&quot;:&quot;ArpltnInforInqireSvc&quot;,&#x27; +
-                                    &#x27; &quot;keyValue&quot;:&quot;&#x27; + apiKey + &#x27;&quot;,&#x27; +
-                                    &#x27;&quot;areaType&quot;:&#x27; + &#x27;&quot;&#x27; + encodeURIComponent(area) + &#x27;&quot;,&#x27; +
-                                    &#x27;&quot;envType&quot;:&#x27; + &#x27;&quot;&#x27; + envType + &#x27;&quot;}&#x27;;
-                            var resultData;
-                            parm = JSON.parse(parm);
-                            console.log(parm);
-                            $.mobile.loading(&#x27;show&#x27;, {
-                                text : &#x27;Loading&#x27;,
-                                textVisible : &#x27;true&#x27;,
-                                theme : &#x27;c&#x27;,
-                                textonlt : &#x27;false&#x27;
-                            });
-                            $.ajax({
-                                type : &#x27;POST&#x27;,
-                                url : addr,
-                                data : JSON.stringify(parm),
-                                contentType : &quot;application/json;charset=UTF-8&quot;,
-                                dataType : &#x27;json&#x27;,
-                                success : function (msg) {
-                                    resultData = JSON.parse(msg.data);
-                                    $.mobile.loading(&#x27;hide&#x27;);
-                                    callback(resultData);
-                                },
-                                error : function (e) {
-                                    console.log(e);
-                                    $.mobile.loading(&#x27;hide&#x27;);
-                                }
+                            var jsonData = {};
+                            jsonData.serviceName = &#x27;ArpltnInforInqireSvc&#x27;;
+                            jsonData.numOfRows = &#x27;100&#x27;;
+                            jsonData.serviceKey = apiKey;
+                            jsonData.envType = envType;
+                            jsonData.sidoName = encodeURIComponent(area);
+
+                            this.publicDataInterface(addr, jsonData, function (resultData) {
+                                callback(resultData);
                             });
                         };
 
 
+                        /**
+                         * 데이터 포털 온실가스배출량 조회 서비스
+                         * @method greenGasEmissionLoad
+                         * @param {String} addr - 주소
+                         * @param {String} apiKey - API 키
+                         * @param {String} startDate - 시작 날짜 (YYYYMM 200701 ~ 201412 까지만 데이터 존재)
+                         * @param {String} endDate - 종료 날짜 (YYYYMM 200701 ~ 201412 까지만 데이터 존재)
+                         * @param {function} callback - 성공 콜백 함수
+                         */
+                        OGDSM.externalConnection.prototype.greenGasEmissionLoad = function (addr, apiKey, startDate, endDate, callback) {
+                            &#x27;use strict&#x27;;
+                            var jsonData = {};
+                            jsonData.serviceName = &#x27;GreenGasEmissionReport&#x27;;
+                            jsonData.numOfRows = &#x27;100&#x27;;
+                            jsonData.serviceKey = apiKey;
+                            jsonData.startDate = startDate;
+                            jsonData.endDate = endDate;
+
+                            this.publicDataInterface(addr, jsonData, function (resultData) {
+                                callback(resultData);
+                            });
+                        };
+
+
+                        /**
+                         * 원자력발전소 실시간 주변 방사선량
+                         * @method realTimeLevelofRadiationLoad
+                         * @param {String} addr - 주소
+                         * @param {String} apiKey - API 키
+                         * @param {String} genName - 원자력 발전소 이름 (WS, KR, YK, Plant)
+                         * @param {function} callback - 성공 콜백 함수
+                         */
+                        OGDSM.externalConnection.prototype.realTimeLevelofRadiationLoad = function (addr, apiKey, genName, callback) {
+                            &#x27;use strict&#x27;;
+                            var jsonData = {};
+                            jsonData.serviceName = &#x27;NuclearPowerPlantRealtimeLevelofRadiation&#x27;;
+                            jsonData.serviceKey = apiKey;
+                            jsonData.startDate = genName;
+
+                            this.publicDataInterface(addr, jsonData, function (resultData) {
+                                callback(resultData);
+                            });
+                        };
 
                         /**
                          * geoServer 데이터 리스트 요청
                          * @method getLayersGeoServer
                          * @param {String} addr - 서버 주소
                          * @param {String} wsName - 워크스페이스 이름
-                         * @param {Function} callback - 성공 콜백 함수
+                         * @param {Function} callback - 콜백 함수 function (resultData) {...}
                          */
                         OGDSM.externalConnection.prototype.getLayersGeoServer = function (addr, wsName, callback) {
                             &#x27;use strict&#x27;;
@@ -420,9 +463,8 @@
                                     $.mobile.loading(&#x27;hide&#x27;);
                                     callback(resultData);
                                 },
-
-                                error : function (e) {
-                                    console.log(e);
+                                error : function (error) {
+                                    console.error(error);
                                 }
                             });
                         };

@@ -22,7 +22,7 @@ YUI.add("yuidoc-meta", function(Y) {
         {
             "displayName": "OGDSM.jsontoArray",
             "name": "OGDSM.jsontoArray",
-            "description": "OGDSM JSON 객체 배열 변환 모듈 (OGDSM json to Array module)\n- 사용 방법(Use)\n      OGDSM.jsonToArray(jsonData, array[0], array[1]);"
+            "description": "OGDSM JSON 객체 배열 변환 모듈 (OGDSM json to Array module)\n- 사용 방법(Use)\n      OGDSM.jsonToArray(jsonData, x string, y string);"
         },
         {
             "displayName": "OGDSM.namespace",
