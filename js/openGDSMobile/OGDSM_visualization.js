@@ -48,6 +48,8 @@ OGDSM.namesapce('visualization');
             });
         }
         // Orientation...
+
+
     };
     OGDSM.visualization.prototype = {
         constructor : OGDSM.visualization,
@@ -276,6 +278,8 @@ OGDSM.visualization.prototype.updateLayoutSetting = function (mapDiv) {
         this.mapObj.updateSize();
     }
 };
+
+
 /**
  * WMS 및 WFS 맵 레이어 추가
  * @method addMap
@@ -304,6 +308,76 @@ OGDSM.visualization.prototype.addMap = function (data, type) {
         if (typeof (this.attrTableObj) !== 'undefined') {
             this.attrTableObj.addAttribute(data.get('title'));
         }
+        var interaction;
+        interaction = new ol.interaction.Select({
+            layers : function (layer) {
+                return true;
+            },
+            style : function (feature) {
+                /*console.log(feature.getStyle()[0]);*/
+                /*console.log(data);*/
+                return [new ol.style.Style({
+                    stroke : new ol.style.Stroke({
+                        color : 'rgba(255, 0, 0, 1.0)',
+                        width : 2
+                    }),
+                    fill : new ol.style.Fill({
+                        color : data.getStyle()[0].getFill().getColor()
+                    })
+                })];
+            }
+        });
+        this.mapObj.addInteraction(interaction);
+
+        interaction.getFeatures().on('add', function (event) {
+            /*console.log(event);*/
+            /*console.log(event.target.item(0));*/
+        });
+        interaction.getFeatures().on('remove', function (event) {
+            console.log(event.target.item(0));
+        });
+        /*
+        var selected;
+     //   var selectedStyleCache = {};
+        var featureOverlay = new ol.FeatureOverlay({
+                map : this.mapObj,
+                style : function (feature, resolution) {
+                    console.log(feature.get('emd_eng_nm'));
+                    var text = resolution < 5000 ? feature.get('emd_eng_nm') : '';
+                  //  if (!selectedStyleCache[text]) {
+                    return [new ol.style.Style({
+                        stroke : new ol.style.Stroke({
+                            color : 'rgba(255,0,0,1)',
+                            width : 2
+                        })
+                    })];
+                //    }
+                    //return selectedStyleCache[text];
+                }
+            });
+
+        this.mapObj.on('singleclick', function (evt) {
+            if (evt.dragging) {
+                return -1;
+            }
+      //      selectedStyleCache = {};
+
+            var pixel = this.getEventPixel(evt.originalEvent);
+            var feature = this.forEachFeatureAtPixel(pixel, function (feature, layer) {
+                return feature;
+            });
+            if (feature !== selected) {
+                if (selected) {
+                    featureOverlay.removeFeature(selected);
+                }
+                if (feature) {
+        //            console.log(selectedStyleCache);
+                    featureOverlay.addFeature(feature);
+                }
+                selected = feature;
+            }
+        });
+        */
     } else {
         console.log("Layer is existence");
     }
