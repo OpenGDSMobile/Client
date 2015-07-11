@@ -16,6 +16,7 @@ OGDSM.namesapce('attributeTable');
         this.addr = addr;
         this.editMode = false;
         this.visualObj = visualObj;
+        this.attrSelected = false;
         var rootElement = document.getElementById(rootDiv),
             ulElement = document.createElement('ul'),
             contentsElement = document.createElement('div');
@@ -35,6 +36,12 @@ OGDSM.namesapce('attributeTable');
         constructor : OGDSM.attributeTable,
         getEditMode : function () {
             return this.editMode;
+        },
+        getSelectObj : function () {
+            return this.attrSelected;
+        },
+        setSelectObj : function (obj) {
+            this.attrSelected = obj;
         }
     };
     return OGDSM.attributeTable;
@@ -52,6 +59,7 @@ OGDSM.attributeTable.prototype.addAttribute = function (layerName) {
         tabs = $('#' + rootDiv + 'Tab'),
         contents = $('#' + rootDiv + 'Contents'),
         visualObj = this.visualObj,
+        attrSelected = this.attrSelected,
         tableObj = null;
     var aBaseCSS = 'display:block; padding:6px 15px; text-decoration:none; border-right:1px solid #000;' +
                    'border-top:1px solid #000; margin:0;',
@@ -77,20 +85,45 @@ OGDSM.attributeTable.prototype.addAttribute = function (layerName) {
             if (i === 0) {
                 tableTh.append('<th data-value="' + key + '">' + key + '</th>');
             }
-            var newCell = tableBody.find('tr:last').attr('data-row', i);
+            var newCell = tableBody.find('tr:last').attr('data-row', i + 1);
             newCell.append('<td>' +
                            '<input type="text" value="' + value + '" class="editSW" style="' + textInputCSS + '"' +
                            'disabled=true>' +
                            '</td>');
         });
     }
+    var featureOverlay = new ol.FeatureOverlay({
+        map : visualObj.getMap(),
+        style : function (feature, resolution) {
+            var styleStroke = new ol.style.Stroke({
+                color : 'rgba(255, 0, 0, 1.0)',
+                width : 3
+            });
+            return [new ol.style.Style({
+                fill : feature.get('styleFill'),
+                stroke : styleStroke,
+                text : feature.get('styleText')
+            })];
+        }
+    });
+    this.featureOverlay = featureOverlay;
     function tableEvent(evtLayerName) {
         /**********tr select ****************/
         $('#attrTable' + evtLayerName + ' tbody').on('click', 'tr', function () {
+            var i = 0;
+            var eachFeatures = visualObj.layerCheck(evtLayerName).getSource().getFeatures();
             tableObj.$('tr.selected').removeClass('selected');
             $(this).addClass('selected');
-            console.log(visualObj.layerCheck(evtLayerName));
-            console.log(evtLayerName);
+            featureOverlay.removeFeature(attrObj.getSelectObj());
+            for (i = 0; i < eachFeatures.length; i++) {
+                var vectorObj = eachFeatures[i];
+                var type = vectorObj.getGeometry().getType();
+                var num = vectorObj.Z.split('.');
+                if (num[1] === $(this).attr('data-row')) {
+                    featureOverlay.addFeature(vectorObj);
+                    attrObj.setSelectObj(vectorObj);
+                }
+            }
             // selected layer color change...
         });
 
@@ -199,7 +232,7 @@ OGDSM.attributeTable.prototype.searchAttribute = function (tableName, header, va
     var tableObj = $('#attrTable' + tableName).DataTable();
     var searchIdx = 0;
     var resultIdx = null;
-    console.log(tableName + ' ' + header + ' ' + value);
+    //console.log(tableName + ' ' + header + ' ' + value);
     tableObj.columns().header().each(function (data, i) {
         var tableHeader = $(data).attr('data-value');
         if (header === tableHeader) {
@@ -229,4 +262,8 @@ OGDSM.attributeTable.prototype.unSelectAttribute = function (tableName) {
     var tableObj = $('#attrTable' + tableName).DataTable();
     tableObj.$('tr.selected').removeClass('selected');
     // selected layer color change...
+    if (this.getSelectObj() !== false) {
+        this.featureOverlay.removeFeature(this.getSelectObj());
+        this.attrSelected = false;
+    }
 };

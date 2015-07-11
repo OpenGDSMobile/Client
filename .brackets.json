@@ -18,6 +18,7 @@
         "D:/Apache24/htdocs/OpenGDSMobileClient/js/proj4js/2.2.2/EPSGdefs.js",
         "D:/Apache24/htdocs/OpenGDSMobileClient/js/ol3/ol.js",
         "/var/www/html/2_study/openGDSMobileClient/Gruntfile.js",
-        "/var/www/html/2_study/openGDSMobileClient/js/ol3/3.5/ol.js"
+        "/var/www/html/2_study/openGDSMobileClient/js/ol3/3.5/ol.js",
+        "rbush.js"
     ]
 }

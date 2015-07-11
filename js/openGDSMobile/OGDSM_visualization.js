@@ -343,6 +343,7 @@ OGDSM.visualization.prototype.addMap = function (data) {
             this.attrTableObj.addAttribute(data.get('title'));
             interaction.getFeatures().on('add', function (event) {
                 attrTableObj.unSelectAttribute(data.get('title'));
+                var obj = event.target.item(0);
                 var label = event.target.item(0).get('label');
                 var selectValue = event.target.item(0).get(label);
                 var trNumber = attrTableObj.searchAttribute(data.get('title'), label, selectValue);
@@ -350,7 +351,9 @@ OGDSM.visualization.prototype.addMap = function (data) {
             });
             interaction.getFeatures().on('remove', function (event) {
                 attrTableObj.unSelectAttribute(data.get('title'));
-                console.log("test");
+            });
+            interaction.getFeatures().on('change', function (event) {
+                console.log("Test");
             });
         }
     } else {
