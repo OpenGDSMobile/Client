@@ -20,26 +20,26 @@ OGDSM.namesapce('externalConnection');
 
 /**
  * GeoServer WFS 데이터 요청 (OpenLayers3 ol.source.GeoJSON)
- * @method geoServerWFSLoad
+ * @method geoServerGeoJsonLoad
  * @param {OGDSM Obj} obj - OpenGDS Mobile 시각화 객체
  * @param {String} addr - 주소
  * @param {String} workspace - 워크스페이스
  * @param {String} layerName - 레이어 이름
  * @param {JSON Object} options - 옵션 JSON 객체 키 값<br>
-  {type:'polygon', color:'rgba(0, 0, 0, 0.0)', callback:function () {}}<br>
-  type(String) : 레이어 타입( polygon | point)<br>
+  {color:'rgba(0, 0, 0, 0.0)', callback:function () {}}<br>
   color(String) : 색상 rgba<br>
+  label(String) : 라벨<br>
   callback(Function) : 콜백 함수 function (resultData) {...}
  */
-OGDSM.externalConnection.prototype.geoServerWFSLoad = function (obj, addr, workspace, layerName, options) {
+OGDSM.externalConnection.prototype.geoServerGeoJsonLoad = function (obj, addr, workspace, layerName, options) {
     'use strict';
     options = (typeof (options) !== 'undefined') ? options : {};
     var fullAddr = addr + '/geoserver/wfs?service=WFS&version=1.1.0&request=GetFeature&typeNames=' + workspace + ':' + layerName +
         '&outputFormat=json&srsname=' + obj.baseProj;
     var objStyles, name;
     var defaults = {
-        type : 'polygon',
         color : 'rgba(0, 0, 0, 0.0)',
+        label : null,
         callback : function (wfslayer) {}
     };
     for (name in defaults) {
@@ -49,33 +49,6 @@ OGDSM.externalConnection.prototype.geoServerWFSLoad = function (obj, addr, works
             }
         }
 	}
-    if (defaults.type === 'polygon') {
-        objStyles = [
-            new ol.style.Style({
-                fill : new ol.style.Fill({
-                    color : defaults.color
-                }),
-                stroke : new ol.style.Stroke({
-                    color : 'rgba(0, 0, 0, 1.0)',
-                    width : 1
-                })
-            })];
-    } else if (defaults.type === 'point') {
-        objStyles = [
-            new ol.style.Style({
-                image : new ol.style.Circle({
-                    radius : 5,
-                    fill : new ol.style.Fill({
-                        color : defaults.color
-                    }),
-                    stroke : new ol.style.Stroke({
-                        color : 'rgba(0, 0, 0, 1.0)',
-                        width : 1
-                    })
-                })
-            })
-        ];
-    }
     $.mobile.loading('show', {
         text : 'Loading',
         textVisible : 'true',
@@ -94,8 +67,57 @@ OGDSM.externalConnection.prototype.geoServerWFSLoad = function (obj, addr, works
                 source : new ol.source.Vector({
                     features : (new ol.format.GeoJSON()).readFeatures(msg)
                 }),
-                style : objStyles
+                style : (function () {
+                    var styleFill = new ol.style.Fill({
+                        color : defaults.color
+                    });
+                    var styleStroke = new ol.style.Stroke({
+                        color : 'rgba(0, 0, 0, 1.0)',
+                        width : 1
+                    });
+                    var styleCircle = new ol.style.Circle({
+                        radius : 10,
+                        fill : styleFill,
+                        stroke : styleStroke
+                    });
+                    return function (feature, resolution) {
+                        var type = feature.getGeometry().getType();
+                        var styleText = null;
+                        if (defaults.label !== null) {
+                            styleText = new ol.style.Text({
+                                font : '12px Calibri, sans-serif',
+                                text : feature.get(defaults.label),
+                                fill : new ol.style.Fill({
+                                    color : '#000'
+                                }),
+                                stroke : new ol.style.Stroke({
+                                    color : '#fff',
+                                    width : 3
+                                })
+                            });
+                            feature.set('label', defaults.label);
+                        }
+                        //console.log(defaults.label);
+                        feature.set('styleFill', styleFill);
+                        feature.set('styleStroke', styleStroke);
+                        feature.set('styleCircle', styleCircle);
+                        feature.set('styleText', styleText);
+                        if (type === 'MultiPolygon') {
+                            return [new ol.style.Style({
+                                fill : styleFill,
+                                stroke : styleStroke,
+                                text : styleText
+                            })];
+                        } else if (type === 'Point') {
+                            return [new ol.style.Style({
+                                image : styleCircle,
+                                text : styleText
+                            })];
+                        }
+                    };
+                }())
             });
+            wfsLayer.set('styleFill', defaults.color);
             obj.addMap(wfsLayer, defaults.type);
             $.mobile.loading('hide');
             defaults.callback(wfsLayer);
@@ -117,6 +139,7 @@ OGDSM.externalConnection.prototype.geoServerWFSLoad = function (obj, addr, works
   epsg(String) : EPSG String<br>
  * @return {ol.layer.Vector} vectorSource - OpenLayers3 백터 객체
  */
+/*
 OGDSM.externalConnection.prototype.geoServerWFS = function (addr, ws, layerName, options) {
     options = (typeof (options) !== 'undefined') ? options : {};
     var vectorSource, styles, resultData, name;
@@ -184,6 +207,7 @@ OGDSM.externalConnection.prototype.geoServerWFS = function (addr, ws, layerName,
     });
     return resultData;
 };
+*/
 /**
  * VWorld WMS 데이터 요청
  * @method vworldWMSLoad

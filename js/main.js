@@ -65,16 +65,19 @@ function vworldWMSUI() {
     });
 }
 //지오서버 WFS 데이터 시각화 함수
-function wfsLoad(str, type) {
+function wfsLoad(str, label) {
     'use strict';
-    type = (typeof (type) !== 'undefined') ? type : 'polygon';
+    label = (typeof (label) !== 'undefined') ? label : null;
     var r = Math.floor(Math.random() * 256),
         g = Math.floor(Math.random() * 256),
         b = Math.floor(Math.random() * 256);
     var color = 'rgb(' + r + ',' + g + ',' + b + ')';
     var externalServer = new OGDSM.externalConnection();
     var ui = new OGDSM.eGovFrameUI();
-    externalServer.geoServerWFSLoad(openGDSMObj, geoServerAddr, 'opengds', str, { type : type, color : color});
+    externalServer.geoServerGeoJsonLoad(openGDSMObj, geoServerAddr, 'opengds', str, {
+        color : color,
+        label : label
+    });
 
 }
 //서울 열린데이터 광장 데이터 선택 사용자 인터페이스 생성 / 시각화 함수

@@ -247,17 +247,17 @@ OGDSM.mapLayerList.prototype.addList = function (obj, label, color, type) {
                    '</div>' +
                    '</li>');
     var labelCanvas = document.getElementById(label + 'canvas').getContext('2d');
-    if (type === 'polygon') {
+    if (type === 'MultiPolygon') {
         labelCanvas.fillStyle = color;
         labelCanvas.fillRect(5, 5, 20, 20);
         labelCanvas.strokeRect(5, 5, 20, 20);
-    } else if (type === 'point') {
+    } else if (type === 'Point') {
         labelCanvas.beginPath();
         labelCanvas.arc(15, 15, 12, 0, 2 * Math.PI);
         labelCanvas.fillStyle = color;
         labelCanvas.fill();
         labelCanvas.stroke();
-    } else if (type === 'line') {
+    } else if (type === 'Line') {
         labelCanvas.moveTo(5, 5);
         labelCanvas.lineTo(20, 20);
         labelCanvas.strokeStyle = color;

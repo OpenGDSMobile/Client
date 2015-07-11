@@ -40,7 +40,7 @@ OGDSM.namesapce('visualization');
             OGDSM.visualization.updateLayoutSetting();
         });
         if (defaults.attrTableDiv !== null) {
-            this.attrTableObj = new OGDSM.attributeTable(defaults.attrTableDiv, defaults.attrAddr);
+            this.attrTableObj = new OGDSM.attributeTable(defaults.attrTableDiv, defaults.attrAddr, this);
         }
         if (defaults.layerListDiv !== null) {
             this.layerListObj = new OGDSM.mapLayerList(this, defaults.layerListDiv, {
@@ -284,100 +284,75 @@ OGDSM.visualization.prototype.updateLayoutSetting = function (mapDiv) {
  * WMS 및 WFS 맵 레이어 추가
  * @method addMap
  * @param {ol Map Object} data - 오픈레이어3 지도 객체
- * @param {String} type - WFS 객체 타입 [default=polygon | point]
  */
-OGDSM.visualization.prototype.addMap = function (data, type) {
+OGDSM.visualization.prototype.addMap = function (data) {
     'use strict';
     var chkData = this.layerCheck(data.get('title'));
+    var interaction;
     if (chkData === false) {
         this.getMap().addLayer(data);
-        if (typeof (this.layerListObj) !== 'undefined') {
-            var color;
-            if (typeof data.getStyle !== 'undefined') {
-                if (type === 'polygon') {
-                    color = data.getStyle()[0].getFill().getColor();
-                } else if (type === 'point') {
-                    color = data.getStyle()[0].getImage().getFill().getColor();
-                }
-
-            } else {
-                color =  'rgb(0, 0, 0)';
-            }
-            this.layerListObj.addList(data, data.get('title'), color, type);
-        }
-        if (typeof (this.attrTableObj) !== 'undefined') {
-            this.attrTableObj.addAttribute(data.get('title'));
-        }
-        var interaction;
+        this.mapObj.removeInteraction(this.mapObj.getInteractions());
+        /***interaction ******/
         interaction = new ol.interaction.Select({
             layers : function (layer) {
                 return true;
             },
-            style : function (feature) {
-                /*console.log(feature.getStyle()[0]);*/
-                /*console.log(data);*/
-                return [new ol.style.Style({
-                    stroke : new ol.style.Stroke({
-                        color : 'rgba(255, 0, 0, 1.0)',
-                        width : 2
-                    }),
-                    fill : new ol.style.Fill({
-                        color : data.getStyle()[0].getFill().getColor()
-                    })
-                })];
-            }
+            style : (function () {
+                var styleStroke = new ol.style.Stroke({
+                    color : 'rgba(255, 0, 0, 1.0)',
+                    width : 3
+                });
+                return function (feature, resolution) {
+                    var type = feature.getGeometry().getType();
+                    var styleCircle = new ol.style.Circle({
+                        radius : 10,
+                        fill : feature.get('styleCircle').getFill(),
+                        stroke : styleStroke
+                    });
+                    if (type === 'MultiPolygon') {
+                        return [new ol.style.Style({
+                            fill : feature.get('styleFill'),
+                            stroke : styleStroke,
+                            text : feature.get('styleText')
+                        })];
+                    } else if (type === 'Point') {
+                        return [new ol.style.Style({
+                            image : styleCircle,
+                            text : feature.get('styleText')
+                        })];
+                    }
+                };
+            }())
         });
         this.mapObj.addInteraction(interaction);
-
-        interaction.getFeatures().on('add', function (event) {
-            /*console.log(event);*/
-            /*console.log(event.target.item(0));*/
-        });
-        interaction.getFeatures().on('remove', function (event) {
-            console.log(event.target.item(0));
-        });
-        /*
-        var selected;
-     //   var selectedStyleCache = {};
-        var featureOverlay = new ol.FeatureOverlay({
-                map : this.mapObj,
-                style : function (feature, resolution) {
-                    console.log(feature.get('emd_eng_nm'));
-                    var text = resolution < 5000 ? feature.get('emd_eng_nm') : '';
-                  //  if (!selectedStyleCache[text]) {
-                    return [new ol.style.Style({
-                        stroke : new ol.style.Stroke({
-                            color : 'rgba(255,0,0,1)',
-                            width : 2
-                        })
-                    })];
-                //    }
-                    //return selectedStyleCache[text];
-                }
-            });
-
-        this.mapObj.on('singleclick', function (evt) {
-            if (evt.dragging) {
-                return -1;
+        /***layer list On******/
+        if (typeof (this.layerListObj) !== 'undefined') {
+            var color;
+            var geometryObj = data.getSource().getFeatures()[0].getGeometry();
+            var geoType = geometryObj.getType();
+            if (typeof data.getStyle !== 'undefined') {
+                color = data.get('styleFill');
+            } else {
+                color =  'rgb(0, 0, 0)';
             }
-      //      selectedStyleCache = {};
-
-            var pixel = this.getEventPixel(evt.originalEvent);
-            var feature = this.forEachFeatureAtPixel(pixel, function (feature, layer) {
-                return feature;
+            this.layerListObj.addList(data, data.get('title'), color, geoType);
+        }
+        /***attribute On******/
+        if (typeof (this.attrTableObj) !== 'undefined') {
+            var attrTableObj = this.attrTableObj;
+            this.attrTableObj.addAttribute(data.get('title'));
+            interaction.getFeatures().on('add', function (event) {
+                attrTableObj.unSelectAttribute(data.get('title'));
+                var label = event.target.item(0).get('label');
+                var selectValue = event.target.item(0).get(label);
+                var trNumber = attrTableObj.searchAttribute(data.get('title'), label, selectValue);
+                attrTableObj.selectAttribute(data.get('title'), trNumber);
             });
-            if (feature !== selected) {
-                if (selected) {
-                    featureOverlay.removeFeature(selected);
-                }
-                if (feature) {
-        //            console.log(selectedStyleCache);
-                    featureOverlay.addFeature(feature);
-                }
-                selected = feature;
-            }
-        });
-        */
+            interaction.getFeatures().on('remove', function (event) {
+                attrTableObj.unSelectAttribute(data.get('title'));
+                console.log("test");
+            });
+        }
     } else {
         console.log("Layer is existence");
     }

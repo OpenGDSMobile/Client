@@ -10,14 +10,14 @@
 	<link rel="stylesheet" href="./css/egovframework/mbl/cmm/EgovMobile-1.3.2.css">      <!-- eGov Mobile -->
     <link type="text/css" rel="stylesheet" href="./css/ol3/ol.css">                      <!-- OpenLayers 3 -->
 
-    <link rel="stylesheet" href="http://cdn.datatables.net/1.10.7/css/jquery.dataTables.min.css">      <!-- Data Table Plug-in -->
+    <link rel="stylesheet" href="./css/jQueryPlugins/jquery.dataTables.min.css">      <!-- Data Table Plug-in -->
 
     <!-- dependency library JS-->
     <!-- egovFramework  KOREA-->
 	<script type="text/javascript" src="./js/egovframework/mbl/cmm/jquery-1.9.1.min.js"></script>      <!-- jQuery -->
 	<script type="text/javascript" src="./js/egovframework/mbl/cmm/jquery.mobile-1.3.2.min.js"></script> <!-- jQuery Mobile -->
     <script type="text/javascript" src="./js/egovframework/mbl/cmm/EgovMobile-1.3.2.js"></script>      <!-- eGov Mobile -->
-    <script type="text/javascript" src="http://cdn.datatables.net/1.10.7/js/jquery.dataTables.min.js"></script> <!-- Data Table jQuery Plug-in-->
+    <script type="text/javascript" src="./js/jQueryPlugins/jquery.dataTables.min.js"></script> <!-- Data Table jQuery Plug-in-->
 
     <!-- Proj, OpenLayers3, D3 -->
     <script type="text/javascript" src="./js/proj4js/2.2.2/proj4.js"></script>                         <!-- Proj4js -->
@@ -256,31 +256,31 @@
     <div data-role="popup" id="WFSList">
         <ul data-role="listview" id="wfslayersList">
             <li data-theme="z" data-role="list-divider">도로명 전자지도</li>
-            <li><a href="#" onclick="wfsLoad('seoul_sig')">서울특별시(구 단위)</a></li>
-            <li><a href="#" onclick="wfsLoad('seoul_emd')">서울특별시(동 단위)</a></li>
-            <li><a href="#" onclick="wfsLoad('incheon_emd')">인천광역시(동 단위)</a></li>
-            <li><a href="#" onclick="wfsLoad('sejong_emd')">세종특별자치시(동 단위)</a></li>
-            <li><a href="#" onclick="wfsLoad('daejong_emd')">대전광역시(동 단위)</a></li>
-            <li><a href="#" onclick="wfsLoad('daegu_emd')">대구광역시(동 단위)</a></li>
-            <li><a href="#" onclick="wfsLoad('ulsan_emd')">울산광역시(동 단위)</a></li>
-            <li><a href="#" onclick="wfsLoad('gwangju_emd')">광주광역시(동 단위)</a></li>
-            <li><a href="#" onclick="wfsLoad('busan_emd')">부산광역시(동 단위)</a></li>
-            <li><a href="#" onclick="wfsLoad('chungbuk_sig')">충청북도(구 단위)</a></li>
-            <li><a href="#" onclick="wfsLoad('chungnam_sig')">충청남도(구 단위)</a></li>
-            <li><a href="#" onclick="wfsLoad('gangwon_sig')">강원도(구 단위)</a></li>
-            <li><a href="#" onclick="wfsLoad('gyeonggi_sig')">경기도(구 단위)</a></li>
-            <li><a href="#" onclick="wfsLoad('Gyeongsangbuk_sig')">경상북도(구 단위)</a></li>
-            <li><a href="#" onclick="wfsLoad('Gyeongsangnam_sig')">경상남도(구 단위)</a></li>
-            <li><a href="#" onclick="wfsLoad('Jeju_sig')">제주도(구 단위)</a></li>
-            <li><a href="#" onclick="wfsLoad('Jellanam_sig')">전라남도(구 단위)</a></li>
-            <li><a href="#" onclick="wfsLoad('Jeollabuk_sig')">전라북도(구 단위)</a></li>
+            <li><a href="#" onclick="wfsLoad('seoul_sig', 'sig_kor_nm')">서울특별시(구 단위)</a></li>
+            <li><a href="#" onclick="wfsLoad('seoul_emd', 'emd_kor_nm')">서울특별시(동 단위)</a></li>
+            <li><a href="#" onclick="wfsLoad('incheon_emd', 'emd_kor_nm')">인천광역시(동 단위)</a></li>
+            <li><a href="#" onclick="wfsLoad('sejong_emd', 'emd_kor_nm')">세종특별자치시(동 단위)</a></li>
+            <li><a href="#" onclick="wfsLoad('daejong_emd', 'emd_kor_nm')">대전광역시(동 단위)</a></li>
+            <li><a href="#" onclick="wfsLoad('daegu_emd', 'emd_kor_nm')">대구광역시(동 단위)</a></li>
+            <li><a href="#" onclick="wfsLoad('ulsan_emd', 'emd_kor_nm')">울산광역시(동 단위)</a></li>
+            <li><a href="#" onclick="wfsLoad('gwangju_emd', 'emd_kor_nm')">광주광역시(동 단위)</a></li>
+            <li><a href="#" onclick="wfsLoad('busan_emd', 'emd_kor_nm')">부산광역시(동 단위)</a></li>
+            <li><a href="#" onclick="wfsLoad('chungbuk_sig', 'sig_kor_nm')">충청북도(구 단위)</a></li>
+            <li><a href="#" onclick="wfsLoad('chungnam_sig', 'sig_kor_nm')">충청남도(구 단위)</a></li>
+            <li><a href="#" onclick="wfsLoad('gangwon_sig', 'sig_kor_nm')">강원도(구 단위)</a></li>
+            <li><a href="#" onclick="wfsLoad('gyeonggi_sig', 'sig_kor_nm')">경기도(구 단위)</a></li>
+            <li><a href="#" onclick="wfsLoad('Gyeongsangbuk_sig', 'sig_kor_nm')">경상북도(구 단위)</a></li>
+            <li><a href="#" onclick="wfsLoad('Gyeongsangnam_sig', 'sig_kor_nm')">경상남도(구 단위)</a></li>
+            <li><a href="#" onclick="wfsLoad('Jeju_sig', 'sig_kor_nm')">제주도(구 단위)</a></li>
+            <li><a href="#" onclick="wfsLoad('Jellanam_sig', 'sig_kor_nm')">전라남도(구 단위)</a></li>
+            <li><a href="#" onclick="wfsLoad('Jeollabuk_sig', 'sig_kor_nm')">전라북도(구 단위)</a></li>
         </ul>
     </div>
 <!--Open Data PopUp-->
     <div data-role="popup" id="opendataList">
         <ul data-role="listview">
             <li data-theme="z" data-role="list-divider">데이터 셋</li>
-            <li><a href="#" onclick="wfsLoad('seoul_env_position','point')">환경 센서위치(서울)</a></li>
+            <li><a href="#" onclick="wfsLoad('seoul_env_position', 'name')">환경 센서위치(서울)</a></li>
             <li><a href="#" onclick="wfsLoad('city_wer_mse_esb_loca_w','point')">도시 기상 관측망(서울)</a></li>
             <li><a href="#" onclick="wfsLoad('sejong_population_wgs84')">인구 데이터(세종특별시2013.1.-2014.2.)</a></li>
             <li data-theme="z" data-role="list-divider">오픈 API</li>

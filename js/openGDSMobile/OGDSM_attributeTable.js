@@ -11,10 +11,11 @@ OGDSM.namesapce('attributeTable');
      * @param {String} RootDiv - 속성 테이블 DIV 이름
      * @param {String} addr - PostgreSQL 접속 주소
      */
-    OGDSM.attributeTable = function (rootDiv, addr) {
+    OGDSM.attributeTable = function (rootDiv, addr, visualObj) {
         this.rootDiv = rootDiv;
         this.addr = addr;
         this.editMode = false;
+        this.visualObj = visualObj;
         var rootElement = document.getElementById(rootDiv),
             ulElement = document.createElement('ul'),
             contentsElement = document.createElement('div');
@@ -50,6 +51,7 @@ OGDSM.attributeTable.prototype.addAttribute = function (layerName) {
         rootDiv = this.rootDiv,
         tabs = $('#' + rootDiv + 'Tab'),
         contents = $('#' + rootDiv + 'Contents'),
+        visualObj = this.visualObj,
         tableObj = null;
     var aBaseCSS = 'display:block; padding:6px 15px; text-decoration:none; border-right:1px solid #000;' +
                    'border-top:1px solid #000; margin:0;',
@@ -65,6 +67,7 @@ OGDSM.attributeTable.prototype.addAttribute = function (layerName) {
         $(e.currentTarget).css('background', backgroundSelected);
         $('.attrTable').hide();
         $('#attrContent' + layerName).css('display', 'block');
+        $('.attrTable tr.selected').removeClass('selected');
     }
     function createTableCol(attrContents, i, tableBody, tableTh) {
         $.each(attrContents, function (key, value) {
@@ -72,24 +75,27 @@ OGDSM.attributeTable.prototype.addAttribute = function (layerName) {
                 return true;
             }
             if (i === 0) {
-                tableTh.append('<th>' + key + '</th>');
+                tableTh.append('<th data-value="' + key + '">' + key + '</th>');
             }
-            var newCell = tableBody.find('tr:last');
+            var newCell = tableBody.find('tr:last').attr('data-row', i);
             newCell.append('<td>' +
                            '<input type="text" value="' + value + '" class="editSW" style="' + textInputCSS + '"' +
                            'disabled=true>' +
                            '</td>');
         });
     }
-    function tableEvent() {
+    function tableEvent(evtLayerName) {
         /**********tr select ****************/
-        $('#attrTable' + layerName + ' tbody').on('click', 'tr', function () {
+        $('#attrTable' + evtLayerName + ' tbody').on('click', 'tr', function () {
             tableObj.$('tr.selected').removeClass('selected');
             $(this).addClass('selected');
+            console.log(visualObj.layerCheck(evtLayerName));
+            console.log(evtLayerName);
+            // selected layer color change...
         });
 
         /**********page change **************/
-        $('#attrTable' + layerName).on('page.dt', function (e, settings) {
+        $('#attrTable' + evtLayerName).on('page.dt', function (e, settings) {
             setTimeout(function () {
                 attrObj.editAttribute(attrObj.getEditMode());
             }, 200);
@@ -145,7 +151,8 @@ OGDSM.attributeTable.prototype.addAttribute = function (layerName) {
                 'bPaginate' : true,
                 "dom": 'rt<"bottom"ip><"clear">'
             });
-            tableEvent();
+           // tableObjs['attrTable' + layerName] = tableObj;
+            tableEvent(layerName);
             /*
             $(window).on('resize', function () {
                 var attrDivHeight = $('#' + rootDiv + 'Contents').height();
@@ -184,4 +191,42 @@ OGDSM.attributeTable.prototype.editAttribute = function (sw) {
         textInput.attr('disabled', true);
         this.editMode = false;
     }
+};
+
+OGDSM.attributeTable.prototype.searchAttribute = function (tableName, header, value) {
+    'use strict';
+    //console.log(this.tableObjs);
+    var tableObj = $('#attrTable' + tableName).DataTable();
+    var searchIdx = 0;
+    var resultIdx = null;
+    console.log(tableName + ' ' + header + ' ' + value);
+    tableObj.columns().header().each(function (data, i) {
+        var tableHeader = $(data).attr('data-value');
+        if (header === tableHeader) {
+            searchIdx = i;
+            return false;
+        }
+    });
+
+    tableObj.columns(searchIdx).every(function () {
+        $(this.data()).each(function (i, data) {
+            if ($(this).val() === value) {
+                resultIdx = i;
+            }
+        });
+    });
+    return resultIdx;
+};
+
+OGDSM.attributeTable.prototype.selectAttribute = function (tableName, trNum) {
+    'use strict';
+    var tableObj = $('#attrTable' + tableName).DataTable();
+    tableObj.$('tr.selected').removeClass('selected');
+    tableObj.$('tr').eq(trNum).addClass('selected');
+};
+OGDSM.attributeTable.prototype.unSelectAttribute = function (tableName) {
+    'use strict';
+    var tableObj = $('#attrTable' + tableName).DataTable();
+    tableObj.$('tr.selected').removeClass('selected');
+    // selected layer color change...
 };
