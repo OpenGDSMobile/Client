@@ -2,7 +2,7 @@
 <html lang="en" class="yui-overrride">
 <head>
     <meta charset="utf-8">
-    <title>js\openGDSMobile\OGDSM_attributeTable.js</title>
+    <title>../js/openGDSMobile/OGDSM_attributeTable.js</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700' rel='stylesheet' type='text/css'>
@@ -84,7 +84,7 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1 class="file-heading">File: js\openGDSMobile\OGDSM_attributeTable.js</h1>
+                        <h1 class="file-heading">File: ../js/openGDSMobile/OGDSM_attributeTable.js</h1>
 
                         <div class="file">
                             <pre class="code prettyprint linenums">
@@ -101,10 +101,12 @@
                              * @param {String} RootDiv - 속성 테이블 DIV 이름
                              * @param {String} addr - PostgreSQL 접속 주소
                              */
-                            OGDSM.attributeTable = function (rootDiv, addr) {
+                            OGDSM.attributeTable = function (rootDiv, addr, visualObj) {
                                 this.rootDiv = rootDiv;
                                 this.addr = addr;
                                 this.editMode = false;
+                                this.visualObj = visualObj;
+                                this.attrSelected = false;
                                 var rootElement = document.getElementById(rootDiv),
                                     ulElement = document.createElement(&#x27;ul&#x27;),
                                     contentsElement = document.createElement(&#x27;div&#x27;);
@@ -124,6 +126,18 @@
                                 constructor : OGDSM.attributeTable,
                                 getEditMode : function () {
                                     return this.editMode;
+                                },
+                                getSelectObj : function () {
+                                    return this.attrSelected;
+                                },
+                                setSelectObj : function (obj) {
+                                    this.attrSelected = obj;
+                                },
+                                setolSelectObj : function (obj) {
+                                    this.olSelectObj = obj;
+                                },
+                                getolSelectObj : function (obj) {
+                                    return this.olSelectObj;
                                 }
                             };
                             return OGDSM.attributeTable;
@@ -140,6 +154,8 @@
                                 rootDiv = this.rootDiv,
                                 tabs = $(&#x27;#&#x27; + rootDiv + &#x27;Tab&#x27;),
                                 contents = $(&#x27;#&#x27; + rootDiv + &#x27;Contents&#x27;),
+                                visualObj = this.visualObj,
+                                attrSelected = this.attrSelected,
                                 tableObj = null;
                             var aBaseCSS = &#x27;display:block; padding:6px 15px; text-decoration:none; border-right:1px solid #000;&#x27; +
                                            &#x27;border-top:1px solid #000; margin:0;&#x27;,
@@ -155,6 +171,7 @@
                                 $(e.currentTarget).css(&#x27;background&#x27;, backgroundSelected);
                                 $(&#x27;.attrTable&#x27;).hide();
                                 $(&#x27;#attrContent&#x27; + layerName).css(&#x27;display&#x27;, &#x27;block&#x27;);
+                                $(&#x27;.attrTable tr.selected&#x27;).removeClass(&#x27;selected&#x27;);
                             }
                             function createTableCol(attrContents, i, tableBody, tableTh) {
                                 $.each(attrContents, function (key, value) {
@@ -162,24 +179,53 @@
                                         return true;
                                     }
                                     if (i === 0) {
-                                        tableTh.append(&#x27;&lt;th&gt;&#x27; + key + &#x27;&lt;/th&gt;&#x27;);
+                                        tableTh.append(&#x27;&lt;th data-value=&quot;&#x27; + key + &#x27;&quot;&gt;&#x27; + key + &#x27;&lt;/th&gt;&#x27;);
                                     }
-                                    var newCell = tableBody.find(&#x27;tr:last&#x27;);
+                                    var newCell = tableBody.find(&#x27;tr:last&#x27;).attr(&#x27;data-row&#x27;, i + 1);
                                     newCell.append(&#x27;&lt;td&gt;&#x27; +
                                                    &#x27;&lt;input type=&quot;text&quot; value=&quot;&#x27; + value + &#x27;&quot; class=&quot;editSW&quot; style=&quot;&#x27; + textInputCSS + &#x27;&quot;&#x27; +
                                                    &#x27;disabled=true&gt;&#x27; +
                                                    &#x27;&lt;/td&gt;&#x27;);
                                 });
                             }
-                            function tableEvent() {
+                            var featureOverlay = new ol.FeatureOverlay({
+                                map : visualObj.getMap(),
+                                style : function (feature, resolution) {
+                                    var styleStroke = new ol.style.Stroke({
+                                        color : &#x27;rgba(255, 0, 0, 1.0)&#x27;,
+                                        width : 3
+                                    });
+                                    return [new ol.style.Style({
+                                        fill : feature.get(&#x27;styleFill&#x27;),
+                                        stroke : styleStroke,
+                                        text : feature.get(&#x27;styleText&#x27;)
+                                    })];
+                                }
+                            });
+                            this.featureOverlay = featureOverlay;
+                            function tableEvent(evtLayerName) {
                                 /**********tr select ****************/
-                                $(&#x27;#attrTable&#x27; + layerName + &#x27; tbody&#x27;).on(&#x27;click&#x27;, &#x27;tr&#x27;, function () {
+                                $(&#x27;#attrTable&#x27; + evtLayerName + &#x27; tbody&#x27;).on(&#x27;click&#x27;, &#x27;tr&#x27;, function () {
+                                    var i = 0;
+                                    var eachFeatures = visualObj.layerCheck(evtLayerName).getSource().getFeatures();
                                     tableObj.$(&#x27;tr.selected&#x27;).removeClass(&#x27;selected&#x27;);
                                     $(this).addClass(&#x27;selected&#x27;);
+                                    featureOverlay.removeFeature(attrObj.getSelectObj());
+                                    for (i = 0; i &lt; eachFeatures.length; i++) {
+                                        var vectorObj = eachFeatures[i];
+                                        var num = vectorObj.Z.split(&#x27;.&#x27;);
+                                        if (num[1] === $(this).attr(&#x27;data-row&#x27;)) {
+                                            featureOverlay.addFeature(vectorObj);
+                                            attrObj.setSelectObj(vectorObj);
+                                        }
+                                    }
+                                    // selected layer color change...
+                                    attrObj.getolSelectObj().getFeatures().clear();
+                                    //console.log(visualObj.getMap().getInteractions());
                                 });
 
                                 /**********page change **************/
-                                $(&#x27;#attrTable&#x27; + layerName).on(&#x27;page.dt&#x27;, function (e, settings) {
+                                $(&#x27;#attrTable&#x27; + evtLayerName).on(&#x27;page.dt&#x27;, function (e, settings) {
                                     setTimeout(function () {
                                         attrObj.editAttribute(attrObj.getEditMode());
                                     }, 200);
@@ -235,7 +281,8 @@
                                         &#x27;bPaginate&#x27; : true,
                                         &quot;dom&quot;: &#x27;rt&lt;&quot;bottom&quot;ip&gt;&lt;&quot;clear&quot;&gt;&#x27;
                                     });
-                                    tableEvent();
+                                   // tableObjs[&#x27;attrTable&#x27; + layerName] = tableObj;
+                                    tableEvent(layerName);
                                     /*
                                     $(window).on(&#x27;resize&#x27;, function () {
                                         var attrDivHeight = $(&#x27;#&#x27; + rootDiv + &#x27;Contents&#x27;).height();
@@ -273,6 +320,48 @@
                             } else {
                                 textInput.attr(&#x27;disabled&#x27;, true);
                                 this.editMode = false;
+                            }
+                        };
+
+                        OGDSM.attributeTable.prototype.searchAttribute = function (tableName, header, value) {
+                            &#x27;use strict&#x27;;
+                            //console.log(this.tableObjs);
+                            var tableObj = $(&#x27;#attrTable&#x27; + tableName).DataTable();
+                            var searchIdx = 0;
+                            var resultIdx = null;
+                            //console.log(tableName + &#x27; &#x27; + header + &#x27; &#x27; + value);
+                            tableObj.columns().header().each(function (data, i) {
+                                var tableHeader = $(data).attr(&#x27;data-value&#x27;);
+                                if (header === tableHeader) {
+                                    searchIdx = i;
+                                    return false;
+                                }
+                            });
+
+                            tableObj.columns(searchIdx).every(function () {
+                                $(this.data()).each(function (i, data) {
+                                    if ($(this).val() === value) {
+                                        resultIdx = i;
+                                    }
+                                });
+                            });
+                            return resultIdx;
+                        };
+
+                        OGDSM.attributeTable.prototype.selectAttribute = function (tableName, trNum) {
+                            &#x27;use strict&#x27;;
+                            var tableObj = $(&#x27;#attrTable&#x27; + tableName).DataTable();
+                            tableObj.$(&#x27;tr.selected&#x27;).removeClass(&#x27;selected&#x27;);
+                            tableObj.$(&#x27;tr&#x27;).eq(trNum).addClass(&#x27;selected&#x27;);
+                        };
+                        OGDSM.attributeTable.prototype.unSelectAttribute = function (tableName) {
+                            &#x27;use strict&#x27;;
+                            var tableObj = $(&#x27;#attrTable&#x27; + tableName).DataTable();
+                            tableObj.$(&#x27;tr.selected&#x27;).removeClass(&#x27;selected&#x27;);
+                            // selected layer color change...
+                            if (this.getSelectObj() !== false) {
+                                this.featureOverlay.removeFeature(this.getSelectObj());
+                                this.attrSelected = false;
                             }
                         };
 

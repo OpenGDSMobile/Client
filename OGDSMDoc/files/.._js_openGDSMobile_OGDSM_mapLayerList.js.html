@@ -2,7 +2,7 @@
 <html lang="en" class="yui-overrride">
 <head>
     <meta charset="utf-8">
-    <title>js\openGDSMobile\OGDSM_mapLayerList.js</title>
+    <title>../js/openGDSMobile/OGDSM_mapLayerList.js</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700' rel='stylesheet' type='text/css'>
@@ -84,7 +84,7 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1 class="file-heading">File: js\openGDSMobile\OGDSM_mapLayerList.js</h1>
+                        <h1 class="file-heading">File: ../js/openGDSMobile/OGDSM_mapLayerList.js</h1>
 
                         <div class="file">
                             <pre class="code prettyprint linenums">
@@ -337,17 +337,17 @@
                                            &#x27;&lt;/div&gt;&#x27; +
                                            &#x27;&lt;/li&gt;&#x27;);
                             var labelCanvas = document.getElementById(label + &#x27;canvas&#x27;).getContext(&#x27;2d&#x27;);
-                            if (type === &#x27;polygon&#x27;) {
+                            if (type === &#x27;MultiPolygon&#x27;) {
                                 labelCanvas.fillStyle = color;
                                 labelCanvas.fillRect(5, 5, 20, 20);
                                 labelCanvas.strokeRect(5, 5, 20, 20);
-                            } else if (type === &#x27;point&#x27;) {
+                            } else if (type === &#x27;Point&#x27;) {
                                 labelCanvas.beginPath();
                                 labelCanvas.arc(15, 15, 12, 0, 2 * Math.PI);
                                 labelCanvas.fillStyle = color;
                                 labelCanvas.fill();
                                 labelCanvas.stroke();
-                            } else if (type === &#x27;line&#x27;) {
+                            } else if (type === &#x27;Line&#x27;) {
                                 labelCanvas.moveTo(5, 5);
                                 labelCanvas.lineTo(20, 20);
                                 labelCanvas.strokeStyle = color;

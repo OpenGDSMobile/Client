@@ -42,6 +42,12 @@ OGDSM.namesapce('attributeTable');
         },
         setSelectObj : function (obj) {
             this.attrSelected = obj;
+        },
+        setolSelectObj : function (obj) {
+            this.olSelectObj = obj;
+        },
+        getolSelectObj : function (obj) {
+            return this.olSelectObj;
         }
     };
     return OGDSM.attributeTable;
@@ -117,7 +123,6 @@ OGDSM.attributeTable.prototype.addAttribute = function (layerName) {
             featureOverlay.removeFeature(attrObj.getSelectObj());
             for (i = 0; i < eachFeatures.length; i++) {
                 var vectorObj = eachFeatures[i];
-                var type = vectorObj.getGeometry().getType();
                 var num = vectorObj.Z.split('.');
                 if (num[1] === $(this).attr('data-row')) {
                     featureOverlay.addFeature(vectorObj);
@@ -125,6 +130,8 @@ OGDSM.attributeTable.prototype.addAttribute = function (layerName) {
                 }
             }
             // selected layer color change...
+            attrObj.getolSelectObj().getFeatures().clear();
+            //console.log(visualObj.getMap().getInteractions());
         });
 
         /**********page change **************/

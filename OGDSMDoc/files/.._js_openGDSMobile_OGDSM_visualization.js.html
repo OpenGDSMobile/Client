@@ -2,7 +2,7 @@
 <html lang="en" class="yui-overrride">
 <head>
     <meta charset="utf-8">
-    <title>js\openGDSMobile\OGDSM_visualization.js</title>
+    <title>../js/openGDSMobile/OGDSM_visualization.js</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700' rel='stylesheet' type='text/css'>
@@ -84,7 +84,7 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1 class="file-heading">File: js\openGDSMobile\OGDSM_visualization.js</h1>
+                        <h1 class="file-heading">File: ../js/openGDSMobile/OGDSM_visualization.js</h1>
 
                         <div class="file">
                             <pre class="code prettyprint linenums">
@@ -130,7 +130,7 @@
                                     OGDSM.visualization.updateLayoutSetting();
                                 });
                                 if (defaults.attrTableDiv !== null) {
-                                    this.attrTableObj = new OGDSM.attributeTable(defaults.attrTableDiv, defaults.attrAddr);
+                                    this.attrTableObj = new OGDSM.attributeTable(defaults.attrTableDiv, defaults.attrAddr, this);
                                 }
                                 if (defaults.layerListDiv !== null) {
                                     this.layerListObj = new OGDSM.mapLayerList(this, defaults.layerListDiv, {
@@ -138,6 +138,8 @@
                                     });
                                 }
                                 // Orientation...
+
+
                             };
                             OGDSM.visualization.prototype = {
                                 constructor : OGDSM.visualization,
@@ -366,33 +368,83 @@
                                 this.mapObj.updateSize();
                             }
                         };
+
+
                         /**
                          * WMS 및 WFS 맵 레이어 추가
                          * @method addMap
                          * @param {ol Map Object} data - 오픈레이어3 지도 객체
-                         * @param {String} type - WFS 객체 타입 [default=polygon | point]
                          */
-                        OGDSM.visualization.prototype.addMap = function (data, type) {
+                        OGDSM.visualization.prototype.addMap = function (data) {
                             &#x27;use strict&#x27;;
                             var chkData = this.layerCheck(data.get(&#x27;title&#x27;));
+                            var interaction;
                             if (chkData === false) {
                                 this.getMap().addLayer(data);
+                                this.mapObj.removeInteraction(this.mapObj.getInteractions());
+                                /***interaction ******/
+                                interaction = new ol.interaction.Select({
+                                    layers : function (layer) {
+                                        return true;
+                                    },
+                                    style : (function () {
+                                        var styleStroke = new ol.style.Stroke({
+                                            color : &#x27;rgba(255, 0, 0, 1.0)&#x27;,
+                                            width : 3
+                                        });
+                                        return function (feature, resolution) {
+                                            var type = feature.getGeometry().getType();
+                                            var styleCircle = new ol.style.Circle({
+                                                radius : 10,
+                                                fill : feature.get(&#x27;styleCircle&#x27;).getFill(),
+                                                stroke : styleStroke
+                                            });
+                                            if (type === &#x27;MultiPolygon&#x27;) {
+                                                return [new ol.style.Style({
+                                                    fill : feature.get(&#x27;styleFill&#x27;),
+                                                    stroke : styleStroke,
+                                                    text : feature.get(&#x27;styleText&#x27;)
+                                                })];
+                                            } else if (type === &#x27;Point&#x27;) {
+                                                return [new ol.style.Style({
+                                                    image : styleCircle,
+                                                    text : feature.get(&#x27;styleText&#x27;)
+                                                })];
+                                            }
+                                        };
+                                    }())
+                                });
+                                this.mapObj.addInteraction(interaction);
+                                this.mapObj.removeLayer(interaction);
+                                //console.log(interaction.deselected(null));
+                                /***layer list On******/
                                 if (typeof (this.layerListObj) !== &#x27;undefined&#x27;) {
                                     var color;
+                                    var geometryObj = data.getSource().getFeatures()[0].getGeometry();
+                                    var geoType = geometryObj.getType();
                                     if (typeof data.getStyle !== &#x27;undefined&#x27;) {
-                                        if (type === &#x27;polygon&#x27;) {
-                                            color = data.getStyle()[0].getFill().getColor();
-                                        } else if (type === &#x27;point&#x27;) {
-                                            color = data.getStyle()[0].getImage().getFill().getColor();
-                                        }
-
+                                        color = data.get(&#x27;styleFill&#x27;);
                                     } else {
                                         color =  &#x27;rgb(0, 0, 0)&#x27;;
                                     }
-                                    this.layerListObj.addList(data, data.get(&#x27;title&#x27;), color, type);
+                                    this.layerListObj.addList(data, data.get(&#x27;title&#x27;), color, geoType);
                                 }
+                                /***attribute On******/
                                 if (typeof (this.attrTableObj) !== &#x27;undefined&#x27;) {
+                                    var attrTableObj = this.attrTableObj;
                                     this.attrTableObj.addAttribute(data.get(&#x27;title&#x27;));
+                                    this.attrTableObj.setolSelectObj(interaction);
+                                    interaction.getFeatures().on(&#x27;add&#x27;, function (event) {
+                                        attrTableObj.unSelectAttribute(data.get(&#x27;title&#x27;));
+                                        var obj = event.target.item(0);
+                                        var label = event.target.item(0).get(&#x27;label&#x27;);
+                                        var selectValue = event.target.item(0).get(label);
+                                        var trNumber = attrTableObj.searchAttribute(data.get(&#x27;title&#x27;), label, selectValue);
+                                        attrTableObj.selectAttribute(data.get(&#x27;title&#x27;), trNumber);
+                                    });
+                                    interaction.getFeatures().on(&#x27;remove&#x27;, function (event) {
+                                        attrTableObj.unSelectAttribute(data.get(&#x27;title&#x27;));
+                                    });
                                 }
                             } else {
                                 console.log(&quot;Layer is existence&quot;);

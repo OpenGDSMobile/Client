@@ -325,6 +325,8 @@ OGDSM.visualization.prototype.addMap = function (data) {
             }())
         });
         this.mapObj.addInteraction(interaction);
+        this.mapObj.removeLayer(interaction);
+        //console.log(interaction.deselected(null));
         /***layer list On******/
         if (typeof (this.layerListObj) !== 'undefined') {
             var color;
@@ -341,6 +343,7 @@ OGDSM.visualization.prototype.addMap = function (data) {
         if (typeof (this.attrTableObj) !== 'undefined') {
             var attrTableObj = this.attrTableObj;
             this.attrTableObj.addAttribute(data.get('title'));
+            this.attrTableObj.setolSelectObj(interaction);
             interaction.getFeatures().on('add', function (event) {
                 attrTableObj.unSelectAttribute(data.get('title'));
                 var obj = event.target.item(0);
@@ -351,9 +354,6 @@ OGDSM.visualization.prototype.addMap = function (data) {
             });
             interaction.getFeatures().on('remove', function (event) {
                 attrTableObj.unSelectAttribute(data.get('title'));
-            });
-            interaction.getFeatures().on('change', function (event) {
-                console.log("Test");
             });
         }
     } else {

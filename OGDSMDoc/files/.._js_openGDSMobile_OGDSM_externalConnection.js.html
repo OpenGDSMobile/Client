@@ -2,7 +2,7 @@
 <html lang="en" class="yui-overrride">
 <head>
     <meta charset="utf-8">
-    <title>js\openGDSMobile\OGDSM_externalConnection.js</title>
+    <title>../js/openGDSMobile/OGDSM_externalConnection.js</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700' rel='stylesheet' type='text/css'>
@@ -84,7 +84,7 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1 class="file-heading">File: js\openGDSMobile\OGDSM_externalConnection.js</h1>
+                        <h1 class="file-heading">File: ../js/openGDSMobile/OGDSM_externalConnection.js</h1>
 
                         <div class="file">
                             <pre class="code prettyprint linenums">
@@ -110,26 +110,26 @@
 
                         /**
                          * GeoServer WFS 데이터 요청 (OpenLayers3 ol.source.GeoJSON)
-                         * @method geoServerWFSLoad
+                         * @method geoServerGeoJsonLoad
                          * @param {OGDSM Obj} obj - OpenGDS Mobile 시각화 객체
                          * @param {String} addr - 주소
                          * @param {String} workspace - 워크스페이스
                          * @param {String} layerName - 레이어 이름
                          * @param {JSON Object} options - 옵션 JSON 객체 키 값&lt;br&gt;
-                          {type:&#x27;polygon&#x27;, color:&#x27;rgba(0, 0, 0, 0.0)&#x27;, callback:function () {}}&lt;br&gt;
-                          type(String) : 레이어 타입( polygon | point)&lt;br&gt;
+                          {color:&#x27;rgba(0, 0, 0, 0.0)&#x27;, callback:function () {}}&lt;br&gt;
                           color(String) : 색상 rgba&lt;br&gt;
+                          label(String) : 라벨&lt;br&gt;
                           callback(Function) : 콜백 함수 function (resultData) {...}
                          */
-                        OGDSM.externalConnection.prototype.geoServerWFSLoad = function (obj, addr, workspace, layerName, options) {
+                        OGDSM.externalConnection.prototype.geoServerGeoJsonLoad = function (obj, addr, workspace, layerName, options) {
                             &#x27;use strict&#x27;;
                             options = (typeof (options) !== &#x27;undefined&#x27;) ? options : {};
                             var fullAddr = addr + &#x27;/geoserver/wfs?service=WFS&amp;version=1.1.0&amp;request=GetFeature&amp;typeNames=&#x27; + workspace + &#x27;:&#x27; + layerName +
                                 &#x27;&amp;outputFormat=json&amp;srsname=&#x27; + obj.baseProj;
                             var objStyles, name;
                             var defaults = {
-                                type : &#x27;polygon&#x27;,
                                 color : &#x27;rgba(0, 0, 0, 0.0)&#x27;,
+                                label : null,
                                 callback : function (wfslayer) {}
                             };
                             for (name in defaults) {
@@ -139,33 +139,6 @@
                                     }
                                 }
                         	}
-                            if (defaults.type === &#x27;polygon&#x27;) {
-                                objStyles = [
-                                    new ol.style.Style({
-                                        fill : new ol.style.Fill({
-                                            color : defaults.color
-                                        }),
-                                        stroke : new ol.style.Stroke({
-                                            color : &#x27;rgba(0, 0, 0, 1.0)&#x27;,
-                                            width : 1
-                                        })
-                                    })];
-                            } else if (defaults.type === &#x27;point&#x27;) {
-                                objStyles = [
-                                    new ol.style.Style({
-                                        image : new ol.style.Circle({
-                                            radius : 5,
-                                            fill : new ol.style.Fill({
-                                                color : defaults.color
-                                            }),
-                                            stroke : new ol.style.Stroke({
-                                                color : &#x27;rgba(0, 0, 0, 1.0)&#x27;,
-                                                width : 1
-                                            })
-                                        })
-                                    })
-                                ];
-                            }
                             $.mobile.loading(&#x27;show&#x27;, {
                                 text : &#x27;Loading&#x27;,
                                 textVisible : &#x27;true&#x27;,
@@ -184,8 +157,57 @@
                                         source : new ol.source.Vector({
                                             features : (new ol.format.GeoJSON()).readFeatures(msg)
                                         }),
-                                        style : objStyles
+                                        style : (function () {
+                                            var styleFill = new ol.style.Fill({
+                                                color : defaults.color
+                                            });
+                                            var styleStroke = new ol.style.Stroke({
+                                                color : &#x27;rgba(0, 0, 0, 1.0)&#x27;,
+                                                width : 1
+                                            });
+                                            var styleCircle = new ol.style.Circle({
+                                                radius : 10,
+                                                fill : styleFill,
+                                                stroke : styleStroke
+                                            });
+                                            return function (feature, resolution) {
+                                                var type = feature.getGeometry().getType();
+                                                var styleText = null;
+                                                if (defaults.label !== null) {
+                                                    styleText = new ol.style.Text({
+                                                        font : &#x27;12px Calibri, sans-serif&#x27;,
+                                                        text : feature.get(defaults.label),
+                                                        fill : new ol.style.Fill({
+                                                            color : &#x27;#000&#x27;
+                                                        }),
+                                                        stroke : new ol.style.Stroke({
+                                                            color : &#x27;#fff&#x27;,
+                                                            width : 3
+                                                        })
+                                                    });
+                                                    feature.set(&#x27;label&#x27;, defaults.label);
+                                                }
+                                                //console.log(defaults.label);
+                                                feature.set(&#x27;styleFill&#x27;, styleFill);
+                                                feature.set(&#x27;styleStroke&#x27;, styleStroke);
+                                                feature.set(&#x27;styleCircle&#x27;, styleCircle);
+                                                feature.set(&#x27;styleText&#x27;, styleText);
+                                                if (type === &#x27;MultiPolygon&#x27;) {
+                                                    return [new ol.style.Style({
+                                                        fill : styleFill,
+                                                        stroke : styleStroke,
+                                                        text : styleText
+                                                    })];
+                                                } else if (type === &#x27;Point&#x27;) {
+                                                    return [new ol.style.Style({
+                                                        image : styleCircle,
+                                                        text : styleText
+                                                    })];
+                                                }
+                                            };
+                                        }())
                                     });
+                                    wfsLayer.set(&#x27;styleFill&#x27;, defaults.color);
                                     obj.addMap(wfsLayer, defaults.type);
                                     $.mobile.loading(&#x27;hide&#x27;);
                                     defaults.callback(wfsLayer);
@@ -207,6 +229,7 @@
                           epsg(String) : EPSG String&lt;br&gt;
                          * @return {ol.layer.Vector} vectorSource - OpenLayers3 백터 객체
                          */
+                        /*
                         OGDSM.externalConnection.prototype.geoServerWFS = function (addr, ws, layerName, options) {
                             options = (typeof (options) !== &#x27;undefined&#x27;) ? options : {};
                             var vectorSource, styles, resultData, name;
@@ -274,6 +297,7 @@
                             });
                             return resultData;
                         };
+                        */
                         /**
                          * VWorld WMS 데이터 요청
                          * @method vworldWMSLoad
