@@ -1,6 +1,6 @@
-OpenGDS Mobile Client 1.2
+OpenGDS Mobile Client 1.3
 ======
-> + Mobile Web Browsers Visualization Module about Geo-spatial image and Public Data
+> + Mobile Web Browsers Visualization Library using Open Source about Geo-spatial and Public Data
 > + Demo Web System
 
 How to Install?
@@ -19,3 +19,4 @@ Dependent libraries
 > + D3.js 3.4.13
 > + OpenLayers 3
 > + proj4 2.2.2
+> + DataTablse(jQuery plugin) - datatables 1.10.7
