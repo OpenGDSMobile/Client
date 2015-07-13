@@ -45,14 +45,31 @@
             var obj = null;
             $(function(){
                 obj = new OGDSM.visualization('map');
-                obj.olMapView([127.010031, 37.582200]);
+                obj.olMapView([127.010031, 37.582200], 'OSM', 'EPSG:3857');
                 var r = Math.floor(Math.random() * 256),
                     g = Math.floor(Math.random() * 256),
                     b = Math.floor(Math.random() * 256);
                 var color = 'rgb(' + r + ',' + g + ',' + b + ')';
-                var addr = 'http://113.198.80.9';
+                //var addr = 'http://113.198.80.9';
+                var addr = 'All_TL_SCCO_EMD.geojson';
                 var externalServer = new OGDSM.externalConnection();
-                externalServer.geoServerWFSLoad(obj, addr, 'opengds', 'seoul_sig', {color : color});
+               // externalServer.geoServerWFSLoad(obj, addr, 'opengds', 'seoul_sig', {color : color});
+
+                $.ajax({
+                    type : 'POST',
+                    url : addr,
+                    dataType : 'json',
+                    success : function (msg) {
+                        var geoJSON = new ol.layer.Vector({
+                            title : 'test',
+                            source : new ol.source.Vector({
+                                features : (new ol.format.GeoJSON()).readFeatures(msg)
+                            })
+                        });
+                        console.log(msg);
+                        obj.getMap().addLayer(geoJSON);
+                    }
+                });
             });
         </script>
     </head>

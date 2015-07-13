@@ -12,7 +12,9 @@
         <script type="text/javascript" src="./js/egovframework/mbl/cmm/EgovMobile-1.3.2.js"></script>      <!-- eGov Mobile -->
        
         <script type="text/javascript" src="./js/d3/d3.js"></script>      <!-- d3.js  3.5.5-->
-        <script type="text/javascript" src="./js/openGDSMobile/d3chart.js"></script>
+        <!--<script type="text/javascript" src="./js/openGDSMobile/d3chart.js"></script>-->
+        <script type="text/javascript" src="./js/openGDSMobile/OGDSM.js"></script>
+        <script type="text/javascript" src="./js/openGDSMobile/OGDSM_chartVisualization.js"></script>
 
 		<style>
 		#d3_chart {
@@ -29,10 +31,9 @@
 		</style>
 
         <script>
-        	var serverAddr = "http://localhost:8080/mobile/PublicDataPortal.do";
+        	var serverAddr = "http://113.198.80.60:8081/mobile/PublicDataPortal.do";
             var obj = null;
-            
-            
+
             function dataPortal() {
             	
             	//data.go.kr : 원자력발전소 실시간 주변 방사선량
@@ -51,20 +52,28 @@
                 	contentType : "application/json;charset=UTF-8",
                 	dataType : 'json',
                 	success : function(msg){
-                		resultData = JSON.parse(msg.data);
+                		var resultData = JSON.parse(msg.data);
                 		//console.log(msg);
                 		//$('#result').text(JSON.stringify(resultData));
                 		
-						var xyData = jsonToArray(resultData, 'value', 'expl');
+						//var xyData = OGDSM.jsonToArray(resultData, 'value', 'expl');
 						
-                		console.log(xyData);
-                		console.log(xyData[0].length);
-                		console.log(xyData[1].length);
-                		
-                		//barChart('d3_chart', xyData);
+
+                		//console.log(xyData);
+                		//console.log(xyData[0].length);
+                		//console.log(xyData[1].length);
+                		//console.log(JSON.stringify(resultData));
+
+                        var chartObj = new OGDSM.chartVisualization(resultData, {
+                            rootKey : 'row',
+                            labelKey : 'expl',
+                            valueKey : 'value',
+                            min : 0
+                        });
+                		chartObj.vBarChart('d3_chart');
                 		//vbarChart('d3_chart', xyData, 1000);
                 		//lineChart('d3_chart', xyData, 0);
-                		areaChart('d3_chart', xyData, 0);
+                		//areaChart('d3_chart', xyData, 0);
                 	},
                 	error : function (e){
                 		console.log(e);	
@@ -106,7 +115,60 @@
                 });  
             }
 			
+			function dataPortal3() {
+                var paramData = {};
+                paramData['serviceName'] = "ArpltnInforInqireSvc";
+                paramData['serviceKey'] = "kCxEhXiTf1qmDBlQFOOmw%2BemcPSxQXn5V5%2Fx8EthoHdbSojIdQvwX%2BHtWFyuJaIco0nUJtu12e%2F9acb7HeRRRA%3D%3D";
+                paramData['numOfRows'] = "100";
+                paramData['envType'] = "pm10Value";
+                paramData['sidoName'] = encodeURIComponent("서울");
+
+                $.ajax({
+                	type : 'POST',
+                	url : serverAddr,
+                	data : JSON.stringify(paramData),
+                	contentType : "application/json;charset=UTF-8",
+                	dataType : 'json',
+                	success : function(msg){
+                		resultData = JSON.parse(msg.data);
+                		console.log(msg);
+                		console.log(resultData);
+                		$('#result').text(JSON.stringify(resultData));
+                	},
+                	error : function (e){
+                		console.log(e);
+                		$('#result').text(e);
+                	}
+                });
+            }
 			
+			function dataPortal4() {
+                var paramData = {};
+                paramData['serviceKey'] = "6473565a72696e7438326262524174";
+                paramData['returnType'] = "json";
+                paramData['serviceName'] = "TimeAverageAirQuality";
+                paramData['amount'] = "1/100";
+                paramData['dateTimeValue'] = '201501011100';
+                paramData['envType'] = "PM10";
+                console.log(paramData);
+                $.ajax({
+                	type : 'POST',
+                	url : serverAddr,
+                	data : JSON.stringify(paramData),
+                	contentType : "application/json;charset=UTF-8",
+                	dataType : 'json',
+                	success : function(msg){
+                		resultData = JSON.parse(msg.data);
+                		console.log(msg);
+                		console.log(resultData);
+                		$('#result').text(JSON.stringify(resultData));
+                	},
+                	error : function (e){
+                		console.log(e);
+                		$('#result').text(e);
+                	}
+                });
+            }
             
             dataPortal();
         </script>
