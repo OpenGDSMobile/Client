@@ -32,7 +32,8 @@
 
         <script>
         	//var serverAddr = "http://113.198.80.60:8081/mobile/PublicDataPortal.do";
-            var serverAddr = "http://localhost/mobile/PublicDataPortal.do";
+            var serverAddr = "http://113.198.80.60/ApplicationServer/PublicDataPortal.do";
+            //var serverAddr = "http://localhost/mobile/PublicDataPortal.do";
             var obj = null;
 
             function dataPortal() {
@@ -71,7 +72,7 @@
                             valueKey : 'value',
                             min : 0
                         });
-                		chartObj.vBarChart('d3_chart');
+                		chartObj.hBarChart('d3_chart');
                 		//vbarChart('d3_chart', xyData, 1000);
                 		//lineChart('d3_chart', xyData, 0);
                 		//areaChart('d3_chart', xyData, 0);
