@@ -66,18 +66,18 @@ OGDSM.namesapce('chartVisualization');
  * @method vBarChart
  * @param {String} divId - 막대 차트 시각화할 DIV 아이디 이름
  * @param {JSON Object} options - 옵션 JSON 객체 키 값<br>
-      {range : [], color : ['#000000']}<br>
+      {range : [], color : ['#4AAEEA']}<br>
  */
-OGDSM.chartVisualization.prototype.vBarChart = function (rootDiv, barChartOptions) {
+OGDSM.chartVisualization.prototype.vBarChart = function (rootDiv, subOptions) {
     'use strict';
-    barChartOptions = (typeof (barChartOptions) !== 'undefined') ? barChartOptions : {};
+    subOptions = (typeof (subOptions) !== 'undefined') ? subOptions : {};
     var data = this.data,
         options = this.defaults,
-        barOptions = {
+        chartOptions = {
             range : null,
             color : ['#4AAEEA']
         };
-    barOptions = OGDSM.applyOptions(barOptions, barChartOptions);
+    chartOptions = OGDSM.applyOptions(chartOptions, subOptions);
     var rootDivObj = $('#' + rootDiv),
         margin = {top : 20, right : 25, bottom : 130, left : 45},
         barWidth = rootDivObj.width() - margin.left - margin.right,
@@ -102,7 +102,7 @@ OGDSM.chartVisualization.prototype.vBarChart = function (rootDiv, barChartOption
             return 'translate(' + labels(d[options.labelKey]) + ', ' + margin.top + ')';
         });
 
-    bar.append('rect')
+    var barRect = bar.append('rect')
         .attr('y', function (d) {
             return values(d[options.valueKey]);
         })
@@ -115,17 +115,22 @@ OGDSM.chartVisualization.prototype.vBarChart = function (rootDiv, barChartOption
         })
         .attr('width', labels.rangeBand())
         .attr('fill', function (d) {
-            if ($.isArray(barOptions.range) === true) {
+            if ($.isArray(chartOptions.range) === true) {
                 var z = 0;
-                for (z = 0; z < barOptions.range.length; z += 1) {
-                    if (d[options.valueKey] <= barOptions.range.range[z]) {
-                        return barOptions.color[z];
+                for (z = 0; z < chartOptions.range.length; z += 1) {
+                    if (d[options.valueKey] <= chartOptions.range.range[z]) {
+                        return chartOptions.color[z];
                     }
                 }
             } else {
-                return barOptions.color;
+                return chartOptions.color;
             }
-        });
+        });/*
+    barRect.transition()
+        .duration(2000)
+        .attr('height', function (d) {
+            return barHeight - values(d[options.valueKey]);
+        });*/
 
     bar.append('text')
         .attr('x', labels.rangeBand() + margin.left)
@@ -173,20 +178,20 @@ OGDSM.chartVisualization.prototype.vBarChart = function (rootDiv, barChartOption
  * @method hBarChart
  * @param {String} divId - 막대 차트 시각화할 DIV 아이디 이름
  * @param {JSON Object} options - 옵션 JSON 객체 키 값<br>
-      {range : [], color : ['#000000']}<br>
+      {range : [], color : ['#4AAEEA']}<br>
  */
-OGDSM.chartVisualization.prototype.hBarChart = function (rootDiv, barChartOptions) {
+OGDSM.chartVisualization.prototype.hBarChart = function (rootDiv, subOptions) {
     'use strict';
-    barChartOptions = (typeof (barChartOptions) !== 'undefined') ? barChartOptions : {};
+    subOptions = (typeof (subOptions) !== 'undefined') ? subOptions : {};
     var data = this.data,
         options = this.defaults,
-        barOptions = {
+        chartOptions = {
             range : null,
             color : ['#4AAEEA']
         };
-    barOptions = OGDSM.applyOptions(barOptions, barChartOptions);
+    chartOptions = OGDSM.applyOptions(chartOptions, subOptions);
     var rootDivObj = $('#' + rootDiv),
-        margin = {top : 20, right : 25, bottom : 130, left : 45},
+        margin = {top : 0, right : 60, bottom : 20, left : 80},
         barWidth = rootDivObj.width() - margin.left - margin.right,
         barHeight = rootDivObj.height() - margin.top - margin.bottom;
     $('#' + rootDiv).empty();
@@ -202,11 +207,11 @@ OGDSM.chartVisualization.prototype.hBarChart = function (rootDiv, barChartOption
         return d[options.labelKey];
     }));
     values.domain([options.min, options.max]);
-
+    console.log(options.min + ' ' + options.max);
     var bar = chartSVG.selectAll('g').data(data).enter()
         .append('g')
         .attr('transform', function (d, i) {
-            return 'translate(' + '0' + ', ' + labels(d[options.labelKey]) + ')';
+            return 'translate(' + margin.left + ', ' + labels(d[options.labelKey]) + ')';
         });
     bar.append('rect')
         .attr('y', function (d) {
@@ -214,30 +219,238 @@ OGDSM.chartVisualization.prototype.hBarChart = function (rootDiv, barChartOption
         })
         .attr('x', function (d, i) {
             return margin.left;
-        //    return values(d[options.valueKey]);
-      //      return (labels(d[options.labelKey]) / data.length) + margin.left;
         })
         .attr('height', labels.rangeBand())
         .attr('width', function (d) {
-            return barHeight - values(d[options.valueKey]);
+            //return barWidth - values(d[options.valueKey]);
+            return barWidth - values(d[options.valueKey]);
         })
         .attr('fill', function (d) {
-            if ($.isArray(barOptions.range) === true) {
+            if ($.isArray(chartOptions.range) === true) {
                 var z = 0;
-                for (z = 0; z < barOptions.range.length; z += 1) {
-                    if (d[options.valueKey] <= barOptions.range.range[z]) {
-                        return barOptions.color[z];
+                for (z = 0; z < chartOptions.range.length; z += 1) {
+                    if (d[options.valueKey] <= chartOptions.range.range[z]) {
+                        return chartOptions.color[z];
                     }
                 }
             } else {
-                return barOptions.color;
+                return chartOptions.color;
             }
         });
-/*
     bar.append('text')
-        .attr('x', labels.rangeBand() + margin.left)
-        .attr('y', function (d) {
-            return values(d[options.valueKey]) - 10;
+        .attr('x', function (d) {
+            return barWidth + (margin.left) - values(d[options.valueKey]);
+        })
+        .attr('y', labels.rangeBand())
+        .attr('dy', '.75em')
+        .attr('text-anchor', 'end')
+        .text(function (d) {
+            return d[options.valueKey];
+        });
+
+    chartSVG.append('g').attr('class', 'y axis')
+        .attr('transform', 'translate(' + (margin.left) * 2 + ', ' + labels.rangeBand() + ')')
+        .call(labelAxis)
+        .attr('fill', 'none')
+        .attr('stroke', '#000')
+        .attr('shape-rendering', 'crispEdges')
+        .selectAll('text')
+        .style('text-anchor', 'end')
+        .attr('dx', '-.8em')
+        .attr('dy', '.15em');
+    //Bug ......
+    chartSVG.append('g').attr('class', 'x axis')
+            .attr('transform', 'translate(' + (margin.left) * 2 + ', ' + barHeight + ')')
+            .call(valueAxis)
+            .attr('fill', 'none')
+            .attr('stroke', '#000')
+            .attr('shape-rendering', 'crispEdges')
+            .append('text')
+            .attr('y', 5)
+            .attr('dy', '.71em')
+            .style('text-anchor', 'end')
+            .text(options.valueKey);
+};
+
+
+
+/**
+ * 라인 차트 시각화
+ * @method lineChart
+ * @param {String} divId - 막대 차트 시각화할 DIV 아이디 이름
+ * @param {JSON Object} options - 옵션 JSON 객체 키 값<br>
+      {stroke : ['#4AAEEA'], width : 2,<br>
+       circleSize : 3, circleColor : ['#AAAAAA']}<br>
+ */
+OGDSM.chartVisualization.prototype.lineChart = function (rootDiv, subOptions) {
+    'use strict';
+    subOptions = (typeof (subOptions) !== 'undefined') ? subOptions : {};
+    var data = this.data,
+        options = this.defaults,
+        chartOptions = {
+            range : null,
+            stroke : ['#4AAEEA'],
+            width : 2,
+            circleSize : 3,
+            circleColor : ['#AAAAAA']
+        };
+    chartOptions = OGDSM.applyOptions(chartOptions, subOptions);
+    var rootDivObj = $('#' + rootDiv),
+        margin = {top : 20, right : 25, bottom : 130, left : 45},
+        barWidth = rootDivObj.width() - margin.left - margin.right,
+        barHeight = rootDivObj.height() - margin.top - margin.bottom;
+    $('#' + rootDiv).empty();
+    var labels = d3.scale.ordinal().rangeRoundBands([0, barWidth], 0.1);
+    var values = d3.scale.linear().range([barHeight, 0]);
+    var chartSVG = d3.select('#' + rootDiv).append('svg').attr('id', rootDiv + 'Bar')
+        .attr('width', barWidth + margin.left + margin.right)
+        .attr('height', barHeight + margin.top + margin.bottom);
+
+    var labelAxis = d3.svg.axis().scale(labels).orient('bottom');
+    var valueAxis = d3.svg.axis().scale(values).orient('left');
+    labels.domain(data.map(function (d) {
+        return d[options.labelKey];
+    }));
+    values.domain([options.min, options.max]);
+
+    var lineXY = d3.svg.line()
+        .x(function (d, i) {
+            return labels(d[options.labelKey]);
+        })
+        .y(function (d, i) {
+            return values(d[options.valueKey]);
+        });
+    //var bar = chartSVG.append('path').attr('d', lineFunc(
+
+    chartSVG.append('path').attr('d', lineXY(data))
+        .attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')')
+        .attr('stroke', chartOptions.stroke)
+        .attr('stroke-width', options.stroke)
+        .attr('fill', 'none');
+    var circleText = chartSVG.selectAll('g').data(data).enter()
+        .append('g')
+        .attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')');
+
+    circleText.append('circle')
+        .attr('cy', function (d, i) {
+            return values(d[options.valueKey]);
+        })
+        .attr('cx', function (d, i) {
+            return labels(d[options.labelKey]);
+        })
+        .attr('r', chartOptions.circleSize)
+        .attr('fill', chartOptions.circleColor);
+    circleText.append('text')
+        .attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')')
+        .attr('x', function (d, i) {
+            return labels(d[options.labelKey]) - 15;
+        })
+        .attr('y', function (d, i) {
+            return values(d[options.valueKey]) - 20;
+        })
+        .attr('dy', '.75em')
+        .attr('text-anchor', 'end')
+        .text(function (d) {
+            return d[options.valueKey];
+        });
+    chartSVG.append('g').attr('class', 'x axis')
+        .attr('transform', 'translate(' + margin.left + ', ' + (barHeight + margin.top) + ')')
+        .call(labelAxis)
+        .attr('fill', 'none')
+        .attr('stroke', '#000')
+        .attr('shape-rendering', 'crispEdges')
+        .selectAll('text')
+        .style('text-anchor', 'end')
+        .attr('dx', '-.8em')
+        .attr('dy', '.15em')
+        .attr('transform', function (d) {
+            return 'rotate(-65)';
+        });
+    chartSVG.append('g').attr('class', 'y axis')
+        .attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')')
+        .call(valueAxis)
+        .attr('fill', 'none')
+        .attr('stroke', '#000')
+        .attr('shape-rendering', 'crispEdges')
+        .append('text')
+        .attr('transform', 'rotate(-90)')
+        .attr('y', 5)
+        .attr('dy', '.71em')
+        .style('text-anchor', 'end')
+        .text(options.valueKey);
+};
+
+
+/**
+ * 영역 차트 시각화
+ * @method areaChart
+ * @param {String} divId - 막대 차트 시각화할 DIV 아이디 이름
+ * @param {JSON Object} options - 옵션 JSON 객체 키 값<br>
+      {fill : ['#4AAEEA'], circleSize : 3, circleColor : ['#AAAAAA']}<br>
+ */
+OGDSM.chartVisualization.prototype.areaChart = function (rootDiv, subOptions) {
+    'use strict';
+    subOptions = (typeof (subOptions) !== 'undefined') ? subOptions : {};
+    var data = this.data,
+        options = this.defaults,
+        chartOptions = {
+            fill : ['#4AAEEA'],
+            circleSize : 3,
+            circleColor : ['#AAAAAA']
+        };
+    chartOptions = OGDSM.applyOptions(chartOptions, subOptions);
+    var rootDivObj = $('#' + rootDiv),
+        margin = {top : 20, right : 25, bottom : 130, left : 45},
+        barWidth = rootDivObj.width() - margin.left - margin.right,
+        barHeight = rootDivObj.height() - margin.top - margin.bottom;
+    $('#' + rootDiv).empty();
+    var labels = d3.scale.ordinal().rangeRoundBands([0, barWidth], 0.1);
+    var values = d3.scale.linear().range([barHeight, 0]);
+    var chartSVG = d3.select('#' + rootDiv).append('svg').attr('id', rootDiv + 'Bar')
+        .attr('width', barWidth + margin.left + margin.right)
+        .attr('height', barHeight + margin.top + margin.bottom);
+
+    var labelAxis = d3.svg.axis().scale(labels).orient('bottom');
+    var valueAxis = d3.svg.axis().scale(values).orient('left');
+    labels.domain(data.map(function (d) {
+        return d[options.labelKey];
+    }));
+    values.domain([options.min, options.max]);
+
+    var areaXY = d3.svg.area()
+        .x(function (d, i) {
+            return labels(d[options.labelKey]);
+        })
+        .y0(barHeight)
+        .y1(function (d, i) {
+            return values(d[options.valueKey]);
+        });
+    chartSVG.append('path').attr('d', areaXY(data))
+        .attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')')
+        .attr('class', 'area')
+        .attr('fill', chartOptions.fill);
+
+
+    var circleText = chartSVG.selectAll('g').data(data).enter()
+        .append('g')
+        .attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')');
+
+    circleText.append('circle')
+        .attr('cy', function (d, i) {
+            return values(d[options.valueKey]);
+        })
+        .attr('cx', function (d, i) {
+            return labels(d[options.labelKey]);
+        })
+        .attr('r', chartOptions.circleSize)
+        .attr('fill', chartOptions.circleColor);
+    circleText.append('text')
+        .attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')')
+        .attr('x', function (d, i) {
+            return labels(d[options.labelKey]) - 15;
+        })
+        .attr('y', function (d, i) {
+            return values(d[options.valueKey]) - 20;
         })
         .attr('dy', '.75em')
         .attr('text-anchor', 'end')
@@ -271,97 +484,176 @@ OGDSM.chartVisualization.prototype.hBarChart = function (rootDiv, barChartOption
             .attr('dy', '.71em')
             .style('text-anchor', 'end')
             .text(options.valueKey);
-            */
 };
 
+
+
 /**
- * 가로 막대 차트 시각화
- * @method barChart
+ * 라인 차트 시각화
+ * @method lineChart
  * @param {String} divId - 막대 차트 시각화할 DIV 아이디 이름
- * @param {Array} data - 데이터 값 2차원 배열 (0 : x, 1 : y)
- * @param {Array} range - 데이터 범위 1차원 배열
- * @param {Array} color - 데이터 색 범위 1차원 배열 [default=#000000 (range와 배열 길이 같아야함)]
+ * @param {JSON Object} options - 옵션 JSON 객체 키 값<br>
+      {stroke : ['#4AAEEA'], width : 2,<br>
+       circleSize : 3, circleColor : ['#AAAAAA']}<br>
+ */
+OGDSM.chartVisualization.prototype.lineChart = function (rootDiv, subOptions) {
+    'use strict';
+    subOptions = (typeof (subOptions) !== 'undefined') ? subOptions : {};
+    var data = this.data,
+        options = this.defaults,
+        chartOptions = {
+            range : null,
+            stroke : ['#4AAEEA'],
+            width : 2,
+            circleSize : 3,
+            circleColor : ['#AAAAAA']
+        };
+    chartOptions = OGDSM.applyOptions(chartOptions, subOptions);
+    var rootDivObj = $('#' + rootDiv),
+        margin = {top : 20, right : 25, bottom : 130, left : 45},
+        barWidth = rootDivObj.width() - margin.left - margin.right,
+        barHeight = rootDivObj.height() - margin.top - margin.bottom;
+    $('#' + rootDiv).empty();
+    var labels = d3.scale.ordinal().rangeRoundBands([0, barWidth], 0.1);
+    var values = d3.scale.linear().range([barHeight, 0]);
+    var chartSVG = d3.select('#' + rootDiv).append('svg').attr('id', rootDiv + 'Bar')
+        .attr('width', barWidth + margin.left + margin.right)
+        .attr('height', barHeight + margin.top + margin.bottom);
+
+    var labelAxis = d3.svg.axis().scale(labels).orient('bottom');
+    var valueAxis = d3.svg.axis().scale(values).orient('left');
+    labels.domain(data.map(function (d) {
+        return d[options.labelKey];
+    }));
+    values.domain([options.min, options.max]);
+
+    var lineXY = d3.svg.line()
+        .x(function (d, i) {
+            return labels(d[options.labelKey]);
+        })
+        .y(function (d, i) {
+            return values(d[options.valueKey]);
+        });
+    //var bar = chartSVG.append('path').attr('d', lineFunc(
+
+    chartSVG.append('path').attr('d', lineXY(data))
+        .attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')')
+        .attr('stroke', chartOptions.stroke)
+        .attr('stroke-width', options.stroke)
+        .attr('fill', 'none');
+    var circleText = chartSVG.selectAll('g').data(data).enter()
+        .append('g')
+        .attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')');
+
+    circleText.append('circle')
+        .attr('cy', function (d, i) {
+            return values(d[options.valueKey]);
+        })
+        .attr('cx', function (d, i) {
+            return labels(d[options.labelKey]);
+        })
+        .attr('r', chartOptions.circleSize)
+        .attr('fill', chartOptions.circleColor);
+    circleText.append('text')
+        .attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')')
+        .attr('x', function (d, i) {
+            return labels(d[options.labelKey]) - 15;
+        })
+        .attr('y', function (d, i) {
+            return values(d[options.valueKey]) - 20;
+        })
+        .attr('dy', '.75em')
+        .attr('text-anchor', 'end')
+        .text(function (d) {
+            return d[options.valueKey];
+        });
+    chartSVG.append('g').attr('class', 'x axis')
+        .attr('transform', 'translate(' + margin.left + ', ' + (barHeight + margin.top) + ')')
+        .call(labelAxis)
+        .attr('fill', 'none')
+        .attr('stroke', '#000')
+        .attr('shape-rendering', 'crispEdges')
+        .selectAll('text')
+        .style('text-anchor', 'end')
+        .attr('dx', '-.8em')
+        .attr('dy', '.15em')
+        .attr('transform', function (d) {
+            return 'rotate(-65)';
+        });
+    chartSVG.append('g').attr('class', 'y axis')
+        .attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')')
+        .call(valueAxis)
+        .attr('fill', 'none')
+        .attr('stroke', '#000')
+        .attr('shape-rendering', 'crispEdges')
+        .append('text')
+        .attr('transform', 'rotate(-90)')
+        .attr('y', 5)
+        .attr('dy', '.71em')
+        .style('text-anchor', 'end')
+        .text(options.valueKey);
+};
+
+
+/**
+ * 파이 차트 시각화
+ * @method areaChart
+ * @param {String} divId - 막대 차트 시각화할 DIV 아이디 이름
+ * @param {JSON Object} options - 옵션 JSON 객체 키 값<br>
+      {fill : ['#4AAEEA'], circleSize : 3, circleColor : ['#AAAAAA']}<br>
  */
 /*
-OGDSM.chartVisualization.prototype.barChart = function (divId, data, range, color) {
+OGDSM.chartVisualization.prototype.pieChart = function (rootDiv, subOptions) {
     'use strict';
-    range = (typeof (range) !== 'undefined') ? range : [];
-    color = (typeof (color) !== 'undefined') ? color : ['#000000'];
-    var barHeight = 18,
-        minusWidth = 0,
-        rootDiv = $('#' + divId),
-        maxData = d3.max(data[0]),
-        barChartDiv = null,
-        x = null,
-        y = null,
-        z = null;
-    rootDiv.empty();
-    barChartDiv = d3.select("#" + divId).append('svg')
-        .attr('id', 'barchart')
-        .attr('width', rootDiv.width())
-        .attr('height', barHeight * data[0].length);
-    x = d3.scale.linear().domain([0, maxData]).range([0, rootDiv.width() - 50]);
-    barChartDiv.selectAll("rect").data(data[0]).enter()
-        .append("rect")
-        .attr("x", 0)
-        .attr("y", function (d, i) {
-            return i * barHeight;
-        })
-        .attr('width', function (d) {
-            if (d === '-' || d === '0') {
-                return x(20);
-            }
-			return x(d) - minusWidth;
-        })
-        .attr('height', barHeight - 2)
-		.attr('fill', function (d, i) {
-            if (d === '-' || d === '0') {
-                return '#AAAAAA';
-            }
-            if (range.length !== 0) {
-                for (z = 0; z < range.length; z += 1) {
-                    if (data[0][i] <= range[z]) {
-                        return color[z];
-                    }
-                }
-            }
-            return color[color.length];
+    subOptions = (typeof (subOptions) !== 'undefined') ? subOptions : {};
+    var data = this.data,
+        options = this.defaults,
+        chartOptions = {
+            fill : ['#4AAEEA'],
+            circleSize : 3,
+            circleColor : ['#AAAAAA']
+        };
+    chartOptions = OGDSM.applyOptions(chartOptions, subOptions);
+    var rootDivObj = $('#' + rootDiv),
+        margin = {top : 0, right : 0, bottom : 0, left : 0},
+        barWidth = rootDivObj.width() - margin.left - margin.right,
+        barHeight = rootDivObj.height() - margin.top - margin.bottom;
+    $('#' + rootDiv).empty();
+    var chartSVG = d3.select('#' + rootDiv).append('svg').attr('id', rootDiv + 'Bar')
+        .attr('width', barWidth + margin.left + margin.right)
+        .attr('height', barHeight + margin.top + margin.bottom)
+        .attr('transform', 'translate(' + barWidth / 2 + ',' + barHeight / 2 + ')');
+
+    var radius = Math.min(barWidth, barHeight) / 2;
+    var arc = d3.svg.arc()
+        .outerRadius(radius - 10)
+        .innerRadius(0);
+
+    var pie = d3.layout.pie()
+        .sort(null)
+        .value(function (d) {
+            return d[options.valueKey];
         });
 
-    barChartDiv.selectAll('g').data(data[1])
+    var group = chartSVG.selectAll('.arc')
+        .data(pie(data))
         .enter()
-        .append('text')
-        .attr('x', 0)
-        .attr('y', function (d, i) {
-            return i * barHeight + barHeight - 5;
-        })
-        .attr('font-weight', 'bold')
-        .attr('font-size', '0.8em')
-        .text(function (d) {
-            return d;
-        });
+        .append('g')
+        .attr('class', 'arc');
 
-	barChartDiv.selectAll('g').data(data[0])
-        .enter()
-        .append('text')
-        .attr('x', function (d) {
-            if (d === '-' || d === '0') {
-                return x(10);
-            }
-			return x(d) - minusWidth;
+    group.append('path')
+        .attr('d', arc)
+        .style('fill', function (d) {
+            return '#AAAAAA';
+        });
+    group.append('text')
+        .attr('transform', function (d) {
+            return 'translate(' + arc.centroid(d) + ')';
         })
-        .attr('y', function (d, i) {
-            return i * barHeight + barHeight - 5;
-        })
-        .attr('dy', '.15em')
-        .attr('fill', 'black')
-        .attr('font-size', '0.8em')
-        .attr('font-weight', 'bold')
+        .attr('dy', '.35em')
+        .style('text-anchor', 'middle')
         .text(function (d) {
-            if (d === '-' || d === '0') {
-                return '점검중';
-            }
-            return d;
+            return d[options.labelKey];
         });
 };
 */
