@@ -1,5 +1,5 @@
 /*jslint devel: true, vars : true plusplus : true*/
-/*global $, jQuery, ol, OGDSM*/
+/*global $, jQuery, ol, OGDSM, mappingDB*/
 
 OGDSM.namesapce('attributeTable');
 (function (OGDSM) {
@@ -12,6 +12,7 @@ OGDSM.namesapce('attributeTable');
      * @param {String} addr - PostgreSQL 접속 주소
      */
     OGDSM.attributeTable = function (rootDiv, addr, visualObj) {
+        visualObj = (typeof (visualObj) !== 'undefined') ? visualObj : null;
         this.rootDiv = rootDiv;
         this.addr = addr;
         this.editMode = false;
@@ -22,7 +23,6 @@ OGDSM.namesapce('attributeTable');
             contentsElement = document.createElement('div');
         var contentsCSS = 'width: 100%; height: 100%; background: rgba(255, 255, 255, 0.0); margin: 0px;',
             ulCSS = 'list-style: none; position: relative; margin: 0px; z-index: 2; top: 1px; display: table; border-left: 1px solid #f5ab36;';
-
         ulElement.id = rootDiv + 'Tab';
         ulElement.style.cssText = ulCSS;
 
@@ -98,40 +98,45 @@ OGDSM.attributeTable.prototype.addAttribute = function (layerName) {
                            '</td>');
         });
     }
-    var featureOverlay = new ol.FeatureOverlay({
-        map : visualObj.getMap(),
-        style : function (feature, resolution) {
-            var styleStroke = new ol.style.Stroke({
-                color : 'rgba(255, 0, 0, 1.0)',
-                width : 3
-            });
-            return [new ol.style.Style({
-                fill : feature.get('styleFill'),
-                stroke : styleStroke,
-                text : feature.get('styleText')
-            })];
-        }
-    });
-    this.featureOverlay = featureOverlay;
+    var featureOverlay = null;
+    if (visualObj !== null) {
+        featureOverlay = new ol.FeatureOverlay({
+            map : visualObj.getMap(),
+            style : function (feature, resolution) {
+                var styleStroke = new ol.style.Stroke({
+                    color : 'rgba(255, 0, 0, 1.0)',
+                    width : 3
+                });
+                return [new ol.style.Style({
+                    fill : feature.get('styleFill'),
+                    stroke : styleStroke,
+                    text : feature.get('styleText')
+                })];
+            }
+        });
+        this.featureOverlay = featureOverlay;
+    }
     function tableEvent(evtLayerName) {
         /**********tr select ****************/
         $('#attrTable' + evtLayerName + ' tbody').on('click', 'tr', function () {
             var i = 0;
-            var eachFeatures = visualObj.layerCheck(evtLayerName).getSource().getFeatures();
             tableObj.$('tr.selected').removeClass('selected');
             $(this).addClass('selected');
-            featureOverlay.removeFeature(attrObj.getSelectObj());
-            for (i = 0; i < eachFeatures.length; i++) {
-                var vectorObj = eachFeatures[i];
-                var num = vectorObj.Z.split('.');
-                if (num[1] === $(this).attr('data-row')) {
-                    featureOverlay.addFeature(vectorObj);
-                    attrObj.setSelectObj(vectorObj);
-                }
-            }
+
             // selected layer color change...
-            attrObj.getolSelectObj().getFeatures().clear();
-            //console.log(visualObj.getMap().getInteractions());
+            if (visualObj !== null) {
+                var eachFeatures = visualObj.layerCheck(evtLayerName).getSource().getFeatures();
+                featureOverlay.removeFeature(attrObj.getSelectObj());
+                for (i = 0; i < eachFeatures.length; i++) {
+                    var vectorObj = eachFeatures[i];
+                    var num = vectorObj.Z.split('.');
+                    if (num[1] === $(this).attr('data-row')) {
+                        featureOverlay.addFeature(vectorObj);
+                        attrObj.setSelectObj(vectorObj);
+                    }
+                }
+                attrObj.getolSelectObj().getFeatures().clear();
+            }
         });
 
         /**********page change **************/
@@ -191,14 +196,14 @@ OGDSM.attributeTable.prototype.addAttribute = function (layerName) {
                 'bPaginate' : true,
                 "dom": 'rt<"bottom"ip><"clear">'
             });
-           // tableObjs['attrTable' + layerName] = tableObj;
             tableEvent(layerName);
-            /*
-            $(window).on('resize', function () {
-                var attrDivHeight = $('#' + rootDiv + 'Contents').height();
-                var thHeight = $('thead').height() + 7;
-            });
-            */
+
+            /*****/
+            var keys = Object.keys(attrContents[0]);
+            mappingDB.version = mappingDB.version + 1;
+            mappingDB.createDatabase('webMappingDB', layerName, attrContents, keys[0]);
+
+            /****/
         },
         error : function (error) {
             console.log(error);

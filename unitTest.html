@@ -1,0 +1,63 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+
+	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <!-- dependency library CSS-->
+	<link rel="stylesheet" href="./css/egovframework/mbl/cmm/jquery.mobile-1.3.2.css">   <!-- jQuery Mobile -->
+	<link rel="stylesheet" href="./css/egovframework/mbl/cmm/EgovMobile-1.3.2.css">      <!-- eGov Mobile -->
+    <link type="text/css" rel="stylesheet" href="./css/ol3/ol.css">                      <!-- OpenLayers 3 -->
+
+    <link rel="stylesheet" href="./css/jQueryPlugins/jquery.dataTables.min.css">      <!-- Data Table Plug-in -->
+
+    <!-- dependency library JS-->
+    <!-- egovFramework  KOREA-->
+	<script type="text/javascript" src="./js/egovframework/mbl/cmm/jquery-1.9.1.min.js"></script>      <!-- jQuery -->
+	<script type="text/javascript" src="./js/egovframework/mbl/cmm/jquery.mobile-1.3.2.min.js"></script> <!-- jQuery Mobile -->
+    <script type="text/javascript" src="./js/egovframework/mbl/cmm/EgovMobile-1.3.2.js"></script>      <!-- eGov Mobile -->
+    <script type="text/javascript" src="./js/jQueryPlugins/jquery.dataTables.min.js"></script> <!-- Data Table jQuery Plug-in-->
+
+    <script type="text/javascript" src="./js/openGDSMobile/OGDSM.js"></script>
+    <script type="text/javascript" src="./js/openGDSMobile/OGDSM_visualization.js"></script>
+    <script type="text/javascript" src="./js/openGDSMobile/indexDBtest.js"></script>
+    <script type="text/javascript" src="./js/openGDSMobile/OGDSM_attributeTable.js"></script>
+
+    <script>
+    $(function() {
+        /******************Attribute and IndexDB ************************/
+        var addr = 'http://113.198.80.60:8081/mobile/attrTable.do';
+        var attrTable = new OGDSM.attributeTable('attrTable', addr);
+        indexedDB.deleteDatabase('webMappingDB');
+
+        attrTable.addAttribute('seoul_sig');
+        //attrTable.addAttribute('seoul_emd');
+
+        setTimeout(function () {
+            attrTable.addAttribute('seoul_emd');
+        }, 3000);
+
+        var attrEditChk = $('#attrEditChk');
+        attrEditChk.click(function () {
+            var chk = $(this).is(':checked');
+            if (chk === true) {
+                attrTable.editAttribute(true);
+            } else {
+                attrTable.editAttribute(false);
+            }
+        });
+        /******************Attribute and IndexDB END************************/
+    });
+    </script>
+</head>
+<body>
+
+    <!-- Attribute and IndexDB -->
+    <div id="attrTable">
+    </div>
+    <input type="checkbox" id="attrEditChk" data-theme="b"><label for="attrEditChk">편집모드</label>
+    <!-- Attribute and IndexDB END-->
+</body>
+</html>
