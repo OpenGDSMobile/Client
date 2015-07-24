@@ -406,3 +406,56 @@ areaChart = function (divId, data, scale, range, color) {
 };
 
 
+
+OGDSM.chartVisualization.prototype.kMap = function (divId, geodata, center_lat, center_lon, map_scale) {
+    var rootDiv = $('#'+divId);
+    rootDiv.empty();
+    
+    var svg = d3.select('#'+divId)
+    			.append('svg')
+    			.attr("width" , 500)
+    			.attr("height", 600);
+    
+    baseGeoDataUrl = "http://localhost:8080/mobile/geoBasedData/" + geodata + ".json";
+    
+    d3.json(baseGeoDataUrl, function(error, topology) {
+    	  if (error) {
+    	    return console.error(error);
+    	  } else {
+    		  
+    		  var projection = d3.geo.mercator()
+    		  					 .center([center_lon, center_lat])
+    		  					 .scale(map_scale);
+    		  var path = d3.geo.path()
+    		  		   	   .projection(projection);
+
+    		  var g = svg.append("g");
+    		  
+    		  if(geodata == "SIDO"){
+    			  g.selectAll("path")
+    			   .data(topojson.feature(topology, topology.objects.All_TL_SCCO_CTPRVN_4326).features)
+                   .enter().append("path")
+                   .attr("class", function(d) { return "sido_" + d.properties.CTP_ENG_NM; })
+                   .style("fill", function(d) { return "#" + Math.random().toString(16).slice(2, 8); })
+                   .attr("d", path); 
+    		  }
+    		  else if(geodata == "GU"){
+    			  g.selectAll("path")
+    			   .data(topojson.feature(topology, topology.objects.All_TL_SCCO_SIG_4326).features)
+                   .enter().append("path")
+                   .attr("class", function(d) { return "gu_" + d.properties.SIG_ENG_NM; })
+                   .style("fill", function (d) { return "#" + Math.random().toString(16).slice(2, 8); })
+                   .attr("d", path);  
+    		  }
+    		  else if(geodata == "DONG"){
+    			  g.selectAll("path")
+    			   .data(topojson.feature(topology, topology.objects.All_TL_SCCO_EMD_4326).features)
+                   .enter().append("path")
+                   .attr("class", function(d) { return "dong_" + d.properties.EMD_ENG_NM; })
+                   .style("fill", function (d) { return "#" + Math.random().toString(16).slice(2, 8); })
+                   .attr("d", path);  
+    		  }
+    	  }
+    });
+};
+

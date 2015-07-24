@@ -15,6 +15,13 @@
         <!--<script type="text/javascript" src="./js/openGDSMobile/d3chart.js"></script>-->
         <script type="text/javascript" src="./js/openGDSMobile/OGDSM.js"></script>
         <script type="text/javascript" src="./js/openGDSMobile/OGDSM_chartVisualization.js"></script>
+        <script type="text/javascript" src="./js/openGDSMobile/d3chart.js"></script>
+
+<script src="http://d3js.org/topojson.v1.min.js"></script>
+<!-- <script src="http://d3js.org/d3.geo.projection.v0.min.js" > </script> -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/1.6.19/topojson.min.js" > </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3-geo-projection/0.2.15/d3.geo.projection.js" > </script>
+
 
 		<style>
 		#d3_chart {
@@ -26,8 +33,78 @@
 		  margin-top: 20px;
 		  margin-right: 0px;*/
 		  color: white;
-		  height:500px;
+		  height:450px;
 		}
+		
+		.sido_Busan{
+  			fill: #d3dfe4;
+  			fill-opacity: .5;
+		}
+		.sido_Chungcheongbuk-do{
+  			fill: #5574a6;
+  			fill-opacity: .5;
+		}
+		.sido_Chungcheongnam-do{
+  			fill: #329262;
+  			fill-opacity: .5;
+		}
+		.sido_Daegu{
+  			fill: #8b0707;
+  			fill-opacity: .5;
+		}
+		.sido_Daejeon{
+  			fill: #e67300;
+  			fill-opacity: .5;
+		}
+		.sido_Gangwon-do{
+  			fill: #6633cc;
+  			fill-opacity: .5;
+		}
+		.sido_Gwangju{
+  			fill: #aaaa11;
+  			fill-opacity: .5;
+		}
+		.sido_Gyeongsangbuk-do{
+  			fill: #22aa99;
+  			fill-opacity: .5;
+		}
+		.sido_Gyeonggi-do{
+  			fill: #994499;
+  			fill-opacity: .5;
+		}
+		.sido_Gyeongsangnam-do{
+  			fill: #b82e2e;
+  			fill-opacity: .5;
+		}
+		.sido_Incheon{
+  			fill: #66aa00;
+  			fill-opacity: .5;
+		}
+		.sido_Jeju-do{
+  			fill: #dd4477;
+  			fill-opacity: .5;
+		}
+		.sido_Jeollabuk-do{
+  			fill: #ff9900;
+  			fill-opacity: .5;
+		}
+		.sido_Jeollanam-do{
+  			fill: #f93c3c;
+  			fill-opacity: .5;
+		}
+		.sido_Sejong-si{
+  			fill: #18d06e;
+  			fill-opacity: .5;
+		}
+		.sido_Seoul{
+  			fill: #e28bb8;
+  			fill-opacity: .5;
+		}
+		.sido_Ulsan{
+  			fill: #e28bb8;
+  			fill-opacity: .5;
+		}
+		
 		</style>
 
         <script>
@@ -74,9 +151,9 @@
                         });
                         //chartObj.vBarChart('d3_chart');
                 		//chartObj.hBarChart('d3_chart');
-                        //chartObj.lineChart('d3_chart');
+                        chartObj.lineChart('d3_chart');
                         //chartObj.areaChart('d3_chart');
-                        chartObj.pieChart('d3_chart');
+                        //chartObj.pieChart('d3_chart');
 
                 	},
                 	error : function (e){
@@ -173,8 +250,19 @@
                 	}
                 });
             }
+			
+           // dataPortal5();
             
-            dataPortal();
+           $(function(){
+        	   
+        	   //kMap = function (divId, geodata, center_lat, center_lon, map_scale)
+        	   //geodata = ["SIDO", "DONG", "GU"]	
+        	   //center_lat, center_lon = Latitude, Longitude
+        	   
+               var chartObj = new OGDSM.chartVisualization();
+               chartObj.kMap('d3_chart', "GU", 34., 131., 3000); 
+           }); 
+            
         </script>
     </head>
     <body>
