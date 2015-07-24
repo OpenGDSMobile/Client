@@ -15,12 +15,6 @@ OGDSM.namesapce('chartVisualization');
     */
     OGDSM.chartVisualization = function (jsonData, options) {
         options = (typeof (options) !== 'undefined') ? options : {};
-        if (typeof (options.rootKey) === 'undefined' ||
-                typeof (options.labelKey) === 'undefined' ||
-                typeof (options.valueKey) === 'undefined') {
-            console.error('Please input option values : rootKey, label, value');
-            return null;
-        }
         this.defaults = {
             rootKey : null,
             labelKey : null,
@@ -28,20 +22,29 @@ OGDSM.namesapce('chartVisualization');
             max : null,
             min : null
         };
-        this.jsonData = jsonData;
-        this.data = jsonData[options.rootKey];
         this.defaults = OGDSM.applyOptions(this.defaults, options);
-        var d = null;
-        this.defaults.max = this.defaults.min = this.data[0][options.valueKey];
-        for (d in this.data) {
-            if (this.data.hasOwnProperty(d)) {
-                this.defaults.max = Math.max(this.data[d][options.valueKey], this.defaults.max);
-                this.defaults.min = Math.min(this.data[d][options.valueKey], this.defaults.max);
+        if (typeof (jsonData) !== 'undefined'){
+            if (typeof (options.rootKey) === 'undefined' ||
+                    typeof (options.labelKey) === 'undefined' ||
+                    typeof (options.valueKey) === 'undefined') {
+                console.error('Please input option values : rootKey, label, value');
+                return null;
             }
+	        this.jsonData = jsonData;
+	        this.data = jsonData[options.rootKey];
+	        this.defaults = OGDSM.applyOptions(this.defaults, options);
+	        var d = null;
+	        this.defaults.max = this.defaults.min = this.data[0][options.valueKey];
+	        for (d in this.data) {
+	            if (this.data.hasOwnProperty(d)) {
+	                this.defaults.max = Math.max(this.data[d][options.valueKey], this.defaults.max);
+	                this.defaults.min = Math.min(this.data[d][options.valueKey], this.defaults.max);
+	            }
+	        }
+	        this.defaults.max = (typeof (options.max) !== 'undefined') ? options.max : this.defaults.max;
+	        this.defaults.min = (typeof (options.min) !== 'undefined') ? options.min : this.defaults.min;
+
         }
-        this.defaults.max = (typeof (options.max) !== 'undefined') ? options.max : this.defaults.max;
-        this.defaults.min = (typeof (options.min) !== 'undefined') ? options.min : this.defaults.min;
-        console.log(this.defaults);
     };
     OGDSM.chartVisualization.prototype = {
         constructor : OGDSM.chartVisualization,
