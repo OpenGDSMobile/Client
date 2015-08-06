@@ -41,6 +41,7 @@
                             <ul id="api-classes" class="apis classes">
                                 <li><a href="../classes/OGDSM.html">OGDSM</a></li>
                                 <li><a href="../classes/OGDSM.attributeTable.html">OGDSM.attributeTable</a></li>
+                                <li><a href="../classes/OGDSM.chartVisualization.html">OGDSM.chartVisualization</a></li>
                                 <li><a href="../classes/OGDSM.eGovFrameUI.html">OGDSM.eGovFrameUI</a></li>
                                 <li><a href="../classes/OGDSM.externalConnection.html">OGDSM.externalConnection</a></li>
                                 <li><a href="../classes/OGDSM.mapLayerList.html">OGDSM.mapLayerList</a></li>
@@ -49,6 +50,7 @@
 
                             <ul id="api-modules" class="apis modules">
                                 <li><a href="../modules/OGDSM.applyOptions.html">OGDSM.applyOptions</a></li>
+                                <li><a href="../modules/OGDSM.indexedDB.html">OGDSM.indexedDB</a></li>
                                 <li><a href="../modules/OGDSM.jsontoArray.html">OGDSM.jsontoArray</a></li>
                                 <li><a href="../modules/OGDSM.namespace.html">OGDSM.namespace</a></li>
                             </ul>
@@ -89,7 +91,7 @@
                         <div class="file">
                             <pre class="code prettyprint linenums">
                         /*jslint devel: true, vars : true plusplus : true*/
-                        /*global $, jQuery, ol, OGDSM*/
+                        /*global $, jQuery, ol, OGDSM, mappingDB*/
 
                         OGDSM.namesapce(&#x27;attributeTable&#x27;);
                         (function (OGDSM) {
@@ -101,18 +103,19 @@
                              * @param {String} RootDiv - 속성 테이블 DIV 이름
                              * @param {String} addr - PostgreSQL 접속 주소
                              */
-                            OGDSM.attributeTable = function (rootDiv, addr, visualObj) {
+                            OGDSM.attributeTable = function (rootDiv, addr, visualObj, indexedDB_SW) {
+                                visualObj = (typeof (visualObj) !== &#x27;undefined&#x27;) ? visualObj : null;
                                 this.rootDiv = rootDiv;
                                 this.addr = addr;
                                 this.editMode = false;
                                 this.visualObj = visualObj;
                                 this.attrSelected = false;
+                                this.indexedDB_SW = indexedDB_SW;
                                 var rootElement = document.getElementById(rootDiv),
                                     ulElement = document.createElement(&#x27;ul&#x27;),
                                     contentsElement = document.createElement(&#x27;div&#x27;);
                                 var contentsCSS = &#x27;width: 100%; height: 100%; background: rgba(255, 255, 255, 0.0); margin: 0px;&#x27;,
                                     ulCSS = &#x27;list-style: none; position: relative; margin: 0px; z-index: 2; top: 1px; display: table; border-left: 1px solid #f5ab36;&#x27;;
-
                                 ulElement.id = rootDiv + &#x27;Tab&#x27;;
                                 ulElement.style.cssText = ulCSS;
 
@@ -124,20 +127,41 @@
                             };
                             OGDSM.attributeTable.prototype = {
                                 constructor : OGDSM.attributeTable,
+
+                                /**
+                                 * 수정 모드 여부 받기
+                                 * @method getEidtMode
+                                 * @return {Boolean} True | False
+                                 */
                                 getEditMode : function () {
                                     return this.editMode;
                                 },
+                                /**
+                                 * 현재 선택 객체 받기 (테이블)
+                                 * @method getSelectObj
+                                 * @return {Object}
+                                 */
                                 getSelectObj : function () {
                                     return this.attrSelected;
                                 },
+                                /**
+                                 * 현재 선택 객체 설정 (테이블)
+                                 * @method setSelectObj
+                                 * @param {Object}
+                                 */
                                 setSelectObj : function (obj) {
                                     this.attrSelected = obj;
                                 },
-                                setolSelectObj : function (obj) {
-                                    this.olSelectObj = obj;
-                                },
+                                /**
+                                 * 현재 선택 객체 설정 (오픈레이어)
+                                 * @method getolSelectObj
+                                 * @return {Ol Feature Object}
+                                 */
                                 getolSelectObj : function (obj) {
                                     return this.olSelectObj;
+                                },
+                                setolSelectObj : function (obj) {
+                                    this.olSelectObj = obj;
                                 }
                             };
                             return OGDSM.attributeTable;
@@ -152,6 +176,7 @@
                             &#x27;use strict&#x27;;
                             var attrObj = this,
                                 rootDiv = this.rootDiv,
+                                indexedDB_SW = this.indexedDB_SW,
                                 tabs = $(&#x27;#&#x27; + rootDiv + &#x27;Tab&#x27;),
                                 contents = $(&#x27;#&#x27; + rootDiv + &#x27;Contents&#x27;),
                                 visualObj = this.visualObj,
@@ -184,44 +209,49 @@
                                     var newCell = tableBody.find(&#x27;tr:last&#x27;).attr(&#x27;data-row&#x27;, i + 1);
                                     newCell.append(&#x27;&lt;td&gt;&#x27; +
                                                    &#x27;&lt;input type=&quot;text&quot; value=&quot;&#x27; + value + &#x27;&quot; class=&quot;editSW&quot; style=&quot;&#x27; + textInputCSS + &#x27;&quot;&#x27; +
-                                                   &#x27;disabled=true&gt;&#x27; +
+                                                   &#x27;data-key=&quot;&#x27; + key + &#x27;&quot; data-label=&quot;&#x27; + layerName + &#x27;&quot; disabled=true&gt;&#x27; +
                                                    &#x27;&lt;/td&gt;&#x27;);
                                 });
                             }
-                            var featureOverlay = new ol.FeatureOverlay({
-                                map : visualObj.getMap(),
-                                style : function (feature, resolution) {
-                                    var styleStroke = new ol.style.Stroke({
-                                        color : &#x27;rgba(255, 0, 0, 1.0)&#x27;,
-                                        width : 3
-                                    });
-                                    return [new ol.style.Style({
-                                        fill : feature.get(&#x27;styleFill&#x27;),
-                                        stroke : styleStroke,
-                                        text : feature.get(&#x27;styleText&#x27;)
-                                    })];
-                                }
-                            });
-                            this.featureOverlay = featureOverlay;
+                            var featureOverlay = null;
+                            if (visualObj !== null) {
+                                featureOverlay = new ol.FeatureOverlay({
+                                    map : visualObj.getMap(),
+                                    style : function (feature, resolution) {
+                                        var styleStroke = new ol.style.Stroke({
+                                            color : &#x27;rgba(255, 0, 0, 1.0)&#x27;,
+                                            width : 3
+                                        });
+                                        return [new ol.style.Style({
+                                            fill : feature.get(&#x27;styleFill&#x27;),
+                                            stroke : styleStroke,
+                                            text : feature.get(&#x27;styleText&#x27;)
+                                        })];
+                                    }
+                                });
+                                this.featureOverlay = featureOverlay;
+                            }
                             function tableEvent(evtLayerName) {
                                 /**********tr select ****************/
                                 $(&#x27;#attrTable&#x27; + evtLayerName + &#x27; tbody&#x27;).on(&#x27;click&#x27;, &#x27;tr&#x27;, function () {
                                     var i = 0;
-                                    var eachFeatures = visualObj.layerCheck(evtLayerName).getSource().getFeatures();
                                     tableObj.$(&#x27;tr.selected&#x27;).removeClass(&#x27;selected&#x27;);
                                     $(this).addClass(&#x27;selected&#x27;);
-                                    featureOverlay.removeFeature(attrObj.getSelectObj());
-                                    for (i = 0; i &lt; eachFeatures.length; i++) {
-                                        var vectorObj = eachFeatures[i];
-                                        var num = vectorObj.Z.split(&#x27;.&#x27;);
-                                        if (num[1] === $(this).attr(&#x27;data-row&#x27;)) {
-                                            featureOverlay.addFeature(vectorObj);
-                                            attrObj.setSelectObj(vectorObj);
-                                        }
-                                    }
+
                                     // selected layer color change...
-                                    attrObj.getolSelectObj().getFeatures().clear();
-                                    //console.log(visualObj.getMap().getInteractions());
+                                    if (visualObj !== null) {
+                                        var eachFeatures = visualObj.layerCheck(evtLayerName).getSource().getFeatures();
+                                        featureOverlay.removeFeature(attrObj.getSelectObj());
+                                        for (i = 0; i &lt; eachFeatures.length; i++) {
+                                            var vectorObj = eachFeatures[i];
+                                            var num = vectorObj.Z.split(&#x27;.&#x27;);
+                                            if (num[1] === $(this).attr(&#x27;data-row&#x27;)) {
+                                                featureOverlay.addFeature(vectorObj);
+                                                attrObj.setSelectObj(vectorObj);
+                                            }
+                                        }
+                                        attrObj.getolSelectObj().getFeatures().clear();
+                                    }
                                 });
 
                                 /**********page change **************/
@@ -231,6 +261,14 @@
                                     }, 200);
                                 });
                             }
+
+                            function indexedDBEvent(layerName, data) {
+                                OGDSM.indexedDB(&#x27;webMappingDB&#x27;, {
+                                    insertKey : layerName,
+                                    insertData : data
+                                });
+                            }
+
                             /******* Add tab ***********/
                             tabs.prepend(&#x27;&lt;li id=&quot;attrTab&#x27; + layerName + &#x27;&quot; style=&quot;float:left;&quot;&gt;&#x27; +
                                          &#x27;&lt;a href=&quot;#&quot; style=&quot;&#x27; + aBaseCSS + &#x27;&quot;&gt;&#x27; + layerName + &#x27;&lt;/a&gt;&lt;/li&gt;&#x27;);
@@ -281,14 +319,14 @@
                                         &#x27;bPaginate&#x27; : true,
                                         &quot;dom&quot;: &#x27;rt&lt;&quot;bottom&quot;ip&gt;&lt;&quot;clear&quot;&gt;&#x27;
                                     });
-                                   // tableObjs[&#x27;attrTable&#x27; + layerName] = tableObj;
+
+
                                     tableEvent(layerName);
-                                    /*
-                                    $(window).on(&#x27;resize&#x27;, function () {
-                                        var attrDivHeight = $(&#x27;#&#x27; + rootDiv + &#x27;Contents&#x27;).height();
-                                        var thHeight = $(&#x27;thead&#x27;).height() + 7;
-                                    });
-                                    */
+
+                                    if (indexedDB_SW === true) {
+                                        indexedDBEvent(layerName, attrContents);
+                                    }
+
                                 },
                                 error : function (error) {
                                     console.log(error);
@@ -314,18 +352,50 @@
                         OGDSM.attributeTable.prototype.editAttribute = function (sw) {
                             &#x27;use strict&#x27;;
                             var textInput = $(&#x27;.editSW&#x27;);
+                            function editDataResult(src, dst) {
+                                console.log(&#x27;Update data&#x27;);
+                            }
                             if (sw === true) {
+                                var oldValue = null;
                                 textInput.attr(&#x27;disabled&#x27;, false);
+                                textInput.on(&#x27;focus&#x27;, function () {
+                                    oldValue = $(this).val();
+                                });
+                                textInput.on(&#x27;change&#x27;, function () {
+                                    var searchData = {};
+                                    if (oldValue === $(this).val()) {
+                                        return -1;
+                                    }
+                                    searchData[$(this).attr(&#x27;data-key&#x27;)] = oldValue;
+                                    if (this.indexedDB_SW === true) {
+                                        OGDSM.indexedDB(&#x27;webMappingDB&#x27;, {
+                                            type : &#x27;edit&#x27;,
+                                            searchKey : $(this).attr(&#x27;data-label&#x27;),
+                                            searchData : searchData,
+                                            editData : $(this).val(),
+                                            success : editDataResult
+                                        });
+                                    }
+                                });
                                 this.editMode = true;
                             } else {
                                 textInput.attr(&#x27;disabled&#x27;, true);
+                                textInput.off(&#x27;change&#x27;);
+                                textInput.off(&#x27;focus&#x27;);
                                 this.editMode = false;
                             }
                         };
 
+                        /**
+                         * 속성 정보 검색
+                         * @method selectAttribute
+                         * @param {String}  tableName   - 테이블 이름
+                         * @param {String}  header   - 검색 컬럼
+                         * @param {String}  value   - 검색 값
+                         * @return {Number}  테이블 인덱스
+                         */
                         OGDSM.attributeTable.prototype.searchAttribute = function (tableName, header, value) {
                             &#x27;use strict&#x27;;
-                            //console.log(this.tableObjs);
                             var tableObj = $(&#x27;#attrTable&#x27; + tableName).DataTable();
                             var searchIdx = 0;
                             var resultIdx = null;
@@ -345,15 +415,27 @@
                                     }
                                 });
                             });
+                            console.log(&#x27;search Attr: &#x27; + resultIdx);
                             return resultIdx;
                         };
 
+                        /**
+                         * 속성 정보 선택
+                         * @method selectAttribute
+                         * @param {String}  tableName   - 테이블 이름
+                         * @param {String}  trNum   - 테이블 인덱스
+                         */
                         OGDSM.attributeTable.prototype.selectAttribute = function (tableName, trNum) {
                             &#x27;use strict&#x27;;
                             var tableObj = $(&#x27;#attrTable&#x27; + tableName).DataTable();
                             tableObj.$(&#x27;tr.selected&#x27;).removeClass(&#x27;selected&#x27;);
                             tableObj.$(&#x27;tr&#x27;).eq(trNum).addClass(&#x27;selected&#x27;);
                         };
+                        /**
+                         * 속성 정보 선택 해제
+                         * @method selectAttribute
+                         * @param {String}  tableName   - 테이블 이름
+                         */
                         OGDSM.attributeTable.prototype.unSelectAttribute = function (tableName) {
                             &#x27;use strict&#x27;;
                             var tableObj = $(&#x27;#attrTable&#x27; + tableName).DataTable();
@@ -364,7 +446,6 @@
                                 this.attrSelected = false;
                             }
                         };
-
                             </pre>
                         </div>
                     </div>

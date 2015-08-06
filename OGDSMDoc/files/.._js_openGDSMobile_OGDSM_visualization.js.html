@@ -41,6 +41,7 @@
                             <ul id="api-classes" class="apis classes">
                                 <li><a href="../classes/OGDSM.html">OGDSM</a></li>
                                 <li><a href="../classes/OGDSM.attributeTable.html">OGDSM.attributeTable</a></li>
+                                <li><a href="../classes/OGDSM.chartVisualization.html">OGDSM.chartVisualization</a></li>
                                 <li><a href="../classes/OGDSM.eGovFrameUI.html">OGDSM.eGovFrameUI</a></li>
                                 <li><a href="../classes/OGDSM.externalConnection.html">OGDSM.externalConnection</a></li>
                                 <li><a href="../classes/OGDSM.mapLayerList.html">OGDSM.mapLayerList</a></li>
@@ -49,6 +50,7 @@
 
                             <ul id="api-modules" class="apis modules">
                                 <li><a href="../modules/OGDSM.applyOptions.html">OGDSM.applyOptions</a></li>
+                                <li><a href="../modules/OGDSM.indexedDB.html">OGDSM.indexedDB</a></li>
                                 <li><a href="../modules/OGDSM.jsontoArray.html">OGDSM.jsontoArray</a></li>
                                 <li><a href="../modules/OGDSM.namespace.html">OGDSM.namespace</a></li>
                             </ul>
@@ -100,10 +102,11 @@
                             * @constructor
                             * @param {String} mapDiv - 지도 DIV 아이디 이름
                             * @param {JSON Object} options - 옵션 JSON 객체 키 값&lt;br&gt;
-                            {layerListDiv:null, attrTableDiv:null, attrAddr:&#x27;&#x27;}&lt;br&gt;
+                            {layerListDiv:null, attrTableDiv:null, attrAddr:&#x27;&#x27;, indexedDB:true}&lt;br&gt;
                             layerListDiv : 레이어 관리 리스트 DIV&lt;br&gt;
                             attrTableDiv : 속성 시각화 DIV 아이디 이름&lt;br&gt;
                             attrAddr : 속성 시각화 서버 주소&lt;br&gt;
+                            indexedDB : 속성 정보 모바일 데이터베이스 저장 / 수정&lt;br&gt;
                             */
                             OGDSM.visualization = function (mapDiv, options) {
                                 options = (typeof (options) !== &#x27;undefined&#x27;) ? options : {};
@@ -115,7 +118,8 @@
                                 var defaults = {
                                     layerListDiv : null,
                                     attrTableDiv : null,
-                                    attrAddr : &#x27;&#x27;
+                                    attrAddr : &#x27;&#x27;,
+                                    indexedDB : true
                                 };
 
                                 for (name in defaults) {
@@ -599,95 +603,6 @@
                                 return styleCache[text];
                             });
                             map.setOpacity(defaults.opt);
-                        };
-                        /**
-                         * 가로 막대 차트 시각화
-                         * @method barChart
-                         * @param {String} divId - 막대 차트 시각화할 DIV 아이디 이름
-                         * @param {Array} data - 데이터 값 2차원 배열 (0 : x, 1 : y)
-                         * @param {Array} range - 데이터 범위 1차원 배열
-                         * @param {Array} color - 데이터 색 범위 1차원 배열 [default=#000000 (range와 배열 길이 같아야함)]
-                         */
-                        OGDSM.visualization.prototype.barChart = function (divId, data, range, color) {
-                            &#x27;use strict&#x27;;
-                            range = (typeof (range) !== &#x27;undefined&#x27;) ? range : [];
-                            color = (typeof (color) !== &#x27;undefined&#x27;) ? color : [&#x27;#000000&#x27;];
-                            var barHeight = 18,
-                                minusWidth = 0,
-                                rootDiv = $(&#x27;#&#x27; + divId),
-                                maxData = d3.max(data[0]),
-                                barChartDiv = null,
-                                x = null,
-                                y = null,
-                                z = null;
-                            rootDiv.empty();
-                            barChartDiv = d3.select(&quot;#&quot; + divId).append(&#x27;svg&#x27;)
-                                .attr(&#x27;id&#x27;, &#x27;barchart&#x27;)
-                                .attr(&#x27;width&#x27;, rootDiv.width())
-                                .attr(&#x27;height&#x27;, barHeight * data[0].length);
-                            x = d3.scale.linear().domain([0, maxData]).range([0, rootDiv.width() - 50]);
-                            barChartDiv.selectAll(&quot;rect&quot;).data(data[0]).enter()
-                                .append(&quot;rect&quot;)
-                                .attr(&quot;x&quot;, 0)
-                                .attr(&quot;y&quot;, function (d, i) {
-                                    return i * barHeight;
-                                })
-                                .attr(&#x27;width&#x27;, function (d) {
-                                    if (d === &#x27;-&#x27; || d === &#x27;0&#x27;) {
-                                        return x(20);
-                                    }
-                        			return x(d) - minusWidth;
-                                })
-                                .attr(&#x27;height&#x27;, barHeight - 2)
-                        		.attr(&#x27;fill&#x27;, function (d, i) {
-                                    if (d === &#x27;-&#x27; || d === &#x27;0&#x27;) {
-                                        return &#x27;#AAAAAA&#x27;;
-                                    }
-                                    if (range.length !== 0) {
-                                        for (z = 0; z &lt; range.length; z += 1) {
-                                            if (data[0][i] &lt;= range[z]) {
-                                                return color[z];
-                                            }
-                                        }
-                                    }
-                                    return color[color.length];
-                                });
-
-                            barChartDiv.selectAll(&#x27;g&#x27;).data(data[1])
-                                .enter()
-                                .append(&#x27;text&#x27;)
-                                .attr(&#x27;x&#x27;, 0)
-                                .attr(&#x27;y&#x27;, function (d, i) {
-                                    return i * barHeight + barHeight - 5;
-                                })
-                                .attr(&#x27;font-weight&#x27;, &#x27;bold&#x27;)
-                                .attr(&#x27;font-size&#x27;, &#x27;0.8em&#x27;)
-                                .text(function (d) {
-                                    return d;
-                                });
-
-                        	barChartDiv.selectAll(&#x27;g&#x27;).data(data[0])
-                                .enter()
-                                .append(&#x27;text&#x27;)
-                                .attr(&#x27;x&#x27;, function (d) {
-                                    if (d === &#x27;-&#x27; || d === &#x27;0&#x27;) {
-                                        return x(10);
-                                    }
-                        			return x(d) - minusWidth;
-                                })
-                                .attr(&#x27;y&#x27;, function (d, i) {
-                                    return i * barHeight + barHeight - 5;
-                                })
-                                .attr(&#x27;dy&#x27;, &#x27;.15em&#x27;)
-                                .attr(&#x27;fill&#x27;, &#x27;black&#x27;)
-                                .attr(&#x27;font-size&#x27;, &#x27;0.8em&#x27;)
-                                .attr(&#x27;font-weight&#x27;, &#x27;bold&#x27;)
-                                .text(function (d) {
-                                    if (d === &#x27;-&#x27; || d === &#x27;0&#x27;) {
-                                        return &#x27;점검중&#x27;;
-                                    }
-                                    return d;
-                                });
                         };
 
                             </pre>

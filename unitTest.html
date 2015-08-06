@@ -22,34 +22,70 @@
 
     <script type="text/javascript" src="./js/openGDSMobile/OGDSM.js"></script>
     <script type="text/javascript" src="./js/openGDSMobile/OGDSM_visualization.js"></script>
-    <script type="text/javascript" src="./js/openGDSMobile/indexDBtest.js"></script>
+    <script type="text/javascript" src="./js/openGDSMobile/OGDSM_indexedDB.js"></script>
     <script type="text/javascript" src="./js/openGDSMobile/OGDSM_attributeTable.js"></script>
 
+    <script src="./data/data.json"></script>
+
     <script>
-    $(function() {
-        /******************Attribute and IndexDB ************************/
-        var addr = 'http://113.198.80.60:8081/mobile/attrTable.do';
-        var attrTable = new OGDSM.attributeTable('attrTable', addr);
-        indexedDB.deleteDatabase('webMappingDB');
-
-        attrTable.addAttribute('seoul_sig');
-        //attrTable.addAttribute('seoul_emd');
-
-        setTimeout(function () {
-            attrTable.addAttribute('seoul_emd');
-        }, 3000);
-
-        var attrEditChk = $('#attrEditChk');
-        attrEditChk.click(function () {
-            var chk = $(this).is(':checked');
-            if (chk === true) {
-                attrTable.editAttribute(true);
-            } else {
-                attrTable.editAttribute(false);
-            }
+        function searchDataResult (data, subData) {
+            console.log(data);
+            console.log(subData);
+        }
+        function editDataResult (srcData, dstData) {
+            console.log(srcData);
+            console.log(dstData);
+        }
+        $(function() {
+            /******************Attribute and IndexDB ************************/
+            var addr = 'http://113.198.80.60/ApplicationServer/attrTable.do';
+            var attrTable = new OGDSM.attributeTable('attrTable', addr);
+            attrTable.addAttribute('seoul_sig');
+            /*******Delete DB****************/
+            /*
+            OGDSM.indexedDB('webMappingDB', {
+                type : 'deleteDB'
+            });
+            */
+            /*******Open DB And Insert Data*************************/
+            /*
+            OGDSM.indexedDB('webMappingDB', {
+                insertKey : 'seoul_sig',
+                insertData : jsonstr
+            });
+            */
+            /*******search row Data*************************/
+            /*
+            var searchData = {sig_kor_nm : '종로구'};
+            OGDSM.indexedDB('webMappingDB', {
+                type : 'search',
+                searchKey : 'seoul_sig',
+                searchData : searchData,
+                success : searchDataResult
+            });
+            */
+            /**********************************************/
+            /*
+            var searchData = {sig_kor_nm : '종로구'};
+            OGDSM.indexedDB('webMappingDB', {
+                type : 'edit',
+                searchKey : 'seoul_sig',
+                searchData : searchData,
+                editData : '종로구_',
+                success : editDataResult
+            });
+            */
+            var attrEditChk = $('#attrEditChk');
+            attrEditChk.click(function () {
+                var chk = $(this).is(':checked');
+                if (chk === true) {
+                    attrTable.editAttribute(true);
+                } else {
+                    attrTable.editAttribute(false);
+                }
+            });
+            /******************Attribute and IndexDB END************************/
         });
-        /******************Attribute and IndexDB END************************/
-    });
     </script>
 </head>
 <body>

@@ -1195,7 +1195,7 @@ OGDSM.namesapce('visualization');
             OGDSM.visualization.updateLayoutSetting();
         });
         if (defaults.attrTableDiv !== null) {
-            this.attrTableObj = new OGDSM.attributeTable(defaults.attrTableDiv, defaults.attrAddr);
+            this.attrTableObj = new OGDSM.attributeTable(defaults.attrTableDiv, defaults.attrAddr, this);
         }
         if (defaults.layerListDiv !== null) {
             this.layerListObj = new OGDSM.mapLayerList(this, defaults.layerListDiv, {
@@ -1203,6 +1203,8 @@ OGDSM.namesapce('visualization');
             });
         }
         // Orientation...
+
+
     };
     OGDSM.visualization.prototype = {
         constructor : OGDSM.visualization,
@@ -1431,33 +1433,83 @@ OGDSM.visualization.prototype.updateLayoutSetting = function (mapDiv) {
         this.mapObj.updateSize();
     }
 };
+
+
 /**
  * WMS 및 WFS 맵 레이어 추가
  * @method addMap
  * @param {ol Map Object} data - 오픈레이어3 지도 객체
- * @param {String} type - WFS 객체 타입 [default=polygon | point]
  */
-OGDSM.visualization.prototype.addMap = function (data, type) {
+OGDSM.visualization.prototype.addMap = function (data) {
     'use strict';
     var chkData = this.layerCheck(data.get('title'));
+    var interaction;
     if (chkData === false) {
         this.getMap().addLayer(data);
+        this.mapObj.removeInteraction(this.mapObj.getInteractions());
+        /***interaction ******/
+        interaction = new ol.interaction.Select({
+            layers : function (layer) {
+                return true;
+            },
+            style : (function () {
+                var styleStroke = new ol.style.Stroke({
+                    color : 'rgba(255, 0, 0, 1.0)',
+                    width : 3
+                });
+                return function (feature, resolution) {
+                    var type = feature.getGeometry().getType();
+                    var styleCircle = new ol.style.Circle({
+                        radius : 10,
+                        fill : feature.get('styleCircle').getFill(),
+                        stroke : styleStroke
+                    });
+                    if (type === 'MultiPolygon') {
+                        return [new ol.style.Style({
+                            fill : feature.get('styleFill'),
+                            stroke : styleStroke,
+                            text : feature.get('styleText')
+                        })];
+                    } else if (type === 'Point') {
+                        return [new ol.style.Style({
+                            image : styleCircle,
+                            text : feature.get('styleText')
+                        })];
+                    }
+                };
+            }())
+        });
+        this.mapObj.addInteraction(interaction);
+        this.mapObj.removeLayer(interaction);
+        //console.log(interaction.deselected(null));
+        /***layer list On******/
         if (typeof (this.layerListObj) !== 'undefined') {
             var color;
+            var geometryObj = data.getSource().getFeatures()[0].getGeometry();
+            var geoType = geometryObj.getType();
             if (typeof data.getStyle !== 'undefined') {
-                if (type === 'polygon') {
-                    color = data.getStyle()[0].getFill().getColor();
-                } else if (type === 'point') {
-                    color = data.getStyle()[0].getImage().getFill().getColor();
-                }
-
+                color = data.get('styleFill');
             } else {
                 color =  'rgb(0, 0, 0)';
             }
-            this.layerListObj.addList(data, data.get('title'), color, type);
+            this.layerListObj.addList(data, data.get('title'), color, geoType);
         }
+        /***attribute On******/
         if (typeof (this.attrTableObj) !== 'undefined') {
+            var attrTableObj = this.attrTableObj;
             this.attrTableObj.addAttribute(data.get('title'));
+            this.attrTableObj.setolSelectObj(interaction);
+            interaction.getFeatures().on('add', function (event) {
+                attrTableObj.unSelectAttribute(data.get('title'));
+                var obj = event.target.item(0);
+                var label = event.target.item(0).get('label');
+                var selectValue = event.target.item(0).get(label);
+                var trNumber = attrTableObj.searchAttribute(data.get('title'), label, selectValue);
+                attrTableObj.selectAttribute(data.get('title'), trNumber);
+            });
+            interaction.getFeatures().on('remove', function (event) {
+                attrTableObj.unSelectAttribute(data.get('title'));
+            });
         }
     } else {
         console.log("Layer is existence");
@@ -1725,26 +1777,26 @@ OGDSM.namesapce('externalConnection');
 
 /**
  * GeoServer WFS 데이터 요청 (OpenLayers3 ol.source.GeoJSON)
- * @method geoServerWFSLoad
+ * @method geoServerGeoJsonLoad
  * @param {OGDSM Obj} obj - OpenGDS Mobile 시각화 객체
  * @param {String} addr - 주소
  * @param {String} workspace - 워크스페이스
  * @param {String} layerName - 레이어 이름
  * @param {JSON Object} options - 옵션 JSON 객체 키 값<br>
-  {type:'polygon', color:'rgba(0, 0, 0, 0.0)', callback:function () {}}<br>
-  type(String) : 레이어 타입( polygon | point)<br>
+  {color:'rgba(0, 0, 0, 0.0)', callback:function () {}}<br>
   color(String) : 색상 rgba<br>
+  label(String) : 라벨<br>
   callback(Function) : 콜백 함수 function (resultData) {...}
  */
-OGDSM.externalConnection.prototype.geoServerWFSLoad = function (obj, addr, workspace, layerName, options) {
+OGDSM.externalConnection.prototype.geoServerGeoJsonLoad = function (obj, addr, workspace, layerName, options) {
     'use strict';
     options = (typeof (options) !== 'undefined') ? options : {};
     var fullAddr = addr + '/geoserver/wfs?service=WFS&version=1.1.0&request=GetFeature&typeNames=' + workspace + ':' + layerName +
         '&outputFormat=json&srsname=' + obj.baseProj;
     var objStyles, name;
     var defaults = {
-        type : 'polygon',
         color : 'rgba(0, 0, 0, 0.0)',
+        label : null,
         callback : function (wfslayer) {}
     };
     for (name in defaults) {
@@ -1754,33 +1806,6 @@ OGDSM.externalConnection.prototype.geoServerWFSLoad = function (obj, addr, works
             }
         }
 	}
-    if (defaults.type === 'polygon') {
-        objStyles = [
-            new ol.style.Style({
-                fill : new ol.style.Fill({
-                    color : defaults.color
-                }),
-                stroke : new ol.style.Stroke({
-                    color : 'rgba(0, 0, 0, 1.0)',
-                    width : 1
-                })
-            })];
-    } else if (defaults.type === 'point') {
-        objStyles = [
-            new ol.style.Style({
-                image : new ol.style.Circle({
-                    radius : 5,
-                    fill : new ol.style.Fill({
-                        color : defaults.color
-                    }),
-                    stroke : new ol.style.Stroke({
-                        color : 'rgba(0, 0, 0, 1.0)',
-                        width : 1
-                    })
-                })
-            })
-        ];
-    }
     $.mobile.loading('show', {
         text : 'Loading',
         textVisible : 'true',
@@ -1799,8 +1824,57 @@ OGDSM.externalConnection.prototype.geoServerWFSLoad = function (obj, addr, works
                 source : new ol.source.Vector({
                     features : (new ol.format.GeoJSON()).readFeatures(msg)
                 }),
-                style : objStyles
+                style : (function () {
+                    var styleFill = new ol.style.Fill({
+                        color : defaults.color
+                    });
+                    var styleStroke = new ol.style.Stroke({
+                        color : 'rgba(0, 0, 0, 1.0)',
+                        width : 1
+                    });
+                    var styleCircle = new ol.style.Circle({
+                        radius : 10,
+                        fill : styleFill,
+                        stroke : styleStroke
+                    });
+                    return function (feature, resolution) {
+                        var type = feature.getGeometry().getType();
+                        var styleText = null;
+                        if (defaults.label !== null) {
+                            styleText = new ol.style.Text({
+                                font : '12px Calibri, sans-serif',
+                                text : feature.get(defaults.label),
+                                fill : new ol.style.Fill({
+                                    color : '#000'
+                                }),
+                                stroke : new ol.style.Stroke({
+                                    color : '#fff',
+                                    width : 3
+                                })
+                            });
+                            feature.set('label', defaults.label);
+                        }
+                        //console.log(defaults.label);
+                        feature.set('styleFill', styleFill);
+                        feature.set('styleStroke', styleStroke);
+                        feature.set('styleCircle', styleCircle);
+                        feature.set('styleText', styleText);
+                        if (type === 'MultiPolygon') {
+                            return [new ol.style.Style({
+                                fill : styleFill,
+                                stroke : styleStroke,
+                                text : styleText
+                            })];
+                        } else if (type === 'Point') {
+                            return [new ol.style.Style({
+                                image : styleCircle,
+                                text : styleText
+                            })];
+                        }
+                    };
+                }())
             });
+            wfsLayer.set('styleFill', defaults.color);
             obj.addMap(wfsLayer, defaults.type);
             $.mobile.loading('hide');
             defaults.callback(wfsLayer);
@@ -1822,6 +1896,7 @@ OGDSM.externalConnection.prototype.geoServerWFSLoad = function (obj, addr, works
   epsg(String) : EPSG String<br>
  * @return {ol.layer.Vector} vectorSource - OpenLayers3 백터 객체
  */
+/*
 OGDSM.externalConnection.prototype.geoServerWFS = function (addr, ws, layerName, options) {
     options = (typeof (options) !== 'undefined') ? options : {};
     var vectorSource, styles, resultData, name;
@@ -1889,6 +1964,7 @@ OGDSM.externalConnection.prototype.geoServerWFS = function (addr, ws, layerName,
     });
     return resultData;
 };
+*/
 /**
  * VWorld WMS 데이터 요청
  * @method vworldWMSLoad
@@ -2959,17 +3035,17 @@ OGDSM.mapLayerList.prototype.addList = function (obj, label, color, type) {
                    '</div>' +
                    '</li>');
     var labelCanvas = document.getElementById(label + 'canvas').getContext('2d');
-    if (type === 'polygon') {
+    if (type === 'MultiPolygon') {
         labelCanvas.fillStyle = color;
         labelCanvas.fillRect(5, 5, 20, 20);
         labelCanvas.strokeRect(5, 5, 20, 20);
-    } else if (type === 'point') {
+    } else if (type === 'Point') {
         labelCanvas.beginPath();
         labelCanvas.arc(15, 15, 12, 0, 2 * Math.PI);
         labelCanvas.fillStyle = color;
         labelCanvas.fill();
         labelCanvas.stroke();
-    } else if (type === 'line') {
+    } else if (type === 'Line') {
         labelCanvas.moveTo(5, 5);
         labelCanvas.lineTo(20, 20);
         labelCanvas.strokeStyle = color;
@@ -3017,10 +3093,12 @@ OGDSM.namesapce('attributeTable');
      * @param {String} RootDiv - 속성 테이블 DIV 이름
      * @param {String} addr - PostgreSQL 접속 주소
      */
-    OGDSM.attributeTable = function (rootDiv, addr) {
+    OGDSM.attributeTable = function (rootDiv, addr, visualObj) {
         this.rootDiv = rootDiv;
         this.addr = addr;
         this.editMode = false;
+        this.visualObj = visualObj;
+        this.attrSelected = false;
         var rootElement = document.getElementById(rootDiv),
             ulElement = document.createElement('ul'),
             contentsElement = document.createElement('div');
@@ -3040,6 +3118,18 @@ OGDSM.namesapce('attributeTable');
         constructor : OGDSM.attributeTable,
         getEditMode : function () {
             return this.editMode;
+        },
+        getSelectObj : function () {
+            return this.attrSelected;
+        },
+        setSelectObj : function (obj) {
+            this.attrSelected = obj;
+        },
+        setolSelectObj : function (obj) {
+            this.olSelectObj = obj;
+        },
+        getolSelectObj : function (obj) {
+            return this.olSelectObj;
         }
     };
     return OGDSM.attributeTable;
@@ -3056,6 +3146,8 @@ OGDSM.attributeTable.prototype.addAttribute = function (layerName) {
         rootDiv = this.rootDiv,
         tabs = $('#' + rootDiv + 'Tab'),
         contents = $('#' + rootDiv + 'Contents'),
+        visualObj = this.visualObj,
+        attrSelected = this.attrSelected,
         tableObj = null;
     var aBaseCSS = 'display:block; padding:6px 15px; text-decoration:none; border-right:1px solid #000;' +
                    'border-top:1px solid #000; margin:0;',
@@ -3071,6 +3163,7 @@ OGDSM.attributeTable.prototype.addAttribute = function (layerName) {
         $(e.currentTarget).css('background', backgroundSelected);
         $('.attrTable').hide();
         $('#attrContent' + layerName).css('display', 'block');
+        $('.attrTable tr.selected').removeClass('selected');
     }
     function createTableCol(attrContents, i, tableBody, tableTh) {
         $.each(attrContents, function (key, value) {
@@ -3078,24 +3171,53 @@ OGDSM.attributeTable.prototype.addAttribute = function (layerName) {
                 return true;
             }
             if (i === 0) {
-                tableTh.append('<th>' + key + '</th>');
+                tableTh.append('<th data-value="' + key + '">' + key + '</th>');
             }
-            var newCell = tableBody.find('tr:last');
+            var newCell = tableBody.find('tr:last').attr('data-row', i + 1);
             newCell.append('<td>' +
                            '<input type="text" value="' + value + '" class="editSW" style="' + textInputCSS + '"' +
                            'disabled=true>' +
                            '</td>');
         });
     }
-    function tableEvent() {
+    var featureOverlay = new ol.FeatureOverlay({
+        map : visualObj.getMap(),
+        style : function (feature, resolution) {
+            var styleStroke = new ol.style.Stroke({
+                color : 'rgba(255, 0, 0, 1.0)',
+                width : 3
+            });
+            return [new ol.style.Style({
+                fill : feature.get('styleFill'),
+                stroke : styleStroke,
+                text : feature.get('styleText')
+            })];
+        }
+    });
+    this.featureOverlay = featureOverlay;
+    function tableEvent(evtLayerName) {
         /**********tr select ****************/
-        $('#attrTable' + layerName + ' tbody').on('click', 'tr', function () {
+        $('#attrTable' + evtLayerName + ' tbody').on('click', 'tr', function () {
+            var i = 0;
+            var eachFeatures = visualObj.layerCheck(evtLayerName).getSource().getFeatures();
             tableObj.$('tr.selected').removeClass('selected');
             $(this).addClass('selected');
+            featureOverlay.removeFeature(attrObj.getSelectObj());
+            for (i = 0; i < eachFeatures.length; i++) {
+                var vectorObj = eachFeatures[i];
+                var num = vectorObj.Z.split('.');
+                if (num[1] === $(this).attr('data-row')) {
+                    featureOverlay.addFeature(vectorObj);
+                    attrObj.setSelectObj(vectorObj);
+                }
+            }
+            // selected layer color change...
+            attrObj.getolSelectObj().getFeatures().clear();
+            //console.log(visualObj.getMap().getInteractions());
         });
 
         /**********page change **************/
-        $('#attrTable' + layerName).on('page.dt', function (e, settings) {
+        $('#attrTable' + evtLayerName).on('page.dt', function (e, settings) {
             setTimeout(function () {
                 attrObj.editAttribute(attrObj.getEditMode());
             }, 200);
@@ -3151,7 +3273,8 @@ OGDSM.attributeTable.prototype.addAttribute = function (layerName) {
                 'bPaginate' : true,
                 "dom": 'rt<"bottom"ip><"clear">'
             });
-            tableEvent();
+           // tableObjs['attrTable' + layerName] = tableObj;
+            tableEvent(layerName);
             /*
             $(window).on('resize', function () {
                 var attrDivHeight = $('#' + rootDiv + 'Contents').height();
@@ -3189,5 +3312,47 @@ OGDSM.attributeTable.prototype.editAttribute = function (sw) {
     } else {
         textInput.attr('disabled', true);
         this.editMode = false;
+    }
+};
+
+OGDSM.attributeTable.prototype.searchAttribute = function (tableName, header, value) {
+    'use strict';
+    //console.log(this.tableObjs);
+    var tableObj = $('#attrTable' + tableName).DataTable();
+    var searchIdx = 0;
+    var resultIdx = null;
+    //console.log(tableName + ' ' + header + ' ' + value);
+    tableObj.columns().header().each(function (data, i) {
+        var tableHeader = $(data).attr('data-value');
+        if (header === tableHeader) {
+            searchIdx = i;
+            return false;
+        }
+    });
+
+    tableObj.columns(searchIdx).every(function () {
+        $(this.data()).each(function (i, data) {
+            if ($(this).val() === value) {
+                resultIdx = i;
+            }
+        });
+    });
+    return resultIdx;
+};
+
+OGDSM.attributeTable.prototype.selectAttribute = function (tableName, trNum) {
+    'use strict';
+    var tableObj = $('#attrTable' + tableName).DataTable();
+    tableObj.$('tr.selected').removeClass('selected');
+    tableObj.$('tr').eq(trNum).addClass('selected');
+};
+OGDSM.attributeTable.prototype.unSelectAttribute = function (tableName) {
+    'use strict';
+    var tableObj = $('#attrTable' + tableName).DataTable();
+    tableObj.$('tr.selected').removeClass('selected');
+    // selected layer color change...
+    if (this.getSelectObj() !== false) {
+        this.featureOverlay.removeFeature(this.getSelectObj());
+        this.attrSelected = false;
     }
 };

@@ -15,12 +15,12 @@
         <!--<script type="text/javascript" src="./js/openGDSMobile/d3chart.js"></script>-->
         <script type="text/javascript" src="./js/openGDSMobile/OGDSM.js"></script>
         <script type="text/javascript" src="./js/openGDSMobile/OGDSM_chartVisualization.js"></script>
-        <script type="text/javascript" src="./js/openGDSMobile/d3chart.js"></script>
+<!--        <script type="text/javascript" src="./js/openGDSMobile/d3chart.js"></script>-->
 
-<script src="http://d3js.org/topojson.v1.min.js"></script>
-<!-- <script src="http://d3js.org/d3.geo.projection.v0.min.js" > </script> -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/1.6.19/topojson.min.js" > </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/d3-geo-projection/0.2.15/d3.geo.projection.js" > </script>
+        <script src="http://d3js.org/topojson.v1.min.js"></script>
+        <!-- <script src="http://d3js.org/d3.geo.projection.v0.min.js" > </script> -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/1.6.19/topojson.min.js" > </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-geo-projection/0.2.15/d3.geo.projection.js" > </script>
 
 
 		<style>
@@ -260,7 +260,7 @@
         	   //center_lat, center_lon = Latitude, Longitude
         	   
                var chartObj = new OGDSM.chartVisualization();
-               chartObj.kMap('d3_chart', "GU", 34., 131., 3000); 
+               chartObj.kMap('d3_chart','http://113.198.80.60:8081/mobile/geojson.do', "DONG", 34., 131., 3000);
            }); 
             
         </script>

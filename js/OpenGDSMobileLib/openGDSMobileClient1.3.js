@@ -1165,10 +1165,11 @@ OGDSM.namesapce('visualization');
     * @constructor
     * @param {String} mapDiv - 지도 DIV 아이디 이름
     * @param {JSON Object} options - 옵션 JSON 객체 키 값<br>
-    {layerListDiv:null, attrTableDiv:null, attrAddr:''}<br>
+    {layerListDiv:null, attrTableDiv:null, attrAddr:'', indexedDB:true}<br>
     layerListDiv : 레이어 관리 리스트 DIV<br>
     attrTableDiv : 속성 시각화 DIV 아이디 이름<br>
     attrAddr : 속성 시각화 서버 주소<br>
+    indexedDB : 속성 정보 모바일 데이터베이스 저장 / 수정<br>
     */
     OGDSM.visualization = function (mapDiv, options) {
         options = (typeof (options) !== 'undefined') ? options : {};
@@ -1180,7 +1181,8 @@ OGDSM.namesapce('visualization');
         var defaults = {
             layerListDiv : null,
             attrTableDiv : null,
-            attrAddr : ''
+            attrAddr : '',
+            indexedDB : true
         };
 
         for (name in defaults) {
@@ -1664,95 +1666,6 @@ OGDSM.visualization.prototype.changeWFSStyle = function (layerName, colors, opti
         return styleCache[text];
     });
     map.setOpacity(defaults.opt);
-};
-/**
- * 가로 막대 차트 시각화
- * @method barChart
- * @param {String} divId - 막대 차트 시각화할 DIV 아이디 이름
- * @param {Array} data - 데이터 값 2차원 배열 (0 : x, 1 : y)
- * @param {Array} range - 데이터 범위 1차원 배열
- * @param {Array} color - 데이터 색 범위 1차원 배열 [default=#000000 (range와 배열 길이 같아야함)]
- */
-OGDSM.visualization.prototype.barChart = function (divId, data, range, color) {
-    'use strict';
-    range = (typeof (range) !== 'undefined') ? range : [];
-    color = (typeof (color) !== 'undefined') ? color : ['#000000'];
-    var barHeight = 18,
-        minusWidth = 0,
-        rootDiv = $('#' + divId),
-        maxData = d3.max(data[0]),
-        barChartDiv = null,
-        x = null,
-        y = null,
-        z = null;
-    rootDiv.empty();
-    barChartDiv = d3.select("#" + divId).append('svg')
-        .attr('id', 'barchart')
-        .attr('width', rootDiv.width())
-        .attr('height', barHeight * data[0].length);
-    x = d3.scale.linear().domain([0, maxData]).range([0, rootDiv.width() - 50]);
-    barChartDiv.selectAll("rect").data(data[0]).enter()
-        .append("rect")
-        .attr("x", 0)
-        .attr("y", function (d, i) {
-            return i * barHeight;
-        })
-        .attr('width', function (d) {
-            if (d === '-' || d === '0') {
-                return x(20);
-            }
-			return x(d) - minusWidth;
-        })
-        .attr('height', barHeight - 2)
-		.attr('fill', function (d, i) {
-            if (d === '-' || d === '0') {
-                return '#AAAAAA';
-            }
-            if (range.length !== 0) {
-                for (z = 0; z < range.length; z += 1) {
-                    if (data[0][i] <= range[z]) {
-                        return color[z];
-                    }
-                }
-            }
-            return color[color.length];
-        });
-
-    barChartDiv.selectAll('g').data(data[1])
-        .enter()
-        .append('text')
-        .attr('x', 0)
-        .attr('y', function (d, i) {
-            return i * barHeight + barHeight - 5;
-        })
-        .attr('font-weight', 'bold')
-        .attr('font-size', '0.8em')
-        .text(function (d) {
-            return d;
-        });
-
-	barChartDiv.selectAll('g').data(data[0])
-        .enter()
-        .append('text')
-        .attr('x', function (d) {
-            if (d === '-' || d === '0') {
-                return x(10);
-            }
-			return x(d) - minusWidth;
-        })
-        .attr('y', function (d, i) {
-            return i * barHeight + barHeight - 5;
-        })
-        .attr('dy', '.15em')
-        .attr('fill', 'black')
-        .attr('font-size', '0.8em')
-        .attr('font-weight', 'bold')
-        .text(function (d) {
-            if (d === '-' || d === '0') {
-                return '점검중';
-            }
-            return d;
-        });
 };
 
 /** GeoServer, Public data, VWorld Connect Class **/
@@ -3080,8 +2993,383 @@ OGDSM.mapLayerList.prototype.removeList = function (layerName) {
     $('#popup' + layerName).remove();
 };
 
+/*jslint devel: true, vars : true plusplus : true es5 : true */
+/*global $, jQuery, OGDSM, mappingDB, IDBTransaction*/
+
+
+
+/** Single Object Store **/
+/**
+* OGDSM indexedDB 모듈
+*
+* - 사용 방법 (Use)
+*       OGDSM.indexedDB('dbName'. {options});
+* - Options
+*   옵션 JSON 객체 키 값<br>
+    {type:'new', storeName:dbName, insertKey:null, insertData:null,
+     searchKey: null, searchData: numm, editData: numm, success: false, dbFile : false}<br>
+    type (String) : 모듈 실행 타입 설정<br>
+     > new : DB 생성/ 데이터 삽입 (dbName, storeName, insertData, insertKey)<br>
+     > insert: 데이터 삽입 (dbName, storeName, insertData, insertKey)<br>
+     > forceInsert: 데이터 강제 삽입 (dbName, storeName, insertData, insertKey)<br>
+     > remove: DB 데이터 삭제 ( --- )<br>
+     > removeAll: DB 데이터 모두 삭제 ( --- )<br>
+     > search: DB 데이터 검색 (dbName, storeName, searchKey, searchData)<br>
+     > searchAll: DB 데이터 모두 검색 (dbName, storeName)<br>
+     > edit: DB 데이터 수정 (dbName, storeName, searchKey, searchData, editData)<br>
+     > deleteDB: DB 삭제 (dbName)<br>
+    storeName (String) : 스토어<br>
+    insertKey (String) : 삽입 대상 키<br>
+    insertData (String) : 삽입 데이터<br>
+    searchKey (String) : 검색 대상 키<br>
+    searchData (String) : 검색할 데이터<br>
+    editData (String) : 수정할 데이터<br>
+    success (function) : 성공 콜백 함수 (데이터 검색일 경우 데이터 파라미터로 보내짐)<br>
+    dbFail (function) : 실패 콜백 함수<br>
+* @module OGDSM.indexedDB
+*/
+OGDSM.indexedDB = function (dbName, options) { //dbName_ StoreName, storeName, success, fail
+    'use strict';
+    var dbObject = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
+    var iDB = {};
+    options = (typeof (options) !== 'undefined') ? options : {};
+    var defaults = {
+        type : 'new',
+        storeName : dbName,
+        insertKey : null,
+        insertData : null,
+        searchKey : null,
+        searchData : null,
+        editData : null,
+        success : false,
+        dbFail : false
+    };
+    defaults = OGDSM.applyOptions(defaults, options);
+    if (typeof (Storage) !== 'undefined') {
+        if (localStorage.openGDSMobileDBVersion) {
+            //localStorage.openGDSMobileDBVersion = Number(localStorage.openGDSMobileDBVersion) + 1;
+            localStorage.openGDSMobileDBVersion = localStorage.openGDSMobileDBVersion = 1;
+        } else {
+            localStorage.openGDSMobileDBVersion = localStorage.openGDSMobileDBVersion = 1;
+        }
+    }
+    function insertData(dbName, storeName, data, keyColumn) {
+        var req = dbObject.open(dbName, localStorage.openGDSMobileDBVersion);
+        req.onsuccess = function (event) {
+            iDB.db = event.target.result;
+            var trans = iDB.db.transaction(storeName, 'readwrite').objectStore(storeName);
+            var request = trans.openCursor();
+            request.onsuccess = function (event) {
+                var cursor = event.target.result;
+                var chkKey = false;
+                if (cursor) {
+                    var field;
+                    if (cursor.key === keyColumn) {
+                        chkKey = true;
+                    } else {
+                        cursor.continue();
+                    }
+                }
+                if (chkKey === false) {
+                    trans.put(data, keyColumn);
+                    trans.onsuccess = function (e) {
+                        if (defaults.success) {
+                            defaults.success(data);
+                        } else {
+                            console.log('Success Insert Data. Please call the second parameter of the callback function');
+                        }
+                        iDB.db.close();
+                    };
+                } else {
+                    console.log('Fail Insert Data.');
+                }
+            };
+        };
+        req.onerror = function (e) {
+            console.log(e);
+            console.log("Database error: ", e.target.error);
+        };
+    }
+    function updateData(dbName, storeName, data, keyColumn) {
+        var req = dbObject.open(dbName, localStorage.openGDSMobileDBVersion);
+        req.onsuccess = function (event) {
+            iDB.db = event.target.result;
+            var trans = iDB.db.transaction(storeName, 'readwrite').objectStore(storeName);
+            trans.put(data, keyColumn);
+            trans.onsuccess = function (e) {
+                if (defaults.success) {
+                    defaults.success(data);
+                } else {
+                    console.log('Success Update Data. Please call the second parameter of the callback function');
+                }
+                iDB.db.close();
+            };
+        };
+        req.onerror = function (e) {
+            console.log(e);
+            console.log("Database error: ", e.target.error);
+        };
+    }
+    function search(type, dbName, storeName, searchKey, searchData, editData) {
+        searchKey = (typeof (searchKey) !== 'undefined') ? searchKey : null;
+        searchData = (typeof (searchData) !== 'undefined') ? searchData : null;
+        editData = (typeof (editData) !== 'undefined') ? editData : null;
+        var req = dbObject.open(dbName, localStorage.openGDSMobileDBVersion);
+        req.onsuccess = function (event) {
+            iDB.db = event.target.result;
+            var trans = iDB.db.transaction(storeName, 'readonly').objectStore(storeName);
+            var request = trans.openCursor();
+            request.onsuccess = function (event) {
+                var cursor = event.target.result;
+                var result = null;
+                var searchResult = null;
+                var srcResult = null, dstResult = null;
+                if (cursor) {
+                    var field;
+                    if (cursor.key === searchKey) {
+                        result = cursor.value;
+                    } else {
+                        cursor.continue();
+                    }
+                }
+                if (type === 'searchAll') {
+                    if (defaults.success) {
+                        if (result !== null) {
+                            defaults.success(result);
+                        } else {
+                            console.error('Not data');
+                            defaults.fail(result);
+                        }
+                    } else {
+                        console.log('Success search Data. Please call the second parameter of the callback function');
+                    }
+                } else if (type === 'search' || type === 'edit') {
+                    if (result !== null) {
+                        if (searchData === null) {
+                            console.error('OGDSM Error : Please input search data');
+                            return -1;
+                        }
+                        var value;
+                        if (Object.prototype.toString.call(result) === '[object Array]') {
+                            var keys = Object.keys(result[0]);
+                            var searchkeys = Object.keys(searchData);
+                            var i, key;
+                            srcResult = JSON.parse(JSON.stringify(result));
+                            dstResult = JSON.parse(JSON.stringify(result));
+                            for (value in result) {
+                                if (result.hasOwnProperty(value)) {
+                                    if (result[value][searchkeys[0]] === searchData[searchkeys[0]]) {
+                                        searchResult = result[value];
+                                        if (type === 'edit') {
+                                            dstResult[value][searchkeys[0]] = editData;
+                                            updateData(dbName, storeName, dstResult, searchKey);
+                                        }
+                                        break;
+                                    }
+                                }
+                            }
+                            if (defaults.success) {
+                                if (searchResult !== null) {
+                                    if (type === 'edit') {
+                                        defaults.success(srcResult, dstResult);
+                                    } else {
+                                        defaults.success(result, srcResult);
+                                    }
+                                } else {
+                                    console.error('OGDSM Error : Not data');
+                                }
+                            } else {
+                                console.log('Success search Data. Please call the second parameter of the callback function');
+                            }
+                        } else if (Object.prototype.toString.call(result) === '[object Object]') {
+                            console.log(result);
+                            console.log('object object');
+                        }
+                    }
+
+                }
+            };
+        };
+    }
+    function edit(dbName, storeName, srcKey, srcData, dstData) {
+        search('edit', dbName, storeName, srcKey, srcData, dstData);
+    }
+    function openDBInsertData(dbName, storeName, data, key) {
+        var req = dbObject.open(dbName, localStorage.openGDSMobileDBVersion);
+        req.onsuccess = function (event) {
+            iDB.db = event.target.result;
+
+            if (data !== null) {
+                insertData(dbName, storeName, data, key);
+            } else {
+                if (defaults.success) {
+                    defaults.success(iDB.db);
+                } else {
+                    console.log('Success Open / Create Indexed. Please call the second parameter of the callback function');
+                }
+            }
+            iDB.db.close();
+        };
+        req.onupgradeneeded = function (event) {
+            iDB.db = event.target.result;
+            if (storeName !== null) {
+                if (iDB.db.objectStoreNames.contains(storeName)) {
+                    console.log('Exist Store Name. Therefore New Create After Remove');
+                    iDB.db.deleteObjectStore(storeName);
+                }
+                iDB.db.createObjectStore(storeName);
+            }
+        };
+        req.onerror = function (e) {
+            console.log("Database error: ", e.target.error);
+        };
+    }
+    function clearObjectStore(dbName, storeName) {
+        var req = dbObject.open(dbName, localStorage.openGDSMobileDBVersion);
+        req.onsuccess = function (event) {
+            iDB.db = event.target.result;
+            var trans = iDB.db.transaction(storeName, 'readwrite').objectStore(storeName);
+            trans.clear();
+        };
+
+
+    }
+    if (defaults.type === 'new') {
+        openDBInsertData(dbName, defaults.storeName, defaults.insertData, defaults.insertKey);
+    } else if (defaults.type === 'insert') {
+        insertData(dbName, defaults.storeName, defaults.insertData, defaults.insertKey);
+    } else if (defaults.type === 'forceInsert') {
+        updateData(dbName, defaults.storeName, defaults.insertData, defaults.insertKey);
+    } else if (defaults.type === 'remove') {
+
+        return -1;
+    } else if (defaults.type === 'removeAll') {
+        clearObjectStore(dbName, defaults.storeName);
+        return -1;
+    } else if (defaults.type === 'search') {
+        search(defaults.type, dbName, defaults.storeName, defaults.searchKey, defaults.searchData);
+    } else if (defaults.type === 'searchAll') {
+        search(defaults.type, dbName, defaults.storeName);
+    } else if (defaults.type === 'edit') {
+        search(defaults.type, dbName, defaults.storeName, defaults.searchKey, defaults.searchData, defaults.editData);
+    } else if (defaults.type === 'deleteDB') {
+        dbObject.deleteDatabase(dbName);
+    }
+    return this;
+};
+
+
+
+
+
+/***********
+Multiplue Object Store.. But....  iOS bug..
+https://gist.github.com/nolanlawson/08eb857c6b17a30c1b26
+***********************************/
+/***
+OGDSM.indexedDB = function (dbName, options) { //dbName, storeName, success, fail
+    'use strict';
+    var dbObject = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
+    var iDB = {};
+    options = (typeof (options) !== 'undefined') ? options : {};
+    var defaults = {
+        type : 'create',
+        storeName : null,
+        dataKey : null,
+        insertData : null,
+        searchValue : null,
+        dbSuccess : false,
+        dbFail : false
+    };
+    defaults = OGDSM.applyOptions(defaults, options);
+    if (defaults.dataKey === null) {
+        var keys = Object.keys(defaults.insertData[0]);
+        defaults.dataKey = keys[0];
+    }
+    if (typeof (Storage) !== 'undefined') {
+        if (localStorage.openGDSMobileDBVersion) {
+            localStorage.openGDSMobileDBVersion = Number(localStorage.openGDSMobileDBVersion) + 1;
+        } else {
+            localStorage.openGDSMobileDBVersion = localStorage.openGDSMobileDBVersion = 1;
+        }
+    }
+    if (defaults.type === 'searchAll') {
+        //OGDSM.indexedDB.search(dbName, defaults.storeName, defaults.dataKey, defaults.searchValue);
+        OGDSM.indexedDB.searchAll(dbName, defaults.storeName);
+        return -1;
+    }
+    var req = dbObject.open(dbName, localStorage.openGDSMobileDBVersion);
+    req.onsuccess = function (event) {
+        iDB.db = event.target.result;
+        OGDSM.indexedDB.addData(dbName, defaults.storeName, defaults.insertData, defaults.dataKey);
+        if (defaults.dbSuccess) {
+            defaults.dbSuccess(iDB.db);
+        } else {
+            console.log('Success Open / Create Indexed. Please call the second parameter of the callback function');
+        }
+        iDB.db.close();
+    };
+    req.onupgradeneeded = function (event) {
+        iDB.db = event.target.result;
+        if (defaults.storeName !== null) {
+            if (iDB.db.objectStoreNames.contains(defaults.storeName)) {
+                console.log('Exist Store Name. Therefore New Create After Remove');
+                iDB.db.deleteObjectStore(defaults.storeName);
+            }
+            iDB.db.createObjectStore(defaults.storeName);
+        }
+    };
+    req.onerror = function (e) {
+        console.log("Database error: ", e.target.error);
+    };
+};
+OGDSM.indexedDB.createStore = function (dbName, storeName, success) {
+    'use strict';
+    var iDB = {};
+    var newdbVersion = Number(localStorage.openGDSMobileDBVersion) + 1;
+    var req = this.dbObject.open(this.dbName, newdbVersion);
+    req.onupgradeneeded = function (event) {
+        iDB.db = event.target.result;
+        if (iDB.db.objectStoreNames.contains(storeName)) {
+            console.log('Exist Store Name. Therefore New Create After Remove');
+            iDB.db.deleteObjectStore(storeName);
+        }
+        iDB.db.createObjectStore(storeName);
+        localStorage.openGDSMobileDBVersion = Number(localStorage.openGDSMobileDBVersion) + 1;
+    };
+    req.onsuccess = function (event) {
+        iDB.db = event.target.result;
+        if (success) {
+            success(iDB.db);
+        }
+        iDB.db.close();
+    };
+};
+OGDSM.indexedDB.addData = function (dbName, storeName, data, keyColumn) {
+    'use strict';
+    var iDB = {};
+    var dbObject = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
+    var req = dbObject.open(dbName, localStorage.openGDSMobileDBVersion);
+    req.onsuccess = function (event) {
+        iDB.db = event.target.result;
+        var trans = iDB.db.transaction(storeName, 'readwrite').objectStore(storeName);
+        var i = 0, j = 0;
+        for (i = 0; i < data.length; i++) {
+            trans.put(data[i], data[i][keyColumn]);
+        }
+        trans.onsuccess = function (e) {
+            iDB.db.close();
+        };
+        iDB.db.close();
+    };
+    req.onerror = function (e) {
+        console.log(e);
+        console.log("Database error: ", e.target.error);
+    };
+};
+*********/
 /*jslint devel: true, vars : true plusplus : true*/
-/*global $, jQuery, ol, OGDSM*/
+/*global $, jQuery, ol, OGDSM, mappingDB*/
 
 OGDSM.namesapce('attributeTable');
 (function (OGDSM) {
@@ -3093,18 +3381,19 @@ OGDSM.namesapce('attributeTable');
      * @param {String} RootDiv - 속성 테이블 DIV 이름
      * @param {String} addr - PostgreSQL 접속 주소
      */
-    OGDSM.attributeTable = function (rootDiv, addr, visualObj) {
+    OGDSM.attributeTable = function (rootDiv, addr, visualObj, indexedDB_SW) {
+        visualObj = (typeof (visualObj) !== 'undefined') ? visualObj : null;
         this.rootDiv = rootDiv;
         this.addr = addr;
         this.editMode = false;
         this.visualObj = visualObj;
         this.attrSelected = false;
+        this.indexedDB_SW = indexedDB_SW;
         var rootElement = document.getElementById(rootDiv),
             ulElement = document.createElement('ul'),
             contentsElement = document.createElement('div');
         var contentsCSS = 'width: 100%; height: 100%; background: rgba(255, 255, 255, 0.0); margin: 0px;',
             ulCSS = 'list-style: none; position: relative; margin: 0px; z-index: 2; top: 1px; display: table; border-left: 1px solid #f5ab36;';
-
         ulElement.id = rootDiv + 'Tab';
         ulElement.style.cssText = ulCSS;
 
@@ -3116,20 +3405,41 @@ OGDSM.namesapce('attributeTable');
     };
     OGDSM.attributeTable.prototype = {
         constructor : OGDSM.attributeTable,
+
+        /**
+         * 수정 모드 여부 받기
+         * @method getEidtMode
+         * @return {Boolean} True | False
+         */
         getEditMode : function () {
             return this.editMode;
         },
+        /**
+         * 현재 선택 객체 받기 (테이블)
+         * @method getSelectObj
+         * @return {Object}
+         */
         getSelectObj : function () {
             return this.attrSelected;
         },
+        /**
+         * 현재 선택 객체 설정 (테이블)
+         * @method setSelectObj
+         * @param {Object}
+         */
         setSelectObj : function (obj) {
             this.attrSelected = obj;
         },
-        setolSelectObj : function (obj) {
-            this.olSelectObj = obj;
-        },
+        /**
+         * 현재 선택 객체 설정 (오픈레이어)
+         * @method getolSelectObj
+         * @return {Ol Feature Object}
+         */
         getolSelectObj : function (obj) {
             return this.olSelectObj;
+        },
+        setolSelectObj : function (obj) {
+            this.olSelectObj = obj;
         }
     };
     return OGDSM.attributeTable;
@@ -3144,6 +3454,7 @@ OGDSM.attributeTable.prototype.addAttribute = function (layerName) {
     'use strict';
     var attrObj = this,
         rootDiv = this.rootDiv,
+        indexedDB_SW = this.indexedDB_SW,
         tabs = $('#' + rootDiv + 'Tab'),
         contents = $('#' + rootDiv + 'Contents'),
         visualObj = this.visualObj,
@@ -3176,44 +3487,49 @@ OGDSM.attributeTable.prototype.addAttribute = function (layerName) {
             var newCell = tableBody.find('tr:last').attr('data-row', i + 1);
             newCell.append('<td>' +
                            '<input type="text" value="' + value + '" class="editSW" style="' + textInputCSS + '"' +
-                           'disabled=true>' +
+                           'data-key="' + key + '" data-label="' + layerName + '" disabled=true>' +
                            '</td>');
         });
     }
-    var featureOverlay = new ol.FeatureOverlay({
-        map : visualObj.getMap(),
-        style : function (feature, resolution) {
-            var styleStroke = new ol.style.Stroke({
-                color : 'rgba(255, 0, 0, 1.0)',
-                width : 3
-            });
-            return [new ol.style.Style({
-                fill : feature.get('styleFill'),
-                stroke : styleStroke,
-                text : feature.get('styleText')
-            })];
-        }
-    });
-    this.featureOverlay = featureOverlay;
+    var featureOverlay = null;
+    if (visualObj !== null) {
+        featureOverlay = new ol.FeatureOverlay({
+            map : visualObj.getMap(),
+            style : function (feature, resolution) {
+                var styleStroke = new ol.style.Stroke({
+                    color : 'rgba(255, 0, 0, 1.0)',
+                    width : 3
+                });
+                return [new ol.style.Style({
+                    fill : feature.get('styleFill'),
+                    stroke : styleStroke,
+                    text : feature.get('styleText')
+                })];
+            }
+        });
+        this.featureOverlay = featureOverlay;
+    }
     function tableEvent(evtLayerName) {
         /**********tr select ****************/
         $('#attrTable' + evtLayerName + ' tbody').on('click', 'tr', function () {
             var i = 0;
-            var eachFeatures = visualObj.layerCheck(evtLayerName).getSource().getFeatures();
             tableObj.$('tr.selected').removeClass('selected');
             $(this).addClass('selected');
-            featureOverlay.removeFeature(attrObj.getSelectObj());
-            for (i = 0; i < eachFeatures.length; i++) {
-                var vectorObj = eachFeatures[i];
-                var num = vectorObj.Z.split('.');
-                if (num[1] === $(this).attr('data-row')) {
-                    featureOverlay.addFeature(vectorObj);
-                    attrObj.setSelectObj(vectorObj);
-                }
-            }
+
             // selected layer color change...
-            attrObj.getolSelectObj().getFeatures().clear();
-            //console.log(visualObj.getMap().getInteractions());
+            if (visualObj !== null) {
+                var eachFeatures = visualObj.layerCheck(evtLayerName).getSource().getFeatures();
+                featureOverlay.removeFeature(attrObj.getSelectObj());
+                for (i = 0; i < eachFeatures.length; i++) {
+                    var vectorObj = eachFeatures[i];
+                    var num = vectorObj.Z.split('.');
+                    if (num[1] === $(this).attr('data-row')) {
+                        featureOverlay.addFeature(vectorObj);
+                        attrObj.setSelectObj(vectorObj);
+                    }
+                }
+                attrObj.getolSelectObj().getFeatures().clear();
+            }
         });
 
         /**********page change **************/
@@ -3223,6 +3539,14 @@ OGDSM.attributeTable.prototype.addAttribute = function (layerName) {
             }, 200);
         });
     }
+
+    function indexedDBEvent(layerName, data) {
+        OGDSM.indexedDB('webMappingDB', {
+            insertKey : layerName,
+            insertData : data
+        });
+    }
+
     /******* Add tab ***********/
     tabs.prepend('<li id="attrTab' + layerName + '" style="float:left;">' +
                  '<a href="#" style="' + aBaseCSS + '">' + layerName + '</a></li>');
@@ -3273,14 +3597,14 @@ OGDSM.attributeTable.prototype.addAttribute = function (layerName) {
                 'bPaginate' : true,
                 "dom": 'rt<"bottom"ip><"clear">'
             });
-           // tableObjs['attrTable' + layerName] = tableObj;
+
+
             tableEvent(layerName);
-            /*
-            $(window).on('resize', function () {
-                var attrDivHeight = $('#' + rootDiv + 'Contents').height();
-                var thHeight = $('thead').height() + 7;
-            });
-            */
+
+            if (indexedDB_SW === true) {
+                indexedDBEvent(layerName, attrContents);
+            }
+
         },
         error : function (error) {
             console.log(error);
@@ -3306,18 +3630,50 @@ OGDSM.attributeTable.prototype.removeAttribute = function (layerName) {
 OGDSM.attributeTable.prototype.editAttribute = function (sw) {
     'use strict';
     var textInput = $('.editSW');
+    function editDataResult(src, dst) {
+        console.log('Update data');
+    }
     if (sw === true) {
+        var oldValue = null;
         textInput.attr('disabled', false);
+        textInput.on('focus', function () {
+            oldValue = $(this).val();
+        });
+        textInput.on('change', function () {
+            var searchData = {};
+            if (oldValue === $(this).val()) {
+                return -1;
+            }
+            searchData[$(this).attr('data-key')] = oldValue;
+            if (this.indexedDB_SW === true) {
+                OGDSM.indexedDB('webMappingDB', {
+                    type : 'edit',
+                    searchKey : $(this).attr('data-label'),
+                    searchData : searchData,
+                    editData : $(this).val(),
+                    success : editDataResult
+                });
+            }
+        });
         this.editMode = true;
     } else {
         textInput.attr('disabled', true);
+        textInput.off('change');
+        textInput.off('focus');
         this.editMode = false;
     }
 };
 
+/**
+ * 속성 정보 검색
+ * @method selectAttribute
+ * @param {String}  tableName   - 테이블 이름
+ * @param {String}  header   - 검색 컬럼
+ * @param {String}  value   - 검색 값
+ * @return {Number}  테이블 인덱스
+ */
 OGDSM.attributeTable.prototype.searchAttribute = function (tableName, header, value) {
     'use strict';
-    //console.log(this.tableObjs);
     var tableObj = $('#attrTable' + tableName).DataTable();
     var searchIdx = 0;
     var resultIdx = null;
@@ -3337,15 +3693,27 @@ OGDSM.attributeTable.prototype.searchAttribute = function (tableName, header, va
             }
         });
     });
+    console.log('search Attr: ' + resultIdx);
     return resultIdx;
 };
 
+/**
+ * 속성 정보 선택
+ * @method selectAttribute
+ * @param {String}  tableName   - 테이블 이름
+ * @param {String}  trNum   - 테이블 인덱스
+ */
 OGDSM.attributeTable.prototype.selectAttribute = function (tableName, trNum) {
     'use strict';
     var tableObj = $('#attrTable' + tableName).DataTable();
     tableObj.$('tr.selected').removeClass('selected');
     tableObj.$('tr').eq(trNum).addClass('selected');
 };
+/**
+ * 속성 정보 선택 해제
+ * @method selectAttribute
+ * @param {String}  tableName   - 테이블 이름
+ */
 OGDSM.attributeTable.prototype.unSelectAttribute = function (tableName) {
     'use strict';
     var tableObj = $('#attrTable' + tableName).DataTable();
@@ -3356,3 +3724,721 @@ OGDSM.attributeTable.prototype.unSelectAttribute = function (tableName) {
         this.attrSelected = false;
     }
 };
+/*jslint devel: true, vars : true, plusplus : true */
+/*global $, jQuery, ol, OGDSM, d3, topojson*/
+
+OGDSM.namesapce('chartVisualization');
+(function (OGDSM) {
+    "use strict";
+    /**
+    * D3.js 기반 시각화 객체
+    * @class OGDSM.chartVisualization
+    * @constructor
+    * @param {Array} jsonData - JSON 기반 데이터
+    * @param {JSON Object} options - 옵션 JSON 객체 키 값<br>
+      {rootKey : null, labelKey : null, valueKey : null, <br>
+       max:jsonData min value (based on valueKey), min:jsonData max value (based on valueKey)}<br>
+    */
+    OGDSM.chartVisualization = function (jsonData, options) {
+        options = (typeof (options) !== 'undefined') ? options : {};
+        this.defaults = {
+            rootKey : null,
+            labelKey : null,
+            valueKey : null,
+            max : null,
+            min : null
+        };
+        this.defaults = OGDSM.applyOptions(this.defaults, options);
+        if (typeof (jsonData) !== 'undefined') {
+            if (typeof (options.rootKey) === 'undefined' ||
+                    typeof (options.labelKey) === 'undefined' ||
+                    typeof (options.valueKey) === 'undefined') {
+                console.error('Please input option values : rootKey, label, value');
+                return null;
+            }
+	        this.jsonData = jsonData;
+	        this.data = jsonData[options.rootKey];
+	        this.defaults = OGDSM.applyOptions(this.defaults, options);
+	        var d = null;
+	        this.defaults.max = this.defaults.min = this.data[0][options.valueKey];
+	        for (d in this.data) {
+	            if (this.data.hasOwnProperty(d)) {
+	                this.defaults.max = Math.max(this.data[d][options.valueKey], this.defaults.max);
+	                this.defaults.min = Math.min(this.data[d][options.valueKey], this.defaults.max);
+	            }
+	        }
+	        this.defaults.max = (typeof (options.max) !== 'undefined') ? options.max : this.defaults.max;
+	        this.defaults.min = (typeof (options.min) !== 'undefined') ? options.min : this.defaults.min;
+
+        }
+    };
+    OGDSM.chartVisualization.prototype = {
+        constructor : OGDSM.chartVisualization,
+        /**
+         * 지도 객체 받기
+         * @method getMap
+         * @return {ol.Map} 오픈레이어3 객체
+         */
+        getMap : function () {
+            return null;
+        },
+        max : function () {
+
+        }
+    };
+    return OGDSM.chartVisualization;
+}(OGDSM));
+
+
+/**
+ * 수직 막대 차트 시각화
+ * @method vBarChart
+ * @param {String} divId - 막대 차트 시각화할 DIV 아이디 이름
+ * @param {JSON Object} options - 옵션 JSON 객체 키 값<br>
+      {range : [], color : ['#4AAEEA']}<br>
+ */
+OGDSM.chartVisualization.prototype.vBarChart = function (rootDiv, subOptions) {
+    'use strict';
+    subOptions = (typeof (subOptions) !== 'undefined') ? subOptions : {};
+    var data = this.data,
+        options = this.defaults,
+        chartOptions = {
+            range : null,
+            color : ['#4AAEEA']
+        };
+    chartOptions = OGDSM.applyOptions(chartOptions, subOptions);
+    var rootDivObj = $('#' + rootDiv),
+        margin = {top : 20, right : 25, bottom : 130, left : 45},
+        barWidth = rootDivObj.width() - margin.left - margin.right,
+        barHeight = rootDivObj.height() - margin.top - margin.bottom;
+    $('#' + rootDiv).empty();
+    var labels = d3.scale.ordinal().rangeRoundBands([0, barWidth], 0.1);
+    var values = d3.scale.linear().range([barHeight, 0]);
+    var chartSVG = d3.select('#' + rootDiv).append('svg').attr('id', rootDiv + 'Bar')
+        .attr('width', barWidth + margin.left + margin.right)
+        .attr('height', barHeight + margin.top + margin.bottom);
+
+    var labelAxis = d3.svg.axis().scale(labels).orient('bottom');
+    var valueAxis = d3.svg.axis().scale(values).orient('left');
+    labels.domain(data.map(function (d) {
+        return d[options.labelKey];
+    }));
+    values.domain([options.min, options.max]);
+
+    var bar = chartSVG.selectAll('g').data(data).enter()
+        .append('g')
+        .attr('transform', function (d, i) {
+            return 'translate(' + labels(d[options.labelKey]) + ', ' + margin.top + ')';
+        });
+
+    var barRect = bar.append('rect')
+        .attr('y', function (d) {
+            return values(d[options.valueKey]);
+        })
+        .attr('x', function (d, i) {
+            return labels.rangeBand() + (margin.left / 3); //+(margin.left/4)
+      //      return (labels(d[options.labelKey]) / data.length) + margin.left;
+        })
+        .attr('height', function (d) {
+            return barHeight - values(d[options.valueKey]);
+        })
+        .attr('width', labels.rangeBand())
+        .attr('fill', function (d) {
+            if ($.isArray(chartOptions.range) === true) {
+                var z = 0;
+                for (z = 0; z < chartOptions.range.length; z += 1) {
+                    if (d[options.valueKey] <= chartOptions.range.range[z]) {
+                        return chartOptions.color[z];
+                    }
+                }
+            } else {
+                return chartOptions.color;
+            }
+        });/*
+    barRect.transition()
+        .duration(2000)
+        .attr('height', function (d) {
+            return barHeight - values(d[options.valueKey]);
+        });*/
+
+    bar.append('text')
+        .attr('x', labels.rangeBand() + margin.left)
+        .attr('y', function (d) {
+            return values(d[options.valueKey]) - 10;
+        })
+        .attr('dy', '.75em')
+        .attr('text-anchor', 'end')
+        .text(function (d) {
+            return d[options.valueKey];
+        });
+
+    chartSVG.append('g').attr('class', 'x axis')
+        .attr('transform', 'translate(' + margin.left + ', ' + (barHeight + margin.top) + ')')
+        .call(labelAxis)
+        .attr('fill', 'none')
+        .attr('stroke', '#000')
+        .attr('shape-rendering', 'crispEdges')
+        .selectAll('text')
+        .style('text-anchor', 'end')
+        .attr('dx', '-.8em')
+        .attr('dy', '.15em')
+        .attr('transform', function (d) {
+            return 'rotate(-65)';
+        });
+
+    chartSVG.append('g').attr('class', 'y axis')
+            .attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')')
+            .call(valueAxis)
+            .attr('fill', 'none')
+            .attr('stroke', '#000')
+            .attr('shape-rendering', 'crispEdges')
+            .append('text')
+            .attr('transform', 'rotate(-90)')
+            .attr('y', 5)
+            .attr('dy', '.71em')
+            .style('text-anchor', 'end')
+            .text(options.valueKey);
+};
+
+
+
+/**
+ * 수평 막대 차트 시각화
+ * @method hBarChart
+ * @param {String} divId - 막대 차트 시각화할 DIV 아이디 이름
+ * @param {JSON Object} options - 옵션 JSON 객체 키 값<br>
+      {range : [], color : ['#4AAEEA']}<br>
+ */
+OGDSM.chartVisualization.prototype.hBarChart = function (rootDiv, subOptions) {
+    'use strict';
+    subOptions = (typeof (subOptions) !== 'undefined') ? subOptions : {};
+    var data = this.data,
+        options = this.defaults,
+        chartOptions = {
+            range : null,
+            color : ['#4AAEEA']
+        };
+    chartOptions = OGDSM.applyOptions(chartOptions, subOptions);
+    var rootDivObj = $('#' + rootDiv),
+        margin = {top : 0, right : 60, bottom : 20, left : 80},
+        barWidth = rootDivObj.width() - margin.left - margin.right,
+        barHeight = rootDivObj.height() - margin.top - margin.bottom;
+    $('#' + rootDiv).empty();
+    var labels = d3.scale.ordinal().rangeRoundBands([0, barHeight], 0.1);
+    var values = d3.scale.linear().range([barWidth, 0]);
+    var chartSVG = d3.select('#' + rootDiv).append('svg').attr('id', rootDiv + 'Bar')
+        .attr('width', barWidth + margin.left + margin.right)
+        .attr('height', barHeight + margin.top + margin.bottom);
+
+    var labelAxis = d3.svg.axis().scale(labels).orient('left');
+    var valueAxis = d3.svg.axis().scale(values).orient('bottom');
+    labels.domain(data.map(function (d) {
+        return d[options.labelKey];
+    }));
+    values.domain([options.min, options.max]);
+    console.log(options.min + ' ' + options.max);
+    var bar = chartSVG.selectAll('g').data(data).enter()
+        .append('g')
+        .attr('transform', function (d, i) {
+            return 'translate(' + margin.left + ', ' + labels(d[options.labelKey]) + ')';
+        });
+    bar.append('rect')
+        .attr('y', function (d) {
+            return labels.rangeBand() + (margin.top / 3); //+(margin.left/4)
+        })
+        .attr('x', function (d, i) {
+            return margin.left;
+        })
+        .attr('height', labels.rangeBand())
+        .attr('width', function (d) {
+            //return barWidth - values(d[options.valueKey]);
+            return barWidth - values(d[options.valueKey]);
+        })
+        .attr('fill', function (d) {
+            if ($.isArray(chartOptions.range) === true) {
+                var z = 0;
+                for (z = 0; z < chartOptions.range.length; z += 1) {
+                    if (d[options.valueKey] <= chartOptions.range.range[z]) {
+                        return chartOptions.color[z];
+                    }
+                }
+            } else {
+                return chartOptions.color;
+            }
+        });
+    bar.append('text')
+        .attr('x', function (d) {
+            return barWidth + (margin.left) - values(d[options.valueKey]);
+        })
+        .attr('y', labels.rangeBand())
+        .attr('dy', '.75em')
+        .attr('text-anchor', 'end')
+        .text(function (d) {
+            return d[options.valueKey];
+        });
+
+    chartSVG.append('g').attr('class', 'y axis')
+        .attr('transform', 'translate(' + (margin.left) * 2 + ', ' + labels.rangeBand() + ')')
+        .call(labelAxis)
+        .attr('fill', 'none')
+        .attr('stroke', '#000')
+        .attr('shape-rendering', 'crispEdges')
+        .selectAll('text')
+        .style('text-anchor', 'end')
+        .attr('dx', '-.8em')
+        .attr('dy', '.15em');
+    //Bug ......
+    chartSVG.append('g').attr('class', 'x axis')
+            .attr('transform', 'translate(' + (margin.left) * 2 + ', ' + barHeight + ')')
+            .call(valueAxis)
+            .attr('fill', 'none')
+            .attr('stroke', '#000')
+            .attr('shape-rendering', 'crispEdges')
+            .append('text')
+            .attr('y', 5)
+            .attr('dy', '.71em')
+            .style('text-anchor', 'end')
+            .text(options.valueKey);
+};
+
+
+
+/**
+ * 라인 차트 시각화
+ * @method lineChart
+ * @param {String} divId - 막대 차트 시각화할 DIV 아이디 이름
+ * @param {JSON Object} options - 옵션 JSON 객체 키 값<br>
+      {stroke : ['#4AAEEA'], width : 2,<br>
+       circleSize : 3, circleColor : ['#AAAAAA']}<br>
+ */
+OGDSM.chartVisualization.prototype.lineChart = function (rootDiv, subOptions) {
+    'use strict';
+    subOptions = (typeof (subOptions) !== 'undefined') ? subOptions : {};
+    var data = this.data,
+        options = this.defaults,
+        chartOptions = {
+            range : null,
+            stroke : ['#4AAEEA'],
+            width : 2,
+            circleSize : 3,
+            circleColor : ['#AAAAAA']
+        };
+    chartOptions = OGDSM.applyOptions(chartOptions, subOptions);
+    var rootDivObj = $('#' + rootDiv),
+        margin = {top : 20, right : 25, bottom : 130, left : 45},
+        barWidth = rootDivObj.width() - margin.left - margin.right,
+        barHeight = rootDivObj.height() - margin.top - margin.bottom;
+    $('#' + rootDiv).empty();
+    var labels = d3.scale.ordinal().rangeRoundBands([0, barWidth], 0.1);
+    var values = d3.scale.linear().range([barHeight, 0]);
+    var chartSVG = d3.select('#' + rootDiv).append('svg').attr('id', rootDiv + 'Bar')
+        .attr('width', barWidth + margin.left + margin.right)
+        .attr('height', barHeight + margin.top + margin.bottom);
+
+    var labelAxis = d3.svg.axis().scale(labels).orient('bottom');
+    var valueAxis = d3.svg.axis().scale(values).orient('left');
+    labels.domain(data.map(function (d) {
+        return d[options.labelKey];
+    }));
+    values.domain([options.min, options.max]);
+
+    var lineXY = d3.svg.line()
+        .x(function (d, i) {
+            return labels(d[options.labelKey]);
+        })
+        .y(function (d, i) {
+            return values(d[options.valueKey]);
+        });
+    //var bar = chartSVG.append('path').attr('d', lineFunc(
+
+    chartSVG.append('path').attr('d', lineXY(data))
+        .attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')')
+        .attr('stroke', chartOptions.stroke)
+        .attr('stroke-width', options.stroke)
+        .attr('fill', 'none');
+    var circleText = chartSVG.selectAll('g').data(data).enter()
+        .append('g')
+        .attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')');
+
+    circleText.append('circle')
+        .attr('cy', function (d, i) {
+            return values(d[options.valueKey]);
+        })
+        .attr('cx', function (d, i) {
+            return labels(d[options.labelKey]);
+        })
+        .attr('r', chartOptions.circleSize)
+        .attr('fill', chartOptions.circleColor);
+    circleText.append('text')
+        .attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')')
+        .attr('x', function (d, i) {
+            return labels(d[options.labelKey]) - 15;
+        })
+        .attr('y', function (d, i) {
+            return values(d[options.valueKey]) - 20;
+        })
+        .attr('dy', '.75em')
+        .attr('text-anchor', 'end')
+        .text(function (d) {
+            return d[options.valueKey];
+        });
+    chartSVG.append('g').attr('class', 'x axis')
+        .attr('transform', 'translate(' + margin.left + ', ' + (barHeight + margin.top) + ')')
+        .call(labelAxis)
+        .attr('fill', 'none')
+        .attr('stroke', '#000')
+        .attr('shape-rendering', 'crispEdges')
+        .selectAll('text')
+        .style('text-anchor', 'end')
+        .attr('dx', '-.8em')
+        .attr('dy', '.15em')
+        .attr('transform', function (d) {
+            return 'rotate(-65)';
+        });
+    chartSVG.append('g').attr('class', 'y axis')
+        .attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')')
+        .call(valueAxis)
+        .attr('fill', 'none')
+        .attr('stroke', '#000')
+        .attr('shape-rendering', 'crispEdges')
+        .append('text')
+        .attr('transform', 'rotate(-90)')
+        .attr('y', 5)
+        .attr('dy', '.71em')
+        .style('text-anchor', 'end')
+        .text(options.valueKey);
+};
+
+
+/**
+ * 영역 차트 시각화
+ * @method areaChart
+ * @param {String} divId - 막대 차트 시각화할 DIV 아이디 이름
+ * @param {JSON Object} options - 옵션 JSON 객체 키 값<br>
+      {fill : ['#4AAEEA'], circleSize : 3, circleColor : ['#AAAAAA']}<br>
+ */
+OGDSM.chartVisualization.prototype.areaChart = function (rootDiv, subOptions) {
+    'use strict';
+    subOptions = (typeof (subOptions) !== 'undefined') ? subOptions : {};
+    var data = this.data,
+        options = this.defaults,
+        chartOptions = {
+            fill : ['#4AAEEA'],
+            circleSize : 3,
+            circleColor : ['#AAAAAA']
+        };
+    chartOptions = OGDSM.applyOptions(chartOptions, subOptions);
+    var rootDivObj = $('#' + rootDiv),
+        margin = {top : 20, right : 25, bottom : 130, left : 45},
+        barWidth = rootDivObj.width() - margin.left - margin.right,
+        barHeight = rootDivObj.height() - margin.top - margin.bottom;
+    $('#' + rootDiv).empty();
+    var labels = d3.scale.ordinal().rangeRoundBands([0, barWidth], 0.1);
+    var values = d3.scale.linear().range([barHeight, 0]);
+    var chartSVG = d3.select('#' + rootDiv).append('svg').attr('id', rootDiv + 'Bar')
+        .attr('width', barWidth + margin.left + margin.right)
+        .attr('height', barHeight + margin.top + margin.bottom);
+
+    var labelAxis = d3.svg.axis().scale(labels).orient('bottom');
+    var valueAxis = d3.svg.axis().scale(values).orient('left');
+    labels.domain(data.map(function (d) {
+        return d[options.labelKey];
+    }));
+    values.domain([options.min, options.max]);
+
+    var areaXY = d3.svg.area()
+        .x(function (d, i) {
+            return labels(d[options.labelKey]);
+        })
+        .y0(barHeight)
+        .y1(function (d, i) {
+            return values(d[options.valueKey]);
+        });
+    chartSVG.append('path').attr('d', areaXY(data))
+        .attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')')
+        .attr('class', 'area')
+        .attr('fill', chartOptions.fill);
+
+
+    var circleText = chartSVG.selectAll('g').data(data).enter()
+        .append('g')
+        .attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')');
+
+    circleText.append('circle')
+        .attr('cy', function (d, i) {
+            return values(d[options.valueKey]);
+        })
+        .attr('cx', function (d, i) {
+            return labels(d[options.labelKey]);
+        })
+        .attr('r', chartOptions.circleSize)
+        .attr('fill', chartOptions.circleColor);
+    circleText.append('text')
+        .attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')')
+        .attr('x', function (d, i) {
+            return labels(d[options.labelKey]) - 15;
+        })
+        .attr('y', function (d, i) {
+            return values(d[options.valueKey]) - 20;
+        })
+        .attr('dy', '.75em')
+        .attr('text-anchor', 'end')
+        .text(function (d) {
+            return d[options.valueKey];
+        });
+
+    chartSVG.append('g').attr('class', 'x axis')
+        .attr('transform', 'translate(' + margin.left + ', ' + (barHeight + margin.top) + ')')
+        .call(labelAxis)
+        .attr('fill', 'none')
+        .attr('stroke', '#000')
+        .attr('shape-rendering', 'crispEdges')
+        .selectAll('text')
+        .style('text-anchor', 'end')
+        .attr('dx', '-.8em')
+        .attr('dy', '.15em')
+        .attr('transform', function (d) {
+            return 'rotate(-65)';
+        });
+
+    chartSVG.append('g').attr('class', 'y axis')
+            .attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')')
+            .call(valueAxis)
+            .attr('fill', 'none')
+            .attr('stroke', '#000')
+            .attr('shape-rendering', 'crispEdges')
+            .append('text')
+            .attr('transform', 'rotate(-90)')
+            .attr('y', 5)
+            .attr('dy', '.71em')
+            .style('text-anchor', 'end')
+            .text(options.valueKey);
+};
+
+
+
+/**
+ * 라인 차트 시각화
+ * @method lineChart
+ * @param {String} divId - 막대 차트 시각화할 DIV 아이디 이름
+ * @param {JSON Object} options - 옵션 JSON 객체 키 값<br>
+      {stroke : ['#4AAEEA'], width : 2,<br>
+       circleSize : 3, circleColor : ['#AAAAAA']}<br>
+ */
+OGDSM.chartVisualization.prototype.lineChart = function (rootDiv, subOptions) {
+    'use strict';
+    subOptions = (typeof (subOptions) !== 'undefined') ? subOptions : {};
+    var data = this.data,
+        options = this.defaults,
+        chartOptions = {
+            range : null,
+            stroke : ['#4AAEEA'],
+            width : 2,
+            circleSize : 3,
+            circleColor : ['#AAAAAA']
+        };
+    chartOptions = OGDSM.applyOptions(chartOptions, subOptions);
+    var rootDivObj = $('#' + rootDiv),
+        margin = {top : 20, right : 25, bottom : 130, left : 45},
+        barWidth = rootDivObj.width() - margin.left - margin.right,
+        barHeight = rootDivObj.height() - margin.top - margin.bottom;
+    $('#' + rootDiv).empty();
+    var labels = d3.scale.ordinal().rangeRoundBands([0, barWidth], 0.1);
+    var values = d3.scale.linear().range([barHeight, 0]);
+    var chartSVG = d3.select('#' + rootDiv).append('svg').attr('id', rootDiv + 'Bar')
+        .attr('width', barWidth + margin.left + margin.right)
+        .attr('height', barHeight + margin.top + margin.bottom);
+
+    var labelAxis = d3.svg.axis().scale(labels).orient('bottom');
+    var valueAxis = d3.svg.axis().scale(values).orient('left');
+    labels.domain(data.map(function (d) {
+        return d[options.labelKey];
+    }));
+    values.domain([options.min, options.max]);
+
+    var lineXY = d3.svg.line()
+        .x(function (d, i) {
+            return labels(d[options.labelKey]);
+        })
+        .y(function (d, i) {
+            return values(d[options.valueKey]);
+        });
+    //var bar = chartSVG.append('path').attr('d', lineFunc(
+
+    chartSVG.append('path').attr('d', lineXY(data))
+        .attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')')
+        .attr('stroke', chartOptions.stroke)
+        .attr('stroke-width', options.stroke)
+        .attr('fill', 'none');
+    var circleText = chartSVG.selectAll('g').data(data).enter()
+        .append('g')
+        .attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')');
+
+    circleText.append('circle')
+        .attr('cy', function (d, i) {
+            return values(d[options.valueKey]);
+        })
+        .attr('cx', function (d, i) {
+            return labels(d[options.labelKey]);
+        })
+        .attr('r', chartOptions.circleSize)
+        .attr('fill', chartOptions.circleColor);
+    circleText.append('text')
+        .attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')')
+        .attr('x', function (d, i) {
+            return labels(d[options.labelKey]) - 15;
+        })
+        .attr('y', function (d, i) {
+            return values(d[options.valueKey]) - 20;
+        })
+        .attr('dy', '.75em')
+        .attr('text-anchor', 'end')
+        .text(function (d) {
+            return d[options.valueKey];
+        });
+    chartSVG.append('g').attr('class', 'x axis')
+        .attr('transform', 'translate(' + margin.left + ', ' + (barHeight + margin.top) + ')')
+        .call(labelAxis)
+        .attr('fill', 'none')
+        .attr('stroke', '#000')
+        .attr('shape-rendering', 'crispEdges')
+        .selectAll('text')
+        .style('text-anchor', 'end')
+        .attr('dx', '-.8em')
+        .attr('dy', '.15em')
+        .attr('transform', function (d) {
+            return 'rotate(-65)';
+        });
+    chartSVG.append('g').attr('class', 'y axis')
+        .attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')')
+        .call(valueAxis)
+        .attr('fill', 'none')
+        .attr('stroke', '#000')
+        .attr('shape-rendering', 'crispEdges')
+        .append('text')
+        .attr('transform', 'rotate(-90)')
+        .attr('y', 5)
+        .attr('dy', '.71em')
+        .style('text-anchor', 'end')
+        .text(options.valueKey);
+};
+
+
+OGDSM.chartVisualization.prototype.kMap = function (divId, serverAddr, geodata, center_lat, center_lon, map_scale) {
+    'use strict';
+    var rootDiv = $('#' + divId),
+        paramData = {};
+    paramData.jsonName = geodata;
+    rootDiv.empty();
+    $.ajax({
+        type : 'POST',
+        url : serverAddr,
+        data : JSON.stringify(paramData),
+        contentType : "application/json;charset=UTF-8",
+        dataType : 'json',
+        success : function (msg) {
+            var topology = JSON.parse(msg.data);
+
+            var svg = d3.select('#' + divId)
+                        .append('svg')
+                        .attr("width", 500)
+                        .attr("height", 600);
+            var projection = d3.geo.mercator()
+                                .center([center_lon, center_lat])
+                                .scale(map_scale);
+            var path = d3.geo.path()
+                            .projection(projection);
+            var g = svg.append("g");
+
+            if (geodata === "SIDO") {
+                g.selectAll("path")
+                    .data(topojson.feature(topology, topology.objects.All_TL_SCCO_CTPRVN_4326).features)
+                    .enter().append("path")
+                    .attr("class", function (d) { return "sido_" + d.properties.CTP_ENG_NM; })
+                    .style("fill", function (d) { return "#" + Math.random().toString(16).slice(2, 8); })
+                    .attr("d", path);
+            } else if (geodata === "GU") {
+                g.selectAll("path")
+                    .data(topojson.feature(topology, topology.objects.All_TL_SCCO_SIG_4326).features)
+                    .enter().append("path")
+                    .attr("class", function (d) { return "gu_" + d.properties.SIG_ENG_NM; })
+                    .style("fill", function (d) { return "#" + Math.random().toString(16).slice(2, 8); })
+                    .attr("d", path);
+            } else if (geodata === "DONG") {
+                g.selectAll("path")
+                    .data(topojson.feature(topology, topology.objects.All_TL_SCCO_EMD_4326).features)
+                    .enter().append("path")
+                    .attr("class", function (d) { return "dong_" + d.properties.EMD_ENG_NM; })
+                    .style("fill", function (d) { return "#" + Math.random().toString(16).slice(2, 8); })
+                    .attr("d", path);
+            }
+        },
+        error : function (e) {
+            console.log(e);
+            $('#result').text(e);
+        }
+    });
+};
+
+/**
+ * 파이 차트 시각화
+ * @method areaChart
+ * @param {String} divId - 막대 차트 시각화할 DIV 아이디 이름
+ * @param {JSON Object} options - 옵션 JSON 객체 키 값<br>
+      {fill : ['#4AAEEA'], circleSize : 3, circleColor : ['#AAAAAA']}<br>
+ */
+/*
+OGDSM.chartVisualization.prototype.pieChart = function (rootDiv, subOptions) {
+    'use strict';
+    subOptions = (typeof (subOptions) !== 'undefined') ? subOptions : {};
+    var data = this.data,
+        options = this.defaults,
+        chartOptions = {
+            fill : ['#4AAEEA'],
+            circleSize : 3,
+            circleColor : ['#AAAAAA']
+        };
+    chartOptions = OGDSM.applyOptions(chartOptions, subOptions);
+    var rootDivObj = $('#' + rootDiv),
+        margin = {top : 0, right : 0, bottom : 0, left : 0},
+        barWidth = rootDivObj.width() - margin.left - margin.right,
+        barHeight = rootDivObj.height() - margin.top - margin.bottom;
+    $('#' + rootDiv).empty();
+    var chartSVG = d3.select('#' + rootDiv).append('svg').attr('id', rootDiv + 'Bar')
+        .attr('width', barWidth + margin.left + margin.right)
+        .attr('height', barHeight + margin.top + margin.bottom)
+        .attr('transform', 'translate(' + barWidth / 2 + ',' + barHeight / 2 + ')');
+
+    var radius = Math.min(barWidth, barHeight) / 2;
+    var arc = d3.svg.arc()
+        .outerRadius(radius - 10)
+        .innerRadius(0);
+
+    var pie = d3.layout.pie()
+        .sort(null)
+        .value(function (d) {
+            return d[options.valueKey];
+        });
+
+    var group = chartSVG.selectAll('.arc')
+        .data(pie(data))
+        .enter()
+        .append('g')
+        .attr('class', 'arc');
+
+    group.append('path')
+        .attr('d', arc)
+        .style('fill', function (d) {
+            return '#AAAAAA';
+        });
+    group.append('text')
+        .attr('transform', function (d) {
+            return 'translate(' + arc.centroid(d) + ')';
+        })
+        .attr('dy', '.35em')
+        .style('text-anchor', 'middle')
+        .text(function (d) {
+            return d[options.labelKey];
+        });
+};
+*/

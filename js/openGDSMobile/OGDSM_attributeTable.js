@@ -11,13 +11,14 @@ OGDSM.namesapce('attributeTable');
      * @param {String} RootDiv - 속성 테이블 DIV 이름
      * @param {String} addr - PostgreSQL 접속 주소
      */
-    OGDSM.attributeTable = function (rootDiv, addr, visualObj) {
+    OGDSM.attributeTable = function (rootDiv, addr, visualObj, indexedDB_SW) {
         visualObj = (typeof (visualObj) !== 'undefined') ? visualObj : null;
         this.rootDiv = rootDiv;
         this.addr = addr;
         this.editMode = false;
         this.visualObj = visualObj;
         this.attrSelected = false;
+        this.indexedDB_SW = indexedDB_SW;
         var rootElement = document.getElementById(rootDiv),
             ulElement = document.createElement('ul'),
             contentsElement = document.createElement('div');
@@ -34,20 +35,41 @@ OGDSM.namesapce('attributeTable');
     };
     OGDSM.attributeTable.prototype = {
         constructor : OGDSM.attributeTable,
+
+        /**
+         * 수정 모드 여부 받기
+         * @method getEidtMode
+         * @return {Boolean} True | False
+         */
         getEditMode : function () {
             return this.editMode;
         },
+        /**
+         * 현재 선택 객체 받기 (테이블)
+         * @method getSelectObj
+         * @return {Object}
+         */
         getSelectObj : function () {
             return this.attrSelected;
         },
+        /**
+         * 현재 선택 객체 설정 (테이블)
+         * @method setSelectObj
+         * @param {Object}
+         */
         setSelectObj : function (obj) {
             this.attrSelected = obj;
         },
-        setolSelectObj : function (obj) {
-            this.olSelectObj = obj;
-        },
+        /**
+         * 현재 선택 객체 설정 (오픈레이어)
+         * @method getolSelectObj
+         * @return {Ol Feature Object}
+         */
         getolSelectObj : function (obj) {
             return this.olSelectObj;
+        },
+        setolSelectObj : function (obj) {
+            this.olSelectObj = obj;
         }
     };
     return OGDSM.attributeTable;
@@ -62,6 +84,7 @@ OGDSM.attributeTable.prototype.addAttribute = function (layerName) {
     'use strict';
     var attrObj = this,
         rootDiv = this.rootDiv,
+        indexedDB_SW = this.indexedDB_SW,
         tabs = $('#' + rootDiv + 'Tab'),
         contents = $('#' + rootDiv + 'Contents'),
         visualObj = this.visualObj,
@@ -94,7 +117,7 @@ OGDSM.attributeTable.prototype.addAttribute = function (layerName) {
             var newCell = tableBody.find('tr:last').attr('data-row', i + 1);
             newCell.append('<td>' +
                            '<input type="text" value="' + value + '" class="editSW" style="' + textInputCSS + '"' +
-                           'disabled=true>' +
+                           'data-key="' + key + '" data-label="' + layerName + '" disabled=true>' +
                            '</td>');
         });
     }
@@ -146,6 +169,14 @@ OGDSM.attributeTable.prototype.addAttribute = function (layerName) {
             }, 200);
         });
     }
+
+    function indexedDBEvent(layerName, data) {
+        OGDSM.indexedDB('webMappingDB', {
+            insertKey : layerName,
+            insertData : data
+        });
+    }
+
     /******* Add tab ***********/
     tabs.prepend('<li id="attrTab' + layerName + '" style="float:left;">' +
                  '<a href="#" style="' + aBaseCSS + '">' + layerName + '</a></li>');
@@ -196,14 +227,14 @@ OGDSM.attributeTable.prototype.addAttribute = function (layerName) {
                 'bPaginate' : true,
                 "dom": 'rt<"bottom"ip><"clear">'
             });
+
+
             tableEvent(layerName);
 
-            /*****/
-            var keys = Object.keys(attrContents[0]);
-            mappingDB.version = mappingDB.version + 1;
-            mappingDB.createDatabase('webMappingDB', layerName, attrContents, keys[0]);
+            if (indexedDB_SW === true) {
+                indexedDBEvent(layerName, attrContents);
+            }
 
-            /****/
         },
         error : function (error) {
             console.log(error);
@@ -229,18 +260,50 @@ OGDSM.attributeTable.prototype.removeAttribute = function (layerName) {
 OGDSM.attributeTable.prototype.editAttribute = function (sw) {
     'use strict';
     var textInput = $('.editSW');
+    function editDataResult(src, dst) {
+        console.log('Update data');
+    }
     if (sw === true) {
+        var oldValue = null;
         textInput.attr('disabled', false);
+        textInput.on('focus', function () {
+            oldValue = $(this).val();
+        });
+        textInput.on('change', function () {
+            var searchData = {};
+            if (oldValue === $(this).val()) {
+                return -1;
+            }
+            searchData[$(this).attr('data-key')] = oldValue;
+            if (this.indexedDB_SW === true) {
+                OGDSM.indexedDB('webMappingDB', {
+                    type : 'edit',
+                    searchKey : $(this).attr('data-label'),
+                    searchData : searchData,
+                    editData : $(this).val(),
+                    success : editDataResult
+                });
+            }
+        });
         this.editMode = true;
     } else {
         textInput.attr('disabled', true);
+        textInput.off('change');
+        textInput.off('focus');
         this.editMode = false;
     }
 };
 
+/**
+ * 속성 정보 검색
+ * @method selectAttribute
+ * @param {String}  tableName   - 테이블 이름
+ * @param {String}  header   - 검색 컬럼
+ * @param {String}  value   - 검색 값
+ * @return {Number}  테이블 인덱스
+ */
 OGDSM.attributeTable.prototype.searchAttribute = function (tableName, header, value) {
     'use strict';
-    //console.log(this.tableObjs);
     var tableObj = $('#attrTable' + tableName).DataTable();
     var searchIdx = 0;
     var resultIdx = null;
@@ -260,15 +323,27 @@ OGDSM.attributeTable.prototype.searchAttribute = function (tableName, header, va
             }
         });
     });
+    console.log('search Attr: ' + resultIdx);
     return resultIdx;
 };
 
+/**
+ * 속성 정보 선택
+ * @method selectAttribute
+ * @param {String}  tableName   - 테이블 이름
+ * @param {String}  trNum   - 테이블 인덱스
+ */
 OGDSM.attributeTable.prototype.selectAttribute = function (tableName, trNum) {
     'use strict';
     var tableObj = $('#attrTable' + tableName).DataTable();
     tableObj.$('tr.selected').removeClass('selected');
     tableObj.$('tr').eq(trNum).addClass('selected');
 };
+/**
+ * 속성 정보 선택 해제
+ * @method selectAttribute
+ * @param {String}  tableName   - 테이블 이름
+ */
 OGDSM.attributeTable.prototype.unSelectAttribute = function (tableName) {
     'use strict';
     var tableObj = $('#attrTable' + tableName).DataTable();

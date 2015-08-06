@@ -2,6 +2,9 @@
 /*global $, jQuery, ol, OGDSM, geoServerAddr, serverAddr*/
 var openGDSMObj;
 
+/*OGDSM.indexedDB('webMappingDB', {
+    type : 'deleteDB'
+});*/
 //배경지도 라디오 버튼 사용자 인터페이스 생성 함수
 function mapSelectUI(openGDSMObj) {
     'use strict';

@@ -41,6 +41,7 @@
                             <ul id="api-classes" class="apis classes">
                                 <li><a href="../classes/OGDSM.html">OGDSM</a></li>
                                 <li><a href="../classes/OGDSM.attributeTable.html">OGDSM.attributeTable</a></li>
+                                <li><a href="../classes/OGDSM.chartVisualization.html">OGDSM.chartVisualization</a></li>
                                 <li><a href="../classes/OGDSM.eGovFrameUI.html">OGDSM.eGovFrameUI</a></li>
                                 <li><a href="../classes/OGDSM.externalConnection.html">OGDSM.externalConnection</a></li>
                                 <li><a href="../classes/OGDSM.mapLayerList.html">OGDSM.mapLayerList</a></li>
@@ -49,6 +50,7 @@
 
                             <ul id="api-modules" class="apis modules">
                                 <li><a href="../modules/OGDSM.applyOptions.html">OGDSM.applyOptions</a></li>
+                                <li><a href="../modules/OGDSM.indexedDB.html">OGDSM.indexedDB</a></li>
                                 <li><a href="../modules/OGDSM.jsontoArray.html">OGDSM.jsontoArray</a></li>
                                 <li><a href="../modules/OGDSM.namespace.html">OGDSM.namespace</a></li>
                             </ul>
@@ -495,6 +497,59 @@
                         	    });
                         };
 
+
+
+                        OGDSM.chartVisualization.prototype.kMap = function (divId, geodata, center_lat, center_lon, map_scale) {
+                            var rootDiv = $(&#x27;#&#x27;+divId);
+                            rootDiv.empty();
+
+                            var svg = d3.select(&#x27;#&#x27;+divId)
+                            			.append(&#x27;svg&#x27;)
+                            			.attr(&quot;width&quot; , 500)
+                            			.attr(&quot;height&quot;, 600);
+
+                            baseGeoDataUrl = &quot;http://localhost:8080/mobile/geoBasedData/&quot; + geodata + &quot;.json&quot;;
+
+                            d3.json(baseGeoDataUrl, function(error, topology) {
+                            	  if (error) {
+                            	    return console.error(error);
+                            	  } else {
+
+                            		  var projection = d3.geo.mercator()
+                            		  					 .center([center_lon, center_lat])
+                            		  					 .scale(map_scale);
+                            		  var path = d3.geo.path()
+                            		  		   	   .projection(projection);
+
+                            		  var g = svg.append(&quot;g&quot;);
+
+                            		  if(geodata == &quot;SIDO&quot;){
+                            			  g.selectAll(&quot;path&quot;)
+                            			   .data(topojson.feature(topology, topology.objects.All_TL_SCCO_CTPRVN_4326).features)
+                                           .enter().append(&quot;path&quot;)
+                                           .attr(&quot;class&quot;, function(d) { return &quot;sido_&quot; + d.properties.CTP_ENG_NM; })
+                                           .style(&quot;fill&quot;, function(d) { return &quot;#&quot; + Math.random().toString(16).slice(2, 8); })
+                                           .attr(&quot;d&quot;, path);
+                            		  }
+                            		  else if(geodata == &quot;GU&quot;){
+                            			  g.selectAll(&quot;path&quot;)
+                            			   .data(topojson.feature(topology, topology.objects.All_TL_SCCO_SIG_4326).features)
+                                           .enter().append(&quot;path&quot;)
+                                           .attr(&quot;class&quot;, function(d) { return &quot;gu_&quot; + d.properties.SIG_ENG_NM; })
+                                           .style(&quot;fill&quot;, function (d) { return &quot;#&quot; + Math.random().toString(16).slice(2, 8); })
+                                           .attr(&quot;d&quot;, path);
+                            		  }
+                            		  else if(geodata == &quot;DONG&quot;){
+                            			  g.selectAll(&quot;path&quot;)
+                            			   .data(topojson.feature(topology, topology.objects.All_TL_SCCO_EMD_4326).features)
+                                           .enter().append(&quot;path&quot;)
+                                           .attr(&quot;class&quot;, function(d) { return &quot;dong_&quot; + d.properties.EMD_ENG_NM; })
+                                           .style(&quot;fill&quot;, function (d) { return &quot;#&quot; + Math.random().toString(16).slice(2, 8); })
+                                           .attr(&quot;d&quot;, path);
+                            		  }
+                            	  }
+                            });
+                        };
 
 
                             </pre>

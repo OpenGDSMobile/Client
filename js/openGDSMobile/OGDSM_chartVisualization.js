@@ -1,5 +1,5 @@
 /*jslint devel: true, vars : true, plusplus : true */
-/*global $, jQuery, ol, OGDSM, d3*/
+/*global $, jQuery, ol, OGDSM, d3, topojson*/
 
 OGDSM.namesapce('chartVisualization');
 (function (OGDSM) {
@@ -23,7 +23,7 @@ OGDSM.namesapce('chartVisualization');
             min : null
         };
         this.defaults = OGDSM.applyOptions(this.defaults, options);
-        if (typeof (jsonData) !== 'undefined'){
+        if (typeof (jsonData) !== 'undefined') {
             if (typeof (options.rootKey) === 'undefined' ||
                     typeof (options.labelKey) === 'undefined' ||
                     typeof (options.valueKey) === 'undefined') {
@@ -597,6 +597,62 @@ OGDSM.chartVisualization.prototype.lineChart = function (rootDiv, subOptions) {
         .text(options.valueKey);
 };
 
+
+OGDSM.chartVisualization.prototype.kMap = function (divId, serverAddr, geodata, center_lat, center_lon, map_scale) {
+    'use strict';
+    var rootDiv = $('#' + divId),
+        paramData = {};
+    paramData.jsonName = geodata;
+    rootDiv.empty();
+    $.ajax({
+        type : 'POST',
+        url : serverAddr,
+        data : JSON.stringify(paramData),
+        contentType : "application/json;charset=UTF-8",
+        dataType : 'json',
+        success : function (msg) {
+            var topology = JSON.parse(msg.data);
+
+            var svg = d3.select('#' + divId)
+                        .append('svg')
+                        .attr("width", 500)
+                        .attr("height", 600);
+            var projection = d3.geo.mercator()
+                                .center([center_lon, center_lat])
+                                .scale(map_scale);
+            var path = d3.geo.path()
+                            .projection(projection);
+            var g = svg.append("g");
+
+            if (geodata === "SIDO") {
+                g.selectAll("path")
+                    .data(topojson.feature(topology, topology.objects.All_TL_SCCO_CTPRVN_4326).features)
+                    .enter().append("path")
+                    .attr("class", function (d) { return "sido_" + d.properties.CTP_ENG_NM; })
+                    .style("fill", function (d) { return "#" + Math.random().toString(16).slice(2, 8); })
+                    .attr("d", path);
+            } else if (geodata === "GU") {
+                g.selectAll("path")
+                    .data(topojson.feature(topology, topology.objects.All_TL_SCCO_SIG_4326).features)
+                    .enter().append("path")
+                    .attr("class", function (d) { return "gu_" + d.properties.SIG_ENG_NM; })
+                    .style("fill", function (d) { return "#" + Math.random().toString(16).slice(2, 8); })
+                    .attr("d", path);
+            } else if (geodata === "DONG") {
+                g.selectAll("path")
+                    .data(topojson.feature(topology, topology.objects.All_TL_SCCO_EMD_4326).features)
+                    .enter().append("path")
+                    .attr("class", function (d) { return "dong_" + d.properties.EMD_ENG_NM; })
+                    .style("fill", function (d) { return "#" + Math.random().toString(16).slice(2, 8); })
+                    .attr("d", path);
+            }
+        },
+        error : function (e) {
+            console.log(e);
+            $('#result').text(e);
+        }
+    });
+};
 
 /**
  * 파이 차트 시각화

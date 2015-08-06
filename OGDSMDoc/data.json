@@ -22,6 +22,15 @@
             "fors": {},
             "namespaces": {}
         },
+        "../js/openGDSMobile/OGDSM_chartVisualization.js": {
+            "name": "../js/openGDSMobile/OGDSM_chartVisualization.js",
+            "modules": {},
+            "classes": {
+                "OGDSM.chartVisualization": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
         "../js/openGDSMobile/OGDSM_eGovFrameUI.js": {
             "name": "../js/openGDSMobile/OGDSM_eGovFrameUI.js",
             "modules": {},
@@ -37,6 +46,15 @@
             "classes": {
                 "OGDSM.externalConnection": 1
             },
+            "fors": {},
+            "namespaces": {}
+        },
+        "../js/openGDSMobile/OGDSM_indexedDB.js": {
+            "name": "../js/openGDSMobile/OGDSM_indexedDB.js",
+            "modules": {
+                "OGDSM.indexedDB": 1
+            },
+            "classes": {},
             "fors": {},
             "namespaces": {}
         },
@@ -104,8 +122,21 @@
             "classes": {
                 "OGDSM": 1,
                 "OGDSM.attributeTable": 1,
+                "OGDSM.chartVisualization": 1,
                 "OGDSM.eGovFrameUI": 1,
-                "OGDSM.externalConnection": 1,
+                "OGDSM.externalConnection": 1
+            },
+            "fors": {},
+            "namespaces": {},
+            "tag": "module",
+            "file": "../js/openGDSMobile/OGDSM_externalConnection.js",
+            "line": 7,
+            "description": "OGDSM options 파라미터 적용 모듈\n- 사용 방법(Use)\n      OGDSM.applyOptions(defaults, options);"
+        },
+        "OGDSM.indexedDB": {
+            "name": "OGDSM.indexedDB",
+            "submodules": {},
+            "classes": {
                 "OGDSM.mapLayerList": 1,
                 "OGDSM.visualization": 1
             },
@@ -114,7 +145,7 @@
             "tag": "module",
             "file": "../js/openGDSMobile/OGDSM_visualization.js",
             "line": 7,
-            "description": "OGDSM options 파라미터 적용 모듈\n- 사용 방법(Use)\n      OGDSM.applyOptions(defaults, options);"
+            "description": "OGDSM indexedDB 모듈\n\n- 사용 방법 (Use)\n      OGDSM.indexedDB('dbName'. {options});\n- Options\n  옵션 JSON 객체 키 값<br>\n   {type:'new', storeName:dbName, insertKey:null, insertData:null,\n    searchKey: null, searchData: numm, editData: numm, success: false, dbFile : false}<br>\n   type (String) : 모듈 실행 타입 설정<br>\n    > new : DB 생성/ 데이터 삽입 (dbName, storeName, insertData, insertKey)<br> \n    > insert: 데이터 삽입 (dbName, storeName, insertData, insertKey)<br>\n    > forceInsert: 데이터 강제 삽입 (dbName, storeName, insertData, insertKey)<br>\n    > remove: DB 데이터 삭제 ( --- )<br>\n    > removeAll: DB 데이터 모두 삭제 ( --- )<br>\n    > search: DB 데이터 검색 (dbName, storeName, searchKey, searchData)<br>\n    > searchAll: DB 데이터 모두 검색 (dbName, storeName)<br>\n    > edit: DB 데이터 수정 (dbName, storeName, searchKey, searchData, editData)<br>\n    > deleteDB: DB 삭제 (dbName)<br>\n   storeName (String) : 스토어<br>\n   insertKey (String) : 삽입 대상 키<br>\n   insertData (String) : 삽입 데이터<br>\n   searchKey (String) : 검색 대상 키<br>\n   searchData (String) : 검색할 데이터<br>\n   editData (String) : 수정할 데이터<br>\n   success (function) : 성공 콜백 함수 (데이터 검색일 경우 데이터 파라미터로 보내짐)<br>\n   dbFail (function) : 실패 콜백 함수<br>"
         }
     },
     "classes": {
@@ -156,6 +187,33 @@
                     "name": "addr",
                     "description": "- PostgreSQL 접속 주소",
                     "type": "String"
+                }
+            ]
+        },
+        "OGDSM.chartVisualization": {
+            "name": "OGDSM.chartVisualization",
+            "shortname": "OGDSM.chartVisualization",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "OGDSM.applyOptions",
+            "namespace": "",
+            "file": "../js/openGDSMobile/OGDSM_chartVisualization.js",
+            "line": 7,
+            "description": "D3.js 기반 시각화 객체",
+            "is_constructor": 1,
+            "params": [
+                {
+                    "name": "jsonData",
+                    "description": "- JSON 기반 데이터",
+                    "type": "Array"
+                },
+                {
+                    "name": "options",
+                    "description": "- 옵션 JSON 객체 키 값<br>\n     {rootKey : null, labelKey : null, valueKey : null, <br>\n      max:jsonData min value (based on valueKey), min:jsonData max value (based on valueKey)}<br>",
+                    "type": "JSON Object"
                 }
             ]
         },
@@ -204,7 +262,7 @@
             "extensions": [],
             "plugin_for": [],
             "extension_for": [],
-            "module": "OGDSM.applyOptions",
+            "module": "OGDSM.indexedDB",
             "namespace": "",
             "file": "../js/openGDSMobile/OGDSM_mapLayerList.js",
             "line": 9,
@@ -236,7 +294,7 @@
             "extensions": [],
             "plugin_for": [],
             "extension_for": [],
-            "module": "OGDSM.applyOptions",
+            "module": "OGDSM.indexedDB",
             "namespace": "",
             "file": "../js/openGDSMobile/OGDSM_visualization.js",
             "line": 7,
@@ -250,7 +308,7 @@
                 },
                 {
                     "name": "options",
-                    "description": "- 옵션 JSON 객체 키 값<br>\n   {layerListDiv:null, attrTableDiv:null, attrAddr:''}<br>\n   layerListDiv : 레이어 관리 리스트 DIV<br>\n   attrTableDiv : 속성 시각화 DIV 아이디 이름<br>\n   attrAddr : 속성 시각화 서버 주소<br>",
+                    "description": "- 옵션 JSON 객체 키 값<br>\n   {layerListDiv:null, attrTableDiv:null, attrAddr:'', indexedDB:true}<br>\n   layerListDiv : 레이어 관리 리스트 DIV<br>\n   attrTableDiv : 속성 시각화 DIV 아이디 이름<br>\n   attrAddr : 속성 시각화 서버 주소<br>\n   indexedDB : 속성 정보 모바일 데이터베이스 저장 / 수정<br>",
                     "type": "JSON Object"
                 }
             ]
@@ -259,7 +317,62 @@
     "classitems": [
         {
             "file": "../js/openGDSMobile/OGDSM_attributeTable.js",
-            "line": 56,
+            "line": 39,
+            "description": "수정 모드 여부 받기",
+            "itemtype": "method",
+            "name": "getEidtMode",
+            "return": {
+                "description": "True | False",
+                "type": "Boolean"
+            },
+            "class": "OGDSM.attributeTable",
+            "module": "OGDSM.applyOptions"
+        },
+        {
+            "file": "../js/openGDSMobile/OGDSM_attributeTable.js",
+            "line": 47,
+            "description": "현재 선택 객체 받기 (테이블)",
+            "itemtype": "method",
+            "name": "getSelectObj",
+            "return": {
+                "description": "",
+                "type": "Object"
+            },
+            "class": "OGDSM.attributeTable",
+            "module": "OGDSM.applyOptions"
+        },
+        {
+            "file": "../js/openGDSMobile/OGDSM_attributeTable.js",
+            "line": 55,
+            "description": "현재 선택 객체 설정 (테이블)",
+            "itemtype": "method",
+            "name": "setSelectObj",
+            "params": [
+                {
+                    "name": "UNKNOWN",
+                    "description": "",
+                    "type": "Object"
+                }
+            ],
+            "class": "OGDSM.attributeTable",
+            "module": "OGDSM.applyOptions"
+        },
+        {
+            "file": "../js/openGDSMobile/OGDSM_attributeTable.js",
+            "line": 63,
+            "description": "현재 선택 객체 설정 (오픈레이어)",
+            "itemtype": "method",
+            "name": "getolSelectObj",
+            "return": {
+                "description": "",
+                "type": "Ol Feature Object"
+            },
+            "class": "OGDSM.attributeTable",
+            "module": "OGDSM.applyOptions"
+        },
+        {
+            "file": "../js/openGDSMobile/OGDSM_attributeTable.js",
+            "line": 78,
             "description": "속성 정보 추가",
             "itemtype": "method",
             "name": "addAttribute",
@@ -275,37 +388,37 @@
         },
         {
             "file": "../js/openGDSMobile/OGDSM_attributeTable.js",
-            "line": 117,
+            "line": 143,
             "class": "OGDSM.attributeTable",
             "module": "OGDSM.applyOptions"
         },
         {
             "file": "../js/openGDSMobile/OGDSM_attributeTable.js",
-            "line": 137,
+            "line": 165,
             "class": "OGDSM.attributeTable",
             "module": "OGDSM.applyOptions"
         },
         {
             "file": "../js/openGDSMobile/OGDSM_attributeTable.js",
-            "line": 144,
+            "line": 180,
             "class": "OGDSM.attributeTable",
             "module": "OGDSM.applyOptions"
         },
         {
             "file": "../js/openGDSMobile/OGDSM_attributeTable.js",
-            "line": 152,
+            "line": 188,
             "class": "OGDSM.attributeTable",
             "module": "OGDSM.applyOptions"
         },
         {
             "file": "../js/openGDSMobile/OGDSM_attributeTable.js",
-            "line": 159,
+            "line": 195,
             "class": "OGDSM.attributeTable",
             "module": "OGDSM.applyOptions"
         },
         {
             "file": "../js/openGDSMobile/OGDSM_attributeTable.js",
-            "line": 209,
+            "line": 245,
             "description": "속성 정보 삭제",
             "itemtype": "method",
             "name": "removeAttribute",
@@ -321,7 +434,7 @@
         },
         {
             "file": "../js/openGDSMobile/OGDSM_attributeTable.js",
-            "line": 219,
+            "line": 255,
             "description": "속성 정보 수정",
             "itemtype": "method",
             "name": "removeAttribute",
@@ -333,6 +446,212 @@
                 }
             ],
             "class": "OGDSM.attributeTable",
+            "module": "OGDSM.applyOptions"
+        },
+        {
+            "file": "../js/openGDSMobile/OGDSM_attributeTable.js",
+            "line": 297,
+            "description": "속성 정보 검색",
+            "itemtype": "method",
+            "name": "selectAttribute",
+            "params": [
+                {
+                    "name": "tableName",
+                    "description": "- 테이블 이름",
+                    "type": "String"
+                },
+                {
+                    "name": "header",
+                    "description": "- 검색 컬럼",
+                    "type": "String"
+                },
+                {
+                    "name": "value",
+                    "description": "- 검색 값",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "테이블 인덱스",
+                "type": "Number"
+            },
+            "class": "OGDSM.attributeTable",
+            "module": "OGDSM.applyOptions"
+        },
+        {
+            "file": "../js/openGDSMobile/OGDSM_attributeTable.js",
+            "line": 330,
+            "description": "속성 정보 선택",
+            "itemtype": "method",
+            "name": "selectAttribute",
+            "params": [
+                {
+                    "name": "tableName",
+                    "description": "- 테이블 이름",
+                    "type": "String"
+                },
+                {
+                    "name": "trNum",
+                    "description": "- 테이블 인덱스",
+                    "type": "String"
+                }
+            ],
+            "class": "OGDSM.attributeTable",
+            "module": "OGDSM.applyOptions"
+        },
+        {
+            "file": "../js/openGDSMobile/OGDSM_attributeTable.js",
+            "line": 342,
+            "description": "속성 정보 선택 해제",
+            "itemtype": "method",
+            "name": "selectAttribute",
+            "params": [
+                {
+                    "name": "tableName",
+                    "description": "- 테이블 이름",
+                    "type": "String"
+                }
+            ],
+            "class": "OGDSM.attributeTable",
+            "module": "OGDSM.applyOptions"
+        },
+        {
+            "file": "../js/openGDSMobile/OGDSM_chartVisualization.js",
+            "line": 51,
+            "description": "지도 객체 받기",
+            "itemtype": "method",
+            "name": "getMap",
+            "return": {
+                "description": "오픈레이어3 객체",
+                "type": "ol.Map"
+            },
+            "class": "OGDSM.chartVisualization",
+            "module": "OGDSM.applyOptions"
+        },
+        {
+            "file": "../js/openGDSMobile/OGDSM_chartVisualization.js",
+            "line": 67,
+            "description": "수직 막대 차트 시각화",
+            "itemtype": "method",
+            "name": "vBarChart",
+            "params": [
+                {
+                    "name": "divId",
+                    "description": "- 막대 차트 시각화할 DIV 아이디 이름",
+                    "type": "String"
+                },
+                {
+                    "name": "options",
+                    "description": "- 옵션 JSON 객체 키 값<br>\n     {range : [], color : ['#4AAEEA']}<br>",
+                    "type": "JSON Object"
+                }
+            ],
+            "class": "OGDSM.chartVisualization",
+            "module": "OGDSM.applyOptions"
+        },
+        {
+            "file": "../js/openGDSMobile/OGDSM_chartVisualization.js",
+            "line": 179,
+            "description": "수평 막대 차트 시각화",
+            "itemtype": "method",
+            "name": "hBarChart",
+            "params": [
+                {
+                    "name": "divId",
+                    "description": "- 막대 차트 시각화할 DIV 아이디 이름",
+                    "type": "String"
+                },
+                {
+                    "name": "options",
+                    "description": "- 옵션 JSON 객체 키 값<br>\n     {range : [], color : ['#4AAEEA']}<br>",
+                    "type": "JSON Object"
+                }
+            ],
+            "class": "OGDSM.chartVisualization",
+            "module": "OGDSM.applyOptions"
+        },
+        {
+            "file": "../js/openGDSMobile/OGDSM_chartVisualization.js",
+            "line": 280,
+            "description": "라인 차트 시각화",
+            "itemtype": "method",
+            "name": "lineChart",
+            "params": [
+                {
+                    "name": "divId",
+                    "description": "- 막대 차트 시각화할 DIV 아이디 이름",
+                    "type": "String"
+                },
+                {
+                    "name": "options",
+                    "description": "- 옵션 JSON 객체 키 값<br>\n     {stroke : ['#4AAEEA'], width : 2,<br>\n      circleSize : 3, circleColor : ['#AAAAAA']}<br>",
+                    "type": "JSON Object"
+                }
+            ],
+            "class": "OGDSM.chartVisualization",
+            "module": "OGDSM.applyOptions"
+        },
+        {
+            "file": "../js/openGDSMobile/OGDSM_chartVisualization.js",
+            "line": 387,
+            "description": "영역 차트 시각화",
+            "itemtype": "method",
+            "name": "areaChart",
+            "params": [
+                {
+                    "name": "divId",
+                    "description": "- 막대 차트 시각화할 DIV 아이디 이름",
+                    "type": "String"
+                },
+                {
+                    "name": "options",
+                    "description": "- 옵션 JSON 객체 키 값<br>\n     {fill : ['#4AAEEA'], circleSize : 3, circleColor : ['#AAAAAA']}<br>",
+                    "type": "JSON Object"
+                }
+            ],
+            "class": "OGDSM.chartVisualization",
+            "module": "OGDSM.applyOptions"
+        },
+        {
+            "file": "../js/openGDSMobile/OGDSM_chartVisualization.js",
+            "line": 494,
+            "description": "라인 차트 시각화",
+            "itemtype": "method",
+            "name": "lineChart",
+            "params": [
+                {
+                    "name": "divId",
+                    "description": "- 막대 차트 시각화할 DIV 아이디 이름",
+                    "type": "String"
+                },
+                {
+                    "name": "options",
+                    "description": "- 옵션 JSON 객체 키 값<br>\n     {stroke : ['#4AAEEA'], width : 2,<br>\n      circleSize : 3, circleColor : ['#AAAAAA']}<br>",
+                    "type": "JSON Object"
+                }
+            ],
+            "class": "OGDSM.chartVisualization",
+            "module": "OGDSM.applyOptions"
+        },
+        {
+            "file": "../js/openGDSMobile/OGDSM_chartVisualization.js",
+            "line": 657,
+            "description": "파이 차트 시각화",
+            "itemtype": "method",
+            "name": "areaChart",
+            "params": [
+                {
+                    "name": "divId",
+                    "description": "- 막대 차트 시각화할 DIV 아이디 이름",
+                    "type": "String"
+                },
+                {
+                    "name": "options",
+                    "description": "- 옵션 JSON 객체 키 값<br>\n     {fill : ['#4AAEEA'], circleSize : 3, circleColor : ['#AAAAAA']}<br>",
+                    "type": "JSON Object"
+                }
+            ],
+            "class": "OGDSM.chartVisualization",
             "module": "OGDSM.applyOptions"
         },
         {
@@ -1002,6 +1321,26 @@
             "module": "OGDSM.applyOptions"
         },
         {
+            "file": "../js/openGDSMobile/OGDSM_indexedDB.js",
+            "line": 6,
+            "class": "OGDSM.mapLayerList",
+            "module": "OGDSM.applyOptions"
+        },
+        {
+            "file": "../js/openGDSMobile/OGDSM_indexedDB.js",
+            "line": 270,
+            "description": "Multiplue Object Store.. But....  iOS bug..\nhttps://gist.github.com/nolanlawson/08eb857c6b17a30c1b26",
+            "class": "OGDSM.mapLayerList",
+            "module": "OGDSM.indexedDB"
+        },
+        {
+            "file": "../js/openGDSMobile/OGDSM_indexedDB.js",
+            "line": 274,
+            "description": "OGDSM.indexedDB = function (dbName, options) { //dbName, storeName, success, fail\n    'use strict';\n    var dbObject = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;\n    var iDB = {};\n    options = (typeof (options) !== 'undefined') ? options : {};\n    var defaults = {\n        type : 'create',\n        storeName : null,\n        dataKey : null,\n        insertData : null,\n        searchValue : null,\n        dbSuccess : false,\n        dbFail : false\n    };\n    defaults = OGDSM.applyOptions(defaults, options);\n    if (defaults.dataKey === null) {\n        var keys = Object.keys(defaults.insertData[0]);\n        defaults.dataKey = keys[0];\n    }\n    if (typeof (Storage) !== 'undefined') {\n        if (localStorage.openGDSMobileDBVersion) {\n            localStorage.openGDSMobileDBVersion = Number(localStorage.openGDSMobileDBVersion) + 1;\n        } else {\n            localStorage.openGDSMobileDBVersion = localStorage.openGDSMobileDBVersion = 1;\n        }\n    }\n    if (defaults.type === 'searchAll') {\n        //OGDSM.indexedDB.search(dbName, defaults.storeName, defaults.dataKey, defaults.searchValue);\n        OGDSM.indexedDB.searchAll(dbName, defaults.storeName);\n        return -1;\n    }\n    var req = dbObject.open(dbName, localStorage.openGDSMobileDBVersion);\n    req.onsuccess = function (event) {\n        iDB.db = event.target.result;\n        OGDSM.indexedDB.addData(dbName, defaults.storeName, defaults.insertData, defaults.dataKey);\n        if (defaults.dbSuccess) {\n            defaults.dbSuccess(iDB.db);\n        } else {\n            console.log('Success Open / Create Indexed. Please call the second parameter of the callback function');\n        }\n        iDB.db.close();\n    };\n    req.onupgradeneeded = function (event) {\n        iDB.db = event.target.result;\n        if (defaults.storeName !== null) {\n            if (iDB.db.objectStoreNames.contains(defaults.storeName)) {\n                console.log('Exist Store Name. Therefore New Create After Remove');\n                iDB.db.deleteObjectStore(defaults.storeName);\n            }\n            iDB.db.createObjectStore(defaults.storeName);\n        }\n    };\n    req.onerror = function (e) {\n        console.log(\"Database error: \", e.target.error);\n    };\n};\nOGDSM.indexedDB.createStore = function (dbName, storeName, success) {\n    'use strict';\n    var iDB = {};\n    var newdbVersion = Number(localStorage.openGDSMobileDBVersion) + 1;\n    var req = this.dbObject.open(this.dbName, newdbVersion);\n    req.onupgradeneeded = function (event) {\n        iDB.db = event.target.result;\n        if (iDB.db.objectStoreNames.contains(storeName)) {\n            console.log('Exist Store Name. Therefore New Create After Remove');\n            iDB.db.deleteObjectStore(storeName);\n        }\n        iDB.db.createObjectStore(storeName);\n        localStorage.openGDSMobileDBVersion = Number(localStorage.openGDSMobileDBVersion) + 1;\n    };\n    req.onsuccess = function (event) {\n        iDB.db = event.target.result;\n        if (success) {\n            success(iDB.db);\n        }\n        iDB.db.close();\n    };\n};\nOGDSM.indexedDB.addData = function (dbName, storeName, data, keyColumn) {\n    'use strict';\n    var iDB = {};\n    var dbObject = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;\n    var req = dbObject.open(dbName, localStorage.openGDSMobileDBVersion);\n    req.onsuccess = function (event) {\n        iDB.db = event.target.result;\n        var trans = iDB.db.transaction(storeName, 'readwrite').objectStore(storeName);\n        var i = 0, j = 0;\n        for (i = 0; i < data.length; i++) {\n            trans.put(data[i], data[i][keyColumn]);\n        }\n        trans.onsuccess = function (e) {\n            iDB.db.close();\n        };\n        iDB.db.close();\n    };\n    req.onerror = function (e) {\n        console.log(e);\n        console.log(\"Database error: \", e.target.error);\n    };\n};",
+            "class": "OGDSM.mapLayerList",
+            "module": "OGDSM.indexedDB"
+        },
+        {
             "file": "../js/openGDSMobile/OGDSM_mapLayerList.js",
             "line": 174,
             "description": "레이어 목록 추가",
@@ -1030,7 +1369,7 @@
                 }
             ],
             "class": "OGDSM.mapLayerList",
-            "module": "OGDSM.applyOptions"
+            "module": "OGDSM.indexedDB"
         },
         {
             "file": "../js/openGDSMobile/OGDSM_mapLayerList.js",
@@ -1046,11 +1385,11 @@
                 }
             ],
             "class": "OGDSM.mapLayerList",
-            "module": "OGDSM.applyOptions"
+            "module": "OGDSM.indexedDB"
         },
         {
             "file": "../js/openGDSMobile/OGDSM_visualization.js",
-            "line": 56,
+            "line": 58,
             "description": "지도 객체 받기",
             "itemtype": "method",
             "name": "getMap",
@@ -1059,11 +1398,11 @@
                 "type": "ol.Map"
             },
             "class": "OGDSM.visualization",
-            "module": "OGDSM.applyOptions"
+            "module": "OGDSM.indexedDB"
         },
         {
             "file": "../js/openGDSMobile/OGDSM_visualization.js",
-            "line": 64,
+            "line": 66,
             "description": "지도 레이어 존재 여부 확인",
             "itemtype": "method",
             "name": "layerCheck",
@@ -1079,11 +1418,11 @@
                 "type": "OpenLayer3 Layer Object | Boolean"
             },
             "class": "OGDSM.visualization",
-            "module": "OGDSM.applyOptions"
+            "module": "OGDSM.indexedDB"
         },
         {
             "file": "../js/openGDSMobile/OGDSM_visualization.js",
-            "line": 80,
+            "line": 82,
             "description": "지도 레이어 인덱스 값",
             "itemtype": "method",
             "name": "indexOf",
@@ -1099,11 +1438,11 @@
                 "type": "Number"
             },
             "class": "OGDSM.visualization",
-            "module": "OGDSM.applyOptions"
+            "module": "OGDSM.indexedDB"
         },
         {
             "file": "../js/openGDSMobile/OGDSM_visualization.js",
-            "line": 95,
+            "line": 97,
             "description": "속성정보 객체",
             "itemtype": "method",
             "name": "getAttrObj",
@@ -1112,11 +1451,11 @@
                 "type": "AttributeTable Object"
             },
             "class": "OGDSM.visualization",
-            "module": "OGDSM.applyOptions"
+            "module": "OGDSM.indexedDB"
         },
         {
             "file": "../js/openGDSMobile/OGDSM_visualization.js",
-            "line": 107,
+            "line": 109,
             "description": "OpenGDS 모바일 맵 초기화",
             "itemtype": "method",
             "name": "olMapView",
@@ -1142,11 +1481,11 @@
                 "type": "ol.Map"
             },
             "class": "OGDSM.visualization",
-            "module": "OGDSM.applyOptions"
+            "module": "OGDSM.indexedDB"
         },
         {
             "file": "../js/openGDSMobile/OGDSM_visualization.js",
-            "line": 158,
+            "line": 160,
             "description": "배경지도 변경",
             "itemtype": "method",
             "name": "changeBaseMap",
@@ -1158,11 +1497,11 @@
                 }
             ],
             "class": "OGDSM.visualization",
-            "module": "OGDSM.applyOptions"
+            "module": "OGDSM.indexedDB"
         },
         {
             "file": "../js/openGDSMobile/OGDSM_visualization.js",
-            "line": 244,
+            "line": 246,
             "description": "지도 GPS 트래킹 스위치",
             "itemtype": "method",
             "name": "trackingGeoLocation",
@@ -1174,11 +1513,11 @@
                 }
             ],
             "class": "OGDSM.visualization",
-            "module": "OGDSM.applyOptions"
+            "module": "OGDSM.indexedDB"
         },
         {
             "file": "../js/openGDSMobile/OGDSM_visualization.js",
-            "line": 269,
+            "line": 271,
             "description": "해상도에 맞는 지도 레이아웃",
             "itemtype": "method",
             "name": "updateLayoutSetting",
@@ -1190,11 +1529,11 @@
                 }
             ],
             "class": "OGDSM.visualization",
-            "module": "OGDSM.applyOptions"
+            "module": "OGDSM.indexedDB"
         },
         {
             "file": "../js/openGDSMobile/OGDSM_visualization.js",
-            "line": 283,
+            "line": 285,
             "description": "WMS 및 WFS 맵 레이어 추가",
             "itemtype": "method",
             "name": "addMap",
@@ -1206,29 +1545,29 @@
                 }
             ],
             "class": "OGDSM.visualization",
-            "module": "OGDSM.applyOptions"
+            "module": "OGDSM.indexedDB"
         },
         {
             "file": "../js/openGDSMobile/OGDSM_visualization.js",
-            "line": 295,
+            "line": 297,
             "class": "OGDSM.visualization",
-            "module": "OGDSM.applyOptions"
+            "module": "OGDSM.indexedDB"
         },
         {
             "file": "../js/openGDSMobile/OGDSM_visualization.js",
-            "line": 330,
+            "line": 332,
             "class": "OGDSM.visualization",
-            "module": "OGDSM.applyOptions"
+            "module": "OGDSM.indexedDB"
         },
         {
             "file": "../js/openGDSMobile/OGDSM_visualization.js",
-            "line": 342,
+            "line": 344,
             "class": "OGDSM.visualization",
-            "module": "OGDSM.applyOptions"
+            "module": "OGDSM.indexedDB"
         },
         {
             "file": "../js/openGDSMobile/OGDSM_visualization.js",
-            "line": 363,
+            "line": 365,
             "description": "이미지 레이어 시각화",
             "itemtype": "method",
             "name": "imageLayer",
@@ -1255,11 +1594,11 @@
                 }
             ],
             "class": "OGDSM.visualization",
-            "module": "OGDSM.applyOptions"
+            "module": "OGDSM.indexedDB"
         },
         {
             "file": "../js/openGDSMobile/OGDSM_visualization.js",
-            "line": 389,
+            "line": 391,
             "description": "맵 레이어 삭제",
             "itemtype": "method",
             "name": "removeMap",
@@ -1271,11 +1610,11 @@
                 }
             ],
             "class": "OGDSM.visualization",
-            "module": "OGDSM.applyOptions"
+            "module": "OGDSM.indexedDB"
         },
         {
             "file": "../js/openGDSMobile/OGDSM_visualization.js",
-            "line": 404,
+            "line": 406,
             "description": "맵 레이어 시각화 여부",
             "itemtype": "method",
             "name": "setVisible",
@@ -1292,11 +1631,11 @@
                 }
             ],
             "class": "OGDSM.visualization",
-            "module": "OGDSM.applyOptions"
+            "module": "OGDSM.indexedDB"
         },
         {
             "file": "../js/openGDSMobile/OGDSM_visualization.js",
-            "line": 417,
+            "line": 419,
             "description": "WFS 스타일 변경",
             "itemtype": "method",
             "name": "changeWFSStyle",
@@ -1318,52 +1657,21 @@
                 }
             ],
             "class": "OGDSM.visualization",
-            "module": "OGDSM.applyOptions"
-        },
-        {
-            "file": "../js/openGDSMobile/OGDSM_visualization.js",
-            "line": 513,
-            "description": "가로 막대 차트 시각화",
-            "itemtype": "method",
-            "name": "barChart",
-            "params": [
-                {
-                    "name": "divId",
-                    "description": "- 막대 차트 시각화할 DIV 아이디 이름",
-                    "type": "String"
-                },
-                {
-                    "name": "data",
-                    "description": "- 데이터 값 2차원 배열 (0 : x, 1 : y)",
-                    "type": "Array"
-                },
-                {
-                    "name": "range",
-                    "description": "- 데이터 범위 1차원 배열",
-                    "type": "Array"
-                },
-                {
-                    "name": "color",
-                    "description": "- 데이터 색 범위 1차원 배열 [default=#000000 (range와 배열 길이 같아야함)]",
-                    "type": "Array"
-                }
-            ],
-            "class": "OGDSM.visualization",
-            "module": "OGDSM.applyOptions"
+            "module": "OGDSM.indexedDB"
         },
         {
             "file": "../js/openGDSMobile/Sortable.js",
             "line": 1,
             "description": "OGDSM Layer list sorting open source\nSortable\nauthor\tRubaXa   <trash@rubaxa.org>\nlicense MIT",
             "class": "",
-            "module": "OGDSM.applyOptions"
+            "module": "OGDSM.indexedDB"
         },
         {
             "file": "../js/openGDSMobile/Sortable.js",
             "line": 160,
             "description": "class  Sortable\nparam  {HTMLElement}  el\nparam  {Object}       [options]",
             "class": "",
-            "module": "OGDSM.applyOptions"
+            "module": "OGDSM.indexedDB"
         },
         {
             "file": "../js/openGDSMobile/Sortable.js",
@@ -1374,7 +1682,7 @@
                 "type": "String[]"
             },
             "class": "",
-            "module": "OGDSM.applyOptions"
+            "module": "OGDSM.indexedDB"
         },
         {
             "file": "../js/openGDSMobile/Sortable.js",
@@ -1388,14 +1696,14 @@
                 }
             ],
             "class": "",
-            "module": "OGDSM.applyOptions"
+            "module": "OGDSM.indexedDB"
         },
         {
             "file": "../js/openGDSMobile/Sortable.js",
             "line": 764,
             "description": "Save the current sorting",
             "class": "",
-            "module": "OGDSM.applyOptions"
+            "module": "OGDSM.indexedDB"
         },
         {
             "file": "../js/openGDSMobile/Sortable.js",
@@ -1419,7 +1727,7 @@
                 "type": "HTMLElement|null"
             },
             "class": "",
-            "module": "OGDSM.applyOptions"
+            "module": "OGDSM.indexedDB"
         },
         {
             "file": "../js/openGDSMobile/Sortable.js",
@@ -1443,20 +1751,20 @@
                 "type": "*"
             },
             "class": "",
-            "module": "OGDSM.applyOptions"
+            "module": "OGDSM.indexedDB"
         },
         {
             "file": "../js/openGDSMobile/Sortable.js",
             "line": 801,
             "description": "Destroy",
             "class": "",
-            "module": "OGDSM.applyOptions"
+            "module": "OGDSM.indexedDB"
         },
         {
             "file": "../js/openGDSMobile/Sortable.js",
             "line": 954,
             "class": "",
-            "module": "OGDSM.applyOptions"
+            "module": "OGDSM.indexedDB"
         },
         {
             "file": "../js/openGDSMobile/Sortable.js",
@@ -1476,7 +1784,7 @@
             "access": "private",
             "tagname": "",
             "class": "",
-            "module": "OGDSM.applyOptions"
+            "module": "OGDSM.indexedDB"
         },
         {
             "file": "../js/openGDSMobile/Sortable.js",
@@ -1495,7 +1803,7 @@
             "access": "private",
             "tagname": "",
             "class": "",
-            "module": "OGDSM.applyOptions"
+            "module": "OGDSM.indexedDB"
         },
         {
             "file": "../js/openGDSMobile/Sortable.js",
@@ -1515,7 +1823,7 @@
                 }
             ],
             "class": "",
-            "module": "OGDSM.applyOptions"
+            "module": "OGDSM.indexedDB"
         },
         {
             "file": "../js/openGDSMobile/d3chart.js",
@@ -1551,6 +1859,10 @@
     ],
     "warnings": [
         {
+            "message": "param name missing: {Object}",
+            "line": " ../js/openGDSMobile/OGDSM_attributeTable.js:55"
+        },
+        {
             "message": "replacing incorrect tag: returns with return",
             "line": " ../js/openGDSMobile/Sortable.js:718"
         },
@@ -1572,23 +1884,23 @@
         },
         {
             "message": "Missing item type",
-            "line": " ../js/openGDSMobile/OGDSM_attributeTable.js:117"
+            "line": " ../js/openGDSMobile/OGDSM_attributeTable.js:143"
         },
         {
             "message": "Missing item type",
-            "line": " ../js/openGDSMobile/OGDSM_attributeTable.js:137"
+            "line": " ../js/openGDSMobile/OGDSM_attributeTable.js:165"
         },
         {
             "message": "Missing item type",
-            "line": " ../js/openGDSMobile/OGDSM_attributeTable.js:144"
+            "line": " ../js/openGDSMobile/OGDSM_attributeTable.js:180"
         },
         {
             "message": "Missing item type",
-            "line": " ../js/openGDSMobile/OGDSM_attributeTable.js:152"
+            "line": " ../js/openGDSMobile/OGDSM_attributeTable.js:188"
         },
         {
             "message": "Missing item type",
-            "line": " ../js/openGDSMobile/OGDSM_attributeTable.js:159"
+            "line": " ../js/openGDSMobile/OGDSM_attributeTable.js:195"
         },
         {
             "message": "Missing item type",
@@ -1600,15 +1912,27 @@
         },
         {
             "message": "Missing item type",
-            "line": " ../js/openGDSMobile/OGDSM_visualization.js:295"
+            "line": " ../js/openGDSMobile/OGDSM_indexedDB.js:6"
+        },
+        {
+            "message": "Missing item type\nMultiplue Object Store.. But....  iOS bug..\nhttps://gist.github.com/nolanlawson/08eb857c6b17a30c1b26",
+            "line": " ../js/openGDSMobile/OGDSM_indexedDB.js:270"
+        },
+        {
+            "message": "Missing item type\nOGDSM.indexedDB = function (dbName, options) { //dbName, storeName, success, fail\n    'use strict';\n    var dbObject = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;\n    var iDB = {};\n    options = (typeof (options) !== 'undefined') ? options : {};\n    var defaults = {\n        type : 'create',\n        storeName : null,\n        dataKey : null,\n        insertData : null,\n        searchValue : null,\n        dbSuccess : false,\n        dbFail : false\n    };\n    defaults = OGDSM.applyOptions(defaults, options);\n    if (defaults.dataKey === null) {\n        var keys = Object.keys(defaults.insertData[0]);\n        defaults.dataKey = keys[0];\n    }\n    if (typeof (Storage) !== 'undefined') {\n        if (localStorage.openGDSMobileDBVersion) {\n            localStorage.openGDSMobileDBVersion = Number(localStorage.openGDSMobileDBVersion) + 1;\n        } else {\n            localStorage.openGDSMobileDBVersion = localStorage.openGDSMobileDBVersion = 1;\n        }\n    }\n    if (defaults.type === 'searchAll') {\n        //OGDSM.indexedDB.search(dbName, defaults.storeName, defaults.dataKey, defaults.searchValue);\n        OGDSM.indexedDB.searchAll(dbName, defaults.storeName);\n        return -1;\n    }\n    var req = dbObject.open(dbName, localStorage.openGDSMobileDBVersion);\n    req.onsuccess = function (event) {\n        iDB.db = event.target.result;\n        OGDSM.indexedDB.addData(dbName, defaults.storeName, defaults.insertData, defaults.dataKey);\n        if (defaults.dbSuccess) {\n            defaults.dbSuccess(iDB.db);\n        } else {\n            console.log('Success Open / Create Indexed. Please call the second parameter of the callback function');\n        }\n        iDB.db.close();\n    };\n    req.onupgradeneeded = function (event) {\n        iDB.db = event.target.result;\n        if (defaults.storeName !== null) {\n            if (iDB.db.objectStoreNames.contains(defaults.storeName)) {\n                console.log('Exist Store Name. Therefore New Create After Remove');\n                iDB.db.deleteObjectStore(defaults.storeName);\n            }\n            iDB.db.createObjectStore(defaults.storeName);\n        }\n    };\n    req.onerror = function (e) {\n        console.log(\"Database error: \", e.target.error);\n    };\n};\nOGDSM.indexedDB.createStore = function (dbName, storeName, success) {\n    'use strict';\n    var iDB = {};\n    var newdbVersion = Number(localStorage.openGDSMobileDBVersion) + 1;\n    var req = this.dbObject.open(this.dbName, newdbVersion);\n    req.onupgradeneeded = function (event) {\n        iDB.db = event.target.result;\n        if (iDB.db.objectStoreNames.contains(storeName)) {\n            console.log('Exist Store Name. Therefore New Create After Remove');\n            iDB.db.deleteObjectStore(storeName);\n        }\n        iDB.db.createObjectStore(storeName);\n        localStorage.openGDSMobileDBVersion = Number(localStorage.openGDSMobileDBVersion) + 1;\n    };\n    req.onsuccess = function (event) {\n        iDB.db = event.target.result;\n        if (success) {\n            success(iDB.db);\n        }\n        iDB.db.close();\n    };\n};\nOGDSM.indexedDB.addData = function (dbName, storeName, data, keyColumn) {\n    'use strict';\n    var iDB = {};\n    var dbObject = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;\n    var req = dbObject.open(dbName, localStorage.openGDSMobileDBVersion);\n    req.onsuccess = function (event) {\n        iDB.db = event.target.result;\n        var trans = iDB.db.transaction(storeName, 'readwrite').objectStore(storeName);\n        var i = 0, j = 0;\n        for (i = 0; i < data.length; i++) {\n            trans.put(data[i], data[i][keyColumn]);\n        }\n        trans.onsuccess = function (e) {\n            iDB.db.close();\n        };\n        iDB.db.close();\n    };\n    req.onerror = function (e) {\n        console.log(e);\n        console.log(\"Database error: \", e.target.error);\n    };\n};",
+            "line": " ../js/openGDSMobile/OGDSM_indexedDB.js:274"
         },
         {
             "message": "Missing item type",
-            "line": " ../js/openGDSMobile/OGDSM_visualization.js:330"
+            "line": " ../js/openGDSMobile/OGDSM_visualization.js:297"
         },
         {
             "message": "Missing item type",
-            "line": " ../js/openGDSMobile/OGDSM_visualization.js:342"
+            "line": " ../js/openGDSMobile/OGDSM_visualization.js:332"
+        },
+        {
+            "message": "Missing item type",
+            "line": " ../js/openGDSMobile/OGDSM_visualization.js:344"
         },
         {
             "message": "Missing item type\nOGDSM Layer list sorting open source\nSortable\nauthor\tRubaXa   <trash@rubaxa.org>\nlicense MIT",

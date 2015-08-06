@@ -10,10 +10,11 @@ OGDSM.namesapce('visualization');
     * @constructor
     * @param {String} mapDiv - 지도 DIV 아이디 이름
     * @param {JSON Object} options - 옵션 JSON 객체 키 값<br>
-    {layerListDiv:null, attrTableDiv:null, attrAddr:''}<br>
+    {layerListDiv:null, attrTableDiv:null, attrAddr:'', indexedDB:true}<br>
     layerListDiv : 레이어 관리 리스트 DIV<br>
     attrTableDiv : 속성 시각화 DIV 아이디 이름<br>
     attrAddr : 속성 시각화 서버 주소<br>
+    indexedDB : 속성 정보 모바일 데이터베이스 저장 / 수정<br>
     */
     OGDSM.visualization = function (mapDiv, options) {
         options = (typeof (options) !== 'undefined') ? options : {};
@@ -25,7 +26,8 @@ OGDSM.namesapce('visualization');
         var defaults = {
             layerListDiv : null,
             attrTableDiv : null,
-            attrAddr : ''
+            attrAddr : '',
+            indexedDB : true
         };
 
         for (name in defaults) {

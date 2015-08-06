@@ -41,6 +41,7 @@
                             <ul id="api-classes" class="apis classes">
                                 <li><a href="../classes/OGDSM.html">OGDSM</a></li>
                                 <li><a href="../classes/OGDSM.attributeTable.html">OGDSM.attributeTable</a></li>
+                                <li><a href="../classes/OGDSM.chartVisualization.html">OGDSM.chartVisualization</a></li>
                                 <li><a href="../classes/OGDSM.eGovFrameUI.html">OGDSM.eGovFrameUI</a></li>
                                 <li><a href="../classes/OGDSM.externalConnection.html">OGDSM.externalConnection</a></li>
                                 <li><a href="../classes/OGDSM.mapLayerList.html">OGDSM.mapLayerList</a></li>
@@ -49,6 +50,7 @@
                 
                             <ul id="api-modules" class="apis modules">
                                 <li><a href="../modules/OGDSM.applyOptions.html">OGDSM.applyOptions</a></li>
+                                <li><a href="../modules/OGDSM.indexedDB.html">OGDSM.indexedDB</a></li>
                                 <li><a href="../modules/OGDSM.jsontoArray.html">OGDSM.jsontoArray</a></li>
                                 <li><a href="../modules/OGDSM.namespace.html">OGDSM.namespace</a></li>
                             </ul>
@@ -92,7 +94,7 @@
                                     Defined in: <a href="../files/.._js_openGDSMobile_OGDSM_visualization.js.html#l7"><code>..&#x2F;js&#x2F;openGDSMobile&#x2F;OGDSM_visualization.js:7</code></a>
                                 </div>
                         
-                                    Module: <a href="../modules/OGDSM.applyOptions.html">OGDSM.applyOptions</a>
+                                    Module: <a href="../modules/OGDSM.indexedDB.html">OGDSM.indexedDB</a>
                         
                         </div>
                         
@@ -171,10 +173,11 @@
                                                     <div class="param-description">
                                                         <ul>
                                 <li>옵션 JSON 객체 키 값<br>
-                                 {layerListDiv:null, attrTableDiv:null, attrAddr:&#39;&#39;}<br>
+                                 {layerListDiv:null, attrTableDiv:null, attrAddr:&#39;&#39;, indexedDB:true}<br>
                                  layerListDiv : 레이어 관리 리스트 DIV<br>
                                  attrTableDiv : 속성 시각화 DIV 아이디 이름<br>
-                                 attrAddr : 속성 시각화 서버 주소<br></li>
+                                 attrAddr : 속성 시각화 서버 주소<br>
+                                 indexedDB : 속성 정보 모바일 데이터베이스 저장 / 수정<br></li>
                                 </ul>
 
                                                     </div>
@@ -205,10 +208,6 @@
                                             <ul class="index-list methods">
                                                     <li class="index-item method">
                                                         <a href="#method_addMap">addMap</a>
-                        
-                                                    </li>
-                                                    <li class="index-item method">
-                                                        <a href="#method_barChart">barChart</a>
                         
                                                     </li>
                                                     <li class="index-item method">
@@ -275,7 +274,7 @@
                                               <div class="meta method-meta">
                                                   <p>
                                                       Defined in
-                                                  <a href="../files/.._js_openGDSMobile_OGDSM_visualization.js.html#l283"><code>..&#x2F;js&#x2F;openGDSMobile&#x2F;OGDSM_visualization.js:283</code></a>
+                                                  <a href="../files/.._js_openGDSMobile_OGDSM_visualization.js.html#l285"><code>..&#x2F;js&#x2F;openGDSMobile&#x2F;OGDSM_visualization.js:285</code></a>
                                               </p>
                                             
                                             
@@ -331,123 +330,13 @@
                                             
                                             
                                             </div>
-                                            <div id="method_barChart" class="method item">
-                                              <h3 class="blue-method-name">barChart</h3>
-                                            
-                                              <div class="meta method-meta">
-                                                  <p>
-                                                      Defined in
-                                                  <a href="../files/.._js_openGDSMobile_OGDSM_visualization.js.html#l513"><code>..&#x2F;js&#x2F;openGDSMobile&#x2F;OGDSM_visualization.js:513</code></a>
-                                              </p>
-                                            
-                                            
-                                            
-                                              </div>
-                                            
-                                              <h3>Syntax</h3>
-                                              <div class="blue-method-syntax">
-                                              <h3 class="name"><code>barChart</code></h3>
-                                            
-                                                    <div class="args">
-                                                        <span class="paren">(</span><ul class="args-list inline commas">
-                                                            <li class="arg">
-                                                                    <code>divId</code>
-                                                            </li>
-                                                            <li class="arg">
-                                                                    <code>data</code>
-                                                            </li>
-                                                            <li class="arg">
-                                                                    <code>range</code>
-                                                            </li>
-                                                            <li class="arg">
-                                                                    <code>color</code>
-                                                            </li>
-                                                        </ul><span class="paren">)</span>
-                                                    </div>
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                              </div>
-                                                <div class="description">
-                                                  <h3>Summary</h3>
-                                                    <p>가로 막대 차트 시각화</p>
-                                            
-                                                </div>
-                                            
-                                                    <div class="params">
-                                                        <h4>Parameters:</h4>
-                                            
-                                                        <ul class="params-list">
-                                                            <li class="param">
-                                                                    <code class="param-name">divId</code>
-                                                                    <span class="type">String</span>
-                                            
-                                            
-                                                                <div class="param-description">
-                                                                    <ul>
-                                            <li>막대 차트 시각화할 DIV 아이디 이름</li>
-                                            </ul>
-                                            
-                                                                </div>
-                                            
-                                                            </li>
-                                                            <li class="param">
-                                                                    <code class="param-name">data</code>
-                                                                    <span class="type">Array</span>
-                                            
-                                            
-                                                                <div class="param-description">
-                                                                    <ul>
-                                            <li>데이터 값 2차원 배열 (0 : x, 1 : y)</li>
-                                            </ul>
-                                            
-                                                                </div>
-                                            
-                                                            </li>
-                                                            <li class="param">
-                                                                    <code class="param-name">range</code>
-                                                                    <span class="type">Array</span>
-                                            
-                                            
-                                                                <div class="param-description">
-                                                                    <ul>
-                                            <li>데이터 범위 1차원 배열</li>
-                                            </ul>
-                                            
-                                                                </div>
-                                            
-                                                            </li>
-                                                            <li class="param">
-                                                                    <code class="param-name">color</code>
-                                                                    <span class="type">Array</span>
-                                            
-                                            
-                                                                <div class="param-description">
-                                                                    <ul>
-                                            <li>데이터 색 범위 1차원 배열 [default=#000000 (range와 배열 길이 같아야함)]</li>
-                                            </ul>
-                                            
-                                                                </div>
-                                            
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                            
-                                            
-                                            
-                                            </div>
                                             <div id="method_changeBaseMap" class="method item">
                                               <h3 class="blue-method-name">changeBaseMap</h3>
                                             
                                               <div class="meta method-meta">
                                                   <p>
                                                       Defined in
-                                                  <a href="../files/.._js_openGDSMobile_OGDSM_visualization.js.html#l158"><code>..&#x2F;js&#x2F;openGDSMobile&#x2F;OGDSM_visualization.js:158</code></a>
+                                                  <a href="../files/.._js_openGDSMobile_OGDSM_visualization.js.html#l160"><code>..&#x2F;js&#x2F;openGDSMobile&#x2F;OGDSM_visualization.js:160</code></a>
                                               </p>
                                             
                                             
@@ -509,7 +398,7 @@
                                               <div class="meta method-meta">
                                                   <p>
                                                       Defined in
-                                                  <a href="../files/.._js_openGDSMobile_OGDSM_visualization.js.html#l417"><code>..&#x2F;js&#x2F;openGDSMobile&#x2F;OGDSM_visualization.js:417</code></a>
+                                                  <a href="../files/.._js_openGDSMobile_OGDSM_visualization.js.html#l419"><code>..&#x2F;js&#x2F;openGDSMobile&#x2F;OGDSM_visualization.js:419</code></a>
                                               </p>
                                             
                                             
@@ -608,7 +497,7 @@
                                               <div class="meta method-meta">
                                                   <p>
                                                       Defined in
-                                                  <a href="../files/.._js_openGDSMobile_OGDSM_visualization.js.html#l95"><code>..&#x2F;js&#x2F;openGDSMobile&#x2F;OGDSM_visualization.js:95</code></a>
+                                                  <a href="../files/.._js_openGDSMobile_OGDSM_visualization.js.html#l97"><code>..&#x2F;js&#x2F;openGDSMobile&#x2F;OGDSM_visualization.js:97</code></a>
                                               </p>
 
 
@@ -661,7 +550,7 @@
                                               <div class="meta method-meta">
                                                   <p>
                                                       Defined in
-                                                  <a href="../files/.._js_openGDSMobile_OGDSM_visualization.js.html#l56"><code>..&#x2F;js&#x2F;openGDSMobile&#x2F;OGDSM_visualization.js:56</code></a>
+                                                  <a href="../files/.._js_openGDSMobile_OGDSM_visualization.js.html#l58"><code>..&#x2F;js&#x2F;openGDSMobile&#x2F;OGDSM_visualization.js:58</code></a>
                                               </p>
                                             
                                             
@@ -714,7 +603,7 @@
                                               <div class="meta method-meta">
                                                   <p>
                                                       Defined in
-                                                  <a href="../files/.._js_openGDSMobile_OGDSM_visualization.js.html#l363"><code>..&#x2F;js&#x2F;openGDSMobile&#x2F;OGDSM_visualization.js:363</code></a>
+                                                  <a href="../files/.._js_openGDSMobile_OGDSM_visualization.js.html#l365"><code>..&#x2F;js&#x2F;openGDSMobile&#x2F;OGDSM_visualization.js:365</code></a>
                                               </p>
 
 
@@ -824,7 +713,7 @@
                                               <div class="meta method-meta">
                                                   <p>
                                                       Defined in
-                                                  <a href="../files/.._js_openGDSMobile_OGDSM_visualization.js.html#l80"><code>..&#x2F;js&#x2F;openGDSMobile&#x2F;OGDSM_visualization.js:80</code></a>
+                                                  <a href="../files/.._js_openGDSMobile_OGDSM_visualization.js.html#l82"><code>..&#x2F;js&#x2F;openGDSMobile&#x2F;OGDSM_visualization.js:82</code></a>
                                               </p>
 
 
@@ -902,7 +791,7 @@
                                               <div class="meta method-meta">
                                                   <p>
                                                       Defined in
-                                                  <a href="../files/.._js_openGDSMobile_OGDSM_visualization.js.html#l64"><code>..&#x2F;js&#x2F;openGDSMobile&#x2F;OGDSM_visualization.js:64</code></a>
+                                                  <a href="../files/.._js_openGDSMobile_OGDSM_visualization.js.html#l66"><code>..&#x2F;js&#x2F;openGDSMobile&#x2F;OGDSM_visualization.js:66</code></a>
                                               </p>
                                             
                                             
@@ -980,7 +869,7 @@
                                               <div class="meta method-meta">
                                                   <p>
                                                       Defined in
-                                                  <a href="../files/.._js_openGDSMobile_OGDSM_visualization.js.html#l107"><code>..&#x2F;js&#x2F;openGDSMobile&#x2F;OGDSM_visualization.js:107</code></a>
+                                                  <a href="../files/.._js_openGDSMobile_OGDSM_visualization.js.html#l109"><code>..&#x2F;js&#x2F;openGDSMobile&#x2F;OGDSM_visualization.js:109</code></a>
                                               </p>
 
 
@@ -1090,7 +979,7 @@
                                               <div class="meta method-meta">
                                                   <p>
                                                       Defined in
-                                                  <a href="../files/.._js_openGDSMobile_OGDSM_visualization.js.html#l389"><code>..&#x2F;js&#x2F;openGDSMobile&#x2F;OGDSM_visualization.js:389</code></a>
+                                                  <a href="../files/.._js_openGDSMobile_OGDSM_visualization.js.html#l391"><code>..&#x2F;js&#x2F;openGDSMobile&#x2F;OGDSM_visualization.js:391</code></a>
                                               </p>
 
 
@@ -1152,7 +1041,7 @@
                                               <div class="meta method-meta">
                                                   <p>
                                                       Defined in
-                                                  <a href="../files/.._js_openGDSMobile_OGDSM_visualization.js.html#l404"><code>..&#x2F;js&#x2F;openGDSMobile&#x2F;OGDSM_visualization.js:404</code></a>
+                                                  <a href="../files/.._js_openGDSMobile_OGDSM_visualization.js.html#l406"><code>..&#x2F;js&#x2F;openGDSMobile&#x2F;OGDSM_visualization.js:406</code></a>
                                               </p>
 
 
@@ -1230,7 +1119,7 @@
                                               <div class="meta method-meta">
                                                   <p>
                                                       Defined in
-                                                  <a href="../files/.._js_openGDSMobile_OGDSM_visualization.js.html#l244"><code>..&#x2F;js&#x2F;openGDSMobile&#x2F;OGDSM_visualization.js:244</code></a>
+                                                  <a href="../files/.._js_openGDSMobile_OGDSM_visualization.js.html#l246"><code>..&#x2F;js&#x2F;openGDSMobile&#x2F;OGDSM_visualization.js:246</code></a>
                                               </p>
 
 
@@ -1292,7 +1181,7 @@
                                               <div class="meta method-meta">
                                                   <p>
                                                       Defined in
-                                                  <a href="../files/.._js_openGDSMobile_OGDSM_visualization.js.html#l269"><code>..&#x2F;js&#x2F;openGDSMobile&#x2F;OGDSM_visualization.js:269</code></a>
+                                                  <a href="../files/.._js_openGDSMobile_OGDSM_visualization.js.html#l271"><code>..&#x2F;js&#x2F;openGDSMobile&#x2F;OGDSM_visualization.js:271</code></a>
                                               </p>
 
 
