@@ -268,9 +268,9 @@ OGDSM.mapLayerList.prototype.addList = function (obj, label, color, type) {
         labelCanvas.strokeRect(5, 5, 20, 20);
     }
     $('#layer' + label).trigger('create');
-    $('#' + label + 'slider').bind('change', sliderEvent);
-    $('#' + label + 'delete').bind('click', deleteEvent);
-    $('input[name=listCheckBox]').bind('click', checkBoxEvent);
+    $('#' + label + 'slider').on('change', sliderEvent);
+    $('#' + label + 'delete').on('click', deleteEvent);
+    $('input[name=listCheckBox]').on('click', checkBoxEvent);
     $('#chkRoot' + label + ' > div').css('width', '98%');
     //$('#hrefRoot' + label + ' > span').css('margin', '-1.5px');
 };

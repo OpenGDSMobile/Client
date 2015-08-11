@@ -18,7 +18,7 @@
             <h1 class="blue-main-title"></h1>
         </div>
         <div class="yui3-u-1-4 version project-version">
-            API Docs for:
+            API Docs for: 
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -32,11 +32,11 @@
                             <li><a href="#api-classes">Classes</a></li>
                             <li><a href="#api-modules">Modules</a></li>
                         </ul>
-
+                
                         <div id="api-tabview-filter">
                             <input type="search" id="api-filter" placeholder="Type to filter APIs">
                         </div>
-
+                
                         <div id="api-tabview-panel">
                             <ul id="api-classes" class="apis classes">
                                 <li><a href="../classes/OGDSM.html">OGDSM</a></li>
@@ -47,7 +47,7 @@
                                 <li><a href="../classes/OGDSM.mapLayerList.html">OGDSM.mapLayerList</a></li>
                                 <li><a href="../classes/OGDSM.visualization.html">OGDSM.visualization</a></li>
                             </ul>
-
+                
                             <ul id="api-modules" class="apis modules">
                                 <li><a href="../modules/OGDSM.applyOptions.html">OGDSM.applyOptions</a></li>
                                 <li><a href="../modules/OGDSM.indexedDB.html">OGDSM.indexedDB</a></li>
@@ -66,12 +66,12 @@
                         <input type="checkbox" id="api-show-inherited" checked>
                         Inherited
                     </label>
-
+            
                     <label for="api-show-protected">
                         <input type="checkbox" id="api-show-protected">
                         Protected
                     </label>
-
+            
                     <label for="api-show-private">
                         <input type="checkbox" id="api-show-private">
                         Private
@@ -80,19 +80,19 @@
                         <input type="checkbox" id="api-show-deprecated">
                         Deprecated
                     </label>
-
+            
                 </div>
-
+            
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
                         <h1 class="file-heading">File: ../js/openGDSMobile/OGDSM_chartVisualization.js</h1>
-
+                        
                         <div class="file">
                             <pre class="code prettyprint linenums">
                         /*jslint devel: true, vars : true, plusplus : true */
                         /*global $, jQuery, ol, OGDSM, d3, topojson*/
-
+                        
                         OGDSM.namesapce(&#x27;chartVisualization&#x27;);
                         (function (OGDSM) {
                             &quot;use strict&quot;;
@@ -135,7 +135,7 @@
                         	        }
                         	        this.defaults.max = (typeof (options.max) !== &#x27;undefined&#x27;) ? options.max : this.defaults.max;
                         	        this.defaults.min = (typeof (options.min) !== &#x27;undefined&#x27;) ? options.min : this.defaults.min;
-
+                        
                                 }
                             };
                             OGDSM.chartVisualization.prototype = {
@@ -149,13 +149,13 @@
                                     return null;
                                 },
                                 max : function () {
-
+                        
                                 }
                             };
                             return OGDSM.chartVisualization;
                         }(OGDSM));
-
-
+                        
+                        
                         /**
                          * 수직 막대 차트 시각화
                          * @method vBarChart
@@ -183,20 +183,20 @@
                             var chartSVG = d3.select(&#x27;#&#x27; + rootDiv).append(&#x27;svg&#x27;).attr(&#x27;id&#x27;, rootDiv + &#x27;Bar&#x27;)
                                 .attr(&#x27;width&#x27;, barWidth + margin.left + margin.right)
                                 .attr(&#x27;height&#x27;, barHeight + margin.top + margin.bottom);
-
+                        
                             var labelAxis = d3.svg.axis().scale(labels).orient(&#x27;bottom&#x27;);
                             var valueAxis = d3.svg.axis().scale(values).orient(&#x27;left&#x27;);
                             labels.domain(data.map(function (d) {
                                 return d[options.labelKey];
                             }));
                             values.domain([options.min, options.max]);
-
+                        
                             var bar = chartSVG.selectAll(&#x27;g&#x27;).data(data).enter()
                                 .append(&#x27;g&#x27;)
                                 .attr(&#x27;transform&#x27;, function (d, i) {
                                     return &#x27;translate(&#x27; + labels(d[options.labelKey]) + &#x27;, &#x27; + margin.top + &#x27;)&#x27;;
                                 });
-
+                        
                             var barRect = bar.append(&#x27;rect&#x27;)
                                 .attr(&#x27;y&#x27;, function (d) {
                                     return values(d[options.valueKey]);
@@ -213,7 +213,7 @@
                                     if ($.isArray(chartOptions.range) === true) {
                                         var z = 0;
                                         for (z = 0; z &lt; chartOptions.range.length; z += 1) {
-                                            if (d[options.valueKey] &lt;= chartOptions.range.range[z]) {
+                                            if (d[options.valueKey] &lt;= chartOptions.range[z]) {
                                                 return chartOptions.color[z];
                                             }
                                         }
@@ -226,7 +226,7 @@
                                 .attr(&#x27;height&#x27;, function (d) {
                                     return barHeight - values(d[options.valueKey]);
                                 });*/
-
+                        
                             bar.append(&#x27;text&#x27;)
                                 .attr(&#x27;x&#x27;, labels.rangeBand() + margin.left)
                                 .attr(&#x27;y&#x27;, function (d) {
@@ -237,7 +237,7 @@
                                 .text(function (d) {
                                     return d[options.valueKey];
                                 });
-
+                        
                             chartSVG.append(&#x27;g&#x27;).attr(&#x27;class&#x27;, &#x27;x axis&#x27;)
                                 .attr(&#x27;transform&#x27;, &#x27;translate(&#x27; + margin.left + &#x27;, &#x27; + (barHeight + margin.top) + &#x27;)&#x27;)
                                 .call(labelAxis)
@@ -251,7 +251,7 @@
                                 .attr(&#x27;transform&#x27;, function (d) {
                                     return &#x27;rotate(-65)&#x27;;
                                 });
-
+                        
                             chartSVG.append(&#x27;g&#x27;).attr(&#x27;class&#x27;, &#x27;y axis&#x27;)
                                     .attr(&#x27;transform&#x27;, &#x27;translate(&#x27; + margin.left + &#x27;, &#x27; + margin.top + &#x27;)&#x27;)
                                     .call(valueAxis)
@@ -265,9 +265,9 @@
                                     .style(&#x27;text-anchor&#x27;, &#x27;end&#x27;)
                                     .text(options.valueKey);
                         };
-
-
-
+                        
+                        
+                        
                         /**
                          * 수평 막대 차트 시각화
                          * @method hBarChart
@@ -295,7 +295,7 @@
                             var chartSVG = d3.select(&#x27;#&#x27; + rootDiv).append(&#x27;svg&#x27;).attr(&#x27;id&#x27;, rootDiv + &#x27;Bar&#x27;)
                                 .attr(&#x27;width&#x27;, barWidth + margin.left + margin.right)
                                 .attr(&#x27;height&#x27;, barHeight + margin.top + margin.bottom);
-
+                        
                             var labelAxis = d3.svg.axis().scale(labels).orient(&#x27;left&#x27;);
                             var valueAxis = d3.svg.axis().scale(values).orient(&#x27;bottom&#x27;);
                             labels.domain(data.map(function (d) {
@@ -324,7 +324,7 @@
                                     if ($.isArray(chartOptions.range) === true) {
                                         var z = 0;
                                         for (z = 0; z &lt; chartOptions.range.length; z += 1) {
-                                            if (d[options.valueKey] &lt;= chartOptions.range.range[z]) {
+                                            if (d[options.valueKey] &lt;= chartOptions.range[z]) {
                                                 return chartOptions.color[z];
                                             }
                                         }
@@ -342,7 +342,7 @@
                                 .text(function (d) {
                                     return d[options.valueKey];
                                 });
-
+                        
                             chartSVG.append(&#x27;g&#x27;).attr(&#x27;class&#x27;, &#x27;y axis&#x27;)
                                 .attr(&#x27;transform&#x27;, &#x27;translate(&#x27; + (margin.left) * 2 + &#x27;, &#x27; + labels.rangeBand() + &#x27;)&#x27;)
                                 .call(labelAxis)
@@ -366,9 +366,9 @@
                                     .style(&#x27;text-anchor&#x27;, &#x27;end&#x27;)
                                     .text(options.valueKey);
                         };
-
-
-
+                        
+                        
+                        
                         /**
                          * 라인 차트 시각화
                          * @method lineChart
@@ -400,14 +400,14 @@
                             var chartSVG = d3.select(&#x27;#&#x27; + rootDiv).append(&#x27;svg&#x27;).attr(&#x27;id&#x27;, rootDiv + &#x27;Bar&#x27;)
                                 .attr(&#x27;width&#x27;, barWidth + margin.left + margin.right)
                                 .attr(&#x27;height&#x27;, barHeight + margin.top + margin.bottom);
-
+                        
                             var labelAxis = d3.svg.axis().scale(labels).orient(&#x27;bottom&#x27;);
                             var valueAxis = d3.svg.axis().scale(values).orient(&#x27;left&#x27;);
                             labels.domain(data.map(function (d) {
                                 return d[options.labelKey];
                             }));
                             values.domain([options.min, options.max]);
-
+                        
                             var lineXY = d3.svg.line()
                                 .x(function (d, i) {
                                     return labels(d[options.labelKey]);
@@ -416,7 +416,7 @@
                                     return values(d[options.valueKey]);
                                 });
                             //var bar = chartSVG.append(&#x27;path&#x27;).attr(&#x27;d&#x27;, lineFunc(
-
+                        
                             chartSVG.append(&#x27;path&#x27;).attr(&#x27;d&#x27;, lineXY(data))
                                 .attr(&#x27;transform&#x27;, &#x27;translate(&#x27; + margin.left + &#x27;, &#x27; + margin.top + &#x27;)&#x27;)
                                 .attr(&#x27;stroke&#x27;, chartOptions.stroke)
@@ -425,7 +425,7 @@
                             var circleText = chartSVG.selectAll(&#x27;g&#x27;).data(data).enter()
                                 .append(&#x27;g&#x27;)
                                 .attr(&#x27;transform&#x27;, &#x27;translate(&#x27; + margin.left + &#x27;, &#x27; + margin.top + &#x27;)&#x27;);
-
+                        
                             circleText.append(&#x27;circle&#x27;)
                                 .attr(&#x27;cy&#x27;, function (d, i) {
                                     return values(d[options.valueKey]);
@@ -474,8 +474,8 @@
                                 .style(&#x27;text-anchor&#x27;, &#x27;end&#x27;)
                                 .text(options.valueKey);
                         };
-
-
+                        
+                        
                         /**
                          * 영역 차트 시각화
                          * @method areaChart
@@ -504,14 +504,14 @@
                             var chartSVG = d3.select(&#x27;#&#x27; + rootDiv).append(&#x27;svg&#x27;).attr(&#x27;id&#x27;, rootDiv + &#x27;Bar&#x27;)
                                 .attr(&#x27;width&#x27;, barWidth + margin.left + margin.right)
                                 .attr(&#x27;height&#x27;, barHeight + margin.top + margin.bottom);
-
+                        
                             var labelAxis = d3.svg.axis().scale(labels).orient(&#x27;bottom&#x27;);
                             var valueAxis = d3.svg.axis().scale(values).orient(&#x27;left&#x27;);
                             labels.domain(data.map(function (d) {
                                 return d[options.labelKey];
                             }));
                             values.domain([options.min, options.max]);
-
+                        
                             var areaXY = d3.svg.area()
                                 .x(function (d, i) {
                                     return labels(d[options.labelKey]);
@@ -524,12 +524,12 @@
                                 .attr(&#x27;transform&#x27;, &#x27;translate(&#x27; + margin.left + &#x27;, &#x27; + margin.top + &#x27;)&#x27;)
                                 .attr(&#x27;class&#x27;, &#x27;area&#x27;)
                                 .attr(&#x27;fill&#x27;, chartOptions.fill);
-
-
+                        
+                        
                             var circleText = chartSVG.selectAll(&#x27;g&#x27;).data(data).enter()
                                 .append(&#x27;g&#x27;)
                                 .attr(&#x27;transform&#x27;, &#x27;translate(&#x27; + margin.left + &#x27;, &#x27; + margin.top + &#x27;)&#x27;);
-
+                        
                             circleText.append(&#x27;circle&#x27;)
                                 .attr(&#x27;cy&#x27;, function (d, i) {
                                     return values(d[options.valueKey]);
@@ -552,7 +552,7 @@
                                 .text(function (d) {
                                     return d[options.valueKey];
                                 });
-
+                        
                             chartSVG.append(&#x27;g&#x27;).attr(&#x27;class&#x27;, &#x27;x axis&#x27;)
                                 .attr(&#x27;transform&#x27;, &#x27;translate(&#x27; + margin.left + &#x27;, &#x27; + (barHeight + margin.top) + &#x27;)&#x27;)
                                 .call(labelAxis)
@@ -566,7 +566,7 @@
                                 .attr(&#x27;transform&#x27;, function (d) {
                                     return &#x27;rotate(-65)&#x27;;
                                 });
-
+                        
                             chartSVG.append(&#x27;g&#x27;).attr(&#x27;class&#x27;, &#x27;y axis&#x27;)
                                     .attr(&#x27;transform&#x27;, &#x27;translate(&#x27; + margin.left + &#x27;, &#x27; + margin.top + &#x27;)&#x27;)
                                     .call(valueAxis)
@@ -580,9 +580,9 @@
                                     .style(&#x27;text-anchor&#x27;, &#x27;end&#x27;)
                                     .text(options.valueKey);
                         };
-
-
-
+                        
+                        
+                        
                         /**
                          * 라인 차트 시각화
                          * @method lineChart
@@ -614,14 +614,14 @@
                             var chartSVG = d3.select(&#x27;#&#x27; + rootDiv).append(&#x27;svg&#x27;).attr(&#x27;id&#x27;, rootDiv + &#x27;Bar&#x27;)
                                 .attr(&#x27;width&#x27;, barWidth + margin.left + margin.right)
                                 .attr(&#x27;height&#x27;, barHeight + margin.top + margin.bottom);
-
+                        
                             var labelAxis = d3.svg.axis().scale(labels).orient(&#x27;bottom&#x27;);
                             var valueAxis = d3.svg.axis().scale(values).orient(&#x27;left&#x27;);
                             labels.domain(data.map(function (d) {
                                 return d[options.labelKey];
                             }));
                             values.domain([options.min, options.max]);
-
+                        
                             var lineXY = d3.svg.line()
                                 .x(function (d, i) {
                                     return labels(d[options.labelKey]);
@@ -630,7 +630,7 @@
                                     return values(d[options.valueKey]);
                                 });
                             //var bar = chartSVG.append(&#x27;path&#x27;).attr(&#x27;d&#x27;, lineFunc(
-
+                        
                             chartSVG.append(&#x27;path&#x27;).attr(&#x27;d&#x27;, lineXY(data))
                                 .attr(&#x27;transform&#x27;, &#x27;translate(&#x27; + margin.left + &#x27;, &#x27; + margin.top + &#x27;)&#x27;)
                                 .attr(&#x27;stroke&#x27;, chartOptions.stroke)
@@ -639,7 +639,7 @@
                             var circleText = chartSVG.selectAll(&#x27;g&#x27;).data(data).enter()
                                 .append(&#x27;g&#x27;)
                                 .attr(&#x27;transform&#x27;, &#x27;translate(&#x27; + margin.left + &#x27;, &#x27; + margin.top + &#x27;)&#x27;);
-
+                        
                             circleText.append(&#x27;circle&#x27;)
                                 .attr(&#x27;cy&#x27;, function (d, i) {
                                     return values(d[options.valueKey]);
@@ -688,8 +688,8 @@
                                 .style(&#x27;text-anchor&#x27;, &#x27;end&#x27;)
                                 .text(options.valueKey);
                         };
-
-
+                        
+                        
                         OGDSM.chartVisualization.prototype.kMap = function (divId, serverAddr, geodata, center_lat, center_lon, map_scale) {
                             &#x27;use strict&#x27;;
                             var rootDiv = $(&#x27;#&#x27; + divId),
@@ -704,7 +704,7 @@
                                 dataType : &#x27;json&#x27;,
                                 success : function (msg) {
                                     var topology = JSON.parse(msg.data);
-
+                        
                                     var svg = d3.select(&#x27;#&#x27; + divId)
                                                 .append(&#x27;svg&#x27;)
                                                 .attr(&quot;width&quot;, 500)
@@ -715,7 +715,7 @@
                                     var path = d3.geo.path()
                                                     .projection(projection);
                                     var g = svg.append(&quot;g&quot;);
-
+                        
                                     if (geodata === &quot;SIDO&quot;) {
                                         g.selectAll(&quot;path&quot;)
                                             .data(topojson.feature(topology, topology.objects.All_TL_SCCO_CTPRVN_4326).features)
@@ -745,7 +745,7 @@
                                 }
                             });
                         };
-
+                        
                         /**
                          * 파이 차트 시각화
                          * @method areaChart
@@ -774,24 +774,24 @@
                                 .attr(&#x27;width&#x27;, barWidth + margin.left + margin.right)
                                 .attr(&#x27;height&#x27;, barHeight + margin.top + margin.bottom)
                                 .attr(&#x27;transform&#x27;, &#x27;translate(&#x27; + barWidth / 2 + &#x27;,&#x27; + barHeight / 2 + &#x27;)&#x27;);
-
+                        
                             var radius = Math.min(barWidth, barHeight) / 2;
                             var arc = d3.svg.arc()
                                 .outerRadius(radius - 10)
                                 .innerRadius(0);
-
+                        
                             var pie = d3.layout.pie()
                                 .sort(null)
                                 .value(function (d) {
                                     return d[options.valueKey];
                                 });
-
+                        
                             var group = chartSVG.selectAll(&#x27;.arc&#x27;)
                                 .data(pie(data))
                                 .enter()
                                 .append(&#x27;g&#x27;)
                                 .attr(&#x27;class&#x27;, &#x27;arc&#x27;);
-
+                        
                             group.append(&#x27;path&#x27;)
                                 .attr(&#x27;d&#x27;, arc)
                                 .style(&#x27;fill&#x27;, function (d) {
@@ -808,7 +808,7 @@
                                 });
                         };
                         */
-
+                        
                             </pre>
                         </div>
                     </div>

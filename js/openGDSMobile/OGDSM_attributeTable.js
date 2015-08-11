@@ -55,8 +55,8 @@ OGDSM.namesapce('attributeTable');
         /**
          * 현재 선택 객체 설정 (테이블)
          * @method setSelectObj
-         * @param {Object}
-         */
+         * @param {Object} obj - 테이블 객체
+         **/
         setSelectObj : function (obj) {
             this.attrSelected = obj;
         },
@@ -140,7 +140,7 @@ OGDSM.attributeTable.prototype.addAttribute = function (layerName) {
         this.featureOverlay = featureOverlay;
     }
     function tableEvent(evtLayerName) {
-        /**********tr select ****************/
+        /*tr select*/
         $('#attrTable' + evtLayerName + ' tbody').on('click', 'tr', function () {
             var i = 0;
             tableObj.$('tr.selected').removeClass('selected');
@@ -162,7 +162,7 @@ OGDSM.attributeTable.prototype.addAttribute = function (layerName) {
             }
         });
 
-        /**********page change **************/
+        /*page change*/
         $('#attrTable' + evtLayerName).on('page.dt', function (e, settings) {
             setTimeout(function () {
                 attrObj.editAttribute(attrObj.getEditMode());
@@ -172,12 +172,12 @@ OGDSM.attributeTable.prototype.addAttribute = function (layerName) {
 
     function indexedDBEvent(layerName, data) {
         OGDSM.indexedDB('webMappingDB', {
-            insertKey : layerName,
+            insertKey : layerName + '--Local',
             insertData : data
         });
     }
 
-    /******* Add tab ***********/
+    /*Add tab*/
     tabs.prepend('<li id="attrTab' + layerName + '" style="float:left;">' +
                  '<a href="#" style="' + aBaseCSS + '">' + layerName + '</a></li>');
     $('#' + rootDiv + 'Tab a').css('background', backgroundNotSelected);
@@ -185,61 +185,103 @@ OGDSM.attributeTable.prototype.addAttribute = function (layerName) {
     $('#attrTab' + layerName + ' a').css('background', backgroundSelected);
     $('#attrTab' + layerName + ' a').css('color', colorSelected);
 
-    /******* Add Content ***********/
+    /*Add Content*/
     var attrDivHeight = $('#' + rootDiv + 'Contents').height();
     contents.prepend('<div id="attrContent' + layerName + '" class="attrTable">' +
                      '<table id="attrTable' + layerName + '" class="display compact" cellspacing="0" width="100%">' +
                      '<thead style="width:100%;"><tr></tr></thead>' +
                      '<tbody style="text-align:center"></tbody></table></div>');
 
-    /******* Event *******************/
+    /*Event*/
     $('.attrTable').hide();
     $('#attrContent' + layerName).css('display', 'block');
     $('#attrTab' + layerName + ' a').bind('click', tabClickEvent);
 
     var parm = {};
     parm.tableName = layerName;
-    $.ajax({
-        type : 'POST',
-        url : this.addr,
-        data : JSON.stringify(parm),
-        contentType : "application/json;charset=UTF-8",
-        dataType : 'json',
-        success : function (msg) {
-            var attrContents = msg.data, i = 0;
-            if (attrContents === null) {
-                console.log('Not attribute information');
-                return -1;
+
+
+    if (layerName.split('--')[1]) {
+        OGDSM.indexedDB('webMappingDB', {
+            type : 'search',
+            storeName : 'webMappingDB',
+            searchKey : layerName,
+            success : function (attrContents) {
+                console.log(attrContents);
+                var i = 0;
+                if (attrContents === null) {
+                    console.log('Not attribute information');
+                    return -1;
+                }
+                var tableDiv = $('#attrContent' + layerName),
+                    tableTh = tableDiv.find('thead').find('tr'),
+                    tableBody = tableDiv.find('tbody');
+                for (i = 0; i < attrContents.length; i++) {
+                    tableBody.append('<tr>');
+                    createTableCol(attrContents[i], i, tableBody, tableTh);
+                    tableBody.append('</tr>');
+                }
+
+                var thHeight = $('thead').height() + 7;
+                tableObj = $('#attrTable' + layerName).DataTable({
+                    'bFilter' : false,
+                    'bLengthChange' : 10,
+                    'bPaginate' : true,
+                    "dom": 'rt<"bottom"ip><"clear">'
+                });
+
+
+                tableEvent(layerName);
+            },
+            fail : function (result) {
+
             }
-            var tableDiv = $('#attrContent' + layerName),
-                tableTh = tableDiv.find('thead').find('tr'),
-                tableBody = tableDiv.find('tbody');
-            for (i = 0; i < attrContents.length; i++) {
-                tableBody.append('<tr>');
-                createTableCol(attrContents[i], i, tableBody, tableTh);
-                tableBody.append('</tr>');
+        });
+
+    } else {
+        $.ajax({
+            type : 'POST',
+            url : this.addr,
+            data : JSON.stringify(parm),
+            contentType : "application/json;charset=UTF-8",
+            dataType : 'json',
+            success : function (msg) {
+                var attrContents = msg.data, i = 0;
+                if (attrContents === null) {
+                    console.log('Not attribute information');
+                    return -1;
+                }
+                var tableDiv = $('#attrContent' + layerName),
+                    tableTh = tableDiv.find('thead').find('tr'),
+                    tableBody = tableDiv.find('tbody');
+                for (i = 0; i < attrContents.length; i++) {
+                    tableBody.append('<tr>');
+                    createTableCol(attrContents[i], i, tableBody, tableTh);
+                    tableBody.append('</tr>');
+                }
+
+                var thHeight = $('thead').height() + 7;
+                tableObj = $('#attrTable' + layerName).DataTable({
+                    'bFilter' : false,
+                    'bLengthChange' : 10,
+                    'bPaginate' : true,
+                    "dom": 'rt<"bottom"ip><"clear">'
+                });
+
+
+                tableEvent(layerName);
+
+
+                if (indexedDB_SW === true) {
+                    indexedDBEvent(layerName, attrContents);
+                }
+
+            },
+            error : function (error) {
+                console.log(error);
             }
-
-            var thHeight = $('thead').height() + 7;
-            tableObj = $('#attrTable' + layerName).DataTable({
-                'bFilter' : false,
-                'bLengthChange' : 10,
-                'bPaginate' : true,
-                "dom": 'rt<"bottom"ip><"clear">'
-            });
-
-
-            tableEvent(layerName);
-
-            if (indexedDB_SW === true) {
-                indexedDBEvent(layerName, attrContents);
-            }
-
-        },
-        error : function (error) {
-            console.log(error);
-        }
-    });
+        });
+    }
 };
 
 /**
@@ -260,6 +302,7 @@ OGDSM.attributeTable.prototype.removeAttribute = function (layerName) {
 OGDSM.attributeTable.prototype.editAttribute = function (sw) {
     'use strict';
     var textInput = $('.editSW');
+    var thisObj = this;
     function editDataResult(src, dst) {
         console.log('Update data');
     }
@@ -275,7 +318,7 @@ OGDSM.attributeTable.prototype.editAttribute = function (sw) {
                 return -1;
             }
             searchData[$(this).attr('data-key')] = oldValue;
-            if (this.indexedDB_SW === true) {
+            if (thisObj.indexedDB_SW === true) {
                 OGDSM.indexedDB('webMappingDB', {
                     type : 'edit',
                     searchKey : $(this).attr('data-label'),

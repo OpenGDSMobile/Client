@@ -18,7 +18,7 @@
             <h1 class="blue-main-title"></h1>
         </div>
         <div class="yui3-u-1-4 version project-version">
-            API Docs for:
+            API Docs for: 
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -32,11 +32,11 @@
                             <li><a href="#api-classes">Classes</a></li>
                             <li><a href="#api-modules">Modules</a></li>
                         </ul>
-
+                
                         <div id="api-tabview-filter">
                             <input type="search" id="api-filter" placeholder="Type to filter APIs">
                         </div>
-
+                
                         <div id="api-tabview-panel">
                             <ul id="api-classes" class="apis classes">
                                 <li><a href="../classes/OGDSM.html">OGDSM</a></li>
@@ -47,7 +47,7 @@
                                 <li><a href="../classes/OGDSM.mapLayerList.html">OGDSM.mapLayerList</a></li>
                                 <li><a href="../classes/OGDSM.visualization.html">OGDSM.visualization</a></li>
                             </ul>
-
+                
                             <ul id="api-modules" class="apis modules">
                                 <li><a href="../modules/OGDSM.applyOptions.html">OGDSM.applyOptions</a></li>
                                 <li><a href="../modules/OGDSM.indexedDB.html">OGDSM.indexedDB</a></li>
@@ -66,12 +66,12 @@
                         <input type="checkbox" id="api-show-inherited" checked>
                         Inherited
                     </label>
-
+            
                     <label for="api-show-protected">
                         <input type="checkbox" id="api-show-protected">
                         Protected
                     </label>
-
+            
                     <label for="api-show-private">
                         <input type="checkbox" id="api-show-private">
                         Private
@@ -80,19 +80,19 @@
                         <input type="checkbox" id="api-show-deprecated">
                         Deprecated
                     </label>
-
+            
                 </div>
-
+            
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
                         <h1 class="file-heading">File: ../js/openGDSMobile/OGDSM_attributeTable.js</h1>
-
+                        
                         <div class="file">
                             <pre class="code prettyprint linenums">
                         /*jslint devel: true, vars : true plusplus : true*/
                         /*global $, jQuery, ol, OGDSM, mappingDB*/
-
+                        
                         OGDSM.namesapce(&#x27;attributeTable&#x27;);
                         (function (OGDSM) {
                             &#x27;use strict&#x27;;
@@ -118,16 +118,16 @@
                                     ulCSS = &#x27;list-style: none; position: relative; margin: 0px; z-index: 2; top: 1px; display: table; border-left: 1px solid #f5ab36;&#x27;;
                                 ulElement.id = rootDiv + &#x27;Tab&#x27;;
                                 ulElement.style.cssText = ulCSS;
-
+                        
                                 contentsElement.id = rootDiv + &#x27;Contents&#x27;;
                                 contentsElement.style.cssText = contentsCSS;
-
+                        
                                 rootElement.appendChild(ulElement);
                                 rootElement.appendChild(contentsElement);
                             };
                             OGDSM.attributeTable.prototype = {
                                 constructor : OGDSM.attributeTable,
-
+                        
                                 /**
                                  * 수정 모드 여부 받기
                                  * @method getEidtMode
@@ -147,8 +147,8 @@
                                 /**
                                  * 현재 선택 객체 설정 (테이블)
                                  * @method setSelectObj
-                                 * @param {Object}
-                                 */
+                                 * @param {Object} obj - 테이블 객체
+                                 **/
                                 setSelectObj : function (obj) {
                                     this.attrSelected = obj;
                                 },
@@ -166,7 +166,7 @@
                             };
                             return OGDSM.attributeTable;
                         }(OGDSM));
-
+                        
                         /**
                          * 속성 정보 추가
                          * @method addAttribute
@@ -232,12 +232,12 @@
                                 this.featureOverlay = featureOverlay;
                             }
                             function tableEvent(evtLayerName) {
-                                /**********tr select ****************/
+                                /*tr select*/
                                 $(&#x27;#attrTable&#x27; + evtLayerName + &#x27; tbody&#x27;).on(&#x27;click&#x27;, &#x27;tr&#x27;, function () {
                                     var i = 0;
                                     tableObj.$(&#x27;tr.selected&#x27;).removeClass(&#x27;selected&#x27;);
                                     $(this).addClass(&#x27;selected&#x27;);
-
+                        
                                     // selected layer color change...
                                     if (visualObj !== null) {
                                         var eachFeatures = visualObj.layerCheck(evtLayerName).getSource().getFeatures();
@@ -253,87 +253,129 @@
                                         attrObj.getolSelectObj().getFeatures().clear();
                                     }
                                 });
-
-                                /**********page change **************/
+                        
+                                /*page change*/
                                 $(&#x27;#attrTable&#x27; + evtLayerName).on(&#x27;page.dt&#x27;, function (e, settings) {
                                     setTimeout(function () {
                                         attrObj.editAttribute(attrObj.getEditMode());
                                     }, 200);
                                 });
                             }
-
+                        
                             function indexedDBEvent(layerName, data) {
                                 OGDSM.indexedDB(&#x27;webMappingDB&#x27;, {
-                                    insertKey : layerName,
+                                    insertKey : layerName + &#x27;--Local&#x27;,
                                     insertData : data
                                 });
                             }
-
-                            /******* Add tab ***********/
+                        
+                            /*Add tab*/
                             tabs.prepend(&#x27;&lt;li id=&quot;attrTab&#x27; + layerName + &#x27;&quot; style=&quot;float:left;&quot;&gt;&#x27; +
                                          &#x27;&lt;a href=&quot;#&quot; style=&quot;&#x27; + aBaseCSS + &#x27;&quot;&gt;&#x27; + layerName + &#x27;&lt;/a&gt;&lt;/li&gt;&#x27;);
                             $(&#x27;#&#x27; + rootDiv + &#x27;Tab a&#x27;).css(&#x27;background&#x27;, backgroundNotSelected);
                             $(&#x27;#attrTab&#x27; + layerName + &#x27; a&#x27;).css(&#x27;border-bottom&#x27;, borderSelected);
                             $(&#x27;#attrTab&#x27; + layerName + &#x27; a&#x27;).css(&#x27;background&#x27;, backgroundSelected);
                             $(&#x27;#attrTab&#x27; + layerName + &#x27; a&#x27;).css(&#x27;color&#x27;, colorSelected);
-
-                            /******* Add Content ***********/
+                        
+                            /*Add Content*/
                             var attrDivHeight = $(&#x27;#&#x27; + rootDiv + &#x27;Contents&#x27;).height();
                             contents.prepend(&#x27;&lt;div id=&quot;attrContent&#x27; + layerName + &#x27;&quot; class=&quot;attrTable&quot;&gt;&#x27; +
                                              &#x27;&lt;table id=&quot;attrTable&#x27; + layerName + &#x27;&quot; class=&quot;display compact&quot; cellspacing=&quot;0&quot; width=&quot;100%&quot;&gt;&#x27; +
                                              &#x27;&lt;thead style=&quot;width:100%;&quot;&gt;&lt;tr&gt;&lt;/tr&gt;&lt;/thead&gt;&#x27; +
                                              &#x27;&lt;tbody style=&quot;text-align:center&quot;&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/div&gt;&#x27;);
-
-                            /******* Event *******************/
+                        
+                            /*Event*/
                             $(&#x27;.attrTable&#x27;).hide();
                             $(&#x27;#attrContent&#x27; + layerName).css(&#x27;display&#x27;, &#x27;block&#x27;);
                             $(&#x27;#attrTab&#x27; + layerName + &#x27; a&#x27;).bind(&#x27;click&#x27;, tabClickEvent);
-
+                        
                             var parm = {};
                             parm.tableName = layerName;
-                            $.ajax({
-                                type : &#x27;POST&#x27;,
-                                url : this.addr,
-                                data : JSON.stringify(parm),
-                                contentType : &quot;application/json;charset=UTF-8&quot;,
-                                dataType : &#x27;json&#x27;,
-                                success : function (msg) {
-                                    var attrContents = msg.data, i = 0;
-                                    if (attrContents === null) {
-                                        console.log(&#x27;Not attribute information&#x27;);
-                                        return -1;
+                            
+                            
+                            if (layerName.split(&#x27;--&#x27;)[1]) {
+                                OGDSM.indexedDB(&#x27;webMappingDB&#x27;, {
+                                    type : &#x27;search&#x27;,
+                                    storeName : &#x27;webMappingDB&#x27;,
+                                    searchKey : layerName,
+                                    success : function (attrContents) {
+                                        console.log(attrContents);
+                                        var i = 0;
+                                        if (attrContents === null) {
+                                            console.log(&#x27;Not attribute information&#x27;);
+                                            return -1;
+                                        }
+                                        var tableDiv = $(&#x27;#attrContent&#x27; + layerName),
+                                            tableTh = tableDiv.find(&#x27;thead&#x27;).find(&#x27;tr&#x27;),
+                                            tableBody = tableDiv.find(&#x27;tbody&#x27;);
+                                        for (i = 0; i &lt; attrContents.length; i++) {
+                                            tableBody.append(&#x27;&lt;tr&gt;&#x27;);
+                                            createTableCol(attrContents[i], i, tableBody, tableTh);
+                                            tableBody.append(&#x27;&lt;/tr&gt;&#x27;);
+                                        }
+                        
+                                        var thHeight = $(&#x27;thead&#x27;).height() + 7;
+                                        tableObj = $(&#x27;#attrTable&#x27; + layerName).DataTable({
+                                            &#x27;bFilter&#x27; : false,
+                                            &#x27;bLengthChange&#x27; : 10,
+                                            &#x27;bPaginate&#x27; : true,
+                                            &quot;dom&quot;: &#x27;rt&lt;&quot;bottom&quot;ip&gt;&lt;&quot;clear&quot;&gt;&#x27;
+                                        });
+                        
+                        
+                                        tableEvent(layerName);
+                                    },
+                                    fail : function (result) {
+                        
                                     }
-                                    var tableDiv = $(&#x27;#attrContent&#x27; + layerName),
-                                        tableTh = tableDiv.find(&#x27;thead&#x27;).find(&#x27;tr&#x27;),
-                                        tableBody = tableDiv.find(&#x27;tbody&#x27;);
-                                    for (i = 0; i &lt; attrContents.length; i++) {
-                                        tableBody.append(&#x27;&lt;tr&gt;&#x27;);
-                                        createTableCol(attrContents[i], i, tableBody, tableTh);
-                                        tableBody.append(&#x27;&lt;/tr&gt;&#x27;);
+                                });
+                                
+                            } else {
+                                $.ajax({
+                                    type : &#x27;POST&#x27;,
+                                    url : this.addr,
+                                    data : JSON.stringify(parm),
+                                    contentType : &quot;application/json;charset=UTF-8&quot;,
+                                    dataType : &#x27;json&#x27;,
+                                    success : function (msg) {
+                                        var attrContents = msg.data, i = 0;
+                                        if (attrContents === null) {
+                                            console.log(&#x27;Not attribute information&#x27;);
+                                            return -1;
+                                        }
+                                        var tableDiv = $(&#x27;#attrContent&#x27; + layerName),
+                                            tableTh = tableDiv.find(&#x27;thead&#x27;).find(&#x27;tr&#x27;),
+                                            tableBody = tableDiv.find(&#x27;tbody&#x27;);
+                                        for (i = 0; i &lt; attrContents.length; i++) {
+                                            tableBody.append(&#x27;&lt;tr&gt;&#x27;);
+                                            createTableCol(attrContents[i], i, tableBody, tableTh);
+                                            tableBody.append(&#x27;&lt;/tr&gt;&#x27;);
+                                        }
+                        
+                                        var thHeight = $(&#x27;thead&#x27;).height() + 7;
+                                        tableObj = $(&#x27;#attrTable&#x27; + layerName).DataTable({
+                                            &#x27;bFilter&#x27; : false,
+                                            &#x27;bLengthChange&#x27; : 10,
+                                            &#x27;bPaginate&#x27; : true,
+                                            &quot;dom&quot;: &#x27;rt&lt;&quot;bottom&quot;ip&gt;&lt;&quot;clear&quot;&gt;&#x27;
+                                        });
+                        
+                        
+                                        tableEvent(layerName);
+                        
+                        
+                                        if (indexedDB_SW === true) {
+                                            indexedDBEvent(layerName, attrContents);
+                                        }
+                        
+                                    },
+                                    error : function (error) {
+                                        console.log(error);
                                     }
-
-                                    var thHeight = $(&#x27;thead&#x27;).height() + 7;
-                                    tableObj = $(&#x27;#attrTable&#x27; + layerName).DataTable({
-                                        &#x27;bFilter&#x27; : false,
-                                        &#x27;bLengthChange&#x27; : 10,
-                                        &#x27;bPaginate&#x27; : true,
-                                        &quot;dom&quot;: &#x27;rt&lt;&quot;bottom&quot;ip&gt;&lt;&quot;clear&quot;&gt;&#x27;
-                                    });
-
-
-                                    tableEvent(layerName);
-
-                                    if (indexedDB_SW === true) {
-                                        indexedDBEvent(layerName, attrContents);
-                                    }
-
-                                },
-                                error : function (error) {
-                                    console.log(error);
-                                }
-                            });
+                                });
+                            }
                         };
-
+                        
                         /**
                          * 속성 정보 삭제
                          * @method removeAttribute
@@ -352,6 +394,7 @@
                         OGDSM.attributeTable.prototype.editAttribute = function (sw) {
                             &#x27;use strict&#x27;;
                             var textInput = $(&#x27;.editSW&#x27;);
+                            var thisObj = this;
                             function editDataResult(src, dst) {
                                 console.log(&#x27;Update data&#x27;);
                             }
@@ -367,7 +410,7 @@
                                         return -1;
                                     }
                                     searchData[$(this).attr(&#x27;data-key&#x27;)] = oldValue;
-                                    if (this.indexedDB_SW === true) {
+                                    if (thisObj.indexedDB_SW === true) {
                                         OGDSM.indexedDB(&#x27;webMappingDB&#x27;, {
                                             type : &#x27;edit&#x27;,
                                             searchKey : $(this).attr(&#x27;data-label&#x27;),
@@ -385,7 +428,7 @@
                                 this.editMode = false;
                             }
                         };
-
+                        
                         /**
                          * 속성 정보 검색
                          * @method selectAttribute
@@ -407,7 +450,7 @@
                                     return false;
                                 }
                             });
-
+                        
                             tableObj.columns(searchIdx).every(function () {
                                 $(this.data()).each(function (i, data) {
                                     if ($(this).val() === value) {
@@ -418,7 +461,7 @@
                             console.log(&#x27;search Attr: &#x27; + resultIdx);
                             return resultIdx;
                         };
-
+                        
                         /**
                          * 속성 정보 선택
                          * @method selectAttribute
@@ -446,6 +489,7 @@
                                 this.attrSelected = false;
                             }
                         };
+                        
                             </pre>
                         </div>
                     </div>

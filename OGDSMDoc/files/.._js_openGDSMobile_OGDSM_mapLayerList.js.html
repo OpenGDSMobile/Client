@@ -18,7 +18,7 @@
             <h1 class="blue-main-title"></h1>
         </div>
         <div class="yui3-u-1-4 version project-version">
-            API Docs for:
+            API Docs for: 
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -32,11 +32,11 @@
                             <li><a href="#api-classes">Classes</a></li>
                             <li><a href="#api-modules">Modules</a></li>
                         </ul>
-
+                
                         <div id="api-tabview-filter">
                             <input type="search" id="api-filter" placeholder="Type to filter APIs">
                         </div>
-
+                
                         <div id="api-tabview-panel">
                             <ul id="api-classes" class="apis classes">
                                 <li><a href="../classes/OGDSM.html">OGDSM</a></li>
@@ -47,7 +47,7 @@
                                 <li><a href="../classes/OGDSM.mapLayerList.html">OGDSM.mapLayerList</a></li>
                                 <li><a href="../classes/OGDSM.visualization.html">OGDSM.visualization</a></li>
                             </ul>
-
+                
                             <ul id="api-modules" class="apis modules">
                                 <li><a href="../modules/OGDSM.applyOptions.html">OGDSM.applyOptions</a></li>
                                 <li><a href="../modules/OGDSM.indexedDB.html">OGDSM.indexedDB</a></li>
@@ -66,12 +66,12 @@
                         <input type="checkbox" id="api-show-inherited" checked>
                         Inherited
                     </label>
-
+            
                     <label for="api-show-protected">
                         <input type="checkbox" id="api-show-protected">
                         Protected
                     </label>
-
+            
                     <label for="api-show-private">
                         <input type="checkbox" id="api-show-private">
                         Private
@@ -80,20 +80,20 @@
                         <input type="checkbox" id="api-show-deprecated">
                         Deprecated
                     </label>
-
+            
                 </div>
-
+            
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
                         <h1 class="file-heading">File: ../js/openGDSMobile/OGDSM_mapLayerList.js</h1>
-
+                        
                         <div class="file">
                             <pre class="code prettyprint linenums">
                         /*jslint devel: true, vars : true plusplus : true*/
                         /*global $, jQuery, ol, OGDSM, d3, Sortable*/
                         OGDSM.namesapce(&#x27;mapLayerList&#x27;);
-
+                        
                         (function (OGDSM) {
                             &quot;use strict&quot;;
                             var arrlayerObjs = [], arrlabels = [];
@@ -151,11 +151,11 @@
                                     listUlCSS = &#x27;list-style:none; padding:0; margin:0;&#x27;,
                                     listSlideHideCSS = &#x27; left: &#x27; + -(defaults.listWidthSize) + &#x27;px; transition: left 0.1s ease;&#x27;,
                                     listSlideShowCSS = &#x27; left: 0px; transition: left 0.1s ease;&#x27;;
-
+                        
                                 var buttonSlideShowCSS = &#x27;left:&#x27; + (defaults.listWidthSize) + &#x27;px; &#x27; + &#x27;transition : background 0.1s ease, left 0.1s ease;&#x27;,
                                     buttonSlideHideCSS = &#x27;left:&#x27; + (defaults.listWidthSize - 25) + &#x27;px; &#x27; + &#x27;transition : background 0.1s ease, left 0.1s ease;&#x27;;
-
-
+                        
+                        
                                 handleList = function (e) {
                                     if (this.value === &#x27;hide&#x27;) {
                                         this.value = &#x27;show&#x27;;
@@ -177,24 +177,24 @@
                                 }
                                 buttonElement.addEventListener(&#x27;click&#x27;, handleList, false);
                                 buttonElement.addEventListener(&#x27;touchstart&#x27;, handleList, false);
-
-
-
+                        
+                        
+                        
                                 listTitleElement.style.cssText = listTitleCSS;
                                 listTitleElement.innerHTML = defaults.titleHTML;
                                 listUlElement.id = listDiv + &#x27;Contents&#x27;;
                                 listUlElement.style.cssText = listUlCSS;
-
-
+                        
+                        
                                 listRootElement.id = listDiv + &#x27;Root&#x27;;
                                 listRootElement.style.cssText = listRootCSS;
                                 listRootElement.appendChild(listTitleElement);
                                 listRootElement.appendChild(listUlElement);
-
+                        
                                 rootElement.style.cssText = rootElementCSS + listSlideHideCSS;
                                 rootElement.appendChild(buttonElement);
                                 rootElement.appendChild(listRootElement);
-
+                        
                                 $(&#x27;#&#x27; + listDiv + &#x27;Button&#x27;).trigger(&#x27;create&#x27;);
                                 this.ulObj = Sortable.create(document.getElementById(this.listDiv + &#x27;Contents&#x27;), {
                                     animation: 150,
@@ -232,7 +232,7 @@
                                         thisObj.setLabels(labels);
                                     }
                                 });
-
+                        
                             };
                             OGDSM.mapLayerList.prototype = {
                                 constructor : OGDSM.mapLayerList,
@@ -360,13 +360,13 @@
                                 labelCanvas.strokeRect(5, 5, 20, 20);
                             }
                             $(&#x27;#layer&#x27; + label).trigger(&#x27;create&#x27;);
-                            $(&#x27;#&#x27; + label + &#x27;slider&#x27;).bind(&#x27;change&#x27;, sliderEvent);
-                            $(&#x27;#&#x27; + label + &#x27;delete&#x27;).bind(&#x27;click&#x27;, deleteEvent);
-                            $(&#x27;input[name=listCheckBox]&#x27;).bind(&#x27;click&#x27;, checkBoxEvent);
+                            $(&#x27;#&#x27; + label + &#x27;slider&#x27;).on(&#x27;change&#x27;, sliderEvent);
+                            $(&#x27;#&#x27; + label + &#x27;delete&#x27;).on(&#x27;click&#x27;, deleteEvent);
+                            $(&#x27;input[name=listCheckBox]&#x27;).on(&#x27;click&#x27;, checkBoxEvent);
                             $(&#x27;#chkRoot&#x27; + label + &#x27; &gt; div&#x27;).css(&#x27;width&#x27;, &#x27;98%&#x27;);
                             //$(&#x27;#hrefRoot&#x27; + label + &#x27; &gt; span&#x27;).css(&#x27;margin&#x27;, &#x27;-1.5px&#x27;);
                         };
-
+                        
                         /**
                          * 레이어 목록 삭제
                          * @method removeList
@@ -377,13 +377,13 @@
                             var labels = this.getLabels(),
                                 objs = this.getLayersObj();
                             var layerNum = $.inArray(layerName, labels);
-
+                        
                             labels.splice(layerNum, 1);
                             objs.splice(layerNum, 1);
                             $(&#x27;#layer&#x27; + layerName).remove();
                             $(&#x27;#popup&#x27; + layerName).remove();
                         };
-
+                        
                             </pre>
                         </div>
                     </div>

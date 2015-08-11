@@ -1,4 +1,4 @@
-/** GeoServer, Public data, VWorld Connect Class **/
+/* GeoServer, Public data, VWorld Connect Class */
 /*jslint devel: true, vars : true */
 /*global $, jQuery, ol, OGDSM*/
 OGDSM.namesapce('externalConnection');
@@ -34,8 +34,9 @@ OGDSM.namesapce('externalConnection');
 OGDSM.externalConnection.prototype.geoServerGeoJsonLoad = function (obj, addr, workspace, layerName, options) {
     'use strict';
     options = (typeof (options) !== 'undefined') ? options : {};
-    var fullAddr = addr + '/geoserver/wfs?service=WFS&version=1.1.0&request=GetFeature&typeNames=' + workspace + ':' + layerName +
-        '&outputFormat=json&srsname=' + obj.baseProj;
+    console.log(layerName);
+    var fullAddr = addr + '/geoserver/wfs?service=WFS&version=1.1.0&request=GetFeature&typeNames=' + workspace + ':' +
+        layerName.split('--')[0] + '&outputFormat=json&srsname=' + obj.baseProj;
     var objStyles, name;
     var defaults = {
         color : 'rgba(0, 0, 0, 0.0)',
@@ -55,7 +56,7 @@ OGDSM.externalConnection.prototype.geoServerGeoJsonLoad = function (obj, addr, w
         theme : 'c',
         textonlt : 'false'
     });
-    layerName = layerName.replace(/[ \{\}\[\]\/?.,;:|\)*~`!\-+┼<>@\#$%&\'\"\\\(\=]/gi);
+    layerName = layerName.replace(/[ \{\}\[\]\/?.,;:|\)*~`!\+┼<>@\#$%&\'\"\\\(\=]/gi);
     $.ajax({
         type : 'POST',
         url : fullAddr,

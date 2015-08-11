@@ -18,7 +18,7 @@
             <h1 class="blue-main-title"></h1>
         </div>
         <div class="yui3-u-1-4 version project-version">
-            API Docs for:
+            API Docs for: 
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -32,11 +32,11 @@
                             <li><a href="#api-classes">Classes</a></li>
                             <li><a href="#api-modules">Modules</a></li>
                         </ul>
-
+                
                         <div id="api-tabview-filter">
                             <input type="search" id="api-filter" placeholder="Type to filter APIs">
                         </div>
-
+                
                         <div id="api-tabview-panel">
                             <ul id="api-classes" class="apis classes">
                                 <li><a href="../classes/OGDSM.html">OGDSM</a></li>
@@ -47,7 +47,7 @@
                                 <li><a href="../classes/OGDSM.mapLayerList.html">OGDSM.mapLayerList</a></li>
                                 <li><a href="../classes/OGDSM.visualization.html">OGDSM.visualization</a></li>
                             </ul>
-
+                
                             <ul id="api-modules" class="apis modules">
                                 <li><a href="../modules/OGDSM.applyOptions.html">OGDSM.applyOptions</a></li>
                                 <li><a href="../modules/OGDSM.indexedDB.html">OGDSM.indexedDB</a></li>
@@ -66,12 +66,12 @@
                         <input type="checkbox" id="api-show-inherited" checked>
                         Inherited
                     </label>
-
+            
                     <label for="api-show-protected">
                         <input type="checkbox" id="api-show-protected">
                         Protected
                     </label>
-
+            
                     <label for="api-show-private">
                         <input type="checkbox" id="api-show-private">
                         Private
@@ -80,14 +80,14 @@
                         <input type="checkbox" id="api-show-deprecated">
                         Deprecated
                     </label>
-
+            
                 </div>
-
+            
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
                         <h1 class="file-heading">File: ../js/openGDSMobile/OGDSM_visualization.js</h1>
-
+                        
                         <div class="file">
                             <pre class="code prettyprint linenums">
                         /*jslint devel: true, vars : true, plusplus : true */
@@ -97,11 +97,11 @@
                             &quot;use strict&quot;;
                             var mapObj;
                             /**
-                            * 오픈레이어3 지도 시각화 객체
-                            * @class OGDSM.visualization
-                            * @constructor
-                            * @param {String} mapDiv - 지도 DIV 아이디 이름
-                            * @param {JSON Object} options - 옵션 JSON 객체 키 값&lt;br&gt;
+                             * 오픈레이어3 지도 시각화 객체
+                             * @class OGDSM.visualization
+                             * @constructor
+                             * @param {String} mapDiv - 지도 DIV 아이디 이름
+                             * @param {JSON Object} options - 옵션 JSON 객체 키 값&lt;br&gt;
                             {layerListDiv:null, attrTableDiv:null, attrAddr:&#x27;&#x27;, indexedDB:true}&lt;br&gt;
                             layerListDiv : 레이어 관리 리스트 DIV&lt;br&gt;
                             attrTableDiv : 속성 시각화 DIV 아이디 이름&lt;br&gt;
@@ -121,7 +121,7 @@
                                     attrAddr : &#x27;&#x27;,
                                     indexedDB : true
                                 };
-
+                        
                                 for (name in defaults) {
                                     if (defaults.hasOwnProperty(name)) {
                                         if (options.hasOwnProperty(name)) {
@@ -129,12 +129,12 @@
                                         }
                                     }
                                 }
-
+                        
                                 $(window).on(&#x27;resize&#x27;, function () {
                                     OGDSM.visualization.updateLayoutSetting();
                                 });
                                 if (defaults.attrTableDiv !== null) {
-                                    this.attrTableObj = new OGDSM.attributeTable(defaults.attrTableDiv, defaults.attrAddr, this);
+                                    this.attrTableObj = new OGDSM.attributeTable(defaults.attrTableDiv, defaults.attrAddr, this, defaults.indexedDB);
                                 }
                                 if (defaults.layerListDiv !== null) {
                                     this.layerListObj = new OGDSM.mapLayerList(this, defaults.layerListDiv, {
@@ -142,8 +142,8 @@
                                     });
                                 }
                                 // Orientation...
-
-
+                        
+                        
                             };
                             OGDSM.visualization.prototype = {
                                 constructor : OGDSM.visualization,
@@ -197,7 +197,7 @@
                             };
                             return OGDSM.visualization;
                         }(OGDSM));
-
+                        
                         /**
                          * OpenGDS 모바일 맵 초기화
                          * @method olMapView
@@ -247,8 +247,8 @@
                             this.changeBaseMap(mapType);
                             return this.mapObj;
                         };
-
-
+                        
+                        
                         /**
                          * 배경지도 변경
                          * @method changeBaseMap
@@ -258,7 +258,7 @@
                             &quot;use strict&quot;;
                             var TMS = null, view = null, baseLayer = null, map = this.mapObj, maplayers = map.getLayers(),
                                 mapCenter = map.getView().getCenter(), mapZoom = map.getView().getZoom(), mapProj = map.getView().getProjection();
-
+                        
                             maplayers.forEach(function (obj, i) {
                                 var layerTitle = obj.get(&#x27;title&#x27;);
                                 if (layerTitle === &#x27;basemap&#x27;) {
@@ -334,7 +334,7 @@
                                 baseLayer.setSource(TMS);
                             }
                         };
-
+                        
                         /**
                          * 지도 GPS 트래킹 스위치
                          * @method trackingGeoLocation
@@ -353,7 +353,7 @@
                                     tracking : true
                                 });
                             }
-
+                        
                             if (sw === true) {
                                 geolocation.once(&#x27;change:position&#x27;, function () {
                                     mapObj.getView().setCenter(geolocation.getPosition());
@@ -372,8 +372,8 @@
                                 this.mapObj.updateSize();
                             }
                         };
-
-
+                        
+                        
                         /**
                          * WMS 및 WFS 맵 레이어 추가
                          * @method addMap
@@ -386,7 +386,7 @@
                             if (chkData === false) {
                                 this.getMap().addLayer(data);
                                 this.mapObj.removeInteraction(this.mapObj.getInteractions());
-                                /***interaction ******/
+                                /*interaction*/
                                 interaction = new ol.interaction.Select({
                                     layers : function (layer) {
                                         return true;
@@ -421,7 +421,7 @@
                                 this.mapObj.addInteraction(interaction);
                                 this.mapObj.removeLayer(interaction);
                                 //console.log(interaction.deselected(null));
-                                /***layer list On******/
+                                /*layer list On*/
                                 if (typeof (this.layerListObj) !== &#x27;undefined&#x27;) {
                                     var color;
                                     var geometryObj = data.getSource().getFeatures()[0].getGeometry();
@@ -433,7 +433,7 @@
                                     }
                                     this.layerListObj.addList(data, data.get(&#x27;title&#x27;), color, geoType);
                                 }
-                                /***attribute On******/
+                                /*attribute On*/
                                 if (typeof (this.attrTableObj) !== &#x27;undefined&#x27;) {
                                     var attrTableObj = this.attrTableObj;
                                     this.attrTableObj.addAttribute(data.get(&#x27;title&#x27;));
@@ -466,7 +466,7 @@
                             &#x27;use strict&#x27;;
                             var imgLayer = null,
                                 title = imgTitle;
-
+                        
                             imgLayer = new ol.layer.Image({
                                 opacity : 1.0,
                                 title : title,
@@ -475,7 +475,7 @@
                                     imageSize : imgSize,
                                     projection : new ol.proj.Projection({code : &#x27;EPSG:3857&#x27;}),
                                     imageExtent : imgExtent
-
+                        
                                 })
                             });
                             this.getMap().addLayer(imgLayer);
@@ -534,7 +534,7 @@
                                 range : null,
                                 xyData : null
                             };
-
+                        
                             for (name in defaults) {
                                 if (defaults.hasOwnProperty(name)) {
                                     if (options.hasOwnProperty(name)) {
@@ -597,14 +597,14 @@
                                             })
                                         })];
                                     }
-
-
+                        
+                        
                                 }
                                 return styleCache[text];
                             });
                             map.setOpacity(defaults.opt);
                         };
-
+                        
                             </pre>
                         </div>
                     </div>

@@ -121,7 +121,7 @@ OGDSM.chartVisualization.prototype.vBarChart = function (rootDiv, subOptions) {
             if ($.isArray(chartOptions.range) === true) {
                 var z = 0;
                 for (z = 0; z < chartOptions.range.length; z += 1) {
-                    if (d[options.valueKey] <= chartOptions.range.range[z]) {
+                    if (d[options.valueKey] <= chartOptions.range[z]) {
                         return chartOptions.color[z];
                     }
                 }
@@ -232,7 +232,7 @@ OGDSM.chartVisualization.prototype.hBarChart = function (rootDiv, subOptions) {
             if ($.isArray(chartOptions.range) === true) {
                 var z = 0;
                 for (z = 0; z < chartOptions.range.length; z += 1) {
-                    if (d[options.valueKey] <= chartOptions.range.range[z]) {
+                    if (d[options.valueKey] <= chartOptions.range[z]) {
                         return chartOptions.color[z];
                     }
                 }

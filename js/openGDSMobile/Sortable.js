@@ -1,4 +1,4 @@
-/**!
+/*
  * OGDSM Layer list sorting open source
  * Sortable
  * author	RubaXa   <trash@rubaxa.org>
@@ -715,7 +715,7 @@
 		},
 
 
-		/**
+		/*
 		 * Serializes the item into an array of string.
 		 * @returns {String[]}
 		 */
@@ -737,7 +737,7 @@
 		},
 
 
-		/**
+		/*
 		 * Sorts the elements according to the array.
 		 * @param  {String[]}  order  order of the items
 		 */
@@ -761,7 +761,7 @@
 		},
 
 
-		/**
+		/*
 		 * Save the current sorting
 		 */
 		save: function () {
@@ -770,7 +770,7 @@
 		},
 
 
-		/**
+		/*
 		 * For each element in the set, get the first element that matches the selector by testing the element itself and traversing up through its ancestors in the DOM tree.
 		 * @param   {HTMLElement}  el
 		 * @param   {String}       [selector]  default: `options.draggable`
@@ -781,7 +781,7 @@
 		},
 
 
-		/**
+		/*
 		 * Set/get option
 		 * @param   {string} name
 		 * @param   {*}      [value]
@@ -798,7 +798,7 @@
 		},
 
 
-		/**
+		/*
 		 * Destroy
 		 */
 		destroy: function () {
@@ -951,14 +951,14 @@
 	}
 
 
-	/** @returns {HTMLElement|false} */
+	/* @returns {HTMLElement|false} */
 	function _ghostInBottom(el, evt) {
 		var lastEl = el.lastElementChild, rect = lastEl.getBoundingClientRect();
 		return (evt.clientY - (rect.top + rect.height) > 5) && lastEl; // min delta
 	}
 
 
-	/**
+	/*
 	 * Generate id
 	 * @param   {HTMLElement} el
 	 * @returns {String}
@@ -976,7 +976,7 @@
 		return sum.toString(36);
 	}
 
-	/**
+	/*
 	 * Returns the index of an element within its parent
 	 * @param el
 	 * @returns {number}
@@ -1035,7 +1035,7 @@
 	Sortable.version = '1.1.1';
 
 
-	/**
+	/*
 	 * Create sortable instance
 	 * @param {HTMLElement}  el
 	 * @param {Object}      [options]

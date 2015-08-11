@@ -18,7 +18,7 @@
             <h1 class="blue-main-title"></h1>
         </div>
         <div class="yui3-u-1-4 version project-version">
-            API Docs for:
+            API Docs for: 
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -32,11 +32,11 @@
                             <li><a href="#api-classes">Classes</a></li>
                             <li><a href="#api-modules">Modules</a></li>
                         </ul>
-
+                
                         <div id="api-tabview-filter">
                             <input type="search" id="api-filter" placeholder="Type to filter APIs">
                         </div>
-
+                
                         <div id="api-tabview-panel">
                             <ul id="api-classes" class="apis classes">
                                 <li><a href="../classes/OGDSM.html">OGDSM</a></li>
@@ -47,7 +47,7 @@
                                 <li><a href="../classes/OGDSM.mapLayerList.html">OGDSM.mapLayerList</a></li>
                                 <li><a href="../classes/OGDSM.visualization.html">OGDSM.visualization</a></li>
                             </ul>
-
+                
                             <ul id="api-modules" class="apis modules">
                                 <li><a href="../modules/OGDSM.applyOptions.html">OGDSM.applyOptions</a></li>
                                 <li><a href="../modules/OGDSM.indexedDB.html">OGDSM.indexedDB</a></li>
@@ -66,12 +66,12 @@
                         <input type="checkbox" id="api-show-inherited" checked>
                         Inherited
                     </label>
-
+            
                     <label for="api-show-protected">
                         <input type="checkbox" id="api-show-protected">
                         Protected
                     </label>
-
+            
                     <label for="api-show-private">
                         <input type="checkbox" id="api-show-private">
                         Private
@@ -80,14 +80,14 @@
                         <input type="checkbox" id="api-show-deprecated">
                         Deprecated
                     </label>
-
+            
                 </div>
-
+            
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
                         <h1 class="file-heading">File: ../js/openGDSMobile/OGDSM.js</h1>
-
+                        
                         <div class="file">
                             <pre class="code prettyprint linenums">
                         /*jslint devel: true, vars : true */
@@ -122,7 +122,7 @@
                             };
                             return OGDSM;
                         }(window, jQuery));
-
+                        
                         /**
                         * OGDSM 네임스페이스 모듈 (OGDSM &#x27;namespace&#x27; module)
                         *
@@ -139,16 +139,16 @@
                                 parent = OGDSM,
                                 i;
                             var test;
-
+                        
                             if (parent[0] === &#x27;OGDSM&#x27;) {
                                 parts = parts.slice(1);
                             }
-
+                        
                             for (i = 0; i &lt; parts.length; i += 1) {
                                 if (typeof parent[parts[i]] === &quot;undefined&quot;) {
                                     parent[parts[i]] = {};
                                 }
-
+                        
                                 parent = parent[parts[i]];
                             }
                             return parent;
@@ -160,7 +160,7 @@
                          *
                          * @module OGDSM.jsontoArray
                          */
-
+                        
                         OGDSM.jsonToArray = function (obj, x, y) {
                             &#x27;use strict&#x27;;
                             var xyAxis = [],
@@ -173,8 +173,8 @@
                             });
                             return xyAxis;
                         };
-
-
+                        
+                        
                         /**
                          * OGDSM options 파라미터 적용 모듈
                          * - 사용 방법(Use)
@@ -194,7 +194,7 @@
                             }
                             return defaults;
                         };
-
+                        
                             </pre>
                         </div>
                     </div>

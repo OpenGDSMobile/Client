@@ -267,19 +267,21 @@ OGDSM.eGovFrameUI.prototype.timeInput = function (divId) {
  * 날짜 태그 생성
  * @method dateInput
  * @param {String} divId - 최상위 DIV 아이디 이름
+ * @param {String} option - 년, 월, 일 옵션 (month || week) [option]
  * @return {jQuery Object} 제이쿼리 아이디 이름 객체 (Date YYYY/MM/DD)
  */
-OGDSM.eGovFrameUI.prototype.dateInput = function (divId) {
+OGDSM.eGovFrameUI.prototype.dateInput = function (divId, option) {
     'use strict';
+    option = (typeof (option) !== 'undefined') ? option : 'date';
     var rootDiv, html;
     rootDiv = $('#' + divId);
-    html = '<input type="date" id="dateValue">';
+    html = '<input type="' + option + '" id="dateValue">';
     rootDiv.append(html);
     rootDiv.trigger("create");
     return $('#dateValue');
 };
 
-/**************Custom UI Create *******************/
+/*Custom UI Create*/
 
 /**
  * 배경 맵 선택 사용자 인터페이스 자동 생성: 라디오 박스
@@ -622,4 +624,52 @@ OGDSM.eGovFrameUI.prototype.dataPortalEnvironment = function (divId, options) {
                                       {horizontal : true});
     }
     return [visualType, areaRadio, environmentType];
+};
+
+/**
+ * 데이터 포털 원자력발전소 실시간 주변 방사선량 인터페이스
+ * @method dataPortalNuclear
+ * @param {String} divId - 최상위 DIV 아이디 이름
+ * @param {JSON Object} options - 옵션 JSON 객체 키 값<br>
+  {theme:this.dataTheme}<br>
+  theme(String) : 테마<br>
+ * @return {String} 생성된 객체 배열 [visualType, nuclearPos]
+ */
+OGDSM.eGovFrameUI.prototype.dataPortalNuclear = function (divId, options) {
+    'use strict';
+    options = (typeof (options) !== 'undefined') ? options : {};
+    var name, i;
+    var defaults = {
+        theme : this.dataTheme
+    };
+    defaults = OGDSM.applyOptions(defaults, options);
+    var rootDiv = $('#' + divId),
+        visualType = this.autoRadioBox(divId, 'visualType', ['차트'], ['chart'], {horizontal : true}),
+        nuclearPos = this.autoRadioBox(divId, 'nuclearPos', ['월성', '고리'], ['WS', 'KR'], {horizontal : true});
+
+    nuclearPos = this.autoRadioBox(divId, 'nuclearPos', ['한빛', '한울'], ['YK', 'UJ'], {horizontal : true});
+    return [visualType, nuclearPos];
+};
+
+/**
+ * 데이터 포털 온실가스배출량 조회 서비스 인터페이스
+ * @method dataPortalGreenGas
+ * @param {String} divId - 최상위 DIV 아이디 이름
+ * @param {JSON Object} options - 옵션 JSON 객체 키 값<br>
+  {theme:this.dataTheme}<br>
+  theme(String) : 테마<br>
+ * @return {String} 생성된 객체 배열 [visualType, nuclearPos]
+ */
+OGDSM.eGovFrameUI.prototype.dataPortalGreenGas = function (divId, options) {
+    'use strict';
+    options = (typeof (options) !== 'undefined') ? options : {};
+    var name, i;
+    var defaults = {
+        theme : this.dataTheme
+    };
+    defaults = OGDSM.applyOptions(defaults, options);
+    var rootDiv = $('#' + divId),
+        visualType = this.autoRadioBox(divId, 'visualType', ['차트'], ['chart'], {horizontal : true}),
+        date = this.dateInput(divId, 'month');
+    return [visualType, date];
 };

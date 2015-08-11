@@ -103,7 +103,7 @@ OGDSM.applyOptions = function (defaults, options) {
     return defaults;
 };
 
-/**!
+/*
  * OGDSM Layer list sorting open source
  * Sortable
  * author	RubaXa   <trash@rubaxa.org>
@@ -820,7 +820,7 @@ OGDSM.applyOptions = function (defaults, options) {
 		},
 
 
-		/**
+		/*
 		 * Serializes the item into an array of string.
 		 * @returns {String[]}
 		 */
@@ -842,7 +842,7 @@ OGDSM.applyOptions = function (defaults, options) {
 		},
 
 
-		/**
+		/*
 		 * Sorts the elements according to the array.
 		 * @param  {String[]}  order  order of the items
 		 */
@@ -866,7 +866,7 @@ OGDSM.applyOptions = function (defaults, options) {
 		},
 
 
-		/**
+		/*
 		 * Save the current sorting
 		 */
 		save: function () {
@@ -875,7 +875,7 @@ OGDSM.applyOptions = function (defaults, options) {
 		},
 
 
-		/**
+		/*
 		 * For each element in the set, get the first element that matches the selector by testing the element itself and traversing up through its ancestors in the DOM tree.
 		 * @param   {HTMLElement}  el
 		 * @param   {String}       [selector]  default: `options.draggable`
@@ -886,7 +886,7 @@ OGDSM.applyOptions = function (defaults, options) {
 		},
 
 
-		/**
+		/*
 		 * Set/get option
 		 * @param   {string} name
 		 * @param   {*}      [value]
@@ -903,7 +903,7 @@ OGDSM.applyOptions = function (defaults, options) {
 		},
 
 
-		/**
+		/*
 		 * Destroy
 		 */
 		destroy: function () {
@@ -1056,14 +1056,14 @@ OGDSM.applyOptions = function (defaults, options) {
 	}
 
 
-	/** @returns {HTMLElement|false} */
+	/* @returns {HTMLElement|false} */
 	function _ghostInBottom(el, evt) {
 		var lastEl = el.lastElementChild, rect = lastEl.getBoundingClientRect();
 		return (evt.clientY - (rect.top + rect.height) > 5) && lastEl; // min delta
 	}
 
 
-	/**
+	/*
 	 * Generate id
 	 * @param   {HTMLElement} el
 	 * @returns {String}
@@ -1081,7 +1081,7 @@ OGDSM.applyOptions = function (defaults, options) {
 		return sum.toString(36);
 	}
 
-	/**
+	/*
 	 * Returns the index of an element within its parent
 	 * @param el
 	 * @returns {number}
@@ -1140,7 +1140,7 @@ OGDSM.applyOptions = function (defaults, options) {
 	Sortable.version = '1.1.1';
 
 
-	/**
+	/*
 	 * Create sortable instance
 	 * @param {HTMLElement}  el
 	 * @param {Object}      [options]
@@ -1160,11 +1160,11 @@ OGDSM.namesapce('visualization');
     "use strict";
     var mapObj;
     /**
-    * 오픈레이어3 지도 시각화 객체
-    * @class OGDSM.visualization
-    * @constructor
-    * @param {String} mapDiv - 지도 DIV 아이디 이름
-    * @param {JSON Object} options - 옵션 JSON 객체 키 값<br>
+     * 오픈레이어3 지도 시각화 객체
+     * @class OGDSM.visualization
+     * @constructor
+     * @param {String} mapDiv - 지도 DIV 아이디 이름
+     * @param {JSON Object} options - 옵션 JSON 객체 키 값<br>
     {layerListDiv:null, attrTableDiv:null, attrAddr:'', indexedDB:true}<br>
     layerListDiv : 레이어 관리 리스트 DIV<br>
     attrTableDiv : 속성 시각화 DIV 아이디 이름<br>
@@ -1197,7 +1197,7 @@ OGDSM.namesapce('visualization');
             OGDSM.visualization.updateLayoutSetting();
         });
         if (defaults.attrTableDiv !== null) {
-            this.attrTableObj = new OGDSM.attributeTable(defaults.attrTableDiv, defaults.attrAddr, this);
+            this.attrTableObj = new OGDSM.attributeTable(defaults.attrTableDiv, defaults.attrAddr, this, defaults.indexedDB);
         }
         if (defaults.layerListDiv !== null) {
             this.layerListObj = new OGDSM.mapLayerList(this, defaults.layerListDiv, {
@@ -1449,7 +1449,7 @@ OGDSM.visualization.prototype.addMap = function (data) {
     if (chkData === false) {
         this.getMap().addLayer(data);
         this.mapObj.removeInteraction(this.mapObj.getInteractions());
-        /***interaction ******/
+        /*interaction*/
         interaction = new ol.interaction.Select({
             layers : function (layer) {
                 return true;
@@ -1484,7 +1484,7 @@ OGDSM.visualization.prototype.addMap = function (data) {
         this.mapObj.addInteraction(interaction);
         this.mapObj.removeLayer(interaction);
         //console.log(interaction.deselected(null));
-        /***layer list On******/
+        /*layer list On*/
         if (typeof (this.layerListObj) !== 'undefined') {
             var color;
             var geometryObj = data.getSource().getFeatures()[0].getGeometry();
@@ -1496,7 +1496,7 @@ OGDSM.visualization.prototype.addMap = function (data) {
             }
             this.layerListObj.addList(data, data.get('title'), color, geoType);
         }
-        /***attribute On******/
+        /*attribute On*/
         if (typeof (this.attrTableObj) !== 'undefined') {
             var attrTableObj = this.attrTableObj;
             this.attrTableObj.addAttribute(data.get('title'));
@@ -1668,7 +1668,7 @@ OGDSM.visualization.prototype.changeWFSStyle = function (layerName, colors, opti
     map.setOpacity(defaults.opt);
 };
 
-/** GeoServer, Public data, VWorld Connect Class **/
+/* GeoServer, Public data, VWorld Connect Class */
 /*jslint devel: true, vars : true */
 /*global $, jQuery, ol, OGDSM*/
 OGDSM.namesapce('externalConnection');
@@ -1704,8 +1704,9 @@ OGDSM.namesapce('externalConnection');
 OGDSM.externalConnection.prototype.geoServerGeoJsonLoad = function (obj, addr, workspace, layerName, options) {
     'use strict';
     options = (typeof (options) !== 'undefined') ? options : {};
-    var fullAddr = addr + '/geoserver/wfs?service=WFS&version=1.1.0&request=GetFeature&typeNames=' + workspace + ':' + layerName +
-        '&outputFormat=json&srsname=' + obj.baseProj;
+    console.log(layerName);
+    var fullAddr = addr + '/geoserver/wfs?service=WFS&version=1.1.0&request=GetFeature&typeNames=' + workspace + ':' +
+        layerName.split('--')[0] + '&outputFormat=json&srsname=' + obj.baseProj;
     var objStyles, name;
     var defaults = {
         color : 'rgba(0, 0, 0, 0.0)',
@@ -1725,7 +1726,7 @@ OGDSM.externalConnection.prototype.geoServerGeoJsonLoad = function (obj, addr, w
         theme : 'c',
         textonlt : 'false'
     });
-    layerName = layerName.replace(/[ \{\}\[\]\/?.,;:|\)*~`!\-+┼<>@\#$%&\'\"\\\(\=]/gi);
+    layerName = layerName.replace(/[ \{\}\[\]\/?.,;:|\)*~`!\+┼<>@\#$%&\'\"\\\(\=]/gi);
     $.ajax({
         type : 'POST',
         url : fullAddr,
@@ -2342,19 +2343,21 @@ OGDSM.eGovFrameUI.prototype.timeInput = function (divId) {
  * 날짜 태그 생성
  * @method dateInput
  * @param {String} divId - 최상위 DIV 아이디 이름
+ * @param {String} option - 년, 월, 일 옵션 (month || week) [option]
  * @return {jQuery Object} 제이쿼리 아이디 이름 객체 (Date YYYY/MM/DD)
  */
-OGDSM.eGovFrameUI.prototype.dateInput = function (divId) {
+OGDSM.eGovFrameUI.prototype.dateInput = function (divId, option) {
     'use strict';
+    option = (typeof (option) !== 'undefined') ? option : 'date';
     var rootDiv, html;
     rootDiv = $('#' + divId);
-    html = '<input type="date" id="dateValue">';
+    html = '<input type="' + option + '" id="dateValue">';
     rootDiv.append(html);
     rootDiv.trigger("create");
     return $('#dateValue');
 };
 
-/**************Custom UI Create *******************/
+/*Custom UI Create*/
 
 /**
  * 배경 맵 선택 사용자 인터페이스 자동 생성: 라디오 박스
@@ -2699,6 +2702,54 @@ OGDSM.eGovFrameUI.prototype.dataPortalEnvironment = function (divId, options) {
     return [visualType, areaRadio, environmentType];
 };
 
+/**
+ * 데이터 포털 원자력발전소 실시간 주변 방사선량 인터페이스
+ * @method dataPortalNuclear
+ * @param {String} divId - 최상위 DIV 아이디 이름
+ * @param {JSON Object} options - 옵션 JSON 객체 키 값<br>
+  {theme:this.dataTheme}<br>
+  theme(String) : 테마<br>
+ * @return {String} 생성된 객체 배열 [visualType, nuclearPos]
+ */
+OGDSM.eGovFrameUI.prototype.dataPortalNuclear = function (divId, options) {
+    'use strict';
+    options = (typeof (options) !== 'undefined') ? options : {};
+    var name, i;
+    var defaults = {
+        theme : this.dataTheme
+    };
+    defaults = OGDSM.applyOptions(defaults, options);
+    var rootDiv = $('#' + divId),
+        visualType = this.autoRadioBox(divId, 'visualType', ['차트'], ['chart'], {horizontal : true}),
+        nuclearPos = this.autoRadioBox(divId, 'nuclearPos', ['월성', '고리'], ['WS', 'KR'], {horizontal : true});
+
+    nuclearPos = this.autoRadioBox(divId, 'nuclearPos', ['한빛', '한울'], ['YK', 'UJ'], {horizontal : true});
+    return [visualType, nuclearPos];
+};
+
+/**
+ * 데이터 포털 온실가스배출량 조회 서비스 인터페이스
+ * @method dataPortalGreenGas
+ * @param {String} divId - 최상위 DIV 아이디 이름
+ * @param {JSON Object} options - 옵션 JSON 객체 키 값<br>
+  {theme:this.dataTheme}<br>
+  theme(String) : 테마<br>
+ * @return {String} 생성된 객체 배열 [visualType, nuclearPos]
+ */
+OGDSM.eGovFrameUI.prototype.dataPortalGreenGas = function (divId, options) {
+    'use strict';
+    options = (typeof (options) !== 'undefined') ? options : {};
+    var name, i;
+    var defaults = {
+        theme : this.dataTheme
+    };
+    defaults = OGDSM.applyOptions(defaults, options);
+    var rootDiv = $('#' + divId),
+        visualType = this.autoRadioBox(divId, 'visualType', ['차트'], ['chart'], {horizontal : true}),
+        date = this.dateInput(divId, 'month');
+    return [visualType, date];
+};
+
 /*jslint devel: true, vars : true plusplus : true*/
 /*global $, jQuery, ol, OGDSM, d3, Sortable*/
 OGDSM.namesapce('mapLayerList');
@@ -2969,9 +3020,9 @@ OGDSM.mapLayerList.prototype.addList = function (obj, label, color, type) {
         labelCanvas.strokeRect(5, 5, 20, 20);
     }
     $('#layer' + label).trigger('create');
-    $('#' + label + 'slider').bind('change', sliderEvent);
-    $('#' + label + 'delete').bind('click', deleteEvent);
-    $('input[name=listCheckBox]').bind('click', checkBoxEvent);
+    $('#' + label + 'slider').on('change', sliderEvent);
+    $('#' + label + 'delete').on('click', deleteEvent);
+    $('input[name=listCheckBox]').on('click', checkBoxEvent);
     $('#chkRoot' + label + ' > div').css('width', '98%');
     //$('#hrefRoot' + label + ' > span').css('margin', '-1.5px');
 };
@@ -2998,7 +3049,7 @@ OGDSM.mapLayerList.prototype.removeList = function (layerName) {
 
 
 
-/** Single Object Store **/
+/* Single Object Store */
 /**
 * OGDSM indexedDB 모듈
 *
@@ -3006,28 +3057,32 @@ OGDSM.mapLayerList.prototype.removeList = function (layerName) {
 *       OGDSM.indexedDB('dbName'. {options});
 * - Options
 *   옵션 JSON 객체 키 값<br>
-    {type:'new', storeName:dbName, insertKey:null, insertData:null,
-     searchKey: null, searchData: numm, editData: numm, success: false, dbFile : false}<br>
-    type (String) : 모듈 실행 타입 설정<br>
-     > new : DB 생성/ 데이터 삽입 (dbName, storeName, insertData, insertKey)<br>
-     > insert: 데이터 삽입 (dbName, storeName, insertData, insertKey)<br>
-     > forceInsert: 데이터 강제 삽입 (dbName, storeName, insertData, insertKey)<br>
-     > remove: DB 데이터 삭제 ( --- )<br>
-     > removeAll: DB 데이터 모두 삭제 ( --- )<br>
-     > search: DB 데이터 검색 (dbName, storeName, searchKey, searchData)<br>
-     > searchAll: DB 데이터 모두 검색 (dbName, storeName)<br>
-     > edit: DB 데이터 수정 (dbName, storeName, searchKey, searchData, editData)<br>
-     > deleteDB: DB 삭제 (dbName)<br>
-    storeName (String) : 스토어<br>
-    insertKey (String) : 삽입 대상 키<br>
-    insertData (String) : 삽입 데이터<br>
-    searchKey (String) : 검색 대상 키<br>
-    searchData (String) : 검색할 데이터<br>
-    editData (String) : 수정할 데이터<br>
-    success (function) : 성공 콜백 함수 (데이터 검색일 경우 데이터 파라미터로 보내짐)<br>
-    dbFail (function) : 실패 콜백 함수<br>
+{type:'new', storeName:dbName, insertKey:null, insertData:null,
+searchKey: null, searchData: null, editData: null, deleteKey: null, success: false, dbFile : false}<br>
+<p style="font-weight:bold;">
+type (String) : 모듈 실행 타입 설정 (필요 파라미터)
+</p>
+<p style="padding-left:2em; background-color:#FFFFFF;">new : DB 생성/ 데이터 삽입 (dbName, storeName, insertData, insertKey)<br>
+    insert / forceInsert: 데이터 삽입 / 데이터 강제 삽입 (dbName, storeName, insertData, insertKey)<br>
+    searchAll / removeAll : 모든 데이터 검색 / 삭제 (dbName, storeName)<br>
+    search: DB 데이터 검색 (dbName, storeName, searchKey, searchData)<br>
+    remove: DB 데이터 삭제 (dbName, storeName, deleteKey)<br>
+    edit: DB 데이터 수정 (dbName, storeName, searchKey, searchData, editData)<br>
+    deleteDB: DB 삭제 (dbName)
+</p>
+<p style="font-weight:bold;">
+storeName (String) : 스토어<br>
+insertKey (String) : 삽입 대상 키<br>
+insertData (String) : 삽입 데이터<br>
+searchKey (String) : 검색 대상 키<br>
+searchData (String) : 검색할 데이터<br>
+editData (String) : 수정할 데이터<br>
+deleteKey (String) : 삭제할 키 데이터<br>
+success (function) : 성공 콜백 함수 (데이터 검색일 경우 데이터 파라미터로 보내짐)<br>
+dbFail (function) : 실패 콜백 함수<br>
+</p>
 * @module OGDSM.indexedDB
-*/
+**/
 OGDSM.indexedDB = function (dbName, options) { //dbName_ StoreName, storeName, success, fail
     'use strict';
     var dbObject = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
@@ -3041,8 +3096,9 @@ OGDSM.indexedDB = function (dbName, options) { //dbName_ StoreName, storeName, s
         searchKey : null,
         searchData : null,
         editData : null,
+        deleteKey : null,
         success : false,
-        dbFail : false
+        fail : false
     };
     defaults = OGDSM.applyOptions(defaults, options);
     if (typeof (Storage) !== 'undefined') {
@@ -3117,28 +3173,19 @@ OGDSM.indexedDB = function (dbName, options) { //dbName_ StoreName, storeName, s
         var req = dbObject.open(dbName, localStorage.openGDSMobileDBVersion);
         req.onsuccess = function (event) {
             iDB.db = event.target.result;
-            var trans = iDB.db.transaction(storeName, 'readonly').objectStore(storeName);
-            var request = trans.openCursor();
-            request.onsuccess = function (event) {
-                var cursor = event.target.result;
-                var result = null;
+            var trans = iDB.db.transaction(storeName, 'readonly');
+            var resultAll = [];
+            var result = null;
+            trans.oncomplete = function (evt) {
                 var searchResult = null;
                 var srcResult = null, dstResult = null;
-                if (cursor) {
-                    var field;
-                    if (cursor.key === searchKey) {
-                        result = cursor.value;
-                    } else {
-                        cursor.continue();
-                    }
-                }
                 if (type === 'searchAll') {
                     if (defaults.success) {
-                        if (result !== null) {
-                            defaults.success(result);
+                        if (resultAll.length !== 0) {
+                            defaults.success(resultAll);
                         } else {
                             console.error('Not data');
-                            defaults.fail(result);
+                            defaults.fail(resultAll);
                         }
                     } else {
                         console.log('Success search Data. Please call the second parameter of the callback function');
@@ -3146,7 +3193,8 @@ OGDSM.indexedDB = function (dbName, options) { //dbName_ StoreName, storeName, s
                 } else if (type === 'search' || type === 'edit') {
                     if (result !== null) {
                         if (searchData === null) {
-                            console.error('OGDSM Error : Please input search data');
+                            console.log('OGDSM log : Not input search data. So search result based On Key');
+                            defaults.success(result);
                             return -1;
                         }
                         var value;
@@ -3185,8 +3233,25 @@ OGDSM.indexedDB = function (dbName, options) { //dbName_ StoreName, storeName, s
                             console.log(result);
                             console.log('object object');
                         }
+                    } else {
+                        console.error('OGDSM Error : Not data key');
                     }
-
+                }
+            };
+            var request = trans.objectStore(storeName).openCursor();
+            request.onsuccess = function (event) {
+                var cursor = event.target.result;
+                if (cursor) {
+                    var field;
+                    var obj = {};
+                    obj.key = cursor.key;
+                    obj.value = cursor.value;
+                    resultAll.push(obj);
+                    if (cursor.key === searchKey) {
+                        result = cursor.value;
+                    } else {
+                        cursor.continue();
+                    }
                 }
             };
         };
@@ -3224,6 +3289,14 @@ OGDSM.indexedDB = function (dbName, options) { //dbName_ StoreName, storeName, s
             console.log("Database error: ", e.target.error);
         };
     }
+    function removeData(dbName, storeName, key) {
+        var req = dbObject.open(dbName, localStorage.openGDSMobileDBVersion);
+        req.onsuccess = function (event) {
+            iDB.db = event.target.result;
+            var trans = iDB.db.transaction(storeName, 'readwrite');
+            trans.objectStore(storeName).delete(key);
+        };
+    }
     function clearObjectStore(dbName, storeName) {
         var req = dbObject.open(dbName, localStorage.openGDSMobileDBVersion);
         req.onsuccess = function (event) {
@@ -3231,8 +3304,6 @@ OGDSM.indexedDB = function (dbName, options) { //dbName_ StoreName, storeName, s
             var trans = iDB.db.transaction(storeName, 'readwrite').objectStore(storeName);
             trans.clear();
         };
-
-
     }
     if (defaults.type === 'new') {
         openDBInsertData(dbName, defaults.storeName, defaults.insertData, defaults.insertKey);
@@ -3241,7 +3312,7 @@ OGDSM.indexedDB = function (dbName, options) { //dbName_ StoreName, storeName, s
     } else if (defaults.type === 'forceInsert') {
         updateData(dbName, defaults.storeName, defaults.insertData, defaults.insertKey);
     } else if (defaults.type === 'remove') {
-
+        removeData(dbName, defaults.storeName, defaults.deleteKey);
         return -1;
     } else if (defaults.type === 'removeAll') {
         clearObjectStore(dbName, defaults.storeName);
@@ -3262,11 +3333,11 @@ OGDSM.indexedDB = function (dbName, options) { //dbName_ StoreName, storeName, s
 
 
 
-/***********
+/*
 Multiplue Object Store.. But....  iOS bug..
 https://gist.github.com/nolanlawson/08eb857c6b17a30c1b26
-***********************************/
-/***
+*/
+/*
 OGDSM.indexedDB = function (dbName, options) { //dbName, storeName, success, fail
     'use strict';
     var dbObject = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
@@ -3367,7 +3438,8 @@ OGDSM.indexedDB.addData = function (dbName, storeName, data, keyColumn) {
         console.log("Database error: ", e.target.error);
     };
 };
-*********/
+*/
+
 /*jslint devel: true, vars : true plusplus : true*/
 /*global $, jQuery, ol, OGDSM, mappingDB*/
 
@@ -3425,8 +3497,8 @@ OGDSM.namesapce('attributeTable');
         /**
          * 현재 선택 객체 설정 (테이블)
          * @method setSelectObj
-         * @param {Object}
-         */
+         * @param {Object} obj - 테이블 객체
+         **/
         setSelectObj : function (obj) {
             this.attrSelected = obj;
         },
@@ -3510,7 +3582,7 @@ OGDSM.attributeTable.prototype.addAttribute = function (layerName) {
         this.featureOverlay = featureOverlay;
     }
     function tableEvent(evtLayerName) {
-        /**********tr select ****************/
+        /*tr select*/
         $('#attrTable' + evtLayerName + ' tbody').on('click', 'tr', function () {
             var i = 0;
             tableObj.$('tr.selected').removeClass('selected');
@@ -3532,7 +3604,7 @@ OGDSM.attributeTable.prototype.addAttribute = function (layerName) {
             }
         });
 
-        /**********page change **************/
+        /*page change*/
         $('#attrTable' + evtLayerName).on('page.dt', function (e, settings) {
             setTimeout(function () {
                 attrObj.editAttribute(attrObj.getEditMode());
@@ -3542,12 +3614,12 @@ OGDSM.attributeTable.prototype.addAttribute = function (layerName) {
 
     function indexedDBEvent(layerName, data) {
         OGDSM.indexedDB('webMappingDB', {
-            insertKey : layerName,
+            insertKey : layerName + '--Local',
             insertData : data
         });
     }
 
-    /******* Add tab ***********/
+    /*Add tab*/
     tabs.prepend('<li id="attrTab' + layerName + '" style="float:left;">' +
                  '<a href="#" style="' + aBaseCSS + '">' + layerName + '</a></li>');
     $('#' + rootDiv + 'Tab a').css('background', backgroundNotSelected);
@@ -3555,61 +3627,103 @@ OGDSM.attributeTable.prototype.addAttribute = function (layerName) {
     $('#attrTab' + layerName + ' a').css('background', backgroundSelected);
     $('#attrTab' + layerName + ' a').css('color', colorSelected);
 
-    /******* Add Content ***********/
+    /*Add Content*/
     var attrDivHeight = $('#' + rootDiv + 'Contents').height();
     contents.prepend('<div id="attrContent' + layerName + '" class="attrTable">' +
                      '<table id="attrTable' + layerName + '" class="display compact" cellspacing="0" width="100%">' +
                      '<thead style="width:100%;"><tr></tr></thead>' +
                      '<tbody style="text-align:center"></tbody></table></div>');
 
-    /******* Event *******************/
+    /*Event*/
     $('.attrTable').hide();
     $('#attrContent' + layerName).css('display', 'block');
     $('#attrTab' + layerName + ' a').bind('click', tabClickEvent);
 
     var parm = {};
     parm.tableName = layerName;
-    $.ajax({
-        type : 'POST',
-        url : this.addr,
-        data : JSON.stringify(parm),
-        contentType : "application/json;charset=UTF-8",
-        dataType : 'json',
-        success : function (msg) {
-            var attrContents = msg.data, i = 0;
-            if (attrContents === null) {
-                console.log('Not attribute information');
-                return -1;
+
+
+    if (layerName.split('--')[1]) {
+        OGDSM.indexedDB('webMappingDB', {
+            type : 'search',
+            storeName : 'webMappingDB',
+            searchKey : layerName,
+            success : function (attrContents) {
+                console.log(attrContents);
+                var i = 0;
+                if (attrContents === null) {
+                    console.log('Not attribute information');
+                    return -1;
+                }
+                var tableDiv = $('#attrContent' + layerName),
+                    tableTh = tableDiv.find('thead').find('tr'),
+                    tableBody = tableDiv.find('tbody');
+                for (i = 0; i < attrContents.length; i++) {
+                    tableBody.append('<tr>');
+                    createTableCol(attrContents[i], i, tableBody, tableTh);
+                    tableBody.append('</tr>');
+                }
+
+                var thHeight = $('thead').height() + 7;
+                tableObj = $('#attrTable' + layerName).DataTable({
+                    'bFilter' : false,
+                    'bLengthChange' : 10,
+                    'bPaginate' : true,
+                    "dom": 'rt<"bottom"ip><"clear">'
+                });
+
+
+                tableEvent(layerName);
+            },
+            fail : function (result) {
+
             }
-            var tableDiv = $('#attrContent' + layerName),
-                tableTh = tableDiv.find('thead').find('tr'),
-                tableBody = tableDiv.find('tbody');
-            for (i = 0; i < attrContents.length; i++) {
-                tableBody.append('<tr>');
-                createTableCol(attrContents[i], i, tableBody, tableTh);
-                tableBody.append('</tr>');
+        });
+
+    } else {
+        $.ajax({
+            type : 'POST',
+            url : this.addr,
+            data : JSON.stringify(parm),
+            contentType : "application/json;charset=UTF-8",
+            dataType : 'json',
+            success : function (msg) {
+                var attrContents = msg.data, i = 0;
+                if (attrContents === null) {
+                    console.log('Not attribute information');
+                    return -1;
+                }
+                var tableDiv = $('#attrContent' + layerName),
+                    tableTh = tableDiv.find('thead').find('tr'),
+                    tableBody = tableDiv.find('tbody');
+                for (i = 0; i < attrContents.length; i++) {
+                    tableBody.append('<tr>');
+                    createTableCol(attrContents[i], i, tableBody, tableTh);
+                    tableBody.append('</tr>');
+                }
+
+                var thHeight = $('thead').height() + 7;
+                tableObj = $('#attrTable' + layerName).DataTable({
+                    'bFilter' : false,
+                    'bLengthChange' : 10,
+                    'bPaginate' : true,
+                    "dom": 'rt<"bottom"ip><"clear">'
+                });
+
+
+                tableEvent(layerName);
+
+
+                if (indexedDB_SW === true) {
+                    indexedDBEvent(layerName, attrContents);
+                }
+
+            },
+            error : function (error) {
+                console.log(error);
             }
-
-            var thHeight = $('thead').height() + 7;
-            tableObj = $('#attrTable' + layerName).DataTable({
-                'bFilter' : false,
-                'bLengthChange' : 10,
-                'bPaginate' : true,
-                "dom": 'rt<"bottom"ip><"clear">'
-            });
-
-
-            tableEvent(layerName);
-
-            if (indexedDB_SW === true) {
-                indexedDBEvent(layerName, attrContents);
-            }
-
-        },
-        error : function (error) {
-            console.log(error);
-        }
-    });
+        });
+    }
 };
 
 /**
@@ -3630,6 +3744,7 @@ OGDSM.attributeTable.prototype.removeAttribute = function (layerName) {
 OGDSM.attributeTable.prototype.editAttribute = function (sw) {
     'use strict';
     var textInput = $('.editSW');
+    var thisObj = this;
     function editDataResult(src, dst) {
         console.log('Update data');
     }
@@ -3645,7 +3760,7 @@ OGDSM.attributeTable.prototype.editAttribute = function (sw) {
                 return -1;
             }
             searchData[$(this).attr('data-key')] = oldValue;
-            if (this.indexedDB_SW === true) {
+            if (thisObj.indexedDB_SW === true) {
                 OGDSM.indexedDB('webMappingDB', {
                     type : 'edit',
                     searchKey : $(this).attr('data-label'),
@@ -3724,6 +3839,7 @@ OGDSM.attributeTable.prototype.unSelectAttribute = function (tableName) {
         this.attrSelected = false;
     }
 };
+
 /*jslint devel: true, vars : true, plusplus : true */
 /*global $, jQuery, ol, OGDSM, d3, topojson*/
 
@@ -3847,7 +3963,7 @@ OGDSM.chartVisualization.prototype.vBarChart = function (rootDiv, subOptions) {
             if ($.isArray(chartOptions.range) === true) {
                 var z = 0;
                 for (z = 0; z < chartOptions.range.length; z += 1) {
-                    if (d[options.valueKey] <= chartOptions.range.range[z]) {
+                    if (d[options.valueKey] <= chartOptions.range[z]) {
                         return chartOptions.color[z];
                     }
                 }
@@ -3958,7 +4074,7 @@ OGDSM.chartVisualization.prototype.hBarChart = function (rootDiv, subOptions) {
             if ($.isArray(chartOptions.range) === true) {
                 var z = 0;
                 for (z = 0; z < chartOptions.range.length; z += 1) {
-                    if (d[options.valueKey] <= chartOptions.range.range[z]) {
+                    if (d[options.valueKey] <= chartOptions.range[z]) {
                         return chartOptions.color[z];
                     }
                 }

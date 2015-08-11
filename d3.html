@@ -109,8 +109,8 @@
 
         <script>
         	//var serverAddr = "http://113.198.80.60:8081/mobile/PublicDataPortal.do";
-            //var serverAddr = "http://113.198.80.60/ApplicationServer/PublicDataPortal.do";
-            var serverAddr = "http://localhost:8080/mobile/PublicDataPortal.do";
+            var serverAddr = "http://113.198.80.60/ApplicationServer/PublicDataPortal.do";
+            //var serverAddr = "http://localhost:8080/mobile/PublicDataPortal.do";
             var obj = null;
 
             function dataPortal() {
@@ -169,7 +169,7 @@
             	
             	//data.go.kr : 온실가스배출량 조회 서비스
                 var paramData = {};
-                paramData['keyValue'] = 'VwIZROE4vwdx%2FffoawR%2F25OtAxTe3OChcBcBsnAQyKdtHfroNv8qRCKb82rEwgyMHvNgRRTIhrTVpO012mVkKA%3D%3D';
+                paramData['serviceKey'] = 'VwIZROE4vwdx%2FffoawR%2F25OtAxTe3OChcBcBsnAQyKdtHfroNv8qRCKb82rEwgyMHvNgRRTIhrTVpO012mVkKA%3D%3D';
                 paramData['serviceName'] = "GreenGasEmissionReport";
                 paramData['startDate']   = "201411";  //yyyymm 200701 ~ 201412 까지만 데이터 존재, 같은 값 사용 
                 paramData['endDate']     = "201411";  //yyyymm 200701 ~ 201412 까지만 데이터 존재, 같은 값 사용 
@@ -185,9 +185,9 @@
                 		console.log(msg);
                 		//$('#result').text(JSON.stringify(resultData));
                 		
-                		var xyData = jsonToArray(resultData, 'totEmTco2eq', 'brNm');
+                		//var xyData = jsonToArray(resultData, 'totEmTco2eq', 'brNm');
                 		//vbarChart('d3_chart', xyData, 0.001);
-                		lineChart('d3_chart', xyData, 0.001);
+                		//lineChart('d3_chart', xyData, 0.001);
                 	},
                 	error : function (e){
                 		console.log(e);	
@@ -251,16 +251,16 @@
                 });
             }
 			
-           // dataPortal5();
+            dataPortal2();
             
            $(function(){
         	   
         	   //kMap = function (divId, geodata, center_lat, center_lon, map_scale)
         	   //geodata = ["SIDO", "DONG", "GU"]	
         	   //center_lat, center_lon = Latitude, Longitude
-        	   
+        	   /*
                var chartObj = new OGDSM.chartVisualization();
-               chartObj.kMap('d3_chart','http://113.198.80.60:8081/mobile/geojson.do', "DONG", 34., 131., 3000);
+               chartObj.kMap('d3_chart','http://113.198.80.60:8081/mobile/geojson.do', "DONG", 34., 131., 3000);*/
            }); 
             
         </script>

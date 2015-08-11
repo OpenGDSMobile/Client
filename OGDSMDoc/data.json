@@ -145,7 +145,7 @@
             "tag": "module",
             "file": "../js/openGDSMobile/OGDSM_visualization.js",
             "line": 7,
-            "description": "OGDSM indexedDB 모듈\n\n- 사용 방법 (Use)\n      OGDSM.indexedDB('dbName'. {options});\n- Options\n  옵션 JSON 객체 키 값<br>\n   {type:'new', storeName:dbName, insertKey:null, insertData:null,\n    searchKey: null, searchData: numm, editData: numm, success: false, dbFile : false}<br>\n   type (String) : 모듈 실행 타입 설정<br>\n    > new : DB 생성/ 데이터 삽입 (dbName, storeName, insertData, insertKey)<br> \n    > insert: 데이터 삽입 (dbName, storeName, insertData, insertKey)<br>\n    > forceInsert: 데이터 강제 삽입 (dbName, storeName, insertData, insertKey)<br>\n    > remove: DB 데이터 삭제 ( --- )<br>\n    > removeAll: DB 데이터 모두 삭제 ( --- )<br>\n    > search: DB 데이터 검색 (dbName, storeName, searchKey, searchData)<br>\n    > searchAll: DB 데이터 모두 검색 (dbName, storeName)<br>\n    > edit: DB 데이터 수정 (dbName, storeName, searchKey, searchData, editData)<br>\n    > deleteDB: DB 삭제 (dbName)<br>\n   storeName (String) : 스토어<br>\n   insertKey (String) : 삽입 대상 키<br>\n   insertData (String) : 삽입 데이터<br>\n   searchKey (String) : 검색 대상 키<br>\n   searchData (String) : 검색할 데이터<br>\n   editData (String) : 수정할 데이터<br>\n   success (function) : 성공 콜백 함수 (데이터 검색일 경우 데이터 파라미터로 보내짐)<br>\n   dbFail (function) : 실패 콜백 함수<br>"
+            "description": "OGDSM indexedDB 모듈\n\n- 사용 방법 (Use)\n      OGDSM.indexedDB('dbName'. {options});\n- Options\n  옵션 JSON 객체 키 값<br>\n{type:'new', storeName:dbName, insertKey:null, insertData:null,\nsearchKey: null, searchData: null, editData: null, deleteKey: null, success: false, dbFile : false}<br>\n<p style=\"font-weight:bold;\">\ntype (String) : 모듈 실행 타입 설정 (필요 파라미터)\n</p>\n<p style=\"padding-left:2em; background-color:#FFFFFF;\">new : DB 생성/ 데이터 삽입 (dbName, storeName, insertData, insertKey)<br>\n   insert / forceInsert: 데이터 삽입 / 데이터 강제 삽입 (dbName, storeName, insertData, insertKey)<br>\n   searchAll / removeAll : 모든 데이터 검색 / 삭제 (dbName, storeName)<br>\n   search: DB 데이터 검색 (dbName, storeName, searchKey, searchData)<br>\n   remove: DB 데이터 삭제 (dbName, storeName, deleteKey)<br>\n   edit: DB 데이터 수정 (dbName, storeName, searchKey, searchData, editData)<br>\n   deleteDB: DB 삭제 (dbName)\n</p>\n<p style=\"font-weight:bold;\">\nstoreName (String) : 스토어<br>\ninsertKey (String) : 삽입 대상 키<br>\ninsertData (String) : 삽입 데이터<br>\nsearchKey (String) : 검색 대상 키<br>\nsearchData (String) : 검색할 데이터<br>\neditData (String) : 수정할 데이터<br>\ndeleteKey (String) : 삭제할 키 데이터<br>\nsuccess (function) : 성공 콜백 함수 (데이터 검색일 경우 데이터 파라미터로 보내짐)<br>\ndbFail (function) : 실패 콜백 함수<br>\n</p>"
         }
     },
     "classes": {
@@ -349,8 +349,8 @@
             "name": "setSelectObj",
             "params": [
                 {
-                    "name": "UNKNOWN",
-                    "description": "",
+                    "name": "obj",
+                    "description": "- 테이블 객체",
                     "type": "Object"
                 }
             ],
@@ -388,37 +388,7 @@
         },
         {
             "file": "../js/openGDSMobile/OGDSM_attributeTable.js",
-            "line": 143,
-            "class": "OGDSM.attributeTable",
-            "module": "OGDSM.applyOptions"
-        },
-        {
-            "file": "../js/openGDSMobile/OGDSM_attributeTable.js",
-            "line": 165,
-            "class": "OGDSM.attributeTable",
-            "module": "OGDSM.applyOptions"
-        },
-        {
-            "file": "../js/openGDSMobile/OGDSM_attributeTable.js",
-            "line": 180,
-            "class": "OGDSM.attributeTable",
-            "module": "OGDSM.applyOptions"
-        },
-        {
-            "file": "../js/openGDSMobile/OGDSM_attributeTable.js",
-            "line": 188,
-            "class": "OGDSM.attributeTable",
-            "module": "OGDSM.applyOptions"
-        },
-        {
-            "file": "../js/openGDSMobile/OGDSM_attributeTable.js",
-            "line": 195,
-            "class": "OGDSM.attributeTable",
-            "module": "OGDSM.applyOptions"
-        },
-        {
-            "file": "../js/openGDSMobile/OGDSM_attributeTable.js",
-            "line": 245,
+            "line": 287,
             "description": "속성 정보 삭제",
             "itemtype": "method",
             "name": "removeAttribute",
@@ -434,7 +404,7 @@
         },
         {
             "file": "../js/openGDSMobile/OGDSM_attributeTable.js",
-            "line": 255,
+            "line": 297,
             "description": "속성 정보 수정",
             "itemtype": "method",
             "name": "removeAttribute",
@@ -450,7 +420,7 @@
         },
         {
             "file": "../js/openGDSMobile/OGDSM_attributeTable.js",
-            "line": 297,
+            "line": 340,
             "description": "속성 정보 검색",
             "itemtype": "method",
             "name": "selectAttribute",
@@ -480,7 +450,7 @@
         },
         {
             "file": "../js/openGDSMobile/OGDSM_attributeTable.js",
-            "line": 330,
+            "line": 373,
             "description": "속성 정보 선택",
             "itemtype": "method",
             "name": "selectAttribute",
@@ -501,7 +471,7 @@
         },
         {
             "file": "../js/openGDSMobile/OGDSM_attributeTable.js",
-            "line": 342,
+            "line": 385,
             "description": "속성 정보 선택 해제",
             "itemtype": "method",
             "name": "selectAttribute",
@@ -875,6 +845,11 @@
                     "name": "divId",
                     "description": "- 최상위 DIV 아이디 이름",
                     "type": "String"
+                },
+                {
+                    "name": "option",
+                    "description": "- 년, 월, 일 옵션 (month || week) [option]",
+                    "type": "String"
                 }
             ],
             "return": {
@@ -886,13 +861,7 @@
         },
         {
             "file": "../js/openGDSMobile/OGDSM_eGovFrameUI.js",
-            "line": 282,
-            "class": "OGDSM.eGovFrameUI",
-            "module": "OGDSM.applyOptions"
-        },
-        {
-            "file": "../js/openGDSMobile/OGDSM_eGovFrameUI.js",
-            "line": 284,
+            "line": 286,
             "description": "배경 맵 선택 사용자 인터페이스 자동 생성: 라디오 박스",
             "itemtype": "method",
             "name": "baseMapRadioBox",
@@ -918,7 +887,7 @@
         },
         {
             "file": "../js/openGDSMobile/OGDSM_eGovFrameUI.js",
-            "line": 307,
+            "line": 309,
             "description": "배경 맵 선택 사용자 인터페이스 자동 생성: 셀렉트 박스",
             "itemtype": "method",
             "name": "baseMapSelect",
@@ -944,7 +913,7 @@
         },
         {
             "file": "../js/openGDSMobile/OGDSM_eGovFrameUI.js",
-            "line": 335,
+            "line": 337,
             "description": "브이월드 WMS API 리스트 요청 인터페이스",
             "itemtype": "method",
             "name": "vworldWMSList",
@@ -969,7 +938,7 @@
         },
         {
             "file": "../js/openGDSMobile/OGDSM_eGovFrameUI.js",
-            "line": 528,
+            "line": 530,
             "description": "서울 열린 데이터 광장 환경정보 요청 인터페이스",
             "itemtype": "method",
             "name": "seoulEnvironment",
@@ -994,7 +963,7 @@
         },
         {
             "file": "../js/openGDSMobile/OGDSM_eGovFrameUI.js",
-            "line": 572,
+            "line": 574,
             "description": "데이터 포털 환경정보 요청 인터페이스",
             "itemtype": "method",
             "name": "dataPortalEnvironment",
@@ -1018,9 +987,53 @@
             "module": "OGDSM.applyOptions"
         },
         {
-            "file": "../js/openGDSMobile/OGDSM_externalConnection.js",
-            "line": 1,
-            "class": "OGDSM.externalConnection",
+            "file": "../js/openGDSMobile/OGDSM_eGovFrameUI.js",
+            "line": 629,
+            "description": "데이터 포털 원자력발전소 실시간 주변 방사선량 인터페이스",
+            "itemtype": "method",
+            "name": "dataPortalNuclear",
+            "params": [
+                {
+                    "name": "divId",
+                    "description": "- 최상위 DIV 아이디 이름",
+                    "type": "String"
+                },
+                {
+                    "name": "options",
+                    "description": "- 옵션 JSON 객체 키 값<br>\n {theme:this.dataTheme}<br>\n theme(String) : 테마<br>",
+                    "type": "JSON Object"
+                }
+            ],
+            "return": {
+                "description": "생성된 객체 배열 [visualType, nuclearPos]",
+                "type": "String"
+            },
+            "class": "OGDSM.eGovFrameUI",
+            "module": "OGDSM.applyOptions"
+        },
+        {
+            "file": "../js/openGDSMobile/OGDSM_eGovFrameUI.js",
+            "line": 654,
+            "description": "데이터 포털 온실가스배출량 조회 서비스 인터페이스",
+            "itemtype": "method",
+            "name": "dataPortalGreenGas",
+            "params": [
+                {
+                    "name": "divId",
+                    "description": "- 최상위 DIV 아이디 이름",
+                    "type": "String"
+                },
+                {
+                    "name": "options",
+                    "description": "- 옵션 JSON 객체 키 값<br>\n {theme:this.dataTheme}<br>\n theme(String) : 테마<br>",
+                    "type": "JSON Object"
+                }
+            ],
+            "return": {
+                "description": "생성된 객체 배열 [visualType, nuclearPos]",
+                "type": "String"
+            },
+            "class": "OGDSM.eGovFrameUI",
             "module": "OGDSM.applyOptions"
         },
         {
@@ -1061,7 +1074,7 @@
         },
         {
             "file": "../js/openGDSMobile/OGDSM_externalConnection.js",
-            "line": 130,
+            "line": 131,
             "description": "GeoServer WFS 요청 (OpenLayers3 ol.source.ServerVector)",
             "itemtype": "method",
             "name": "geoServerWFS",
@@ -1096,7 +1109,7 @@
         },
         {
             "file": "../js/openGDSMobile/OGDSM_externalConnection.js",
-            "line": 211,
+            "line": 212,
             "description": "VWorld WMS 데이터 요청",
             "itemtype": "method",
             "name": "vworldWMSLoad",
@@ -1126,7 +1139,7 @@
         },
         {
             "file": "../js/openGDSMobile/OGDSM_externalConnection.js",
-            "line": 241,
+            "line": 242,
             "description": "공공 데이터 요청 인터페이스",
             "itemtype": "method",
             "name": "publicDataInterface",
@@ -1152,7 +1165,7 @@
         },
         {
             "file": "../js/openGDSMobile/OGDSM_externalConnection.js",
-            "line": 279,
+            "line": 280,
             "description": "서울 열린 데이터 광장 환경 데이터 요청",
             "itemtype": "method",
             "name": "seoulEnvironmentLoad",
@@ -1193,7 +1206,7 @@
         },
         {
             "file": "../js/openGDSMobile/OGDSM_externalConnection.js",
-            "line": 305,
+            "line": 306,
             "description": "데이터 포털 환경 데이터 요청",
             "itemtype": "method",
             "name": "dataPortalEnvironmentLoad",
@@ -1229,7 +1242,7 @@
         },
         {
             "file": "../js/openGDSMobile/OGDSM_externalConnection.js",
-            "line": 329,
+            "line": 330,
             "description": "데이터 포털 온실가스배출량 조회 서비스",
             "itemtype": "method",
             "name": "greenGasEmissionLoad",
@@ -1265,7 +1278,7 @@
         },
         {
             "file": "../js/openGDSMobile/OGDSM_externalConnection.js",
-            "line": 353,
+            "line": 354,
             "description": "원자력발전소 실시간 주변 방사선량",
             "itemtype": "method",
             "name": "realTimeLevelofRadiationLoad",
@@ -1296,7 +1309,7 @@
         },
         {
             "file": "../js/openGDSMobile/OGDSM_externalConnection.js",
-            "line": 373,
+            "line": 374,
             "description": "geoServer 데이터 리스트 요청",
             "itemtype": "method",
             "name": "getLayersGeoServer",
@@ -1319,26 +1332,6 @@
             ],
             "class": "OGDSM.externalConnection",
             "module": "OGDSM.applyOptions"
-        },
-        {
-            "file": "../js/openGDSMobile/OGDSM_indexedDB.js",
-            "line": 6,
-            "class": "OGDSM.mapLayerList",
-            "module": "OGDSM.applyOptions"
-        },
-        {
-            "file": "../js/openGDSMobile/OGDSM_indexedDB.js",
-            "line": 270,
-            "description": "Multiplue Object Store.. But....  iOS bug..\nhttps://gist.github.com/nolanlawson/08eb857c6b17a30c1b26",
-            "class": "OGDSM.mapLayerList",
-            "module": "OGDSM.indexedDB"
-        },
-        {
-            "file": "../js/openGDSMobile/OGDSM_indexedDB.js",
-            "line": 274,
-            "description": "OGDSM.indexedDB = function (dbName, options) { //dbName, storeName, success, fail\n    'use strict';\n    var dbObject = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;\n    var iDB = {};\n    options = (typeof (options) !== 'undefined') ? options : {};\n    var defaults = {\n        type : 'create',\n        storeName : null,\n        dataKey : null,\n        insertData : null,\n        searchValue : null,\n        dbSuccess : false,\n        dbFail : false\n    };\n    defaults = OGDSM.applyOptions(defaults, options);\n    if (defaults.dataKey === null) {\n        var keys = Object.keys(defaults.insertData[0]);\n        defaults.dataKey = keys[0];\n    }\n    if (typeof (Storage) !== 'undefined') {\n        if (localStorage.openGDSMobileDBVersion) {\n            localStorage.openGDSMobileDBVersion = Number(localStorage.openGDSMobileDBVersion) + 1;\n        } else {\n            localStorage.openGDSMobileDBVersion = localStorage.openGDSMobileDBVersion = 1;\n        }\n    }\n    if (defaults.type === 'searchAll') {\n        //OGDSM.indexedDB.search(dbName, defaults.storeName, defaults.dataKey, defaults.searchValue);\n        OGDSM.indexedDB.searchAll(dbName, defaults.storeName);\n        return -1;\n    }\n    var req = dbObject.open(dbName, localStorage.openGDSMobileDBVersion);\n    req.onsuccess = function (event) {\n        iDB.db = event.target.result;\n        OGDSM.indexedDB.addData(dbName, defaults.storeName, defaults.insertData, defaults.dataKey);\n        if (defaults.dbSuccess) {\n            defaults.dbSuccess(iDB.db);\n        } else {\n            console.log('Success Open / Create Indexed. Please call the second parameter of the callback function');\n        }\n        iDB.db.close();\n    };\n    req.onupgradeneeded = function (event) {\n        iDB.db = event.target.result;\n        if (defaults.storeName !== null) {\n            if (iDB.db.objectStoreNames.contains(defaults.storeName)) {\n                console.log('Exist Store Name. Therefore New Create After Remove');\n                iDB.db.deleteObjectStore(defaults.storeName);\n            }\n            iDB.db.createObjectStore(defaults.storeName);\n        }\n    };\n    req.onerror = function (e) {\n        console.log(\"Database error: \", e.target.error);\n    };\n};\nOGDSM.indexedDB.createStore = function (dbName, storeName, success) {\n    'use strict';\n    var iDB = {};\n    var newdbVersion = Number(localStorage.openGDSMobileDBVersion) + 1;\n    var req = this.dbObject.open(this.dbName, newdbVersion);\n    req.onupgradeneeded = function (event) {\n        iDB.db = event.target.result;\n        if (iDB.db.objectStoreNames.contains(storeName)) {\n            console.log('Exist Store Name. Therefore New Create After Remove');\n            iDB.db.deleteObjectStore(storeName);\n        }\n        iDB.db.createObjectStore(storeName);\n        localStorage.openGDSMobileDBVersion = Number(localStorage.openGDSMobileDBVersion) + 1;\n    };\n    req.onsuccess = function (event) {\n        iDB.db = event.target.result;\n        if (success) {\n            success(iDB.db);\n        }\n        iDB.db.close();\n    };\n};\nOGDSM.indexedDB.addData = function (dbName, storeName, data, keyColumn) {\n    'use strict';\n    var iDB = {};\n    var dbObject = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;\n    var req = dbObject.open(dbName, localStorage.openGDSMobileDBVersion);\n    req.onsuccess = function (event) {\n        iDB.db = event.target.result;\n        var trans = iDB.db.transaction(storeName, 'readwrite').objectStore(storeName);\n        var i = 0, j = 0;\n        for (i = 0; i < data.length; i++) {\n            trans.put(data[i], data[i][keyColumn]);\n        }\n        trans.onsuccess = function (e) {\n            iDB.db.close();\n        };\n        iDB.db.close();\n    };\n    req.onerror = function (e) {\n        console.log(e);\n        console.log(\"Database error: \", e.target.error);\n    };\n};",
-            "class": "OGDSM.mapLayerList",
-            "module": "OGDSM.indexedDB"
         },
         {
             "file": "../js/openGDSMobile/OGDSM_mapLayerList.js",
@@ -1549,24 +1542,6 @@
         },
         {
             "file": "../js/openGDSMobile/OGDSM_visualization.js",
-            "line": 297,
-            "class": "OGDSM.visualization",
-            "module": "OGDSM.indexedDB"
-        },
-        {
-            "file": "../js/openGDSMobile/OGDSM_visualization.js",
-            "line": 332,
-            "class": "OGDSM.visualization",
-            "module": "OGDSM.indexedDB"
-        },
-        {
-            "file": "../js/openGDSMobile/OGDSM_visualization.js",
-            "line": 344,
-            "class": "OGDSM.visualization",
-            "module": "OGDSM.indexedDB"
-        },
-        {
-            "file": "../js/openGDSMobile/OGDSM_visualization.js",
             "line": 365,
             "description": "이미지 레이어 시각화",
             "itemtype": "method",
@@ -1661,167 +1636,8 @@
         },
         {
             "file": "../js/openGDSMobile/Sortable.js",
-            "line": 1,
-            "description": "OGDSM Layer list sorting open source\nSortable\nauthor\tRubaXa   <trash@rubaxa.org>\nlicense MIT",
-            "class": "",
-            "module": "OGDSM.indexedDB"
-        },
-        {
-            "file": "../js/openGDSMobile/Sortable.js",
             "line": 160,
             "description": "class  Sortable\nparam  {HTMLElement}  el\nparam  {Object}       [options]",
-            "class": "",
-            "module": "OGDSM.indexedDB"
-        },
-        {
-            "file": "../js/openGDSMobile/Sortable.js",
-            "line": 718,
-            "description": "Serializes the item into an array of string.",
-            "return": {
-                "description": "",
-                "type": "String[]"
-            },
-            "class": "",
-            "module": "OGDSM.indexedDB"
-        },
-        {
-            "file": "../js/openGDSMobile/Sortable.js",
-            "line": 740,
-            "description": "Sorts the elements according to the array.",
-            "params": [
-                {
-                    "name": "order",
-                    "description": "order of the items",
-                    "type": "String[]"
-                }
-            ],
-            "class": "",
-            "module": "OGDSM.indexedDB"
-        },
-        {
-            "file": "../js/openGDSMobile/Sortable.js",
-            "line": 764,
-            "description": "Save the current sorting",
-            "class": "",
-            "module": "OGDSM.indexedDB"
-        },
-        {
-            "file": "../js/openGDSMobile/Sortable.js",
-            "line": 773,
-            "description": "For each element in the set, get the first element that matches the selector by testing the element itself and traversing up through its ancestors in the DOM tree.",
-            "params": [
-                {
-                    "name": "el",
-                    "description": "",
-                    "type": "HTMLElement"
-                },
-                {
-                    "name": "selector",
-                    "description": "default: `options.draggable`",
-                    "type": "String",
-                    "optional": true
-                }
-            ],
-            "return": {
-                "description": "",
-                "type": "HTMLElement|null"
-            },
-            "class": "",
-            "module": "OGDSM.indexedDB"
-        },
-        {
-            "file": "../js/openGDSMobile/Sortable.js",
-            "line": 784,
-            "description": "Set/get option",
-            "params": [
-                {
-                    "name": "name",
-                    "description": "",
-                    "type": "String"
-                },
-                {
-                    "name": "value",
-                    "description": "",
-                    "type": "*",
-                    "optional": true
-                }
-            ],
-            "return": {
-                "description": "",
-                "type": "*"
-            },
-            "class": "",
-            "module": "OGDSM.indexedDB"
-        },
-        {
-            "file": "../js/openGDSMobile/Sortable.js",
-            "line": 801,
-            "description": "Destroy",
-            "class": "",
-            "module": "OGDSM.indexedDB"
-        },
-        {
-            "file": "../js/openGDSMobile/Sortable.js",
-            "line": 954,
-            "class": "",
-            "module": "OGDSM.indexedDB"
-        },
-        {
-            "file": "../js/openGDSMobile/Sortable.js",
-            "line": 961,
-            "description": "Generate id",
-            "params": [
-                {
-                    "name": "el",
-                    "description": "",
-                    "type": "HTMLElement"
-                }
-            ],
-            "return": {
-                "description": "",
-                "type": "String"
-            },
-            "access": "private",
-            "tagname": "",
-            "class": "",
-            "module": "OGDSM.indexedDB"
-        },
-        {
-            "file": "../js/openGDSMobile/Sortable.js",
-            "line": 979,
-            "description": "Returns the index of an element within its parent",
-            "params": [
-                {
-                    "name": "el",
-                    "description": ""
-                }
-            ],
-            "return": {
-                "description": "",
-                "type": "Number"
-            },
-            "access": "private",
-            "tagname": "",
-            "class": "",
-            "module": "OGDSM.indexedDB"
-        },
-        {
-            "file": "../js/openGDSMobile/Sortable.js",
-            "line": 1038,
-            "description": "Create sortable instance",
-            "params": [
-                {
-                    "name": "el",
-                    "description": "",
-                    "type": "HTMLElement"
-                },
-                {
-                    "name": "options",
-                    "description": "",
-                    "type": "Object",
-                    "optional": true
-                }
-            ],
             "class": "",
             "module": "OGDSM.indexedDB"
         },
@@ -1859,128 +1675,8 @@
     ],
     "warnings": [
         {
-            "message": "param name missing: {Object}",
-            "line": " ../js/openGDSMobile/OGDSM_attributeTable.js:55"
-        },
-        {
-            "message": "replacing incorrect tag: returns with return",
-            "line": " ../js/openGDSMobile/Sortable.js:718"
-        },
-        {
-            "message": "replacing incorrect tag: returns with return",
-            "line": " ../js/openGDSMobile/Sortable.js:773"
-        },
-        {
-            "message": "replacing incorrect tag: returns with return",
-            "line": " ../js/openGDSMobile/Sortable.js:784"
-        },
-        {
-            "message": "replacing incorrect tag: returns with return",
-            "line": " ../js/openGDSMobile/Sortable.js:961"
-        },
-        {
-            "message": "replacing incorrect tag: returns with return",
-            "line": " ../js/openGDSMobile/Sortable.js:979"
-        },
-        {
-            "message": "Missing item type",
-            "line": " ../js/openGDSMobile/OGDSM_attributeTable.js:143"
-        },
-        {
-            "message": "Missing item type",
-            "line": " ../js/openGDSMobile/OGDSM_attributeTable.js:165"
-        },
-        {
-            "message": "Missing item type",
-            "line": " ../js/openGDSMobile/OGDSM_attributeTable.js:180"
-        },
-        {
-            "message": "Missing item type",
-            "line": " ../js/openGDSMobile/OGDSM_attributeTable.js:188"
-        },
-        {
-            "message": "Missing item type",
-            "line": " ../js/openGDSMobile/OGDSM_attributeTable.js:195"
-        },
-        {
-            "message": "Missing item type",
-            "line": " ../js/openGDSMobile/OGDSM_eGovFrameUI.js:282"
-        },
-        {
-            "message": "Missing item type",
-            "line": " ../js/openGDSMobile/OGDSM_externalConnection.js:1"
-        },
-        {
-            "message": "Missing item type",
-            "line": " ../js/openGDSMobile/OGDSM_indexedDB.js:6"
-        },
-        {
-            "message": "Missing item type\nMultiplue Object Store.. But....  iOS bug..\nhttps://gist.github.com/nolanlawson/08eb857c6b17a30c1b26",
-            "line": " ../js/openGDSMobile/OGDSM_indexedDB.js:270"
-        },
-        {
-            "message": "Missing item type\nOGDSM.indexedDB = function (dbName, options) { //dbName, storeName, success, fail\n    'use strict';\n    var dbObject = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;\n    var iDB = {};\n    options = (typeof (options) !== 'undefined') ? options : {};\n    var defaults = {\n        type : 'create',\n        storeName : null,\n        dataKey : null,\n        insertData : null,\n        searchValue : null,\n        dbSuccess : false,\n        dbFail : false\n    };\n    defaults = OGDSM.applyOptions(defaults, options);\n    if (defaults.dataKey === null) {\n        var keys = Object.keys(defaults.insertData[0]);\n        defaults.dataKey = keys[0];\n    }\n    if (typeof (Storage) !== 'undefined') {\n        if (localStorage.openGDSMobileDBVersion) {\n            localStorage.openGDSMobileDBVersion = Number(localStorage.openGDSMobileDBVersion) + 1;\n        } else {\n            localStorage.openGDSMobileDBVersion = localStorage.openGDSMobileDBVersion = 1;\n        }\n    }\n    if (defaults.type === 'searchAll') {\n        //OGDSM.indexedDB.search(dbName, defaults.storeName, defaults.dataKey, defaults.searchValue);\n        OGDSM.indexedDB.searchAll(dbName, defaults.storeName);\n        return -1;\n    }\n    var req = dbObject.open(dbName, localStorage.openGDSMobileDBVersion);\n    req.onsuccess = function (event) {\n        iDB.db = event.target.result;\n        OGDSM.indexedDB.addData(dbName, defaults.storeName, defaults.insertData, defaults.dataKey);\n        if (defaults.dbSuccess) {\n            defaults.dbSuccess(iDB.db);\n        } else {\n            console.log('Success Open / Create Indexed. Please call the second parameter of the callback function');\n        }\n        iDB.db.close();\n    };\n    req.onupgradeneeded = function (event) {\n        iDB.db = event.target.result;\n        if (defaults.storeName !== null) {\n            if (iDB.db.objectStoreNames.contains(defaults.storeName)) {\n                console.log('Exist Store Name. Therefore New Create After Remove');\n                iDB.db.deleteObjectStore(defaults.storeName);\n            }\n            iDB.db.createObjectStore(defaults.storeName);\n        }\n    };\n    req.onerror = function (e) {\n        console.log(\"Database error: \", e.target.error);\n    };\n};\nOGDSM.indexedDB.createStore = function (dbName, storeName, success) {\n    'use strict';\n    var iDB = {};\n    var newdbVersion = Number(localStorage.openGDSMobileDBVersion) + 1;\n    var req = this.dbObject.open(this.dbName, newdbVersion);\n    req.onupgradeneeded = function (event) {\n        iDB.db = event.target.result;\n        if (iDB.db.objectStoreNames.contains(storeName)) {\n            console.log('Exist Store Name. Therefore New Create After Remove');\n            iDB.db.deleteObjectStore(storeName);\n        }\n        iDB.db.createObjectStore(storeName);\n        localStorage.openGDSMobileDBVersion = Number(localStorage.openGDSMobileDBVersion) + 1;\n    };\n    req.onsuccess = function (event) {\n        iDB.db = event.target.result;\n        if (success) {\n            success(iDB.db);\n        }\n        iDB.db.close();\n    };\n};\nOGDSM.indexedDB.addData = function (dbName, storeName, data, keyColumn) {\n    'use strict';\n    var iDB = {};\n    var dbObject = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;\n    var req = dbObject.open(dbName, localStorage.openGDSMobileDBVersion);\n    req.onsuccess = function (event) {\n        iDB.db = event.target.result;\n        var trans = iDB.db.transaction(storeName, 'readwrite').objectStore(storeName);\n        var i = 0, j = 0;\n        for (i = 0; i < data.length; i++) {\n            trans.put(data[i], data[i][keyColumn]);\n        }\n        trans.onsuccess = function (e) {\n            iDB.db.close();\n        };\n        iDB.db.close();\n    };\n    req.onerror = function (e) {\n        console.log(e);\n        console.log(\"Database error: \", e.target.error);\n    };\n};",
-            "line": " ../js/openGDSMobile/OGDSM_indexedDB.js:274"
-        },
-        {
-            "message": "Missing item type",
-            "line": " ../js/openGDSMobile/OGDSM_visualization.js:297"
-        },
-        {
-            "message": "Missing item type",
-            "line": " ../js/openGDSMobile/OGDSM_visualization.js:332"
-        },
-        {
-            "message": "Missing item type",
-            "line": " ../js/openGDSMobile/OGDSM_visualization.js:344"
-        },
-        {
-            "message": "Missing item type\nOGDSM Layer list sorting open source\nSortable\nauthor\tRubaXa   <trash@rubaxa.org>\nlicense MIT",
-            "line": " ../js/openGDSMobile/Sortable.js:1"
-        },
-        {
             "message": "Missing item type\nclass  Sortable\nparam  {HTMLElement}  el\nparam  {Object}       [options]",
             "line": " ../js/openGDSMobile/Sortable.js:160"
-        },
-        {
-            "message": "Missing item type\nSerializes the item into an array of string.",
-            "line": " ../js/openGDSMobile/Sortable.js:718"
-        },
-        {
-            "message": "Missing item type\nSorts the elements according to the array.",
-            "line": " ../js/openGDSMobile/Sortable.js:740"
-        },
-        {
-            "message": "Missing item type\nSave the current sorting",
-            "line": " ../js/openGDSMobile/Sortable.js:764"
-        },
-        {
-            "message": "Missing item type\nFor each element in the set, get the first element that matches the selector by testing the element itself and traversing up through its ancestors in the DOM tree.",
-            "line": " ../js/openGDSMobile/Sortable.js:773"
-        },
-        {
-            "message": "Missing item type\nSet/get option",
-            "line": " ../js/openGDSMobile/Sortable.js:784"
-        },
-        {
-            "message": "Missing item type\nDestroy",
-            "line": " ../js/openGDSMobile/Sortable.js:801"
-        },
-        {
-            "message": "Missing item type",
-            "line": " ../js/openGDSMobile/Sortable.js:954"
-        },
-        {
-            "message": "Missing item type\nGenerate id",
-            "line": " ../js/openGDSMobile/Sortable.js:961"
-        },
-        {
-            "message": "Missing item type\nReturns the index of an element within its parent",
-            "line": " ../js/openGDSMobile/Sortable.js:979"
-        },
-        {
-            "message": "Missing item type\nCreate sortable instance",
-            "line": " ../js/openGDSMobile/Sortable.js:1038"
         }
     ]
 }

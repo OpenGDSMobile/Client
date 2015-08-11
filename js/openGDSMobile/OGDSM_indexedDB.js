@@ -3,7 +3,7 @@
 
 
 
-/** Single Object Store **/
+/* Single Object Store */
 /**
 * OGDSM indexedDB 모듈
 *
@@ -11,28 +11,32 @@
 *       OGDSM.indexedDB('dbName'. {options});
 * - Options
 *   옵션 JSON 객체 키 값<br>
-    {type:'new', storeName:dbName, insertKey:null, insertData:null,
-     searchKey: null, searchData: numm, editData: numm, success: false, dbFile : false}<br>
-    type (String) : 모듈 실행 타입 설정<br>
-     > new : DB 생성/ 데이터 삽입 (dbName, storeName, insertData, insertKey)<br>
-     > insert: 데이터 삽입 (dbName, storeName, insertData, insertKey)<br>
-     > forceInsert: 데이터 강제 삽입 (dbName, storeName, insertData, insertKey)<br>
-     > remove: DB 데이터 삭제 ( --- )<br>
-     > removeAll: DB 데이터 모두 삭제 ( --- )<br>
-     > search: DB 데이터 검색 (dbName, storeName, searchKey, searchData)<br>
-     > searchAll: DB 데이터 모두 검색 (dbName, storeName)<br>
-     > edit: DB 데이터 수정 (dbName, storeName, searchKey, searchData, editData)<br>
-     > deleteDB: DB 삭제 (dbName)<br>
-    storeName (String) : 스토어<br>
-    insertKey (String) : 삽입 대상 키<br>
-    insertData (String) : 삽입 데이터<br>
-    searchKey (String) : 검색 대상 키<br>
-    searchData (String) : 검색할 데이터<br>
-    editData (String) : 수정할 데이터<br>
-    success (function) : 성공 콜백 함수 (데이터 검색일 경우 데이터 파라미터로 보내짐)<br>
-    dbFail (function) : 실패 콜백 함수<br>
+{type:'new', storeName:dbName, insertKey:null, insertData:null,
+searchKey: null, searchData: null, editData: null, deleteKey: null, success: false, dbFile : false}<br>
+<p style="font-weight:bold;">
+type (String) : 모듈 실행 타입 설정 (필요 파라미터)
+</p>
+<p style="padding-left:2em; background-color:#FFFFFF;">new : DB 생성/ 데이터 삽입 (dbName, storeName, insertData, insertKey)<br>
+    insert / forceInsert: 데이터 삽입 / 데이터 강제 삽입 (dbName, storeName, insertData, insertKey)<br>
+    searchAll / removeAll : 모든 데이터 검색 / 삭제 (dbName, storeName)<br>
+    search: DB 데이터 검색 (dbName, storeName, searchKey, searchData)<br>
+    remove: DB 데이터 삭제 (dbName, storeName, deleteKey)<br>
+    edit: DB 데이터 수정 (dbName, storeName, searchKey, searchData, editData)<br>
+    deleteDB: DB 삭제 (dbName)
+</p>
+<p style="font-weight:bold;">
+storeName (String) : 스토어<br>
+insertKey (String) : 삽입 대상 키<br>
+insertData (String) : 삽입 데이터<br>
+searchKey (String) : 검색 대상 키<br>
+searchData (String) : 검색할 데이터<br>
+editData (String) : 수정할 데이터<br>
+deleteKey (String) : 삭제할 키 데이터<br>
+success (function) : 성공 콜백 함수 (데이터 검색일 경우 데이터 파라미터로 보내짐)<br>
+dbFail (function) : 실패 콜백 함수<br>
+</p>
 * @module OGDSM.indexedDB
-*/
+**/
 OGDSM.indexedDB = function (dbName, options) { //dbName_ StoreName, storeName, success, fail
     'use strict';
     var dbObject = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
@@ -46,8 +50,9 @@ OGDSM.indexedDB = function (dbName, options) { //dbName_ StoreName, storeName, s
         searchKey : null,
         searchData : null,
         editData : null,
+        deleteKey : null,
         success : false,
-        dbFail : false
+        fail : false
     };
     defaults = OGDSM.applyOptions(defaults, options);
     if (typeof (Storage) !== 'undefined') {
@@ -122,28 +127,19 @@ OGDSM.indexedDB = function (dbName, options) { //dbName_ StoreName, storeName, s
         var req = dbObject.open(dbName, localStorage.openGDSMobileDBVersion);
         req.onsuccess = function (event) {
             iDB.db = event.target.result;
-            var trans = iDB.db.transaction(storeName, 'readonly').objectStore(storeName);
-            var request = trans.openCursor();
-            request.onsuccess = function (event) {
-                var cursor = event.target.result;
-                var result = null;
+            var trans = iDB.db.transaction(storeName, 'readonly');
+            var resultAll = [];
+            var result = null;
+            trans.oncomplete = function (evt) {
                 var searchResult = null;
                 var srcResult = null, dstResult = null;
-                if (cursor) {
-                    var field;
-                    if (cursor.key === searchKey) {
-                        result = cursor.value;
-                    } else {
-                        cursor.continue();
-                    }
-                }
                 if (type === 'searchAll') {
                     if (defaults.success) {
-                        if (result !== null) {
-                            defaults.success(result);
+                        if (resultAll.length !== 0) {
+                            defaults.success(resultAll);
                         } else {
                             console.error('Not data');
-                            defaults.fail(result);
+                            defaults.fail(resultAll);
                         }
                     } else {
                         console.log('Success search Data. Please call the second parameter of the callback function');
@@ -151,7 +147,8 @@ OGDSM.indexedDB = function (dbName, options) { //dbName_ StoreName, storeName, s
                 } else if (type === 'search' || type === 'edit') {
                     if (result !== null) {
                         if (searchData === null) {
-                            console.error('OGDSM Error : Please input search data');
+                            console.log('OGDSM log : Not input search data. So search result based On Key');
+                            defaults.success(result);
                             return -1;
                         }
                         var value;
@@ -190,8 +187,25 @@ OGDSM.indexedDB = function (dbName, options) { //dbName_ StoreName, storeName, s
                             console.log(result);
                             console.log('object object');
                         }
+                    } else {
+                        console.error('OGDSM Error : Not data key');
                     }
-
+                }
+            };
+            var request = trans.objectStore(storeName).openCursor();
+            request.onsuccess = function (event) {
+                var cursor = event.target.result;
+                if (cursor) {
+                    var field;
+                    var obj = {};
+                    obj.key = cursor.key;
+                    obj.value = cursor.value;
+                    resultAll.push(obj);
+                    if (cursor.key === searchKey) {
+                        result = cursor.value;
+                    } else {
+                        cursor.continue();
+                    }
                 }
             };
         };
@@ -229,6 +243,14 @@ OGDSM.indexedDB = function (dbName, options) { //dbName_ StoreName, storeName, s
             console.log("Database error: ", e.target.error);
         };
     }
+    function removeData(dbName, storeName, key) {
+        var req = dbObject.open(dbName, localStorage.openGDSMobileDBVersion);
+        req.onsuccess = function (event) {
+            iDB.db = event.target.result;
+            var trans = iDB.db.transaction(storeName, 'readwrite');
+            trans.objectStore(storeName).delete(key);
+        };
+    }
     function clearObjectStore(dbName, storeName) {
         var req = dbObject.open(dbName, localStorage.openGDSMobileDBVersion);
         req.onsuccess = function (event) {
@@ -236,8 +258,6 @@ OGDSM.indexedDB = function (dbName, options) { //dbName_ StoreName, storeName, s
             var trans = iDB.db.transaction(storeName, 'readwrite').objectStore(storeName);
             trans.clear();
         };
-
-
     }
     if (defaults.type === 'new') {
         openDBInsertData(dbName, defaults.storeName, defaults.insertData, defaults.insertKey);
@@ -246,7 +266,7 @@ OGDSM.indexedDB = function (dbName, options) { //dbName_ StoreName, storeName, s
     } else if (defaults.type === 'forceInsert') {
         updateData(dbName, defaults.storeName, defaults.insertData, defaults.insertKey);
     } else if (defaults.type === 'remove') {
-
+        removeData(dbName, defaults.storeName, defaults.deleteKey);
         return -1;
     } else if (defaults.type === 'removeAll') {
         clearObjectStore(dbName, defaults.storeName);
@@ -267,11 +287,11 @@ OGDSM.indexedDB = function (dbName, options) { //dbName_ StoreName, storeName, s
 
 
 
-/***********
+/*
 Multiplue Object Store.. But....  iOS bug..
 https://gist.github.com/nolanlawson/08eb857c6b17a30c1b26
-***********************************/
-/***
+*/
+/*
 OGDSM.indexedDB = function (dbName, options) { //dbName, storeName, success, fail
     'use strict';
     var dbObject = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
@@ -372,4 +392,4 @@ OGDSM.indexedDB.addData = function (dbName, storeName, data, keyColumn) {
         console.log("Database error: ", e.target.error);
     };
 };
-*********/
+*/

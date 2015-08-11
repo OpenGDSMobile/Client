@@ -30,6 +30,7 @@
     <script type="text/javascript" src="./js/openGDSMobile/OGDSM_eGovFrameUI.js"></script>
     <script type="text/javascript" src="./js/openGDSMobile/OGDSM_externalConnection.js"></script>
     <script type="text/javascript" src="./js/openGDSMobile/OGDSM_mapLayerList.js"></script>
+    <script type="text/javascript" src="./js/openGDSMobile/OGDSM_chartVisualization.js"></script>
     <script type="text/javascript" src="./js/openGDSMobile/OGDSM_visualization.js"></script>
     <script type="text/javascript" src="./js/openGDSMobile/Sortable.js"></script>
 
@@ -69,7 +70,7 @@
             height : 400px;
             overflow-y: auto;
         }
-/* openGDS Mobile CSS */
+/* openGDS Mobile Demo CSS */
         /* basemap select*/
         .OGDSPosTopRight{
             position : absolute;
@@ -120,8 +121,6 @@
             z-index: 10001;
             top :0%;
         }
-
-
         #tableTab{
             list-style:none;
             position:relative;
@@ -164,6 +163,8 @@
                     도로명 전자지도(국가공간정보유통시스템)</a>
                 <a href="#opendataList" data-role="button" data-rel="popup" data-mini="true" data-inline="true" data-transition="slidefade">
                     공공 데이터</a>
+                <a href="#attrDataList" data-role="button" data-rel="popup" data-mini="true" data-inline="true" data-transition="slidefade">
+                    저장 데이터(속성정보)</a>
             </div>
         </div>
         <div id="mapSelect" class="OGDSPosTopRight"></div>
@@ -225,11 +226,6 @@
 		data-overlay-theme="a"
 		style="width:250px; text-align:center; align:center;">
 		</div>
-<!-- Data Table -->
-		<!--<div data-role="panel" data-display="overlay" data-position="right" id="publicDataView">
-			<table id="dataTable">
-			</table>
-		</div>-->
 <!-- Public Data Select -->
 		<div data-role="popup" id="dataSelect" data-overlay-theme="a">
 		  <div id="range">
@@ -253,49 +249,56 @@
             </div>
 			<div id="d3View"> </div>
 		</div>
+<!-- Attribute Data Save -->
+        <div data-role="popup" id="attrDataList">
+            <p id="NotData">데이터 없음</p>
+            <ul data-role="listview" id="attrList">
+
+            </ul>
+        </div>
 <!--WFS PopUp-->
-    <div data-role="popup" id="WFSList">
-        <ul data-role="listview" id="wfslayersList">
-            <li data-theme="z" data-role="list-divider">도로명 전자지도</li>
-            <li><a href="#" onclick="wfsLoad('seoul_sig', 'sig_eng_nm')">서울특별시(구 단위)</a></li>
-            <li><a href="#" onclick="wfsLoad('seoul_emd', 'emd_eng_nm')">서울특별시(동 단위)</a></li>
-            <li><a href="#" onclick="wfsLoad('incheon_emd', 'emd_kor_nm')">인천광역시(동 단위)</a></li>
-            <li><a href="#" onclick="wfsLoad('sejong_emd', 'emd_kor_nm')">세종특별자치시(동 단위)</a></li>
-            <li><a href="#" onclick="wfsLoad('daejong_emd', 'emd_kor_nm')">대전광역시(동 단위)</a></li>
-            <li><a href="#" onclick="wfsLoad('daegu_emd', 'emd_kor_nm')">대구광역시(동 단위)</a></li>
-            <li><a href="#" onclick="wfsLoad('ulsan_emd', 'emd_kor_nm')">울산광역시(동 단위)</a></li>
-            <li><a href="#" onclick="wfsLoad('gwangju_emd', 'emd_kor_nm')">광주광역시(동 단위)</a></li>
-            <li><a href="#" onclick="wfsLoad('busan_emd', 'emd_kor_nm')">부산광역시(동 단위)</a></li>
-            <li><a href="#" onclick="wfsLoad('chungbuk_sig', 'sig_kor_nm')">충청북도(구 단위)</a></li>
-            <li><a href="#" onclick="wfsLoad('chungnam_sig', 'sig_kor_nm')">충청남도(구 단위)</a></li>
-            <li><a href="#" onclick="wfsLoad('gangwon_sig', 'sig_kor_nm')">강원도(구 단위)</a></li>
-            <li><a href="#" onclick="wfsLoad('gyeonggi_sig', 'sig_kor_nm')">경기도(구 단위)</a></li>
-            <li><a href="#" onclick="wfsLoad('Gyeongsangbuk_sig', 'sig_kor_nm')">경상북도(구 단위)</a></li>
-            <li><a href="#" onclick="wfsLoad('Gyeongsangnam_sig', 'sig_kor_nm')">경상남도(구 단위)</a></li>
-            <li><a href="#" onclick="wfsLoad('Jeju_sig', 'sig_kor_nm')">제주도(구 단위)</a></li>
-            <li><a href="#" onclick="wfsLoad('Jellanam_sig', 'sig_kor_nm')">전라남도(구 단위)</a></li>
-            <li><a href="#" onclick="wfsLoad('Jeollabuk_sig', 'sig_kor_nm')">전라북도(구 단위)</a></li>
-        </ul>
-    </div>
+        <div data-role="popup" id="WFSList">
+            <ul data-role="listview" id="wfslayersList">
+                <li data-theme="z" data-role="list-divider">도로명 전자지도</li>
+                <li><a href="#" onclick="wfsLoad('seoul_sig', 'sig_kor_nm')">서울특별시(구 단위)</a></li>
+                <li><a href="#" onclick="wfsLoad('seoul_emd', 'emd_kor_nm')">서울특별시(동 단위)</a></li>
+                <li><a href="#" onclick="wfsLoad('incheon_emd', 'emd_kor_nm')">인천광역시(동 단위)</a></li>
+                <li><a href="#" onclick="wfsLoad('sejong_emd', 'emd_kor_nm')">세종특별자치시(동 단위)</a></li>
+                <li><a href="#" onclick="wfsLoad('daejong_emd', 'emd_kor_nm')">대전광역시(동 단위)</a></li>
+                <li><a href="#" onclick="wfsLoad('daegu_emd', 'emd_kor_nm')">대구광역시(동 단위)</a></li>
+                <li><a href="#" onclick="wfsLoad('ulsan_emd', 'emd_kor_nm')">울산광역시(동 단위)</a></li>
+                <li><a href="#" onclick="wfsLoad('gwangju_emd', 'emd_kor_nm')">광주광역시(동 단위)</a></li>
+                <li><a href="#" onclick="wfsLoad('busan_emd', 'emd_kor_nm')">부산광역시(동 단위)</a></li>
+                <li><a href="#" onclick="wfsLoad('chungbuk_sig', 'sig_kor_nm')">충청북도(구 단위)</a></li>
+                <li><a href="#" onclick="wfsLoad('chungnam_sig', 'sig_kor_nm')">충청남도(구 단위)</a></li>
+                <li><a href="#" onclick="wfsLoad('gangwon_sig', 'sig_kor_nm')">강원도(구 단위)</a></li>
+                <li><a href="#" onclick="wfsLoad('gyeonggi_sig', 'sig_kor_nm')">경기도(구 단위)</a></li>
+                <li><a href="#" onclick="wfsLoad('Gyeongsangbuk_sig', 'sig_kor_nm')">경상북도(구 단위)</a></li>
+                <li><a href="#" onclick="wfsLoad('Gyeongsangnam_sig', 'sig_kor_nm')">경상남도(구 단위)</a></li>
+                <li><a href="#" onclick="wfsLoad('Jeju_sig', 'sig_kor_nm')">제주도(구 단위)</a></li>
+                <li><a href="#" onclick="wfsLoad('Jellanam_sig', 'sig_kor_nm')">전라남도(구 단위)</a></li>
+                <li><a href="#" onclick="wfsLoad('Jeollabuk_sig', 'sig_kor_nm')">전라북도(구 단위)</a></li>
+            </ul>
+        </div>
 <!--Open Data PopUp-->
-    <div data-role="popup" id="opendataList">
-        <ul data-role="listview">
-            <li data-theme="z" data-role="list-divider">데이터 셋</li>
-            <li><a href="#" onclick="wfsLoad('seoul_env_position', 'name')">환경 센서위치(서울)</a></li>
-            <li><a href="#" onclick="wfsLoad('city_wer_mse_esb_loca_w','point')">도시 기상 관측망(서울)</a></li>
-            <li><a href="#" onclick="wfsLoad('sejong_population_wgs84')">인구 데이터(세종특별시2013.1.-2014.2.)</a></li>
-            <li data-theme="z" data-role="list-divider">오픈 API</li>
-            <li><a href="#setting" data-rel="popup" data-position-to="window"
-                   onclick="createSeoulPublicAreaEnvUI()">서울시 실시간 대기환경(서울열린데이터광장)</a></li>
-            <li><a href="#setting" data-rel="popup" data-position-to="window"
-                   onclick="createPublicPortalUI()">전국 실시간 대기환경(공공데이터포털: 에어코리아)</a></li>
-            <li><a href="#setting" data-rel="popup" data-position-to="window"
-                   onclick="#">원자력발전소 실시간 주변 방사선량 X(공공데이터포털: )</a></li>
-            <li><a href="#setting" data-rel="popup" data-position-to="window"
-                   onclick="#">온실가스배출량 조회 서비스 X(공공데이터포털: )</a></li>
-        </ul>
+        <div data-role="popup" id="opendataList">
+            <ul data-role="listview">
+                <li data-theme="z" data-role="list-divider">데이터 셋</li>
+                <li><a href="#" onclick="wfsLoad('seoul_env_position', 'name')">환경 센서위치(서울열린데이터광장)</a></li>
+                <li><a href="#" onclick="wfsLoad('city_wer_mse_esb_loca_w','point')">도시 기상 관측망(서울열린데이터광장)</a></li>
+                <li><a href="#" onclick="wfsLoad('sejong_population_wgs84')">인구 데이터(세종특별시2013.1.-2014.2.)</a></li>
+                <li data-theme="z" data-role="list-divider">오픈 API</li>
+                <li><a href="#setting" data-rel="popup" data-position-to="window"
+                       onclick="createSeoulPublicAreaEnvUI()">서울시 실시간 대기환경(서울열린데이터광장)</a></li>
+                <li><a href="#setting" data-rel="popup" data-position-to="window"
+                       onclick="createPublicPortalUI('airKorea')">전국 실시간 대기환경(공공데이터포털: 에어코리아)</a></li>
+                <li><a href="#setting" data-rel="popup" data-position-to="window"
+                       onclick="createPublicPortalUI('nuclear')">원자력발전소 실시간 주변 방사선량(공공데이터포털: 한국수력원자력)</a></li>
+                <li><a href="#setting" data-rel="popup" data-position-to="window"
+                       onclick="createPublicPortalUI('greengas')">온실가스배출량 조회 서비스(공공데이터포털: 한국지역난방공사)</a></li>
+            </ul>
+        </div>
     </div>
-</div>
 </body>
 </html>
 

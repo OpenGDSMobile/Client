@@ -18,7 +18,7 @@
             <h1 class="blue-main-title"></h1>
         </div>
         <div class="yui3-u-1-4 version project-version">
-            API Docs for:
+            API Docs for: 
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -32,11 +32,11 @@
                             <li><a href="#api-classes">Classes</a></li>
                             <li><a href="#api-modules">Modules</a></li>
                         </ul>
-
+                
                         <div id="api-tabview-filter">
                             <input type="search" id="api-filter" placeholder="Type to filter APIs">
                         </div>
-
+                
                         <div id="api-tabview-panel">
                             <ul id="api-classes" class="apis classes">
                                 <li><a href="../classes/OGDSM.html">OGDSM</a></li>
@@ -47,7 +47,7 @@
                                 <li><a href="../classes/OGDSM.mapLayerList.html">OGDSM.mapLayerList</a></li>
                                 <li><a href="../classes/OGDSM.visualization.html">OGDSM.visualization</a></li>
                             </ul>
-
+                
                             <ul id="api-modules" class="apis modules">
                                 <li><a href="../modules/OGDSM.applyOptions.html">OGDSM.applyOptions</a></li>
                                 <li><a href="../modules/OGDSM.indexedDB.html">OGDSM.indexedDB</a></li>
@@ -66,12 +66,12 @@
                         <input type="checkbox" id="api-show-inherited" checked>
                         Inherited
                     </label>
-
+            
                     <label for="api-show-protected">
                         <input type="checkbox" id="api-show-protected">
                         Protected
                     </label>
-
+            
                     <label for="api-show-private">
                         <input type="checkbox" id="api-show-private">
                         Private
@@ -80,14 +80,14 @@
                         <input type="checkbox" id="api-show-deprecated">
                         Deprecated
                     </label>
-
+            
                 </div>
-
+            
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
                         <h1 class="file-heading">File: ../js/openGDSMobile/OGDSM_eGovFrameUI.js</h1>
-
+                        
                         <div class="file">
                             <pre class="code prettyprint linenums">
                         /*jslint devel: true, vars : true */
@@ -114,8 +114,8 @@
                             };
                             return OGDSM.eGovFrameUI;
                         }(OGDSM));
-
-
+                        
+                        
                         /**
                          * 버튼 자동 생성
                          * @method autoButton
@@ -138,14 +138,14 @@
                                 html = &#x27;&lt;a data-role=&quot;button&quot; id=&quot;&#x27; + linkId + &#x27;&quot; href=&quot;&#x27; + url + &#x27;&quot; &#x27;,
                                 i = 0,
                                 name = null;
-
+                        
                             var defaults = {
                                 theme : this.dataTheme,
                                 corners : true,
                                 inline : false,
                                 mini : false
                             };
-
+                        
                             defaults = OGDSM.applyOptions(defaults, options);
                             html += &#x27;data-theme=&quot;&#x27; + defaults.theme + &#x27;&quot; data-corners=&quot;&#x27; + defaults.corners + &#x27;&quot; data-inline=&quot;&#x27; + defaults.inline + &#x27;&quot; data-mini=&quot;&#x27; + defaults.mini + &#x27;&quot;&#x27;;
                             html += &#x27;&gt;&#x27; + buttonTitle + &#x27;&lt;/a&gt;&#x27;;
@@ -153,7 +153,7 @@
                             rootDiv.trigger(&quot;create&quot;);
                             return $(&quot;#&quot; + linkId);
                         };
-
+                        
                         /**
                          * 체크박스 자동 생성
                          * @method autoCheckBox
@@ -204,7 +204,7 @@
                             rootDiv.trigger(&#x27;create&#x27;);
                             return $(&#x27;input[name=&#x27; + defaults.checkName + &#x27;]:checkbox&#x27;);
                         };
-
+                        
                         /**
                          * 라디오 박스 자동 생성
                          * @method autoRadioBox
@@ -228,7 +228,7 @@
                                 optionData = [&#x27;&#x27;, this.dataTheme],
                                 i = 0,
                                 name = 0;
-
+                        
                             var defaults = {
                                 radioName : radioId + &#x27;Name&#x27;,
                                 horizontal : false,
@@ -240,7 +240,7 @@
                             } else {
                                 html += &#x27;data-theme=&quot;&#x27; + defaults.theme + &#x27;&quot;&gt;&#x27;;
                             }
-
+                        
                             for (i = 0; i &lt; labels.length; i += 1) {
                                 html += &#x27;&lt;input type=&quot;radio&quot;name=&quot;&#x27; + defaults.radioName + &#x27;&quot; id=&quot;&#x27; + radioId + i + &#x27;&quot; value=&quot;&#x27; + values[i] + &#x27;&quot; &#x27;;
                                 html += &#x27;data-theme=&quot;&#x27; + defaults.theme + &#x27;&quot; class=&quot;custom&quot; &#x27;;
@@ -255,9 +255,9 @@
                             rootDiv.append(html);
                             rootDiv.trigger(&#x27;create&#x27;);
                             return $(&#x27;input[name=&#x27; + defaults.radioName + &#x27;]:radio&#x27;);
-
+                        
                         };
-
+                        
                         /**
                          * 셀렉트 자동 생성
                          * @method autoSelect
@@ -290,7 +290,7 @@
                             html = &#x27;&lt;select name=&quot;&#x27; + selectName + &#x27;&quot; id=&quot;&#x27; + selectId + &#x27;&quot; &#x27; + &#x27;data-mini=&quot;&#x27; + defaults.mini +
                                    &#x27;&quot; data-theme=&quot;&#x27; + defaults.theme + &#x27;&quot; data-corners=&quot;&#x27; + defaults.corners + &#x27;&quot; data-inline=&quot;&#x27; + defaults.inline + &#x27;&quot;&gt;&#x27;;
                             html += &#x27;&lt;option value=&quot;&quot;&gt; &#x27; + defaults.firstName + &#x27;&lt;/option&gt;&#x27;;
-
+                        
                             for (i = 0; i &lt; text.length; i += 1) {
                                 html += &#x27;&lt;option value=&quot;&#x27; + values[i] + &#x27;&quot;&gt;&#x27; + text[i] + &#x27;&lt;/option&gt;&#x27;;
                             }
@@ -301,7 +301,7 @@
                             rootDiv.trigger(&#x27;create&#x27;);
                             return $(&#x27;#&#x27; + selectId);
                         };
-
+                        
                         /**
                          * 스위치 자동 생성
                          * @method autoSwitch
@@ -322,7 +322,7 @@
                                 optionName = [&#x27;data-theme&#x27;, &#x27;data-track-theme&#x27;],
                                 optionData = [this.dataTheme, this.dataTheme],
                                 i = 0;
-
+                        
                             var defaults = {
                                 theme : this.dataTheme,
                                 track_theme : this.dataTheme,
@@ -338,7 +338,7 @@
                             rootDiv.trigger(&#x27;create&#x27;);
                             return $(&#x27;#&#x27; + switchId);
                         };
-
+                        
                         /**
                          * 시간 태그 생성
                          * @method timeInput
@@ -354,25 +354,27 @@
                             rootDiv.trigger(&quot;create&quot;);
                             return $(&#x27;#timeValue&#x27;);
                         };
-
+                        
                         /**
                          * 날짜 태그 생성
                          * @method dateInput
                          * @param {String} divId - 최상위 DIV 아이디 이름
+                         * @param {String} option - 년, 월, 일 옵션 (month || week) [option]
                          * @return {jQuery Object} 제이쿼리 아이디 이름 객체 (Date YYYY/MM/DD)
                          */
-                        OGDSM.eGovFrameUI.prototype.dateInput = function (divId) {
+                        OGDSM.eGovFrameUI.prototype.dateInput = function (divId, option) {
                             &#x27;use strict&#x27;;
+                            option = (typeof (option) !== &#x27;undefined&#x27;) ? option : &#x27;date&#x27;;
                             var rootDiv, html;
                             rootDiv = $(&#x27;#&#x27; + divId);
-                            html = &#x27;&lt;input type=&quot;date&quot; id=&quot;dateValue&quot;&gt;&#x27;;
+                            html = &#x27;&lt;input type=&quot;&#x27; + option + &#x27;&quot; id=&quot;dateValue&quot;&gt;&#x27;;
                             rootDiv.append(html);
                             rootDiv.trigger(&quot;create&quot;);
                             return $(&#x27;#dateValue&#x27;);
                         };
-
-                        /**************Custom UI Create *******************/
-
+                        
+                        /*Custom UI Create*/
+                        
                         /**
                          * 배경 맵 선택 사용자 인터페이스 자동 생성: 라디오 박스
                          * @method baseMapRadioBox
@@ -385,7 +387,7 @@
                             options = (typeof (options) !== &#x27;undefined&#x27;) ? options : null;
                             var mapRadioNameObj,
                                 supportMap;
-
+                        
                             if (options !== null) {
                                 supportMap = options.split(&#x27; &#x27;);
                             }
@@ -408,7 +410,7 @@
                             options = (typeof (options) !== &#x27;undefined&#x27;) ? options : null;
                             var mapRadioNameObj,
                                 supportMap;
-
+                        
                             if (options !== null) {
                                 supportMap = options.split(&#x27; &#x27;);
                             }
@@ -423,7 +425,7 @@
                                 OGDSMObj.changeBaseMap($(this).val());
                             });
                         };
-
+                        
                         /**
                          * 브이월드 WMS API 리스트 요청 인터페이스
                          * @method vworldWMSList
@@ -444,7 +446,7 @@
                                 i,
                                 j,
                                 btnObj;
-
+                            
                             styles = [
                                 &#x27;LP_PA_CBND_BUBUN,LP_PA_CBND_BONBUN&#x27;,
                                 &#x27;LT_C_UQ111&#x27;, &#x27;LT_C_UQ112&#x27;, &#x27;LT_C_UQ113&#x27;, &#x27;LT_C_UQ114&#x27;,
@@ -491,14 +493,14 @@
                                 &#x27;접근관제구역&#x27;, &#x27;훈련구역&#x27;, &#x27;건물군(40층이상)&#x27;, &#x27;수색비행장비행구역&#x27;,
                                 &#x27;시계비행로&#x27;, &#x27;시계비행보고지점&#x27;,
                                 &#x27;한강회랑&#x27;, &#x27;헬기장&#x27;];
-
+                        
                             rootDiv.append(html);
                             for (j = 0; j &lt; selectName.length; j += 1) {
                                 this.autoSelect(&quot;vworldWMS&quot;, selectName[j], selectName[j], stylesText, styles, {
                                     firstName : (j + 1) + &#x27;번째 레이어 선택&#x27;
                                 });
                             }
-
+                            
                             $(&quot;#&quot; + selectName[0]).change(function () {
                                 selectState[0] = this.selectedIndex;
                                 $(&quot;#&quot; + selectName[0] + &#x27; option&#x27;).each(function () {
@@ -616,7 +618,7 @@
                             });
                             return selectName;
                         };
-
+                        
                         /**
                          * 서울 열린 데이터 광장 환경정보 요청 인터페이스
                          * @method seoulEnvironment
@@ -659,8 +661,8 @@
                             }
                             return [visualType, date, time, environmentType];
                         };
-
-
+                        
+                        
                         /**
                          * 데이터 포털 환경정보 요청 인터페이스
                          * @method dataPortalEnvironment
@@ -696,7 +698,7 @@
                                 visualType = this.autoRadioBox(divId, &#x27;visualType&#x27;, [&#x27;맵&#x27;, &#x27;차트&#x27;], [&#x27;map&#x27;, &#x27;chart&#x27;], {horizontal : true}),
                                 areaRadio,
                                 environmentType;
-
+                        
                             for (i = 0; i &lt; areaTypes.length - 2; i += 3) {
                                 areaRadio = this.autoRadioBox(divId, &#x27;areaType&#x27;,
                                                               [areaTypes[i], areaTypes[i + 1], areaTypes[i + 2]],
@@ -715,7 +717,55 @@
                             }
                             return [visualType, areaRadio, environmentType];
                         };
-
+                        
+                        /**
+                         * 데이터 포털 원자력발전소 실시간 주변 방사선량 인터페이스
+                         * @method dataPortalNuclear
+                         * @param {String} divId - 최상위 DIV 아이디 이름
+                         * @param {JSON Object} options - 옵션 JSON 객체 키 값&lt;br&gt;
+                          {theme:this.dataTheme}&lt;br&gt;
+                          theme(String) : 테마&lt;br&gt;
+                         * @return {String} 생성된 객체 배열 [visualType, nuclearPos]
+                         */
+                        OGDSM.eGovFrameUI.prototype.dataPortalNuclear = function (divId, options) {
+                            &#x27;use strict&#x27;;
+                            options = (typeof (options) !== &#x27;undefined&#x27;) ? options : {};
+                            var name, i;
+                            var defaults = {
+                                theme : this.dataTheme
+                            };
+                            defaults = OGDSM.applyOptions(defaults, options);
+                            var rootDiv = $(&#x27;#&#x27; + divId),
+                                visualType = this.autoRadioBox(divId, &#x27;visualType&#x27;, [&#x27;차트&#x27;], [&#x27;chart&#x27;], {horizontal : true}),
+                                nuclearPos = this.autoRadioBox(divId, &#x27;nuclearPos&#x27;, [&#x27;월성&#x27;, &#x27;고리&#x27;], [&#x27;WS&#x27;, &#x27;KR&#x27;], {horizontal : true});
+                            
+                            nuclearPos = this.autoRadioBox(divId, &#x27;nuclearPos&#x27;, [&#x27;한빛&#x27;, &#x27;한울&#x27;], [&#x27;YK&#x27;, &#x27;UJ&#x27;], {horizontal : true});
+                            return [visualType, nuclearPos];
+                        };
+                        
+                        /**
+                         * 데이터 포털 온실가스배출량 조회 서비스 인터페이스
+                         * @method dataPortalGreenGas
+                         * @param {String} divId - 최상위 DIV 아이디 이름
+                         * @param {JSON Object} options - 옵션 JSON 객체 키 값&lt;br&gt;
+                          {theme:this.dataTheme}&lt;br&gt;
+                          theme(String) : 테마&lt;br&gt;
+                         * @return {String} 생성된 객체 배열 [visualType, nuclearPos]
+                         */
+                        OGDSM.eGovFrameUI.prototype.dataPortalGreenGas = function (divId, options) {
+                            &#x27;use strict&#x27;;
+                            options = (typeof (options) !== &#x27;undefined&#x27;) ? options : {};
+                            var name, i;
+                            var defaults = {
+                                theme : this.dataTheme
+                            };
+                            defaults = OGDSM.applyOptions(defaults, options);
+                            var rootDiv = $(&#x27;#&#x27; + divId),
+                                visualType = this.autoRadioBox(divId, &#x27;visualType&#x27;, [&#x27;차트&#x27;], [&#x27;chart&#x27;], {horizontal : true}),
+                                date = this.dateInput(divId, &#x27;month&#x27;);
+                            return [visualType, date];
+                        };
+                        
                             </pre>
                         </div>
                     </div>

@@ -5,11 +5,11 @@ OGDSM.namesapce('visualization');
     "use strict";
     var mapObj;
     /**
-    * 오픈레이어3 지도 시각화 객체
-    * @class OGDSM.visualization
-    * @constructor
-    * @param {String} mapDiv - 지도 DIV 아이디 이름
-    * @param {JSON Object} options - 옵션 JSON 객체 키 값<br>
+     * 오픈레이어3 지도 시각화 객체
+     * @class OGDSM.visualization
+     * @constructor
+     * @param {String} mapDiv - 지도 DIV 아이디 이름
+     * @param {JSON Object} options - 옵션 JSON 객체 키 값<br>
     {layerListDiv:null, attrTableDiv:null, attrAddr:'', indexedDB:true}<br>
     layerListDiv : 레이어 관리 리스트 DIV<br>
     attrTableDiv : 속성 시각화 DIV 아이디 이름<br>
@@ -42,7 +42,7 @@ OGDSM.namesapce('visualization');
             OGDSM.visualization.updateLayoutSetting();
         });
         if (defaults.attrTableDiv !== null) {
-            this.attrTableObj = new OGDSM.attributeTable(defaults.attrTableDiv, defaults.attrAddr, this);
+            this.attrTableObj = new OGDSM.attributeTable(defaults.attrTableDiv, defaults.attrAddr, this, defaults.indexedDB);
         }
         if (defaults.layerListDiv !== null) {
             this.layerListObj = new OGDSM.mapLayerList(this, defaults.layerListDiv, {
@@ -294,7 +294,7 @@ OGDSM.visualization.prototype.addMap = function (data) {
     if (chkData === false) {
         this.getMap().addLayer(data);
         this.mapObj.removeInteraction(this.mapObj.getInteractions());
-        /***interaction ******/
+        /*interaction*/
         interaction = new ol.interaction.Select({
             layers : function (layer) {
                 return true;
@@ -329,7 +329,7 @@ OGDSM.visualization.prototype.addMap = function (data) {
         this.mapObj.addInteraction(interaction);
         this.mapObj.removeLayer(interaction);
         //console.log(interaction.deselected(null));
-        /***layer list On******/
+        /*layer list On*/
         if (typeof (this.layerListObj) !== 'undefined') {
             var color;
             var geometryObj = data.getSource().getFeatures()[0].getGeometry();
@@ -341,7 +341,7 @@ OGDSM.visualization.prototype.addMap = function (data) {
             }
             this.layerListObj.addList(data, data.get('title'), color, geoType);
         }
-        /***attribute On******/
+        /*attribute On*/
         if (typeof (this.attrTableObj) !== 'undefined') {
             var attrTableObj = this.attrTableObj;
             this.attrTableObj.addAttribute(data.get('title'));

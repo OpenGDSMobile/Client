@@ -18,7 +18,7 @@
             <h1 class="blue-main-title"></h1>
         </div>
         <div class="yui3-u-1-4 version project-version">
-            API Docs for:
+            API Docs for: 
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -32,11 +32,11 @@
                             <li><a href="#api-classes">Classes</a></li>
                             <li><a href="#api-modules">Modules</a></li>
                         </ul>
-
+                
                         <div id="api-tabview-filter">
                             <input type="search" id="api-filter" placeholder="Type to filter APIs">
                         </div>
-
+                
                         <div id="api-tabview-panel">
                             <ul id="api-classes" class="apis classes">
                                 <li><a href="../classes/OGDSM.html">OGDSM</a></li>
@@ -47,7 +47,7 @@
                                 <li><a href="../classes/OGDSM.mapLayerList.html">OGDSM.mapLayerList</a></li>
                                 <li><a href="../classes/OGDSM.visualization.html">OGDSM.visualization</a></li>
                             </ul>
-
+                
                             <ul id="api-modules" class="apis modules">
                                 <li><a href="../modules/OGDSM.applyOptions.html">OGDSM.applyOptions</a></li>
                                 <li><a href="../modules/OGDSM.indexedDB.html">OGDSM.indexedDB</a></li>
@@ -66,12 +66,12 @@
                         <input type="checkbox" id="api-show-inherited" checked>
                         Inherited
                     </label>
-
+            
                     <label for="api-show-protected">
                         <input type="checkbox" id="api-show-protected">
                         Protected
                     </label>
-
+            
                     <label for="api-show-private">
                         <input type="checkbox" id="api-show-private">
                         Private
@@ -80,22 +80,22 @@
                         <input type="checkbox" id="api-show-deprecated">
                         Deprecated
                     </label>
-
+            
                 </div>
-
+            
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
                         <h1>OGDSM.indexedDB Module</h1>
                         <div class="clearfix meta">
-
-
+                        
+                        
                                 <div class="foundat">
                                     Defined in: <a href="../files/.._js_openGDSMobile_OGDSM_visualization.js.html#l7"><code>..&#x2F;js&#x2F;openGDSMobile&#x2F;OGDSM_visualization.js:7</code></a>
                                 </div>
-
+                        
                         </div>
-
+                        
                         <h3>Summary</h3>
                         <div class="intro">
                             <p>OGDSM indexedDB 모듈</p>
@@ -104,37 +104,38 @@
                         </code></pre></li>
                         <li>Options
                         옵션 JSON 객체 키 값<br>
-                         {type:&#39;new&#39;, storeName:dbName, insertKey:null, insertData:null,
-                          searchKey: null, searchData: numm, editData: numm, success: false, dbFile : false}<br>
-                         type (String) : 모듈 실행 타입 설정<br><blockquote>
-                        <p>new : DB 생성/ 데이터 삽입 (dbName, storeName, insertData, insertKey)<br>
-                        insert: 데이터 삽입 (dbName, storeName, insertData, insertKey)<br>
-                        forceInsert: 데이터 강제 삽입 (dbName, storeName, insertData, insertKey)<br>
-                        remove: DB 데이터 삭제 ( --- )<br>
-                        removeAll: DB 데이터 모두 삭제 ( --- )<br>
-                        search: DB 데이터 검색 (dbName, storeName, searchKey, searchData)<br>
-                        searchAll: DB 데이터 모두 검색 (dbName, storeName)<br>
-                        edit: DB 데이터 수정 (dbName, storeName, searchKey, searchData, editData)<br>
-                        deleteDB: DB 삭제 (dbName)<br>
-                         storeName (String) : 스토어<br>
-                         insertKey (String) : 삽입 대상 키<br>
-                         insertData (String) : 삽입 데이터<br>
-                         searchKey (String) : 검색 대상 키<br>
-                         searchData (String) : 검색할 데이터<br>
-                         editData (String) : 수정할 데이터<br>
-                         success (function) : 성공 콜백 함수 (데이터 검색일 경우 데이터 파라미터로 보내짐)<br>
-                         dbFail (function) : 실패 콜백 함수<br></p>
-                        </blockquote>
-                        </li>
+                        {type:&#39;new&#39;, storeName:dbName, insertKey:null, insertData:null,
+                        searchKey: null, searchData: null, editData: null, deleteKey: null, success: false, dbFile : false}<br><p style="font-weight:bold;">
+                        type (String) : 모듈 실행 타입 설정 (필요 파라미터)
+                        </p>
+                        <p style="padding-left:2em; background-color:#FFFFFF;">new : DB 생성/ 데이터 삽입 (dbName, storeName, insertData, insertKey)<br>
+                         insert / forceInsert: 데이터 삽입 / 데이터 강제 삽입 (dbName, storeName, insertData, insertKey)<br>
+                         searchAll / removeAll : 모든 데이터 검색 / 삭제 (dbName, storeName)<br>
+                         search: DB 데이터 검색 (dbName, storeName, searchKey, searchData)<br>
+                         remove: DB 데이터 삭제 (dbName, storeName, deleteKey)<br>
+                         edit: DB 데이터 수정 (dbName, storeName, searchKey, searchData, editData)<br>
+                         deleteDB: DB 삭제 (dbName)
+                        </p>
+                        <p style="font-weight:bold;">
+                        storeName (String) : 스토어<br>
+                        insertKey (String) : 삽입 대상 키<br>
+                        insertData (String) : 삽입 데이터<br>
+                        searchKey (String) : 검색 대상 키<br>
+                        searchData (String) : 검색할 데이터<br>
+                        editData (String) : 수정할 데이터<br>
+                        deleteKey (String) : 삭제할 키 데이터<br>
+                        success (function) : 성공 콜백 함수 (데이터 검색일 경우 데이터 파라미터로 보내짐)<br>
+                        dbFail (function) : 실패 콜백 함수<br>
+                        </p></li>
                         </ul>
-
+                        
                         </div>
-
-
+                        
+                        
                         <div class="yui3-g">
                             <div class="yui3-u-1-2">
                                     <p>This module provides the following classes:</p>
-
+                        
                                     <ul class="module-classes">
                                         <li class="module-class">
                                             <a href="../classes/OGDSM.mapLayerList.html">
@@ -148,7 +149,7 @@
                                         </li>
                                     </ul>
                             </div>
-
+                        
                             <div class="yui3-u-1-2">
                             </div>
                         </div>

@@ -18,7 +18,7 @@
             <h1 class="blue-main-title"></h1>
         </div>
         <div class="yui3-u-1-4 version project-version">
-            API Docs for:
+            API Docs for: 
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -32,11 +32,11 @@
                             <li><a href="#api-classes">Classes</a></li>
                             <li><a href="#api-modules">Modules</a></li>
                         </ul>
-
+                
                         <div id="api-tabview-filter">
                             <input type="search" id="api-filter" placeholder="Type to filter APIs">
                         </div>
-
+                
                         <div id="api-tabview-panel">
                             <ul id="api-classes" class="apis classes">
                                 <li><a href="../classes/OGDSM.html">OGDSM</a></li>
@@ -47,7 +47,7 @@
                                 <li><a href="../classes/OGDSM.mapLayerList.html">OGDSM.mapLayerList</a></li>
                                 <li><a href="../classes/OGDSM.visualization.html">OGDSM.visualization</a></li>
                             </ul>
-
+                
                             <ul id="api-modules" class="apis modules">
                                 <li><a href="../modules/OGDSM.applyOptions.html">OGDSM.applyOptions</a></li>
                                 <li><a href="../modules/OGDSM.indexedDB.html">OGDSM.indexedDB</a></li>
@@ -66,12 +66,12 @@
                         <input type="checkbox" id="api-show-inherited" checked>
                         Inherited
                     </label>
-
+            
                     <label for="api-show-protected">
                         <input type="checkbox" id="api-show-protected">
                         Protected
                     </label>
-
+            
                     <label for="api-show-private">
                         <input type="checkbox" id="api-show-private">
                         Private
@@ -80,14 +80,14 @@
                         <input type="checkbox" id="api-show-deprecated">
                         Deprecated
                     </label>
-
+            
                 </div>
-
+            
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
                         <h1 class="file-heading">File: ../js/openGDSMobile/d3chart.js</h1>
-
+                        
                         <div class="file">
                             <pre class="code prettyprint linenums">
                         /**
@@ -121,7 +121,7 @@
                             &#x27;use strict&#x27;;
                             range = (typeof (range) !== &#x27;undefined&#x27;) ? range : [];
                             color = (typeof (color) !== &#x27;undefined&#x27;) ? color : [&#x27;#000000&#x27;];
-
+                        
                             if( typeof(data[0][0]) === &#x27;string&#x27;){
                             	$.each(data[0], function (idx){
                             		data[0][idx] = Number(data[0][idx]);
@@ -167,7 +167,7 @@
                                     }
                                     return color[color.length];
                                 });
-
+                            
                             barChartDiv.selectAll(&#x27;g&#x27;).data(data[1])
                                 .enter()
                                 .append(&#x27;text&#x27;)
@@ -180,7 +180,7 @@
                                 .text(function (d) {
                                     return d;
                                 });
-
+                            
                         	barChartDiv.selectAll(&#x27;g&#x27;).data(data[0])
                                 .enter()
                                 .append(&#x27;text&#x27;)
@@ -204,12 +204,12 @@
                                     return d;
                                 });
                         };
-
+                        
                         vbarChart = function (divId, data, scale, range, color) {
                             &#x27;use strict&#x27;;
                             range = (typeof (range) !== &#x27;undefined&#x27;) ? range : [];
                             color = (typeof (color) !== &#x27;undefined&#x27;) ? color : [&#x27;#000000&#x27;];
-
+                        
                             if( typeof(data[0][0]) === &#x27;string&#x27;){
                             	$.each(data[0], function (idx){
                             		data[0][idx] = Number(data[0][idx]);
@@ -220,29 +220,29 @@
                                 vbarChartDiv = null,
                                 y = null,
                                 z = null;
-
+                                
                             rootDiv.empty();
-
+                            
                             vbarChartDiv = d3.select(&quot;#&quot; + divId).append(&#x27;svg&#x27;)
                                 .attr(&#x27;id&#x27;, &#x27;vbarchart&#x27;)
                                 .attr(&#x27;width&#x27;, rootDiv.width())
                                 .attr(&#x27;height&#x27;, rootDiv.height());
-
+                            
                             y = d3.scale.linear().domain([0, maxData]).range([0, rootDiv.height() - 50]);
-
+                            
                             var barWidth = rootDiv.width() / data[0].length;
-
+                            
                             vbarChartDiv.selectAll(&quot;rect&quot;).data(data[0]).enter()
                                 .append(&quot;rect&quot;)
                                 .attr(&quot;y&quot;, function (d,i) {
-                        			return rootDiv.height()-(data[0][i]*scale);
+                        			return rootDiv.height()-(data[0][i]*scale); 
                                 })
                                 .attr(&quot;x&quot;, function (d,i) {
                                     return i * barWidth;
                                 })
                                 .attr(&#x27;width&#x27;,barWidth-1)
                                 .attr(&#x27;height&#x27;, function (d,i) {
-                        			return data[0][i]*scale;
+                        			return data[0][i]*scale; 
                                 })
                         		.attr(&#x27;fill&#x27;, function (d, i) {
                                     if (d === &#x27;-&#x27; || d === &#x27;0&#x27;) {
@@ -257,7 +257,7 @@
                                     }
                                     return color[color.length];
                                 });
-
+                            
                             vbarChartDiv.selectAll(&#x27;g&#x27;).data(data[1])
                             	.enter()
                             	.append(&#x27;text&#x27;)
@@ -292,14 +292,14 @@
                         	        return d;
                         	    });
                         };
-
-
-
+                        
+                        
+                        
                         lineChart = function (divId, data, scale, range, color) {
                             &#x27;use strict&#x27;;
                             range = (typeof (range) !== &#x27;undefined&#x27;) ? range : [];
                             color = (typeof (color) !== &#x27;undefined&#x27;) ? color : [&#x27;#000000&#x27;];
-
+                        
                             if( typeof(data[0][0]) === &#x27;string&#x27;){
                             	$.each(data[0], function (idx){
                             		data[0][idx] = Number(data[0][idx]);
@@ -310,22 +310,22 @@
                                 lineChartDiv = null,
                                 y = null, yRange =null, xRange=null, xAxis=null, yAxis=null, ySlice=null,
                                 z = null;
-
+                                
                             rootDiv.empty();
-
+                            
                             lineChartDiv = d3.select(&quot;#&quot; + divId).append(&#x27;svg&#x27;)
                                 .attr(&#x27;id&#x27;, &#x27;linechart&#x27;)
                                 .attr(&#x27;width&#x27;, rootDiv.width())
                                 .attr(&#x27;height&#x27;, rootDiv.height());
-
+                            
                             ySlice = 50;
                             console.log(data[0]);
                             console.log(maxData);
                             console.log(rootDiv.height());
-
+                            
                             yRange = d3.scale.linear().domain([0, maxData]).range([rootDiv.height()-ySlice, ySlice]);
                             xRange = d3.scale.ordinal().domain(data[1]).rangePoints([0, rootDiv.width()-100]);
-
+                            
                             xAxis = d3.svg.axis()
                         	        .scale(xRange)
                         	        .tickSize(3)
@@ -333,18 +333,18 @@
                             yAxis = d3.svg.axis()
                         	        .scale(yRange)
                         	        .orient(&#x27;left&#x27;);
-
+                            
                             var linePointInterval = (rootDiv.width()) / data[1].length;
                             var yScaleValue = (rootDiv.height()-ySlice) / maxData;
-
+                            
                             var lineFunc = d3.svg.line()
-                            .x(function(d,i) {
-                        		return (linePointInterval*i);
+                            .x(function(d,i) { 
+                        		return (linePointInterval*i); 
                         	})
                             .y(function (d,i) {
-                            	return rootDiv.height()-(data[0][i]*yScaleValue);
+                            	return rootDiv.height()-(data[0][i]*yScaleValue); 
                             });
-
+                            
                             lineChartDiv.append(&#x27;g&#x27;)
                         	    .attr(&#x27;class&#x27;, &#x27;x axis&#x27;)
                         	    .attr(&#x27;transform&#x27;, &#x27;translate(30,&#x27; + (rootDiv.height()-ySlice) + &#x27;)&#x27;)
@@ -352,25 +352,25 @@
                         	    .selectAll(&quot;text&quot;)
                         	      .attr(&#x27;transform&#x27;, function(d){return &quot;rotate(-55)&quot;;})
                         	    ;
-
+                            
                             lineChartDiv.append(&#x27;g&#x27;)
                         	    .attr(&#x27;class&#x27;, &#x27;y axis&#x27;)
                         	    .attr(&#x27;transform&#x27;, &#x27;translate(30)&#x27;)
                         	    .call(yAxis);
-
+                            
                             lineChartDiv.append(&quot;path&quot;).attr(&quot;d&quot;, lineFunc(data[0]))
                         	    .attr(&#x27;stroke&#x27;, &#x27;red&#x27;)
                         	    .attr(&#x27;stroke-width&#x27;, 2)
                         	    .attr(&#x27;transform&#x27;, &#x27;translate(30,0)&#x27;)
                         	    .attr(&#x27;fill&#x27;, &#x27;none&#x27;);
-
+                            
                             lineChartDiv.selectAll(&quot;circle&quot;).data(data[0]).enter()
                         	    .append(&quot;circle&quot;)
                         	    .attr(&quot;cy&quot;, function(d,i) {return rootDiv.height()-(data[0][i]*yScaleValue); })
                         	    .attr(&quot;cx&quot;, function(d,i) {return i * linePointInterval;})
                         	    .attr(&quot;r&quot;,  function(d)   {return 5;})
                         	    .attr(&#x27;transform&#x27;, &#x27;translate(30,0)&#x27;);
-
+                            
                             lineChartDiv.selectAll(&#x27;path&#x27;).data(data[0])
                         	    .enter()
                         	    .append(&#x27;text&#x27;)
@@ -392,14 +392,14 @@
                         	        return d;
                         	    });
                         };
-
-
-
+                        
+                        
+                        
                         areaChart = function (divId, data, scale, range, color) {
                             &#x27;use strict&#x27;;
                             range = (typeof (range) !== &#x27;undefined&#x27;) ? range : [];
                             color = (typeof (color) !== &#x27;undefined&#x27;) ? color : [&#x27;#000000&#x27;];
-
+                        
                             if( typeof(data[0][0]) === &#x27;string&#x27;){
                             	$.each(data[0], function (idx){
                             		data[0][idx] = Number(data[0][idx]);
@@ -410,22 +410,22 @@
                                 areaChartDiv = null,
                                 y = null, yRange =null, xRange=null, xAxis=null, yAxis=null, ySlice=null,
                                 z = null;
-
+                                
                             rootDiv.empty();
-
+                            
                             areaChartDiv = d3.select(&quot;#&quot; + divId).append(&#x27;svg&#x27;)
                                 .attr(&#x27;id&#x27;, &#x27;areaChart&#x27;)
                                 .attr(&#x27;width&#x27;, rootDiv.width())
                                 .attr(&#x27;height&#x27;, rootDiv.height());
-
+                            
                             ySlice = 50;
                             console.log(data[0]);
                             console.log(maxData);
                             console.log(rootDiv.height());
-
+                            
                             yRange = d3.scale.linear().domain([0, maxData]).range([rootDiv.height()-ySlice, ySlice]);
                             xRange = d3.scale.ordinal().domain(data[1]).rangePoints([0, rootDiv.width()-100]);
-
+                            
                             xAxis = d3.svg.axis()
                         	        .scale(xRange)
                         	        .tickSize(3)
@@ -433,21 +433,21 @@
                             yAxis = d3.svg.axis()
                         	        .scale(yRange)
                         	        .orient(&#x27;left&#x27;);
-
+                            
                             var linePointInterval = (rootDiv.width()) / data[1].length;
                             var yScaleValue = (rootDiv.height()-ySlice) / maxData;
-
-
+                            
+                            
                             var areaFunc = d3.svg.area()
-                            .x(function(d,i) {
-                        		return (linePointInterval*i);
+                            .x(function(d,i) { 
+                        		return (linePointInterval*i); 
                         	})
                             .y0(rootDiv.height()-ySlice)
                             .y1(function (d,i) {
-                            	return rootDiv.height()-(data[0][i]*yScaleValue);
+                            	return rootDiv.height()-(data[0][i]*yScaleValue); 
                             });
-
-
+                            
+                            
                             areaChartDiv.append(&#x27;g&#x27;)
                         	    .attr(&#x27;class&#x27;, &#x27;x axis&#x27;)
                         	    .attr(&#x27;transform&#x27;, &#x27;translate(30,&#x27; + (rootDiv.height()-ySlice) + &#x27;)&#x27;)
@@ -455,26 +455,26 @@
                         	    .selectAll(&quot;text&quot;)
                         	      .attr(&#x27;transform&#x27;, function(d){return &quot;rotate(-55)&quot;;})
                         	    ;
-
+                            
                             areaChartDiv.append(&#x27;g&#x27;)
                         	    .attr(&#x27;class&#x27;, &#x27;y axis&#x27;)
                         	    .attr(&#x27;transform&#x27;, &#x27;translate(30)&#x27;)
                         	    .call(yAxis);
-
+                            
                             areaChartDiv.append(&quot;path&quot;).attr(&quot;d&quot;, areaFunc(data[0]))
                         	    //.attr(&#x27;stroke&#x27;, &#x27;red&#x27;)
                         	    .attr(&quot;class&quot;, &quot;area&quot;)
                         	    //.attr(&#x27;stroke-width&#x27;, 2)
                         	    .attr(&#x27;transform&#x27;, &#x27;translate(30,0)&#x27;);
-
-
+                        	    
+                        	    
                             areaChartDiv.selectAll(&quot;circle&quot;).data(data[0]).enter()
                         	    .append(&quot;circle&quot;)
                         	    .attr(&quot;cy&quot;, function(d,i) {return rootDiv.height()-(data[0][i]*yScaleValue); })
                         	    .attr(&quot;cx&quot;, function(d,i) {return i * linePointInterval;})
                         	    .attr(&quot;r&quot;,  function(d)   {return 5;})
                         	    .attr(&#x27;transform&#x27;, &#x27;translate(30,0)&#x27;);
-
+                            
                             areaChartDiv.selectAll(&#x27;path&#x27;).data(data[0])
                         	    .enter()
                         	    .append(&#x27;text&#x27;)
@@ -496,40 +496,40 @@
                         	        return d;
                         	    });
                         };
-
-
-
+                        
+                        
+                        
                         OGDSM.chartVisualization.prototype.kMap = function (divId, geodata, center_lat, center_lon, map_scale) {
                             var rootDiv = $(&#x27;#&#x27;+divId);
                             rootDiv.empty();
-
+                            
                             var svg = d3.select(&#x27;#&#x27;+divId)
                             			.append(&#x27;svg&#x27;)
                             			.attr(&quot;width&quot; , 500)
                             			.attr(&quot;height&quot;, 600);
-
+                            
                             baseGeoDataUrl = &quot;http://localhost:8080/mobile/geoBasedData/&quot; + geodata + &quot;.json&quot;;
-
+                            
                             d3.json(baseGeoDataUrl, function(error, topology) {
                             	  if (error) {
                             	    return console.error(error);
                             	  } else {
-
+                            		  
                             		  var projection = d3.geo.mercator()
                             		  					 .center([center_lon, center_lat])
                             		  					 .scale(map_scale);
                             		  var path = d3.geo.path()
                             		  		   	   .projection(projection);
-
+                        
                             		  var g = svg.append(&quot;g&quot;);
-
+                            		  
                             		  if(geodata == &quot;SIDO&quot;){
                             			  g.selectAll(&quot;path&quot;)
                             			   .data(topojson.feature(topology, topology.objects.All_TL_SCCO_CTPRVN_4326).features)
                                            .enter().append(&quot;path&quot;)
                                            .attr(&quot;class&quot;, function(d) { return &quot;sido_&quot; + d.properties.CTP_ENG_NM; })
                                            .style(&quot;fill&quot;, function(d) { return &quot;#&quot; + Math.random().toString(16).slice(2, 8); })
-                                           .attr(&quot;d&quot;, path);
+                                           .attr(&quot;d&quot;, path); 
                             		  }
                             		  else if(geodata == &quot;GU&quot;){
                             			  g.selectAll(&quot;path&quot;)
@@ -537,7 +537,7 @@
                                            .enter().append(&quot;path&quot;)
                                            .attr(&quot;class&quot;, function(d) { return &quot;gu_&quot; + d.properties.SIG_ENG_NM; })
                                            .style(&quot;fill&quot;, function (d) { return &quot;#&quot; + Math.random().toString(16).slice(2, 8); })
-                                           .attr(&quot;d&quot;, path);
+                                           .attr(&quot;d&quot;, path);  
                             		  }
                             		  else if(geodata == &quot;DONG&quot;){
                             			  g.selectAll(&quot;path&quot;)
@@ -545,13 +545,13 @@
                                            .enter().append(&quot;path&quot;)
                                            .attr(&quot;class&quot;, function(d) { return &quot;dong_&quot; + d.properties.EMD_ENG_NM; })
                                            .style(&quot;fill&quot;, function (d) { return &quot;#&quot; + Math.random().toString(16).slice(2, 8); })
-                                           .attr(&quot;d&quot;, path);
+                                           .attr(&quot;d&quot;, path);  
                             		  }
                             	  }
                             });
                         };
-
-
+                        
+                        
                             </pre>
                         </div>
                     </div>

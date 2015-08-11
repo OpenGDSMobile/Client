@@ -18,7 +18,7 @@
             <h1 class="blue-main-title"></h1>
         </div>
         <div class="yui3-u-1-4 version project-version">
-            API Docs for:
+            API Docs for: 
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -32,11 +32,11 @@
                             <li><a href="#api-classes">Classes</a></li>
                             <li><a href="#api-modules">Modules</a></li>
                         </ul>
-
+                
                         <div id="api-tabview-filter">
                             <input type="search" id="api-filter" placeholder="Type to filter APIs">
                         </div>
-
+                
                         <div id="api-tabview-panel">
                             <ul id="api-classes" class="apis classes">
                                 <li><a href="../classes/OGDSM.html">OGDSM</a></li>
@@ -47,7 +47,7 @@
                                 <li><a href="../classes/OGDSM.mapLayerList.html">OGDSM.mapLayerList</a></li>
                                 <li><a href="../classes/OGDSM.visualization.html">OGDSM.visualization</a></li>
                             </ul>
-
+                
                             <ul id="api-modules" class="apis modules">
                                 <li><a href="../modules/OGDSM.applyOptions.html">OGDSM.applyOptions</a></li>
                                 <li><a href="../modules/OGDSM.indexedDB.html">OGDSM.indexedDB</a></li>
@@ -66,12 +66,12 @@
                         <input type="checkbox" id="api-show-inherited" checked>
                         Inherited
                     </label>
-
+            
                     <label for="api-show-protected">
                         <input type="checkbox" id="api-show-protected">
                         Protected
                     </label>
-
+            
                     <label for="api-show-private">
                         <input type="checkbox" id="api-show-private">
                         Private
@@ -80,22 +80,22 @@
                         <input type="checkbox" id="api-show-deprecated">
                         Deprecated
                     </label>
-
+            
                 </div>
-
+            
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
                         <h1 class="file-heading">File: ../js/openGDSMobile/OGDSM_indexedDB.js</h1>
-
+                        
                         <div class="file">
                             <pre class="code prettyprint linenums">
                         /*jslint devel: true, vars : true plusplus : true es5 : true */
                         /*global $, jQuery, OGDSM, mappingDB, IDBTransaction*/
-
-
-
-                        /** Single Object Store **/
+                        
+                        
+                        
+                        /* Single Object Store */
                         /**
                         * OGDSM indexedDB 모듈
                         *
@@ -103,28 +103,32 @@
                         *       OGDSM.indexedDB(&#x27;dbName&#x27;. {options});
                         * - Options
                         *   옵션 JSON 객체 키 값&lt;br&gt;
-                            {type:&#x27;new&#x27;, storeName:dbName, insertKey:null, insertData:null,
-                             searchKey: null, searchData: numm, editData: numm, success: false, dbFile : false}&lt;br&gt;
-                            type (String) : 모듈 실행 타입 설정&lt;br&gt;
-                             &gt; new : DB 생성/ 데이터 삽입 (dbName, storeName, insertData, insertKey)&lt;br&gt;
-                             &gt; insert: 데이터 삽입 (dbName, storeName, insertData, insertKey)&lt;br&gt;
-                             &gt; forceInsert: 데이터 강제 삽입 (dbName, storeName, insertData, insertKey)&lt;br&gt;
-                             &gt; remove: DB 데이터 삭제 ( --- )&lt;br&gt;
-                             &gt; removeAll: DB 데이터 모두 삭제 ( --- )&lt;br&gt;
-                             &gt; search: DB 데이터 검색 (dbName, storeName, searchKey, searchData)&lt;br&gt;
-                             &gt; searchAll: DB 데이터 모두 검색 (dbName, storeName)&lt;br&gt;
-                             &gt; edit: DB 데이터 수정 (dbName, storeName, searchKey, searchData, editData)&lt;br&gt;
-                             &gt; deleteDB: DB 삭제 (dbName)&lt;br&gt;
-                            storeName (String) : 스토어&lt;br&gt;
-                            insertKey (String) : 삽입 대상 키&lt;br&gt;
-                            insertData (String) : 삽입 데이터&lt;br&gt;
-                            searchKey (String) : 검색 대상 키&lt;br&gt;
-                            searchData (String) : 검색할 데이터&lt;br&gt;
-                            editData (String) : 수정할 데이터&lt;br&gt;
-                            success (function) : 성공 콜백 함수 (데이터 검색일 경우 데이터 파라미터로 보내짐)&lt;br&gt;
-                            dbFail (function) : 실패 콜백 함수&lt;br&gt;
+                        {type:&#x27;new&#x27;, storeName:dbName, insertKey:null, insertData:null,
+                        searchKey: null, searchData: null, editData: null, deleteKey: null, success: false, dbFile : false}&lt;br&gt;
+                        &lt;p style=&quot;font-weight:bold;&quot;&gt;
+                        type (String) : 모듈 실행 타입 설정 (필요 파라미터)
+                        &lt;/p&gt;
+                        &lt;p style=&quot;padding-left:2em; background-color:#FFFFFF;&quot;&gt;new : DB 생성/ 데이터 삽입 (dbName, storeName, insertData, insertKey)&lt;br&gt;
+                            insert / forceInsert: 데이터 삽입 / 데이터 강제 삽입 (dbName, storeName, insertData, insertKey)&lt;br&gt;
+                            searchAll / removeAll : 모든 데이터 검색 / 삭제 (dbName, storeName)&lt;br&gt;
+                            search: DB 데이터 검색 (dbName, storeName, searchKey, searchData)&lt;br&gt;
+                            remove: DB 데이터 삭제 (dbName, storeName, deleteKey)&lt;br&gt;
+                            edit: DB 데이터 수정 (dbName, storeName, searchKey, searchData, editData)&lt;br&gt;
+                            deleteDB: DB 삭제 (dbName)
+                        &lt;/p&gt;
+                        &lt;p style=&quot;font-weight:bold;&quot;&gt;
+                        storeName (String) : 스토어&lt;br&gt;
+                        insertKey (String) : 삽입 대상 키&lt;br&gt;
+                        insertData (String) : 삽입 데이터&lt;br&gt;
+                        searchKey (String) : 검색 대상 키&lt;br&gt;
+                        searchData (String) : 검색할 데이터&lt;br&gt;
+                        editData (String) : 수정할 데이터&lt;br&gt;
+                        deleteKey (String) : 삭제할 키 데이터&lt;br&gt;
+                        success (function) : 성공 콜백 함수 (데이터 검색일 경우 데이터 파라미터로 보내짐)&lt;br&gt;
+                        dbFail (function) : 실패 콜백 함수&lt;br&gt;
+                        &lt;/p&gt;
                         * @module OGDSM.indexedDB
-                        */
+                        **/
                         OGDSM.indexedDB = function (dbName, options) { //dbName_ StoreName, storeName, success, fail
                             &#x27;use strict&#x27;;
                             var dbObject = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
@@ -138,8 +142,9 @@
                                 searchKey : null,
                                 searchData : null,
                                 editData : null,
+                                deleteKey : null,
                                 success : false,
-                                dbFail : false
+                                fail : false
                             };
                             defaults = OGDSM.applyOptions(defaults, options);
                             if (typeof (Storage) !== &#x27;undefined&#x27;) {
@@ -214,28 +219,19 @@
                                 var req = dbObject.open(dbName, localStorage.openGDSMobileDBVersion);
                                 req.onsuccess = function (event) {
                                     iDB.db = event.target.result;
-                                    var trans = iDB.db.transaction(storeName, &#x27;readonly&#x27;).objectStore(storeName);
-                                    var request = trans.openCursor();
-                                    request.onsuccess = function (event) {
-                                        var cursor = event.target.result;
-                                        var result = null;
+                                    var trans = iDB.db.transaction(storeName, &#x27;readonly&#x27;);
+                                    var resultAll = [];
+                                    var result = null;
+                                    trans.oncomplete = function (evt) {
                                         var searchResult = null;
                                         var srcResult = null, dstResult = null;
-                                        if (cursor) {
-                                            var field;
-                                            if (cursor.key === searchKey) {
-                                                result = cursor.value;
-                                            } else {
-                                                cursor.continue();
-                                            }
-                                        }
                                         if (type === &#x27;searchAll&#x27;) {
                                             if (defaults.success) {
-                                                if (result !== null) {
-                                                    defaults.success(result);
+                                                if (resultAll.length !== 0) {
+                                                    defaults.success(resultAll);
                                                 } else {
                                                     console.error(&#x27;Not data&#x27;);
-                                                    defaults.fail(result);
+                                                    defaults.fail(resultAll);
                                                 }
                                             } else {
                                                 console.log(&#x27;Success search Data. Please call the second parameter of the callback function&#x27;);
@@ -243,7 +239,8 @@
                                         } else if (type === &#x27;search&#x27; || type === &#x27;edit&#x27;) {
                                             if (result !== null) {
                                                 if (searchData === null) {
-                                                    console.error(&#x27;OGDSM Error : Please input search data&#x27;);
+                                                    console.log(&#x27;OGDSM log : Not input search data. So search result based On Key&#x27;);
+                                                    defaults.success(result);
                                                     return -1;
                                                 }
                                                 var value;
@@ -282,8 +279,25 @@
                                                     console.log(result);
                                                     console.log(&#x27;object object&#x27;);
                                                 }
+                                            } else {
+                                                console.error(&#x27;OGDSM Error : Not data key&#x27;);
                                             }
-
+                                        }
+                                    };
+                                    var request = trans.objectStore(storeName).openCursor();
+                                    request.onsuccess = function (event) {
+                                        var cursor = event.target.result;
+                                        if (cursor) {
+                                            var field;
+                                            var obj = {};
+                                            obj.key = cursor.key;
+                                            obj.value = cursor.value;
+                                            resultAll.push(obj);
+                                            if (cursor.key === searchKey) {
+                                                result = cursor.value;
+                                            } else {
+                                                cursor.continue();
+                                            }
                                         }
                                     };
                                 };
@@ -295,7 +309,7 @@
                                 var req = dbObject.open(dbName, localStorage.openGDSMobileDBVersion);
                                 req.onsuccess = function (event) {
                                     iDB.db = event.target.result;
-
+                        
                                     if (data !== null) {
                                         insertData(dbName, storeName, data, key);
                                     } else {
@@ -321,6 +335,14 @@
                                     console.log(&quot;Database error: &quot;, e.target.error);
                                 };
                             }
+                            function removeData(dbName, storeName, key) {
+                                var req = dbObject.open(dbName, localStorage.openGDSMobileDBVersion);
+                                req.onsuccess = function (event) {
+                                    iDB.db = event.target.result;
+                                    var trans = iDB.db.transaction(storeName, &#x27;readwrite&#x27;);
+                                    trans.objectStore(storeName).delete(key);
+                                };
+                            }
                             function clearObjectStore(dbName, storeName) {
                                 var req = dbObject.open(dbName, localStorage.openGDSMobileDBVersion);
                                 req.onsuccess = function (event) {
@@ -328,8 +350,6 @@
                                     var trans = iDB.db.transaction(storeName, &#x27;readwrite&#x27;).objectStore(storeName);
                                     trans.clear();
                                 };
-
-
                             }
                             if (defaults.type === &#x27;new&#x27;) {
                                 openDBInsertData(dbName, defaults.storeName, defaults.insertData, defaults.insertKey);
@@ -338,7 +358,7 @@
                             } else if (defaults.type === &#x27;forceInsert&#x27;) {
                                 updateData(dbName, defaults.storeName, defaults.insertData, defaults.insertKey);
                             } else if (defaults.type === &#x27;remove&#x27;) {
-
+                                removeData(dbName, defaults.storeName, defaults.deleteKey);
                                 return -1;
                             } else if (defaults.type === &#x27;removeAll&#x27;) {
                                 clearObjectStore(dbName, defaults.storeName);
@@ -354,16 +374,16 @@
                             }
                             return this;
                         };
-
-
-
-
-
-                        /***********
+                        
+                        
+                        
+                        
+                        
+                        /*
                         Multiplue Object Store.. But....  iOS bug..
                         https://gist.github.com/nolanlawson/08eb857c6b17a30c1b26
-                        ***********************************/
-                        /***
+                        */
+                        /*
                         OGDSM.indexedDB = function (dbName, options) { //dbName, storeName, success, fail
                             &#x27;use strict&#x27;;
                             var dbObject = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
@@ -464,7 +484,8 @@
                                 console.log(&quot;Database error: &quot;, e.target.error);
                             };
                         };
-                        *********/
+                        */
+                        
                             </pre>
                         </div>
                     </div>
