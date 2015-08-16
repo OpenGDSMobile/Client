@@ -125,8 +125,13 @@ OGDSM.indexedDB = function (dbName, options) { //dbName_ StoreName, storeName, s
         searchData = (typeof (searchData) !== 'undefined') ? searchData : null;
         editData = (typeof (editData) !== 'undefined') ? editData : null;
         var req = dbObject.open(dbName, localStorage.openGDSMobileDBVersion);
+        console.log(req);
         req.onsuccess = function (event) {
             iDB.db = event.target.result;
+            if (iDB.db.objectStoreNames.length === 0) {
+                console.log('Not Object Store');
+                return -1;
+            }
             var trans = iDB.db.transaction(storeName, 'readonly');
             var resultAll = [];
             var result = null;
@@ -209,6 +214,19 @@ OGDSM.indexedDB = function (dbName, options) { //dbName_ StoreName, storeName, s
                 }
             };
         };
+        req.onupgradeneeded = function (event) {
+            iDB.db = event.target.result;
+            console.log("new DB in search");
+            if (storeName !== null) {
+                if (iDB.db.objectStoreNames.contains(storeName)) {
+                    console.log('Exist Store Name.');
+                    //iDB.db.deleteObjectStore(storeName);
+
+                } else {
+                    iDB.db.createObjectStore(storeName);
+                }
+            }
+        };
     }
     function edit(dbName, storeName, srcKey, srcData, dstData) {
         search('edit', dbName, storeName, srcKey, srcData, dstData);
@@ -231,12 +249,14 @@ OGDSM.indexedDB = function (dbName, options) { //dbName_ StoreName, storeName, s
         };
         req.onupgradeneeded = function (event) {
             iDB.db = event.target.result;
+            console.log("new DB in openDB");
             if (storeName !== null) {
                 if (iDB.db.objectStoreNames.contains(storeName)) {
-                    console.log('Exist Store Name. Therefore New Create After Remove');
-                    iDB.db.deleteObjectStore(storeName);
+                    console.log('Exist Store Name.');
+                  //  iDB.db.deleteObjectStore(storeName);
+                } else {
+                    iDB.db.createObjectStore(storeName);
                 }
-                iDB.db.createObjectStore(storeName);
             }
         };
         req.onerror = function (e) {

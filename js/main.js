@@ -2,9 +2,6 @@
 /*global $, jQuery, ol, OGDSM, geoServerAddr, serverAddr*/
 var openGDSMObj;
 
-/*OGDSM.indexedDB('webMappingDB', {
-    type : 'deleteDB'
-});*/
 //배경지도 라디오 버튼 사용자 인터페이스 생성 함수
 function mapSelectUI(openGDSMObj) {
     'use strict';
@@ -81,7 +78,6 @@ function wfsLoad(str, label) {
         color : color,
         label : label
     });
-
 }
 //서울 열린데이터 광장 데이터 선택 사용자 인터페이스 생성 / 시각화 함수
 function createSeoulPublicAreaEnvUI() {
@@ -303,6 +299,48 @@ function createPublicPortalUI(service) {
         });
     }
 }
+function deleteDB() {
+    'use strict';
+    OGDSM.indexedDB('webMappingDB', {
+        type : 'removeAll',
+        storeName : 'webMappingDB'
+    });
+    $('#NotData').show();
+    $('#attrList').empty();
+}
+function searchDB() {
+    'use strict';
+    OGDSM.indexedDB('webMappingDB', {
+        type : 'searchAll',
+        storeName : 'webMappingDB',
+        success : function (data) {
+            if (data.length !== 0) {
+                console.log(data);
+                $('#NotData').hide();
+                var attrList = $('#attrList');
+                $.each(data, function (i, d) {
+                    var label = d.key.split('--')[0];
+                    var sp = label.split('_')[1];
+                    if (sp === 'sig' || sp === 'emd') {
+                        attrList.prepend(
+                            '<li data-label="' + label + '">' +
+                                '<a href="#" onclick="wfsLoad(\'' + d.key + '\', \'' + sp + '_kor_nm\')">' +
+                                label + '</li>'
+                        );
+                    }
+                });
+                attrList.prepend(
+                    '<li data-label="delete">' +
+                        '<a href="#" onclick="deleteDB()">모두 삭제</li>'
+                );
+            }
+            $('#attrList').listview('refresh');
+        },
+        fail : function (result) {
+            console.log("Not data");
+        }
+    });
+}
 $(function () {
     'use strict';
     openGDSMObj = new OGDSM.visualization('map', {
@@ -314,37 +352,7 @@ $(function () {
     //openGDSMObj.trackingGeoLocation(true);
     mapSelectUI(openGDSMObj);
     mapAttrUI();
-
-
-    OGDSM.indexedDB('webMappingDB', {
-        type : 'searchAll',
-        storeName : 'webMappingDB',
-        success : function (data) {
-            if (data.length !== 0) {
-                console.log(data);
-                $('#NotData').remove();
-                var attrList = $('#attrList');
-                $.each(data, function (i, d) {
-                    var label = d.key.split('--')[0];
-                    var sp = label.split('_')[1];
-                    attrList.prepend(
-                        '<li data-label="' + label + '">' +
-                            '<a href="#" onclick="wfsLoad(\'' + d.key + '\', \'' + sp + '_kor_nm\')">' +
-                            label + '</li>'
-                    );
-                });
-            }
-            $('#attrList').listview('refresh');
-        },
-        fail : function (result) {
-
-        }
-    });/*
-    var attrList = $('#attrList');
-    attrList.prepend(
-        '<li><a href="#">dddd</a></li>'
-    );*/
-
+    searchDB();
     /***************************************************/
     $("#d3View").attr('width', $(window).width() - 100);
 	$('#d3viewonMap').hide();
@@ -358,7 +366,7 @@ $(function () {
     $('#dataSelect').attr('width', $(window).width() - 50);
     $('#dataSelect').attr('height', $(window).height() - 200);
     /***************************************************/
-   // testfunction();
+  //  testfunction();
 });
 
 function testfunction() {
@@ -371,12 +379,14 @@ function testfunction() {
         deleteKey : 'seoul_sig:DB'
     });*/
 /*db All delete */
+/*
     OGDSM.indexedDB('webMappingDB', {
         type : 'removeAll',
         storeName : 'webMappingDB'
     });
+    */
 /*delete DB*/
-/*    OGDSM.indexedDB('webMappingDB', {
+    OGDSM.indexedDB('webMappingDB', {
         type : 'deleteDB'
-    });*/
+    });
 }

@@ -69,7 +69,7 @@ OGDSM.namesapce('chartVisualization');
  * @method vBarChart
  * @param {String} divId - 막대 차트 시각화할 DIV 아이디 이름
  * @param {JSON Object} options - 옵션 JSON 객체 키 값<br>
-      {range : [], color : ['#4AAEEA']}<br>
+      {range : null, color : ['#4AAEEA']}<br>
  */
 OGDSM.chartVisualization.prototype.vBarChart = function (rootDiv, subOptions) {
     'use strict';
@@ -78,13 +78,18 @@ OGDSM.chartVisualization.prototype.vBarChart = function (rootDiv, subOptions) {
         options = this.defaults,
         chartOptions = {
             range : null,
-            color : ['#4AAEEA']
+            color : ['#4AAEEA'],
+            top : 20,
+            right : 25,
+            bottom : 130,
+            left : 45
         };
     chartOptions = OGDSM.applyOptions(chartOptions, subOptions);
     var rootDivObj = $('#' + rootDiv),
         margin = {top : 20, right : 25, bottom : 130, left : 45},
-        barWidth = rootDivObj.width() - margin.left - margin.right,
-        barHeight = rootDivObj.height() - margin.top - margin.bottom;
+        contentWidth = rootDivObj.width() + margin.left + margin.right,
+        barWidth = rootDivObj.width() - margin.left - margin.right, //contentWidth
+        barHeight = rootDivObj.height() - margin.top - margin.bottom;//contentHeight
     $('#' + rootDiv).empty();
     var labels = d3.scale.ordinal().rangeRoundBands([0, barWidth], 0.1);
     var values = d3.scale.linear().range([barHeight, 0]);

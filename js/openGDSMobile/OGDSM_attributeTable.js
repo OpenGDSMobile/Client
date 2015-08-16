@@ -173,7 +173,13 @@ OGDSM.attributeTable.prototype.addAttribute = function (layerName) {
     function indexedDBEvent(layerName, data) {
         OGDSM.indexedDB('webMappingDB', {
             insertKey : layerName + '--Local',
-            insertData : data
+            insertData : data,
+            success : function () {
+                console.log("test");
+            },
+            fail : function () {
+                console.log("test11");
+            }
         });
     }
 
