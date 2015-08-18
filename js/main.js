@@ -145,12 +145,15 @@ function createSeoulPublicAreaEnvUI() {
                     max : ranges[6]
                 });
 
-                $("#d3View").css('width', ($(window).width() - 50) + 'px');
-                $("#d3View").css('height', ($(window).height() - 200) + 'px');
+                $("#d3View").css('width', ($(window).width()) - 100 + 'px');
+                $("#d3View").css('height', ($(window).height()) + 'px');
                 d3Chart.hBarChart("d3View", {
                     range : ranges,
                     color : colors
                 });
+                $("#d3View").css('overflow-y', 'scroll');
+                $("#d3View").css('max-width', ($(window).width() - 100) + 'px');
+                $("#d3View").css('max-height', ($(window).height() - 200) + 'px');
                 $('#dataSelect').popup('open');
             }
         });
@@ -184,6 +187,7 @@ function createPublicPortalUI(service) {
                         valueKey : 'totEmTco2eq',
                         min : 0
                     });
+                    $('.range').hide();
                     $("#d3View").css('width', ($(window).width() - 100) + 'px');
                     $("#d3View").css('height', ($(window).height() - 200) + 'px');
                     d3Chart.areaChart("d3View");
@@ -215,6 +219,7 @@ function createPublicPortalUI(service) {
                         valueKey : 'value',
                         min : 0
                     });
+                    $('.range').hide();
                     $("#d3View").css('width', ($(window).width() - 100) + 'px');
                     $("#d3View").css('height', ($(window).height() - 200) + 'px');
                     d3Chart.lineChart("d3View");
@@ -229,12 +234,12 @@ function createPublicPortalUI(service) {
         processBtn = ui.autoButton('setting', 'process', '시각화', '#', {
             theme : 'a'
         });
-        var colors = ['#0090ff', '#008080', '#4cff4c', '#99ff99', '#FFFF00', '#FFFF99', '#FF9900', '#FF0000'],
-            ranges = [ [15, 30, 55, 80, 100, 120, 200],    //PM10, PM25
-                      [1, 2, 5.5, 9, 10.5, 12, 15],        //CO
-                      [0.015, 0.03, 0.05, 0.06, 0.1045, 0.15, 0.2],    //NO2
-                      [0.01, 0.02, 0.035, 0.05, 0.075, 0.1, 0.15],     //SO2
-                      [0.02, 0.04, 0.06, 0.08, 0.10, 0.12, 0.3] ];     //O3
+        var colors = ['#0090ff', '#0090ff', '#008080', '#4cff4c', '#99ff99', '#FFFF00', '#FFFF99', '#FF9900', '#FF0000'],
+            ranges = [ [0, 15, 30, 55, 80, 100, 120, 200],    //PM10, PM25
+                      [0, 1, 2, 5.5, 9, 10.5, 12, 15],        //CO
+                      [0, 0.015, 0.03, 0.05, 0.06, 0.1045, 0.15, 0.2],    //NO2
+                      [0, 0.01, 0.02, 0.035, 0.05, 0.075, 0.1, 0.15],     //SO2
+                      [0, 0.02, 0.04, 0.06, 0.08, 0.10, 0.12, 0.3] ];     //O3
         processBtn.click(function () {
             $('#setting').popup('close');
             var apiKey = 'kCxEhXiTf1qmDBlQFOOmw%2BemcPSxQXn5V5%2Fx8EthoHdbSojIdQvwX%2BHtWFyuJaIco0nUJtu12e%2F9acb7HeRRRA%3D%3D',
@@ -282,16 +287,18 @@ function createPublicPortalUI(service) {
                         labelKey : 'stationName',
                         valueKey : environmentType,
                         min : ranges[0],
-                        max : ranges[6]
+                        max : ranges[7]
                     });
                     console.log(d3Chart);
-                    $("#d3View").css('width', ($(window).width() - 100) + 'px');
-                    $("#d3View").css('height', ($(window).height() - 200) + 'px');
+                    $('.range').show();
+                    $("#d3View").css('width', ($(window).width()) - 100 + 'px');
+                    $("#d3View").css('height', ($(window).height()) - 200  + 'px');
                     d3Chart.vBarChart("d3View", {
                         range : ranges,
                         color : colors
                     });
                     $("#d3View").css('overflow-y', 'scroll');
+                    $("#d3View").css('max-width', ($(window).width() - 100) + 'px');
                     $("#d3View").css('max-height', ($(window).height() - 200) + 'px');
                     $('#dataSelect').popup('open');
                 }
