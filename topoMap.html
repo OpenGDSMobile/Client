@@ -27,11 +27,8 @@
 		#d3_chart {
 		  font: 10px sans-serif;
 		  background-color: #fff3aa;
-		  text-align: right;/*
-		  padding: 30px;
-		  margin-left: 0px;
-		  margin-top: 20px;
-		  margin-right: 0px;*/
+		  text-align: right;
+          width : 100%;
 		  color: white;
 		  height:450px;
 		}
@@ -108,10 +105,11 @@
 		</style>
 
         <script>
-            var serverAddr = 'http://113.198.80.60:8081/mobile/geojson.do';
+            var serverAddr = 'http://113.198.80.60/ApplicationServer/geojson.do';
+//            var serverAddr = 'http://113.198.80.60:8081/mobile/geojson.do';
            $(function(){
                var chartObj = new OGDSM.chartVisualization();
-               chartObj.kMap('d3_chart',serverAddr, "DONG", 34., 131., 3000);
+               chartObj.kMap('d3_chart',serverAddr, "SIDO");
            });
 
         </script>

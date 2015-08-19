@@ -79,8 +79,26 @@ function wfsLoad(str, label) {
         label : label
     });
 }
+function kMapLoad(str) {
+    'use strict';
+    $('#opendataList').popup('close');
+    $("#d3View").css('width', ($(window).width() - 300) + 'px');
+    $("#d3View").css('height', ($(window).height() + 200) + 'px');
+    $("#d3View").css('max-height', ($(window).height() + 200) + 'px');
+    setTimeout(function () {
+        var chartObj = new OGDSM.chartVisualization();
+        $('.range').hide();
+        chartObj.kMap('d3View', serverAddr + '/geojson.do', str, {
+            map_scale : 8000
+        });
+        $("#d3View").css('overflow-y', 'scroll');
+        $("#d3View").css('max-height', ($(window).height() - 200) + 'px');
+        console.log($("#dataSelect").css('height'));
+        $('#dataSelect').popup('open');
+    }, 1000);
+}
 //서울 열린데이터 광장 데이터 선택 사용자 인터페이스 생성 / 시각화 함수
-function createSeoulPublicAreaEnvUI() {
+function createSeoulPublicAreaEnvUI(str) {
     'use strict';
     $('#setting').empty();
     var ui = new OGDSM.eGovFrameUI();
@@ -306,6 +324,18 @@ function createPublicPortalUI(service) {
         });
     }
 }
+function popupCloseEvent(service, param) {
+    'use strict';
+    $('#opendataList').popup('close');
+    setTimeout(function () {
+        if (service === 'seoul') {
+            createSeoulPublicAreaEnvUI(param);
+        } else if (service === 'public') {
+            createPublicPortalUI(param);
+        }
+        $('#setting').popup('open');
+    }, 1000);
+}
 function deleteDB() {
     'use strict';
     OGDSM.indexedDB('webMappingDB', {
@@ -361,7 +391,6 @@ $(function () {
     mapAttrUI();
     searchDB();
     /***************************************************/
-    $("#d3View").attr('width', $(window).width() - 100);
 	$('#d3viewonMap').hide();
 	$("#d3viewonMap").attr('width', $(window).width() - 50);
 	$('#d3viewonMap').css('top', $(window).height() - 300);
@@ -370,8 +399,8 @@ $(function () {
 	$("#interpolationMap").attr('width', $(window).width() - 50);
 	$('#interpolationMap').css('top', $(window).height() - 600);
 
-    $('#dataSelect').attr('width', $(window).width() - 50);
-    $('#dataSelect').attr('height', $(window).height() - 200);
+/*    $('#dataSelect').attr('width', $(window).width() - 50);
+    $('#dataSelect').attr('height', $(window).height() - 200);*/
     /***************************************************/
   //  testfunction();
 });

@@ -54,7 +54,8 @@ OGDSM.namesapce('chartVisualization');
 	        }
 	        this.defaults.max = (typeof (options.max) !== 'undefined') ? options.max : this.defaults.max;
 	        this.defaults.min = (typeof (options.min) !== 'undefined') ? options.min : this.defaults.min;
-
+        } else {
+            console.log('kMap function Mode');
         }
     };
     OGDSM.chartVisualization.prototype = {
@@ -516,12 +517,55 @@ OGDSM.chartVisualization.prototype.areaChart = function (rootDiv, subOptions) {
 };
 
 
-OGDSM.chartVisualization.prototype.kMap = function (divId, serverAddr, geodata, center_lat, center_lon, map_scale) {
+OGDSM.chartVisualization.prototype.kMap = function (rootDiv, serverAddr, geodata, subOptions) {
     'use strict';
-    var rootDiv = $('#' + divId),
+    subOptions = (typeof (subOptions) !== 'undefined') ? subOptions : {};
+    var data = this.data,
+        options = this.defaults,
+        mapOptions = {
+            center_lat : 34.0,
+            center_lon : 131.0,
+            map_scale : 3500,
+            top : 0,
+            right : 0,
+            bottom : 0,
+            left : 0
+        };
+    mapOptions = OGDSM.applyOptions(mapOptions, subOptions);
+    var rootDivObj = $('#' + rootDiv),
+        contentWidth = rootDivObj.width() + mapOptions.left + mapOptions.right,
+        contentHeight = rootDivObj.height() + mapOptions.top + mapOptions.bottom,
+        barWidth = rootDivObj.width() - mapOptions.left - mapOptions.right,
+        barHeight = rootDivObj.height() - mapOptions.top - mapOptions.bottom,
+        objNames = [
+            { geoName : 'SIDO', objName : 'All_TL_SCCO_CTPRVN_4326', propEnName : 'CTP_ENG_NM'},
+            { geoName : 'GU', objName : 'All_TL_SCCO_SIG_4326', propEnName : 'SIG_ENG_NM'},
+            { geoName : 'DONG', objName : 'All_TL_SCCO_EMD_4326', propEnName : 'EMD_ENG_NM'}
+        ],
         paramData = {};
     paramData.jsonName = geodata;
-    rootDiv.empty();
+    rootDivObj.empty();
+    var svg = d3.select('#' + rootDiv)
+                .append('svg')
+                .attr("width", contentWidth)
+                .attr("height", contentHeight);
+    var projection = d3.geo.mercator()
+                .center([mapOptions.center_lon, mapOptions.center_lat])
+                .scale(mapOptions.map_scale)
+                .rotate([2, 2.5])
+                .translate([barWidth / 2, barHeight / 2]);
+    var path = d3.geo.path().projection(projection);
+    var curObj = null, curPropEn = null;
+    $.each(objNames, function (i, d) {
+        if (d.geoName === geodata) {
+            curObj = d.objName;
+            curPropEn = d.propEnName;
+        }
+    });
+    if (curObj === null) {
+        console.log('Not support Map');
+        return -1;
+    }
     $.ajax({
         type : 'POST',
         url : serverAddr,
@@ -530,40 +574,16 @@ OGDSM.chartVisualization.prototype.kMap = function (divId, serverAddr, geodata, 
         dataType : 'json',
         success : function (msg) {
             var topology = JSON.parse(msg.data);
-
-            var svg = d3.select('#' + divId)
-                        .append('svg')
-                        .attr("width", 500)
-                        .attr("height", 600);
-            var projection = d3.geo.mercator()
-                                .center([center_lon, center_lat])
-                                .scale(map_scale);
-            var path = d3.geo.path()
-                            .projection(projection);
-            var g = svg.append("g");
-
-            if (geodata === "SIDO") {
-                g.selectAll("path")
-                    .data(topojson.feature(topology, topology.objects.All_TL_SCCO_CTPRVN_4326).features)
-                    .enter().append("path")
-                    .attr("class", function (d) { return "sido_" + d.properties.CTP_ENG_NM; })
-                    .style("fill", function (d) { return "#" + Math.random().toString(16).slice(2, 8); })
-                    .attr("d", path);
-            } else if (geodata === "GU") {
-                g.selectAll("path")
-                    .data(topojson.feature(topology, topology.objects.All_TL_SCCO_SIG_4326).features)
-                    .enter().append("path")
-                    .attr("class", function (d) { return "gu_" + d.properties.SIG_ENG_NM; })
-                    .style("fill", function (d) { return "#" + Math.random().toString(16).slice(2, 8); })
-                    .attr("d", path);
-            } else if (geodata === "DONG") {
-                g.selectAll("path")
-                    .data(topojson.feature(topology, topology.objects.All_TL_SCCO_EMD_4326).features)
-                    .enter().append("path")
-                    .attr("class", function (d) { return "dong_" + d.properties.EMD_ENG_NM; })
-                    .style("fill", function (d) { return "#" + Math.random().toString(16).slice(2, 8); })
-                    .attr("d", path);
-            }
+            var objs = topology.objects;
+            svg.selectAll("path")
+                .data(topojson.feature(topology, objs[curObj]).features)
+                .enter().append("path")
+                .attr('data-prop', function (d) {
+                    return JSON.stringify(d.properties);
+                })
+                .style("fill", function (d) { return "#" + Math.random().toString(16).slice(2, 8); })
+                .style('fill-opacity', 0.5)
+                .attr("d", path);
         },
         error : function (e) {
             console.log(e);
