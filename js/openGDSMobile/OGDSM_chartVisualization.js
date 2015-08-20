@@ -14,13 +14,8 @@ OGDSM.namesapce('chartVisualization');
        max:jsonData min value (based on valueKey), min:jsonData max value (based on valueKey)}<br>
     */
     OGDSM.chartVisualization = function (jsonData, options) {
-        function isInt(value) {
-            var x;
-            if (isNaN(value)) {
-                return false;
-            }
-            x = parseFloat(value);
-            return (x || 0) === x;
+        function isInt(n) {
+            return n % 1 === 0;
         }
         options = (typeof (options) !== 'undefined') ? options : {};
         this.defaults = {

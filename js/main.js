@@ -165,6 +165,7 @@ function createSeoulPublicAreaEnvUI(str) {
 
                 $("#d3View").css('width', ($(window).width()) - 100 + 'px');
                 $("#d3View").css('height', ($(window).height()) + 'px');
+                $("#d3View").css('max-height', ($(window).height()) + 'px');
                 d3Chart.hBarChart("d3View", {
                     range : ranges,
                     color : colors
@@ -172,6 +173,7 @@ function createSeoulPublicAreaEnvUI(str) {
                 $("#d3View").css('overflow-y', 'scroll');
                 $("#d3View").css('max-width', ($(window).width() - 100) + 'px');
                 $("#d3View").css('max-height', ($(window).height() - 200) + 'px');
+                $('.range').show();
                 $('#dataSelect').popup('open');
             }
         });
@@ -208,6 +210,7 @@ function createPublicPortalUI(service) {
                     $('.range').hide();
                     $("#d3View").css('width', ($(window).width() - 100) + 'px');
                     $("#d3View").css('height', ($(window).height() - 200) + 'px');
+                    $("#d3View").css('max-height', ($(window).height()) + 'px');
                     d3Chart.areaChart("d3View");
                     $("#d3View").css('overflow-y', 'scroll');
                     $("#d3View").css('max-height', ($(window).height() - 200) + 'px');
@@ -240,6 +243,7 @@ function createPublicPortalUI(service) {
                     $('.range').hide();
                     $("#d3View").css('width', ($(window).width() - 100) + 'px');
                     $("#d3View").css('height', ($(window).height() - 200) + 'px');
+                    $("#d3View").css('max-height', ($(window).height()) + 'px');
                     d3Chart.lineChart("d3View");
                     $("#d3View").css('overflow-y', 'scroll');
                     $("#d3View").css('max-height', ($(window).height() - 200) + 'px');
@@ -311,6 +315,7 @@ function createPublicPortalUI(service) {
                     $('.range').show();
                     $("#d3View").css('width', ($(window).width()) - 100 + 'px');
                     $("#d3View").css('height', ($(window).height()) - 200  + 'px');
+                    $("#d3View").css('max-height', ($(window).height()) + 'px');
                     d3Chart.vBarChart("d3View", {
                         range : ranges,
                         color : colors
@@ -380,6 +385,9 @@ function searchDB() {
 }
 $(function () {
     'use strict';
+
+    $('#map').height($(window).height());
+
     openGDSMObj = new OGDSM.visualization('map', {
         layerListDiv : 'layerList',
         attrTableDiv : 'attributeTable',

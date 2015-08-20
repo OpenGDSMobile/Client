@@ -225,18 +225,18 @@ OGDSM.mapLayerList.prototype.addList = function (obj, label, color, type) {
     if (label.length > 10) {
         sublabel = sublabel.substr(0, 10) + '...';
     }
-    olList.prepend('<li id="layer' + label + '" style="float:left">' +
+    olList.prepend('<li id="layer' + label + '" style="float:left;">' +
                    '<fieldset data-role="controlgroup" data-type="horizontal" style="margin:0px">' +
                    '<div style="width:15%; float:left;">' +
                    '<canvas id="' + label + 'canvas" width="100%" height=30px; class="drag-handle" ></canvas>' +
-                   '</div> <div id="chkRoot' + label + '" style="width:70%; float:left; padding:0px; margin:0px;">' +
+                   '</div> <div id="chkRoot' + label + '" style="width:60%; float:left; padding:0px; margin:0px;">' +
                    '<input type="checkbox" name="listCheckBox" data-corners="false" data-mini="true" class="custom" ' +
                    'id="' + 'visualSW' + thisObj.getLabels().length + '" data-label="' + label + '" checked/>' +
                    '<label for="' + 'visualSW' + thisObj.getLabels().length + '" style="width:100%">' + sublabel + '</label>' +
-                   '</div> <div style="width:15%; float:left;">' +
+                   '</div> <div style="width:25%; float:left;">' +
                    '<a id="hrefRoot' + label + '" data-role="button" data-rel="popup" data-theme="b" data-icon="gear"' +
-                   'data-corners="false" data-mini="true" data-transition="pop"' +
-                   'data-label="' + label + '" href="#popup' + label + '">　</a>' +
+                   'data-corners="false" data-transition="pop" data-iconpos="notext"  data-mini="true" ' +
+                   'data-label="' + label + '" href="#popup' + label + '" style="width:25%; height:6px;"></a>' +
                    '</div>' +
                    '</fieldset>' +
                    '<div data-role="popup" id="popup' + label + '" style="width:' + 200 + 'px">' +
@@ -245,7 +245,7 @@ OGDSM.mapLayerList.prototype.addList = function (obj, label, color, type) {
                    '<a data-role="button" data-theme="f" data-mini="true"' +
                    'id="' + label + 'delete" data-label="' + label + '">Delete</a>' +
                    '</div>' +
-                   '</li>');
+                   '</li>'); //　   style="width:25%;"
     var labelCanvas = document.getElementById(label + 'canvas').getContext('2d');
     if (type === 'MultiPolygon') {
         labelCanvas.fillStyle = color;
@@ -271,7 +271,7 @@ OGDSM.mapLayerList.prototype.addList = function (obj, label, color, type) {
     $('#' + label + 'slider').on('change', sliderEvent);
     $('#' + label + 'delete').on('click', deleteEvent);
     $('input[name=listCheckBox]').on('click', checkBoxEvent);
-    $('#chkRoot' + label + ' > div').css('width', '98%');
+    $('#chkRoot' + label + ' > div').css('width', '80%');
     //$('#hrefRoot' + label + ' > span').css('margin', '-1.5px');
 };
 

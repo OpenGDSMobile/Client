@@ -22,7 +22,7 @@
 
 $(function(){
 
-	$('div').on('pageshow',function(event, ui){
+	$('div').live('pageshow',function(event, ui){
 
 		// console.log(getUrlVars());
 		
