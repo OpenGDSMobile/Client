@@ -39,8 +39,25 @@ function mapAttrUI() {
             attrObj.editAttribute(false);
 
         }
-
     });
+}
+//실시간 통신
+function realTimeFunc() {
+    'use strict';
+    var realEditChk = $('#realEditChk');
+    realEditChk.click(function () {
+        var chk = $(this).is(':checked');
+        if (chk === true) {
+            console.log("websocket connect");
+            //사용할 아이디 작성
+            //local storage에 저장
+            //WebSocket 접속
+        } else {
+            //
+            console.log("websocket cancel");
+        }
+    });
+
 }
 //브이월드 WMS 데이터 선택 사용자 인터페이스 생성 / 시각화 함수
 function vworldWMSUI() {
