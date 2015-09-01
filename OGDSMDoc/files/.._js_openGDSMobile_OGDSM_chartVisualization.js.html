@@ -106,6 +106,9 @@
                                max:jsonData min value (based on valueKey), min:jsonData max value (based on valueKey)}&lt;br&gt;
                             */
                             OGDSM.chartVisualization = function (jsonData, options) {
+                                function isInt(n) {
+                                    return n % 1 === 0;
+                                }
                                 options = (typeof (options) !== &#x27;undefined&#x27;) ? options : {};
                                 this.defaults = {
                                     rootKey : null,
@@ -130,12 +133,16 @@
                         	        for (d in this.data) {
                         	            if (this.data.hasOwnProperty(d)) {
                         	                this.defaults.max = Math.max(this.data[d][options.valueKey], this.defaults.max);
-                        	                this.defaults.min = Math.min(this.data[d][options.valueKey], this.defaults.max);
+                        	                this.defaults.min = Math.min(this.data[d][options.valueKey], this.defaults.min);
+                                            if (!isInt(Number(this.data[d][options.valueKey]))) {
+                                                this.data[d][options.valueKey] = Number(this.data[d][options.valueKey]).toFixed(3);
+                                            }
                         	            }
                         	        }
                         	        this.defaults.max = (typeof (options.max) !== &#x27;undefined&#x27;) ? options.max : this.defaults.max;
                         	        this.defaults.min = (typeof (options.min) !== &#x27;undefined&#x27;) ? options.min : this.defaults.min;
-                        
+                                } else {
+                                    console.log(&#x27;kMap function Mode&#x27;);
                                 }
                             };
                             OGDSM.chartVisualization.prototype = {
@@ -161,7 +168,7 @@
                          * @method vBarChart
                          * @param {String} divId - 막대 차트 시각화할 DIV 아이디 이름
                          * @param {JSON Object} options - 옵션 JSON 객체 키 값&lt;br&gt;
-                              {range : [], color : [&#x27;#4AAEEA&#x27;]}&lt;br&gt;
+                              {range : null, color : [&#x27;#4AAEEA&#x27;]}&lt;br&gt;
                          */
                         OGDSM.chartVisualization.prototype.vBarChart = function (rootDiv, subOptions) {
                             &#x27;use strict&#x27;;
@@ -170,45 +177,63 @@
                                 options = this.defaults,
                                 chartOptions = {
                                     range : null,
-                                    color : [&#x27;#4AAEEA&#x27;]
+                                    color : [&#x27;#4AAEEA&#x27;],
+                                    top : 20,
+                                    right : 25,
+                                    bottom : 70,
+                                    left : 45,
+                                    tick : 10
                                 };
                             chartOptions = OGDSM.applyOptions(chartOptions, subOptions);
                             var rootDivObj = $(&#x27;#&#x27; + rootDiv),
-                                margin = {top : 20, right : 25, bottom : 130, left : 45},
-                                barWidth = rootDivObj.width() - margin.left - margin.right,
-                                barHeight = rootDivObj.height() - margin.top - margin.bottom;
+                                contentWidth = rootDivObj.width() + chartOptions.left + chartOptions.right,
+                                contentHeight = rootDivObj.height() + chartOptions.top + chartOptions.bottom,
+                                barWidth = rootDivObj.width() - chartOptions.left - chartOptions.right,
+                                barHeight = rootDivObj.height() - chartOptions.top - chartOptions.bottom;
                             $(&#x27;#&#x27; + rootDiv).empty();
-                            var labels = d3.scale.ordinal().rangeRoundBands([0, barWidth], 0.1);
+                            var labels = d3.scale.ordinal().rangeRoundBands([0, barWidth], 0.05);
                             var values = d3.scale.linear().range([barHeight, 0]);
-                            var chartSVG = d3.select(&#x27;#&#x27; + rootDiv).append(&#x27;svg&#x27;).attr(&#x27;id&#x27;, rootDiv + &#x27;Bar&#x27;)
-                                .attr(&#x27;width&#x27;, barWidth + margin.left + margin.right)
-                                .attr(&#x27;height&#x27;, barHeight + margin.top + margin.bottom);
-                        
                             var labelAxis = d3.svg.axis().scale(labels).orient(&#x27;bottom&#x27;);
-                            var valueAxis = d3.svg.axis().scale(values).orient(&#x27;left&#x27;);
+                            var valueAxis = d3.svg.axis().scale(values).orient(&#x27;left&#x27;).ticks(chartOptions.tick);
+                            var chartSVG = d3.select(&#x27;#&#x27; + rootDiv).append(&#x27;svg&#x27;).attr(&#x27;id&#x27;, rootDiv + &#x27;Bar&#x27;)
+                                .attr(&#x27;width&#x27;, contentWidth)
+                                .attr(&#x27;height&#x27;, contentHeight)
+                                .append(&#x27;g&#x27;)
+                                .attr(&#x27;transform&#x27;, &#x27;translate(&#x27; + chartOptions.left + &#x27;, &#x27; + chartOptions.top + &#x27;)&#x27;);
+
                             labels.domain(data.map(function (d) {
                                 return d[options.labelKey];
                             }));
                             values.domain([options.min, options.max]);
-                        
-                            var bar = chartSVG.selectAll(&#x27;g&#x27;).data(data).enter()
-                                .append(&#x27;g&#x27;)
-                                .attr(&#x27;transform&#x27;, function (d, i) {
-                                    return &#x27;translate(&#x27; + labels(d[options.labelKey]) + &#x27;, &#x27; + margin.top + &#x27;)&#x27;;
+                            chartSVG.append(&#x27;g&#x27;)
+                                    .attr(&#x27;class&#x27;, &#x27;y axis&#x27;)
+                                    .call(valueAxis)
+                                    .attr(&#x27;fill&#x27;, &#x27;none&#x27;)
+                                    .attr(&#x27;stroke&#x27;, &#x27;#000&#x27;)
+                                    .attr(&#x27;shape-rendering&#x27;, &#x27;crispEdges&#x27;)
+                                    .append(&#x27;text&#x27;)
+                                    .attr(&#x27;transform&#x27;, &#x27;rotate(-90)&#x27;)
+                                    .attr(&#x27;y&#x27;, 7)
+                                    .attr(&#x27;dy&#x27;, &#x27;.71em&#x27;)
+                                    .style(&#x27;text-anchor&#x27;, &#x27;end&#x27;)
+                                    .style(&#x27;font-size&#x27;, &#x27;0.7em&#x27;)
+                                    .text(options.valueKey);
+                            chartSVG.append(&#x27;g&#x27;).attr(&#x27;class&#x27;, &#x27;x axis&#x27;)
+                                .attr(&#x27;transform&#x27;, &#x27;translate(0, &#x27; + barHeight + &#x27;)&#x27;)
+                                .call(labelAxis)
+                                .attr(&#x27;fill&#x27;, &#x27;none&#x27;)
+                                .attr(&#x27;stroke&#x27;, &#x27;#000&#x27;)
+                                .attr(&#x27;shape-rendering&#x27;, &#x27;crispEdges&#x27;)
+                                .selectAll(&#x27;text&#x27;)
+                                .style(&#x27;text-anchor&#x27;, &#x27;end&#x27;)
+                                .style(&#x27;font-size&#x27;, &#x27;0.7em&#x27;)
+                                .attr(&#x27;dx&#x27;, &#x27;-.8em&#x27;)
+                                .attr(&#x27;dy&#x27;, &#x27;.15em&#x27;)
+                                .attr(&#x27;transform&#x27;, function (d) {
+                                    return &#x27;rotate(-65)&#x27;;
                                 });
                         
-                            var barRect = bar.append(&#x27;rect&#x27;)
-                                .attr(&#x27;y&#x27;, function (d) {
-                                    return values(d[options.valueKey]);
-                                })
-                                .attr(&#x27;x&#x27;, function (d, i) {
-                                    return labels.rangeBand() + (margin.left / 3); //+(margin.left/4)
-                              //      return (labels(d[options.labelKey]) / data.length) + margin.left;
-                                })
-                                .attr(&#x27;height&#x27;, function (d) {
-                                    return barHeight - values(d[options.valueKey]);
-                                })
-                                .attr(&#x27;width&#x27;, labels.rangeBand())
+                            chartSVG.selectAll(&#x27;bar&#x27;).data(data).enter().append(&#x27;rect&#x27;)
                                 .attr(&#x27;fill&#x27;, function (d) {
                                     if ($.isArray(chartOptions.range) === true) {
                                         var z = 0;
@@ -220,50 +245,37 @@
                                     } else {
                                         return chartOptions.color;
                                     }
-                                });/*
-                            barRect.transition()
-                                .duration(2000)
-                                .attr(&#x27;height&#x27;, function (d) {
-                                    return barHeight - values(d[options.valueKey]);
-                                });*/
-                        
-                            bar.append(&#x27;text&#x27;)
-                                .attr(&#x27;x&#x27;, labels.rangeBand() + margin.left)
-                                .attr(&#x27;y&#x27;, function (d) {
-                                    return values(d[options.valueKey]) - 10;
                                 })
+                                .attr(&#x27;x&#x27;, function (d, i) {
+                                    return labels(d[options.labelKey]);
+                                })
+                                .attr(&#x27;width&#x27;, labels.rangeBand())
+                                .attr(&#x27;y&#x27;, function (d) {
+                                    if (isNaN(values(d[options.valueKey]))) {
+                                        return 0;
+                                    }
+                                    return values(d[options.valueKey]);
+                                })
+                                .attr(&#x27;height&#x27;, function (d) {
+                                    if (isNaN(values(d[options.valueKey]))) {
+                                        return 0;
+                                    }
+                                    return barHeight - values(d[options.valueKey]);
+                                });
+                            chartSVG.selectAll(&#x27;bar&#x27;).data(data).enter().append(&#x27;text&#x27;)
+                                .attr(&#x27;x&#x27;, function (d, i) {
+                                    return labels(d[options.labelKey]) + labels.rangeBand() / 2;
+                                })
+                                .attr(&#x27;y&#x27;, function (d) {
+                                    return values(d[options.valueKey]);
+                                })
+                                .attr(&#x27;dx&#x27;, &#x27;-5&#x27;)
                                 .attr(&#x27;dy&#x27;, &#x27;.75em&#x27;)
-                                .attr(&#x27;text-anchor&#x27;, &#x27;end&#x27;)
+                                .style(&#x27;font-size&#x27;, &#x27;0.75em&#x27;)
+                                .attr(&#x27;text-anchor&#x27;, &#x27;start&#x27;)
                                 .text(function (d) {
                                     return d[options.valueKey];
                                 });
-                        
-                            chartSVG.append(&#x27;g&#x27;).attr(&#x27;class&#x27;, &#x27;x axis&#x27;)
-                                .attr(&#x27;transform&#x27;, &#x27;translate(&#x27; + margin.left + &#x27;, &#x27; + (barHeight + margin.top) + &#x27;)&#x27;)
-                                .call(labelAxis)
-                                .attr(&#x27;fill&#x27;, &#x27;none&#x27;)
-                                .attr(&#x27;stroke&#x27;, &#x27;#000&#x27;)
-                                .attr(&#x27;shape-rendering&#x27;, &#x27;crispEdges&#x27;)
-                                .selectAll(&#x27;text&#x27;)
-                                .style(&#x27;text-anchor&#x27;, &#x27;end&#x27;)
-                                .attr(&#x27;dx&#x27;, &#x27;-.8em&#x27;)
-                                .attr(&#x27;dy&#x27;, &#x27;.15em&#x27;)
-                                .attr(&#x27;transform&#x27;, function (d) {
-                                    return &#x27;rotate(-65)&#x27;;
-                                });
-                        
-                            chartSVG.append(&#x27;g&#x27;).attr(&#x27;class&#x27;, &#x27;y axis&#x27;)
-                                    .attr(&#x27;transform&#x27;, &#x27;translate(&#x27; + margin.left + &#x27;, &#x27; + margin.top + &#x27;)&#x27;)
-                                    .call(valueAxis)
-                                    .attr(&#x27;fill&#x27;, &#x27;none&#x27;)
-                                    .attr(&#x27;stroke&#x27;, &#x27;#000&#x27;)
-                                    .attr(&#x27;shape-rendering&#x27;, &#x27;crispEdges&#x27;)
-                                    .append(&#x27;text&#x27;)
-                                    .attr(&#x27;transform&#x27;, &#x27;rotate(-90)&#x27;)
-                                    .attr(&#x27;y&#x27;, 5)
-                                    .attr(&#x27;dy&#x27;, &#x27;.71em&#x27;)
-                                    .style(&#x27;text-anchor&#x27;, &#x27;end&#x27;)
-                                    .text(options.valueKey);
                         };
                         
                         
@@ -282,43 +294,68 @@
                                 options = this.defaults,
                                 chartOptions = {
                                     range : null,
-                                    color : [&#x27;#4AAEEA&#x27;]
+                                    color : [&#x27;#4AAEEA&#x27;],
+                                    top : 20,
+                                    right : 60,
+                                    bottom : 20,
+                                    left : 80,
+                                    tick : 10
                                 };
                             chartOptions = OGDSM.applyOptions(chartOptions, subOptions);
                             var rootDivObj = $(&#x27;#&#x27; + rootDiv),
-                                margin = {top : 0, right : 60, bottom : 20, left : 80},
-                                barWidth = rootDivObj.width() - margin.left - margin.right,
-                                barHeight = rootDivObj.height() - margin.top - margin.bottom;
+                                contentWidth = rootDivObj.width() + chartOptions.left + chartOptions.right,
+                                contentHeight = rootDivObj.height() + chartOptions.top + chartOptions.bottom,
+                                barWidth = rootDivObj.width() - chartOptions.left - chartOptions.right,
+                                barHeight = rootDivObj.height() - chartOptions.top - chartOptions.bottom;
                             $(&#x27;#&#x27; + rootDiv).empty();
-                            var labels = d3.scale.ordinal().rangeRoundBands([0, barHeight], 0.1);
-                            var values = d3.scale.linear().range([barWidth, 0]);
+                            var labels = d3.scale.ordinal().rangeRoundBands([0, barHeight], 0.02);
+                            var values = d3.scale.linear().range([0, barWidth]);
                             var chartSVG = d3.select(&#x27;#&#x27; + rootDiv).append(&#x27;svg&#x27;).attr(&#x27;id&#x27;, rootDiv + &#x27;Bar&#x27;)
-                                .attr(&#x27;width&#x27;, barWidth + margin.left + margin.right)
-                                .attr(&#x27;height&#x27;, barHeight + margin.top + margin.bottom);
+                                .attr(&#x27;width&#x27;, contentWidth)
+                                .attr(&#x27;height&#x27;, contentHeight)
+                                .append(&#x27;g&#x27;)
+                                .attr(&#x27;transform&#x27;, &#x27;translate(&#x27; + chartOptions.left + &#x27;, &#x27; + chartOptions.top + &#x27;)&#x27;);
                         
                             var labelAxis = d3.svg.axis().scale(labels).orient(&#x27;left&#x27;);
-                            var valueAxis = d3.svg.axis().scale(values).orient(&#x27;bottom&#x27;);
+                            var valueAxis = d3.svg.axis().scale(values).orient(&#x27;top&#x27;);
                             labels.domain(data.map(function (d) {
                                 return d[options.labelKey];
                             }));
                             values.domain([options.min, options.max]);
-                            console.log(options.min + &#x27; &#x27; + options.max);
-                            var bar = chartSVG.selectAll(&#x27;g&#x27;).data(data).enter()
-                                .append(&#x27;g&#x27;)
-                                .attr(&#x27;transform&#x27;, function (d, i) {
-                                    return &#x27;translate(&#x27; + margin.left + &#x27;, &#x27; + labels(d[options.labelKey]) + &#x27;)&#x27;;
-                                });
-                            bar.append(&#x27;rect&#x27;)
-                                .attr(&#x27;y&#x27;, function (d) {
-                                    return labels.rangeBand() + (margin.top / 3); //+(margin.left/4)
-                                })
+
+                            chartSVG.append(&#x27;g&#x27;).attr(&#x27;class&#x27;, &#x27;y axis&#x27;)
+                                .call(labelAxis)
+                                .attr(&#x27;fill&#x27;, &#x27;none&#x27;)
+                                .attr(&#x27;stroke&#x27;, &#x27;#000&#x27;)
+                                .attr(&#x27;shape-rendering&#x27;, &#x27;crispEdges&#x27;)
+                                .selectAll(&#x27;text&#x27;)
+                                .style(&#x27;text-anchor&#x27;, &#x27;end&#x27;)
+                                .style(&#x27;font-size&#x27;, &#x27;0.75em&#x27;)
+                                .attr(&#x27;dx&#x27;, &#x27;-.8em&#x27;)
+                                .attr(&#x27;dy&#x27;, &#x27;.15em&#x27;);
+                            chartSVG.append(&#x27;g&#x27;)
+                                .attr(&#x27;class&#x27;, &#x27;x axis&#x27;)
+                                .call(valueAxis)
+                                .attr(&#x27;fill&#x27;, &#x27;none&#x27;)
+                                .attr(&#x27;stroke&#x27;, &#x27;#000&#x27;)
+                                .style(&#x27;font-size&#x27;, &#x27;0.75em&#x27;)
+                                .attr(&#x27;shape-rendering&#x27;, &#x27;crispEdges&#x27;)
+                                .append(&#x27;text&#x27;)
+                                .attr(&#x27;x&#x27;, barWidth)
+                                .attr(&#x27;dy&#x27;, &#x27;1.2em&#x27;)
+                                .style(&#x27;text-anchor&#x27;, &#x27;end&#x27;)
+                                .style(&#x27;font-size&#x27;, &#x27;0.75em&#x27;)
+                                .text(options.valueKey);
+                            chartSVG.selectAll(&#x27;bar&#x27;).data(data).enter().append(&#x27;rect&#x27;)
                                 .attr(&#x27;x&#x27;, function (d, i) {
-                                    return margin.left;
+                                    return 0.5;
                                 })
-                                .attr(&#x27;height&#x27;, labels.rangeBand())
+                                .attr(&#x27;y&#x27;, function (d) {
+                                    return labels(d[options.labelKey]);
+                                })
+                                .attr(&#x27;height&#x27;, labels.rangeBand() - 0.5)
                                 .attr(&#x27;width&#x27;, function (d) {
-                                    //return barWidth - values(d[options.valueKey]);
-                                    return barWidth - values(d[options.valueKey]);
+                                    return values(d[options.valueKey]);
                                 })
                                 .attr(&#x27;fill&#x27;, function (d) {
                                     if ($.isArray(chartOptions.range) === true) {
@@ -332,39 +369,19 @@
                                         return chartOptions.color;
                                     }
                                 });
-                            bar.append(&#x27;text&#x27;)
+                            chartSVG.selectAll(&#x27;bar&#x27;).data(data).enter().append(&#x27;text&#x27;)
                                 .attr(&#x27;x&#x27;, function (d) {
-                                    return barWidth + (margin.left) - values(d[options.valueKey]);
+                                    return values(d[options.valueKey]);
                                 })
-                                .attr(&#x27;y&#x27;, labels.rangeBand())
+                                .attr(&#x27;y&#x27;, function (d) {
+                                    return labels(d[options.labelKey]);
+                                })
                                 .attr(&#x27;dy&#x27;, &#x27;.75em&#x27;)
-                                .attr(&#x27;text-anchor&#x27;, &#x27;end&#x27;)
+                                .style(&#x27;font-size&#x27;, &#x27;0.75em&#x27;)
+                                .attr(&#x27;text-anchor&#x27;, &#x27;start&#x27;)
                                 .text(function (d) {
                                     return d[options.valueKey];
                                 });
-                        
-                            chartSVG.append(&#x27;g&#x27;).attr(&#x27;class&#x27;, &#x27;y axis&#x27;)
-                                .attr(&#x27;transform&#x27;, &#x27;translate(&#x27; + (margin.left) * 2 + &#x27;, &#x27; + labels.rangeBand() + &#x27;)&#x27;)
-                                .call(labelAxis)
-                                .attr(&#x27;fill&#x27;, &#x27;none&#x27;)
-                                .attr(&#x27;stroke&#x27;, &#x27;#000&#x27;)
-                                .attr(&#x27;shape-rendering&#x27;, &#x27;crispEdges&#x27;)
-                                .selectAll(&#x27;text&#x27;)
-                                .style(&#x27;text-anchor&#x27;, &#x27;end&#x27;)
-                                .attr(&#x27;dx&#x27;, &#x27;-.8em&#x27;)
-                                .attr(&#x27;dy&#x27;, &#x27;.15em&#x27;);
-                            //Bug ......
-                            chartSVG.append(&#x27;g&#x27;).attr(&#x27;class&#x27;, &#x27;x axis&#x27;)
-                                    .attr(&#x27;transform&#x27;, &#x27;translate(&#x27; + (margin.left) * 2 + &#x27;, &#x27; + barHeight + &#x27;)&#x27;)
-                                    .call(valueAxis)
-                                    .attr(&#x27;fill&#x27;, &#x27;none&#x27;)
-                                    .attr(&#x27;stroke&#x27;, &#x27;#000&#x27;)
-                                    .attr(&#x27;shape-rendering&#x27;, &#x27;crispEdges&#x27;)
-                                    .append(&#x27;text&#x27;)
-                                    .attr(&#x27;y&#x27;, 5)
-                                    .attr(&#x27;dy&#x27;, &#x27;.71em&#x27;)
-                                    .style(&#x27;text-anchor&#x27;, &#x27;end&#x27;)
-                                    .text(options.valueKey);
                         };
                         
                         
@@ -387,19 +404,26 @@
                                     stroke : [&#x27;#4AAEEA&#x27;],
                                     width : 2,
                                     circleSize : 3,
-                                    circleColor : [&#x27;#AAAAAA&#x27;]
+                                    circleColor : [&#x27;#AAAAAA&#x27;],
+                                    top : 20,
+                                    right : 25,
+                                    bottom : 100,
+                                    left : 45
                                 };
                             chartOptions = OGDSM.applyOptions(chartOptions, subOptions);
                             var rootDivObj = $(&#x27;#&#x27; + rootDiv),
-                                margin = {top : 20, right : 25, bottom : 130, left : 45},
-                                barWidth = rootDivObj.width() - margin.left - margin.right,
-                                barHeight = rootDivObj.height() - margin.top - margin.bottom;
+                                contentWidth = rootDivObj.width() + chartOptions.left + chartOptions.right,
+                                contentHeight = rootDivObj.height() + chartOptions.top + chartOptions.bottom,
+                                barWidth = rootDivObj.width() - chartOptions.left - chartOptions.right,
+                                barHeight = rootDivObj.height() - chartOptions.top - chartOptions.bottom;
                             $(&#x27;#&#x27; + rootDiv).empty();
-                            var labels = d3.scale.ordinal().rangeRoundBands([0, barWidth], 0.1);
+                            var labels = d3.scale.ordinal().rangeRoundBands([0, barWidth], 0.05);
                             var values = d3.scale.linear().range([barHeight, 0]);
-                            var chartSVG = d3.select(&#x27;#&#x27; + rootDiv).append(&#x27;svg&#x27;).attr(&#x27;id&#x27;, rootDiv + &#x27;Bar&#x27;)
-                                .attr(&#x27;width&#x27;, barWidth + margin.left + margin.right)
-                                .attr(&#x27;height&#x27;, barHeight + margin.top + margin.bottom);
+                            var chartSVG = d3.select(&#x27;#&#x27; + rootDiv).append(&#x27;svg&#x27;).attr(&#x27;id&#x27;, rootDiv + &#x27;line&#x27;)
+                                .attr(&#x27;width&#x27;, contentWidth)
+                                .attr(&#x27;height&#x27;, contentHeight)
+                                .append(&#x27;g&#x27;)
+                                .attr(&#x27;transform&#x27;, &#x27;translate(&#x27; + chartOptions.left + &#x27;, &#x27; + chartOptions.top + &#x27;)&#x27;);
                         
                             var labelAxis = d3.svg.axis().scale(labels).orient(&#x27;bottom&#x27;);
                             var valueAxis = d3.svg.axis().scale(values).orient(&#x27;left&#x27;);
@@ -410,71 +434,67 @@
                         
                             var lineXY = d3.svg.line()
                                 .x(function (d, i) {
-                                    return labels(d[options.labelKey]);
+                                    return labels(d[options.labelKey]) + labels.rangeBand() / 2;
                                 })
                                 .y(function (d, i) {
                                     return values(d[options.valueKey]);
                                 });
-                            //var bar = chartSVG.append(&#x27;path&#x27;).attr(&#x27;d&#x27;, lineFunc(
                         
                             chartSVG.append(&#x27;path&#x27;).attr(&#x27;d&#x27;, lineXY(data))
-                                .attr(&#x27;transform&#x27;, &#x27;translate(&#x27; + margin.left + &#x27;, &#x27; + margin.top + &#x27;)&#x27;)
                                 .attr(&#x27;stroke&#x27;, chartOptions.stroke)
-                                .attr(&#x27;stroke-width&#x27;, options.stroke)
+                                .attr(&#x27;stroke-width&#x27;, chartOptions.stroke)
                                 .attr(&#x27;fill&#x27;, &#x27;none&#x27;);
-                            var circleText = chartSVG.selectAll(&#x27;g&#x27;).data(data).enter()
-                                .append(&#x27;g&#x27;)
-                                .attr(&#x27;transform&#x27;, &#x27;translate(&#x27; + margin.left + &#x27;, &#x27; + margin.top + &#x27;)&#x27;);
-                        
-                            circleText.append(&#x27;circle&#x27;)
-                                .attr(&#x27;cy&#x27;, function (d, i) {
-                                    return values(d[options.valueKey]);
-                                })
-                                .attr(&#x27;cx&#x27;, function (d, i) {
-                                    return labels(d[options.labelKey]);
-                                })
-                                .attr(&#x27;r&#x27;, chartOptions.circleSize)
-                                .attr(&#x27;fill&#x27;, chartOptions.circleColor);
-                            circleText.append(&#x27;text&#x27;)
-                                .attr(&#x27;transform&#x27;, &#x27;translate(&#x27; + margin.left + &#x27;, &#x27; + margin.top + &#x27;)&#x27;)
-                                .attr(&#x27;x&#x27;, function (d, i) {
-                                    return labels(d[options.labelKey]) - 15;
-                                })
-                                .attr(&#x27;y&#x27;, function (d, i) {
-                                    return values(d[options.valueKey]) - 20;
-                                })
-                                .attr(&#x27;dy&#x27;, &#x27;.75em&#x27;)
-                                .attr(&#x27;text-anchor&#x27;, &#x27;end&#x27;)
-                                .text(function (d) {
-                                    return d[options.valueKey];
-                                });
-                            chartSVG.append(&#x27;g&#x27;).attr(&#x27;class&#x27;, &#x27;x axis&#x27;)
-                                .attr(&#x27;transform&#x27;, &#x27;translate(&#x27; + margin.left + &#x27;, &#x27; + (barHeight + margin.top) + &#x27;)&#x27;)
-                                .call(labelAxis)
+                            chartSVG.append(&#x27;g&#x27;).attr(&#x27;class&#x27;, &#x27;x axis&#x27;).call(labelAxis)
+                                .attr(&#x27;transform&#x27;, &#x27;translate(0, &#x27; + barHeight + &#x27;)&#x27;)
                                 .attr(&#x27;fill&#x27;, &#x27;none&#x27;)
                                 .attr(&#x27;stroke&#x27;, &#x27;#000&#x27;)
                                 .attr(&#x27;shape-rendering&#x27;, &#x27;crispEdges&#x27;)
                                 .selectAll(&#x27;text&#x27;)
                                 .style(&#x27;text-anchor&#x27;, &#x27;end&#x27;)
+                                .style(&#x27;font-size&#x27;, &#x27;0.7em&#x27;)
                                 .attr(&#x27;dx&#x27;, &#x27;-.8em&#x27;)
                                 .attr(&#x27;dy&#x27;, &#x27;.15em&#x27;)
                                 .attr(&#x27;transform&#x27;, function (d) {
                                     return &#x27;rotate(-65)&#x27;;
                                 });
-                            chartSVG.append(&#x27;g&#x27;).attr(&#x27;class&#x27;, &#x27;y axis&#x27;)
-                                .attr(&#x27;transform&#x27;, &#x27;translate(&#x27; + margin.left + &#x27;, &#x27; + margin.top + &#x27;)&#x27;)
-                                .call(valueAxis)
+                            chartSVG.append(&#x27;g&#x27;).attr(&#x27;class&#x27;, &#x27;y axis&#x27;).call(valueAxis)
                                 .attr(&#x27;fill&#x27;, &#x27;none&#x27;)
                                 .attr(&#x27;stroke&#x27;, &#x27;#000&#x27;)
                                 .attr(&#x27;shape-rendering&#x27;, &#x27;crispEdges&#x27;)
+                                .style(&#x27;text-anchor&#x27;, &#x27;end&#x27;)
+                                .style(&#x27;font-size&#x27;, &#x27;0.7em&#x27;)
                                 .append(&#x27;text&#x27;)
                                 .attr(&#x27;transform&#x27;, &#x27;rotate(-90)&#x27;)
-                                .attr(&#x27;y&#x27;, 5)
+                                .attr(&#x27;y&#x27;, 7)
                                 .attr(&#x27;dy&#x27;, &#x27;.71em&#x27;)
                                 .style(&#x27;text-anchor&#x27;, &#x27;end&#x27;)
+                                .style(&#x27;font-size&#x27;, &#x27;0.7em&#x27;)
                                 .text(options.valueKey);
-                        };
                         
+                            var textCircle = chartSVG.selectAll(&#x27;circle&#x27;).data(data).enter().append(&#x27;g&#x27;);
+                            textCircle.append(&#x27;circle&#x27;)
+                                .attr(&#x27;r&#x27;, chartOptions.circleSize)
+                                .attr(&#x27;fill&#x27;, chartOptions.circleColor)
+                                .attr(&#x27;cy&#x27;, function (d, i) {
+                                    return values(d[options.valueKey]);
+                                })
+                                .attr(&#x27;cx&#x27;, function (d, i) {
+                                    return labels(d[options.labelKey]) + labels.rangeBand() / 2;
+                                });
+                            textCircle.append(&#x27;text&#x27;)
+                                .attr(&#x27;dy&#x27;, &#x27;-.5em&#x27;)
+                                .style(&#x27;font-size&#x27;, &#x27;0.55em&#x27;)
+                                .style(&#x27;text-anchor&#x27;, &#x27;start&#x27;)
+                                .text(function (d) {
+                                    return d[options.valueKey];
+                                })
+                                .attr(&#x27;x&#x27;, function (d, i) {
+                                    return labels(d[options.labelKey]);
+                                })
+                                .attr(&#x27;y&#x27;, function (d, i) {
+                                    return values(d[options.valueKey]);
+                                });
+                        };
                         
                         /**
                          * 영역 차트 시각화
@@ -491,19 +511,26 @@
                                 chartOptions = {
                                     fill : [&#x27;#4AAEEA&#x27;],
                                     circleSize : 3,
-                                    circleColor : [&#x27;#AAAAAA&#x27;]
+                                    circleColor : [&#x27;#AAAAAA&#x27;],
+                                    top : 20,
+                                    right : 0,
+                                    bottom : 100,
+                                    left : 45
                                 };
                             chartOptions = OGDSM.applyOptions(chartOptions, subOptions);
                             var rootDivObj = $(&#x27;#&#x27; + rootDiv),
-                                margin = {top : 20, right : 25, bottom : 130, left : 45},
-                                barWidth = rootDivObj.width() - margin.left - margin.right,
-                                barHeight = rootDivObj.height() - margin.top - margin.bottom;
+                                contentWidth = rootDivObj.width() + chartOptions.left + chartOptions.right,
+                                contentHeight = rootDivObj.height() + chartOptions.top + chartOptions.bottom,
+                                barWidth = rootDivObj.width() - chartOptions.left - chartOptions.right,
+                                barHeight = rootDivObj.height() - chartOptions.top - chartOptions.bottom;
                             $(&#x27;#&#x27; + rootDiv).empty();
                             var labels = d3.scale.ordinal().rangeRoundBands([0, barWidth], 0.1);
                             var values = d3.scale.linear().range([barHeight, 0]);
                             var chartSVG = d3.select(&#x27;#&#x27; + rootDiv).append(&#x27;svg&#x27;).attr(&#x27;id&#x27;, rootDiv + &#x27;Bar&#x27;)
-                                .attr(&#x27;width&#x27;, barWidth + margin.left + margin.right)
-                                .attr(&#x27;height&#x27;, barHeight + margin.top + margin.bottom);
+                                .attr(&#x27;width&#x27;, contentWidth)
+                                .attr(&#x27;height&#x27;, contentHeight)
+                                .append(&#x27;g&#x27;)
+                                .attr(&#x27;transform&#x27;, &#x27;translate(&#x27; + chartOptions.left + &#x27;, &#x27; + chartOptions.top + &#x27;)&#x27;);
                         
                             var labelAxis = d3.svg.axis().scale(labels).orient(&#x27;bottom&#x27;);
                             var valueAxis = d3.svg.axis().scale(values).orient(&#x27;left&#x27;);
@@ -514,188 +541,118 @@
                         
                             var areaXY = d3.svg.area()
                                 .x(function (d, i) {
-                                    return labels(d[options.labelKey]);
+                                    return labels(d[options.labelKey]) + labels.rangeBand() / 2;
                                 })
                                 .y0(barHeight)
                                 .y1(function (d, i) {
                                     return values(d[options.valueKey]);
                                 });
                             chartSVG.append(&#x27;path&#x27;).attr(&#x27;d&#x27;, areaXY(data))
-                                .attr(&#x27;transform&#x27;, &#x27;translate(&#x27; + margin.left + &#x27;, &#x27; + margin.top + &#x27;)&#x27;)
                                 .attr(&#x27;class&#x27;, &#x27;area&#x27;)
                                 .attr(&#x27;fill&#x27;, chartOptions.fill);
                         
-                        
-                            var circleText = chartSVG.selectAll(&#x27;g&#x27;).data(data).enter()
-                                .append(&#x27;g&#x27;)
-                                .attr(&#x27;transform&#x27;, &#x27;translate(&#x27; + margin.left + &#x27;, &#x27; + margin.top + &#x27;)&#x27;);
-                        
-                            circleText.append(&#x27;circle&#x27;)
+                            var textCircle = chartSVG.selectAll(&#x27;circle&#x27;).data(data).enter().append(&#x27;g&#x27;);
+                            textCircle.append(&#x27;circle&#x27;)
+                                .attr(&#x27;r&#x27;, chartOptions.circleSize)
+                                .attr(&#x27;fill&#x27;, chartOptions.circleColor)
                                 .attr(&#x27;cy&#x27;, function (d, i) {
                                     return values(d[options.valueKey]);
                                 })
                                 .attr(&#x27;cx&#x27;, function (d, i) {
-                                    return labels(d[options.labelKey]);
-                                })
-                                .attr(&#x27;r&#x27;, chartOptions.circleSize)
-                                .attr(&#x27;fill&#x27;, chartOptions.circleColor);
-                            circleText.append(&#x27;text&#x27;)
-                                .attr(&#x27;transform&#x27;, &#x27;translate(&#x27; + margin.left + &#x27;, &#x27; + margin.top + &#x27;)&#x27;)
-                                .attr(&#x27;x&#x27;, function (d, i) {
-                                    return labels(d[options.labelKey]) - 15;
-                                })
-                                .attr(&#x27;y&#x27;, function (d, i) {
-                                    return values(d[options.valueKey]) - 20;
-                                })
-                                .attr(&#x27;dy&#x27;, &#x27;.75em&#x27;)
-                                .attr(&#x27;text-anchor&#x27;, &#x27;end&#x27;)
+                                    return labels(d[options.labelKey]) + labels.rangeBand() / 2;
+                                });
+                            textCircle.append(&#x27;text&#x27;)
+                                .attr(&#x27;dy&#x27;, &#x27;-.5em&#x27;)
+                                .style(&#x27;font-size&#x27;, &#x27;0.55em&#x27;)
+                                .style(&#x27;text-anchor&#x27;, &#x27;start&#x27;)
                                 .text(function (d) {
                                     return d[options.valueKey];
+                                })
+                                .attr(&#x27;x&#x27;, function (d, i) {
+                                    return labels(d[options.labelKey]) + labels.rangeBand() / 2;
+                                })
+                                .attr(&#x27;y&#x27;, function (d, i) {
+                                    return values(d[options.valueKey]);
                                 });
-                        
-                            chartSVG.append(&#x27;g&#x27;).attr(&#x27;class&#x27;, &#x27;x axis&#x27;)
-                                .attr(&#x27;transform&#x27;, &#x27;translate(&#x27; + margin.left + &#x27;, &#x27; + (barHeight + margin.top) + &#x27;)&#x27;)
-                                .call(labelAxis)
+
+                            chartSVG.append(&#x27;g&#x27;).attr(&#x27;class&#x27;, &#x27;x axis&#x27;).call(labelAxis)
+                                .attr(&#x27;transform&#x27;, &#x27;translate(0, &#x27; + barHeight + &#x27;)&#x27;)
                                 .attr(&#x27;fill&#x27;, &#x27;none&#x27;)
                                 .attr(&#x27;stroke&#x27;, &#x27;#000&#x27;)
                                 .attr(&#x27;shape-rendering&#x27;, &#x27;crispEdges&#x27;)
                                 .selectAll(&#x27;text&#x27;)
                                 .style(&#x27;text-anchor&#x27;, &#x27;end&#x27;)
+                                .style(&#x27;font-size&#x27;, &#x27;0.7em&#x27;)
                                 .attr(&#x27;dx&#x27;, &#x27;-.8em&#x27;)
                                 .attr(&#x27;dy&#x27;, &#x27;.15em&#x27;)
                                 .attr(&#x27;transform&#x27;, function (d) {
                                     return &#x27;rotate(-65)&#x27;;
                                 });
-                        
-                            chartSVG.append(&#x27;g&#x27;).attr(&#x27;class&#x27;, &#x27;y axis&#x27;)
-                                    .attr(&#x27;transform&#x27;, &#x27;translate(&#x27; + margin.left + &#x27;, &#x27; + margin.top + &#x27;)&#x27;)
-                                    .call(valueAxis)
-                                    .attr(&#x27;fill&#x27;, &#x27;none&#x27;)
-                                    .attr(&#x27;stroke&#x27;, &#x27;#000&#x27;)
-                                    .attr(&#x27;shape-rendering&#x27;, &#x27;crispEdges&#x27;)
-                                    .append(&#x27;text&#x27;)
-                                    .attr(&#x27;transform&#x27;, &#x27;rotate(-90)&#x27;)
-                                    .attr(&#x27;y&#x27;, 5)
-                                    .attr(&#x27;dy&#x27;, &#x27;.71em&#x27;)
-                                    .style(&#x27;text-anchor&#x27;, &#x27;end&#x27;)
-                                    .text(options.valueKey);
-                        };
-                        
-                        
-                        
-                        /**
-                         * 라인 차트 시각화
-                         * @method lineChart
-                         * @param {String} divId - 막대 차트 시각화할 DIV 아이디 이름
-                         * @param {JSON Object} options - 옵션 JSON 객체 키 값&lt;br&gt;
-                              {stroke : [&#x27;#4AAEEA&#x27;], width : 2,&lt;br&gt;
-                               circleSize : 3, circleColor : [&#x27;#AAAAAA&#x27;]}&lt;br&gt;
-                         */
-                        OGDSM.chartVisualization.prototype.lineChart = function (rootDiv, subOptions) {
-                            &#x27;use strict&#x27;;
-                            subOptions = (typeof (subOptions) !== &#x27;undefined&#x27;) ? subOptions : {};
-                            var data = this.data,
-                                options = this.defaults,
-                                chartOptions = {
-                                    range : null,
-                                    stroke : [&#x27;#4AAEEA&#x27;],
-                                    width : 2,
-                                    circleSize : 3,
-                                    circleColor : [&#x27;#AAAAAA&#x27;]
-                                };
-                            chartOptions = OGDSM.applyOptions(chartOptions, subOptions);
-                            var rootDivObj = $(&#x27;#&#x27; + rootDiv),
-                                margin = {top : 20, right : 25, bottom : 130, left : 45},
-                                barWidth = rootDivObj.width() - margin.left - margin.right,
-                                barHeight = rootDivObj.height() - margin.top - margin.bottom;
-                            $(&#x27;#&#x27; + rootDiv).empty();
-                            var labels = d3.scale.ordinal().rangeRoundBands([0, barWidth], 0.1);
-                            var values = d3.scale.linear().range([barHeight, 0]);
-                            var chartSVG = d3.select(&#x27;#&#x27; + rootDiv).append(&#x27;svg&#x27;).attr(&#x27;id&#x27;, rootDiv + &#x27;Bar&#x27;)
-                                .attr(&#x27;width&#x27;, barWidth + margin.left + margin.right)
-                                .attr(&#x27;height&#x27;, barHeight + margin.top + margin.bottom);
-                        
-                            var labelAxis = d3.svg.axis().scale(labels).orient(&#x27;bottom&#x27;);
-                            var valueAxis = d3.svg.axis().scale(values).orient(&#x27;left&#x27;);
-                            labels.domain(data.map(function (d) {
-                                return d[options.labelKey];
-                            }));
-                            values.domain([options.min, options.max]);
-                        
-                            var lineXY = d3.svg.line()
-                                .x(function (d, i) {
-                                    return labels(d[options.labelKey]);
-                                })
-                                .y(function (d, i) {
-                                    return values(d[options.valueKey]);
-                                });
-                            //var bar = chartSVG.append(&#x27;path&#x27;).attr(&#x27;d&#x27;, lineFunc(
-                        
-                            chartSVG.append(&#x27;path&#x27;).attr(&#x27;d&#x27;, lineXY(data))
-                                .attr(&#x27;transform&#x27;, &#x27;translate(&#x27; + margin.left + &#x27;, &#x27; + margin.top + &#x27;)&#x27;)
-                                .attr(&#x27;stroke&#x27;, chartOptions.stroke)
-                                .attr(&#x27;stroke-width&#x27;, options.stroke)
-                                .attr(&#x27;fill&#x27;, &#x27;none&#x27;);
-                            var circleText = chartSVG.selectAll(&#x27;g&#x27;).data(data).enter()
-                                .append(&#x27;g&#x27;)
-                                .attr(&#x27;transform&#x27;, &#x27;translate(&#x27; + margin.left + &#x27;, &#x27; + margin.top + &#x27;)&#x27;);
-                        
-                            circleText.append(&#x27;circle&#x27;)
-                                .attr(&#x27;cy&#x27;, function (d, i) {
-                                    return values(d[options.valueKey]);
-                                })
-                                .attr(&#x27;cx&#x27;, function (d, i) {
-                                    return labels(d[options.labelKey]);
-                                })
-                                .attr(&#x27;r&#x27;, chartOptions.circleSize)
-                                .attr(&#x27;fill&#x27;, chartOptions.circleColor);
-                            circleText.append(&#x27;text&#x27;)
-                                .attr(&#x27;transform&#x27;, &#x27;translate(&#x27; + margin.left + &#x27;, &#x27; + margin.top + &#x27;)&#x27;)
-                                .attr(&#x27;x&#x27;, function (d, i) {
-                                    return labels(d[options.labelKey]) - 15;
-                                })
-                                .attr(&#x27;y&#x27;, function (d, i) {
-                                    return values(d[options.valueKey]) - 20;
-                                })
-                                .attr(&#x27;dy&#x27;, &#x27;.75em&#x27;)
-                                .attr(&#x27;text-anchor&#x27;, &#x27;end&#x27;)
-                                .text(function (d) {
-                                    return d[options.valueKey];
-                                });
-                            chartSVG.append(&#x27;g&#x27;).attr(&#x27;class&#x27;, &#x27;x axis&#x27;)
-                                .attr(&#x27;transform&#x27;, &#x27;translate(&#x27; + margin.left + &#x27;, &#x27; + (barHeight + margin.top) + &#x27;)&#x27;)
-                                .call(labelAxis)
+                            chartSVG.append(&#x27;g&#x27;).attr(&#x27;class&#x27;, &#x27;y axis&#x27;).call(valueAxis)
                                 .attr(&#x27;fill&#x27;, &#x27;none&#x27;)
                                 .attr(&#x27;stroke&#x27;, &#x27;#000&#x27;)
                                 .attr(&#x27;shape-rendering&#x27;, &#x27;crispEdges&#x27;)
-                                .selectAll(&#x27;text&#x27;)
                                 .style(&#x27;text-anchor&#x27;, &#x27;end&#x27;)
-                                .attr(&#x27;dx&#x27;, &#x27;-.8em&#x27;)
-                                .attr(&#x27;dy&#x27;, &#x27;.15em&#x27;)
-                                .attr(&#x27;transform&#x27;, function (d) {
-                                    return &#x27;rotate(-65)&#x27;;
-                                });
-                            chartSVG.append(&#x27;g&#x27;).attr(&#x27;class&#x27;, &#x27;y axis&#x27;)
-                                .attr(&#x27;transform&#x27;, &#x27;translate(&#x27; + margin.left + &#x27;, &#x27; + margin.top + &#x27;)&#x27;)
-                                .call(valueAxis)
-                                .attr(&#x27;fill&#x27;, &#x27;none&#x27;)
-                                .attr(&#x27;stroke&#x27;, &#x27;#000&#x27;)
-                                .attr(&#x27;shape-rendering&#x27;, &#x27;crispEdges&#x27;)
+                                .style(&#x27;font-size&#x27;, &#x27;0.7em&#x27;)
                                 .append(&#x27;text&#x27;)
                                 .attr(&#x27;transform&#x27;, &#x27;rotate(-90)&#x27;)
-                                .attr(&#x27;y&#x27;, 5)
+                                .attr(&#x27;y&#x27;, 7)
                                 .attr(&#x27;dy&#x27;, &#x27;.71em&#x27;)
                                 .style(&#x27;text-anchor&#x27;, &#x27;end&#x27;)
+                                .style(&#x27;font-size&#x27;, &#x27;0.7em&#x27;)
                                 .text(options.valueKey);
                         };
                         
                         
-                        OGDSM.chartVisualization.prototype.kMap = function (divId, serverAddr, geodata, center_lat, center_lon, map_scale) {
+                        OGDSM.chartVisualization.prototype.kMap = function (rootDiv, serverAddr, geodata, subOptions) {
                             &#x27;use strict&#x27;;
-                            var rootDiv = $(&#x27;#&#x27; + divId),
+                            subOptions = (typeof (subOptions) !== &#x27;undefined&#x27;) ? subOptions : {};
+                            var data = this.data,
+                                options = this.defaults,
+                                mapOptions = {
+                                    center_lat : 34.0,
+                                    center_lon : 131.0,
+                                    map_scale : 3500,
+                                    top : 0,
+                                    right : 0,
+                                    bottom : 0,
+                                    left : 0
+                                };
+                            mapOptions = OGDSM.applyOptions(mapOptions, subOptions);
+                            var rootDivObj = $(&#x27;#&#x27; + rootDiv),
+                                contentWidth = rootDivObj.width() + mapOptions.left + mapOptions.right,
+                                contentHeight = rootDivObj.height() + mapOptions.top + mapOptions.bottom,
+                                barWidth = rootDivObj.width() - mapOptions.left - mapOptions.right,
+                                barHeight = rootDivObj.height() - mapOptions.top - mapOptions.bottom,
+                                objNames = [
+                                    { geoName : &#x27;SIDO&#x27;, objName : &#x27;All_TL_SCCO_CTPRVN_4326&#x27;, propEnName : &#x27;CTP_ENG_NM&#x27;},
+                                    { geoName : &#x27;GU&#x27;, objName : &#x27;All_TL_SCCO_SIG_4326&#x27;, propEnName : &#x27;SIG_ENG_NM&#x27;},
+                                    { geoName : &#x27;DONG&#x27;, objName : &#x27;All_TL_SCCO_EMD_4326&#x27;, propEnName : &#x27;EMD_ENG_NM&#x27;}
+                                ],
                                 paramData = {};
                             paramData.jsonName = geodata;
-                            rootDiv.empty();
+                            rootDivObj.empty();
+                            var svg = d3.select(&#x27;#&#x27; + rootDiv)
+                                        .append(&#x27;svg&#x27;)
+                                        .attr(&quot;width&quot;, contentWidth)
+                                        .attr(&quot;height&quot;, contentHeight);
+                            var projection = d3.geo.mercator()
+                                        .center([mapOptions.center_lon, mapOptions.center_lat])
+                                        .scale(mapOptions.map_scale)
+                                        .rotate([2, 2.5])
+                                        .translate([barWidth / 2, barHeight / 2]);
+                            var path = d3.geo.path().projection(projection);
+                            var curObj = null, curPropEn = null;
+                            $.each(objNames, function (i, d) {
+                                if (d.geoName === geodata) {
+                                    curObj = d.objName;
+                                    curPropEn = d.propEnName;
+                                }
+                            });
+                            if (curObj === null) {
+                                console.log(&#x27;Not support Map&#x27;);
+                                return -1;
+                            }
                             $.ajax({
                                 type : &#x27;POST&#x27;,
                                 url : serverAddr,
@@ -704,40 +661,16 @@
                                 dataType : &#x27;json&#x27;,
                                 success : function (msg) {
                                     var topology = JSON.parse(msg.data);
-                        
-                                    var svg = d3.select(&#x27;#&#x27; + divId)
-                                                .append(&#x27;svg&#x27;)
-                                                .attr(&quot;width&quot;, 500)
-                                                .attr(&quot;height&quot;, 600);
-                                    var projection = d3.geo.mercator()
-                                                        .center([center_lon, center_lat])
-                                                        .scale(map_scale);
-                                    var path = d3.geo.path()
-                                                    .projection(projection);
-                                    var g = svg.append(&quot;g&quot;);
-                        
-                                    if (geodata === &quot;SIDO&quot;) {
-                                        g.selectAll(&quot;path&quot;)
-                                            .data(topojson.feature(topology, topology.objects.All_TL_SCCO_CTPRVN_4326).features)
-                                            .enter().append(&quot;path&quot;)
-                                            .attr(&quot;class&quot;, function (d) { return &quot;sido_&quot; + d.properties.CTP_ENG_NM; })
-                                            .style(&quot;fill&quot;, function (d) { return &quot;#&quot; + Math.random().toString(16).slice(2, 8); })
-                                            .attr(&quot;d&quot;, path);
-                                    } else if (geodata === &quot;GU&quot;) {
-                                        g.selectAll(&quot;path&quot;)
-                                            .data(topojson.feature(topology, topology.objects.All_TL_SCCO_SIG_4326).features)
-                                            .enter().append(&quot;path&quot;)
-                                            .attr(&quot;class&quot;, function (d) { return &quot;gu_&quot; + d.properties.SIG_ENG_NM; })
-                                            .style(&quot;fill&quot;, function (d) { return &quot;#&quot; + Math.random().toString(16).slice(2, 8); })
-                                            .attr(&quot;d&quot;, path);
-                                    } else if (geodata === &quot;DONG&quot;) {
-                                        g.selectAll(&quot;path&quot;)
-                                            .data(topojson.feature(topology, topology.objects.All_TL_SCCO_EMD_4326).features)
-                                            .enter().append(&quot;path&quot;)
-                                            .attr(&quot;class&quot;, function (d) { return &quot;dong_&quot; + d.properties.EMD_ENG_NM; })
-                                            .style(&quot;fill&quot;, function (d) { return &quot;#&quot; + Math.random().toString(16).slice(2, 8); })
-                                            .attr(&quot;d&quot;, path);
-                                    }
+                                    var objs = topology.objects;
+                                    svg.selectAll(&quot;path&quot;)
+                                        .data(topojson.feature(topology, objs[curObj]).features)
+                                        .enter().append(&quot;path&quot;)
+                                        .attr(&#x27;data-prop&#x27;, function (d) {
+                                            return JSON.stringify(d.properties);
+                                        })
+                                        .style(&quot;fill&quot;, function (d) { return &quot;#&quot; + Math.random().toString(16).slice(2, 8); })
+                                        .style(&#x27;fill-opacity&#x27;, 0.5)
+                                        .attr(&quot;d&quot;, path);
                                 },
                                 error : function (e) {
                                     console.log(e);

@@ -317,18 +317,18 @@
                             if (label.length &gt; 10) {
                                 sublabel = sublabel.substr(0, 10) + &#x27;...&#x27;;
                             }
-                            olList.prepend(&#x27;&lt;li id=&quot;layer&#x27; + label + &#x27;&quot; style=&quot;float:left&quot;&gt;&#x27; +
+                            olList.prepend(&#x27;&lt;li id=&quot;layer&#x27; + label + &#x27;&quot; style=&quot;float:left;&quot;&gt;&#x27; +
                                            &#x27;&lt;fieldset data-role=&quot;controlgroup&quot; data-type=&quot;horizontal&quot; style=&quot;margin:0px&quot;&gt;&#x27; +
                                            &#x27;&lt;div style=&quot;width:15%; float:left;&quot;&gt;&#x27; +
                                            &#x27;&lt;canvas id=&quot;&#x27; + label + &#x27;canvas&quot; width=&quot;100%&quot; height=30px; class=&quot;drag-handle&quot; &gt;&lt;/canvas&gt;&#x27; +
-                                           &#x27;&lt;/div&gt; &lt;div id=&quot;chkRoot&#x27; + label + &#x27;&quot; style=&quot;width:70%; float:left; padding:0px; margin:0px;&quot;&gt;&#x27; +
+                                           &#x27;&lt;/div&gt; &lt;div id=&quot;chkRoot&#x27; + label + &#x27;&quot; style=&quot;width:60%; float:left; padding:0px; margin:0px;&quot;&gt;&#x27; +
                                            &#x27;&lt;input type=&quot;checkbox&quot; name=&quot;listCheckBox&quot; data-corners=&quot;false&quot; data-mini=&quot;true&quot; class=&quot;custom&quot; &#x27; +
                                            &#x27;id=&quot;&#x27; + &#x27;visualSW&#x27; + thisObj.getLabels().length + &#x27;&quot; data-label=&quot;&#x27; + label + &#x27;&quot; checked/&gt;&#x27; +
                                            &#x27;&lt;label for=&quot;&#x27; + &#x27;visualSW&#x27; + thisObj.getLabels().length + &#x27;&quot; style=&quot;width:100%&quot;&gt;&#x27; + sublabel + &#x27;&lt;/label&gt;&#x27; +
-                                           &#x27;&lt;/div&gt; &lt;div style=&quot;width:15%; float:left;&quot;&gt;&#x27; +
+                                           &#x27;&lt;/div&gt; &lt;div style=&quot;width:25%; float:left;&quot;&gt;&#x27; +
                                            &#x27;&lt;a id=&quot;hrefRoot&#x27; + label + &#x27;&quot; data-role=&quot;button&quot; data-rel=&quot;popup&quot; data-theme=&quot;b&quot; data-icon=&quot;gear&quot;&#x27; +
-                                           &#x27;data-corners=&quot;false&quot; data-mini=&quot;true&quot; data-transition=&quot;pop&quot;&#x27; +
-                                           &#x27;data-label=&quot;&#x27; + label + &#x27;&quot; href=&quot;#popup&#x27; + label + &#x27;&quot;&gt;　&lt;/a&gt;&#x27; +
+                                           &#x27;data-corners=&quot;false&quot; data-transition=&quot;pop&quot; data-iconpos=&quot;notext&quot;  data-mini=&quot;true&quot; &#x27; +
+                                           &#x27;data-label=&quot;&#x27; + label + &#x27;&quot; href=&quot;#popup&#x27; + label + &#x27;&quot; style=&quot;width:25%; height:6px;&quot;&gt;&lt;/a&gt;&#x27; +
                                            &#x27;&lt;/div&gt;&#x27; +
                                            &#x27;&lt;/fieldset&gt;&#x27; +
                                            &#x27;&lt;div data-role=&quot;popup&quot; id=&quot;popup&#x27; + label + &#x27;&quot; style=&quot;width:&#x27; + 200 + &#x27;px&quot;&gt;&#x27; +
@@ -337,7 +337,7 @@
                                            &#x27;&lt;a data-role=&quot;button&quot; data-theme=&quot;f&quot; data-mini=&quot;true&quot;&#x27; +
                                            &#x27;id=&quot;&#x27; + label + &#x27;delete&quot; data-label=&quot;&#x27; + label + &#x27;&quot;&gt;Delete&lt;/a&gt;&#x27; +
                                            &#x27;&lt;/div&gt;&#x27; +
-                                           &#x27;&lt;/li&gt;&#x27;);
+                                           &#x27;&lt;/li&gt;&#x27;); //　   style=&quot;width:25%;&quot;
                             var labelCanvas = document.getElementById(label + &#x27;canvas&#x27;).getContext(&#x27;2d&#x27;);
                             if (type === &#x27;MultiPolygon&#x27;) {
                                 labelCanvas.fillStyle = color;
@@ -363,7 +363,7 @@
                             $(&#x27;#&#x27; + label + &#x27;slider&#x27;).on(&#x27;change&#x27;, sliderEvent);
                             $(&#x27;#&#x27; + label + &#x27;delete&#x27;).on(&#x27;click&#x27;, deleteEvent);
                             $(&#x27;input[name=listCheckBox]&#x27;).on(&#x27;click&#x27;, checkBoxEvent);
-                            $(&#x27;#chkRoot&#x27; + label + &#x27; &gt; div&#x27;).css(&#x27;width&#x27;, &#x27;98%&#x27;);
+                            $(&#x27;#chkRoot&#x27; + label + &#x27; &gt; div&#x27;).css(&#x27;width&#x27;, &#x27;80%&#x27;);
                             //$(&#x27;#hrefRoot&#x27; + label + &#x27; &gt; span&#x27;).css(&#x27;margin&#x27;, &#x27;-1.5px&#x27;);
                         };
                         

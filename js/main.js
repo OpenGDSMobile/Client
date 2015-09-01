@@ -49,6 +49,7 @@ function realTimeFunc() {
         var chk = $(this).is(':checked');
         if (chk === true) {
             console.log("websocket connect");
+            var ws = OGDSM.webSocket('ws://113.198.80.59:8080//websocket');
             //사용할 아이디 작성
             //local storage에 저장
             //WebSocket 접속
@@ -159,18 +160,21 @@ function createSeoulPublicAreaEnvUI(str) {
             break;
         }
         externalServer.seoulEnvironmentLoad(addr, apiKey, environmentType, date, time, function (resultData) {
-            var xyData = OGDSM.jsonToArray(resultData, environmentType, 'MSRSTE_NM');
             if (visualType === 'map') {
-                externalServer.geoServerWFSLoad(openGDSMObj, geoServerAddr, 'opengds', 'seoul_sig', {
+                externalServer.geoServerGeoJsonLoad(openGDSMObj, geoServerAddr, 'opengds', 'seoul_sig', {
                     callback : function (layer) {
+                        console.log(layer);
                         openGDSMObj.changeWFSStyle('seoul_sig', colors, {
-                            opt : 0.6,
                             attr : 'sig_kor_nm',
                             range : ranges,
-                            xyData : xyData ////////////////// JSON DATA .... edit....
+                            data : resultData,
+                            rootKey : 'row',
+                            labelKey : 'MSRSTE_NM',
+                            valueKey : environmentType
                         });
                     }
                 });
+
             } else if (visualType === 'chart') {
                 var d3Chart = new OGDSM.chartVisualization(resultData, {
                     rootKey : 'row',
@@ -310,13 +314,16 @@ function createPublicPortalUI(service) {
             externalServer.dataPortalEnvironmentLoad(addr, apiKey, environmentType, area, function (resultData) {
                 var xyData = OGDSM.jsonToArray(resultData, environmentType, 'stationName');
                 if (visualType === 'map') {
-                    externalServer.geoServerWFSLoad(openGDSMObj, geoServerAddr, 'opengds', 'seoul_sig', {
+                    externalServer.geoServerGeoJsonLoad(openGDSMObj, geoServerAddr, 'opengds', 'seoul_sig', {
                         callback : function (layer) {
+                            console.log(resultData);
                             openGDSMObj.changeWFSStyle('seoul_sig', colors, {
-                                opt : 0.6,
                                 attr : 'sig_kor_nm',
                                 range : ranges,
-                                xyData : xyData
+                                data : resultData,
+                                rootKey : 'row',
+                                labelKey : 'stationName',
+                                valueKey : environmentType
                             });
                         }
                     });
@@ -414,6 +421,7 @@ $(function () {
     //openGDSMObj.trackingGeoLocation(true);
     mapSelectUI(openGDSMObj);
     mapAttrUI();
+    realTimeFunc();
     searchDB();
     /***************************************************/
 	$('#d3viewonMap').hide();

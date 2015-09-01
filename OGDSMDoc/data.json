@@ -16,9 +16,7 @@
         "../js/openGDSMobile/OGDSM_attributeTable.js": {
             "name": "../js/openGDSMobile/OGDSM_attributeTable.js",
             "modules": {},
-            "classes": {
-                "OGDSM.attributeTable": 1
-            },
+            "classes": {},
             "fors": {},
             "namespaces": {}
         },
@@ -76,6 +74,15 @@
             "fors": {},
             "namespaces": {}
         },
+        "../js/openGDSMobile/OGDSM_webSocket.js": {
+            "name": "../js/openGDSMobile/OGDSM_webSocket.js",
+            "modules": {},
+            "classes": {
+                "OGDSM.attributeTable": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
         "../js/openGDSMobile/Sortable.js": {
             "name": "../js/openGDSMobile/Sortable.js",
             "modules": {},
@@ -121,7 +128,6 @@
             "submodules": {},
             "classes": {
                 "OGDSM": 1,
-                "OGDSM.attributeTable": 1,
                 "OGDSM.chartVisualization": 1,
                 "OGDSM.eGovFrameUI": 1,
                 "OGDSM.externalConnection": 1
@@ -137,6 +143,7 @@
             "name": "OGDSM.indexedDB",
             "submodules": {},
             "classes": {
+                "OGDSM.attributeTable": 1,
                 "OGDSM.mapLayerList": 1,
                 "OGDSM.visualization": 1
             },
@@ -171,9 +178,9 @@
             "extensions": [],
             "plugin_for": [],
             "extension_for": [],
-            "module": "OGDSM.applyOptions",
+            "module": "OGDSM.indexedDB",
             "namespace": "",
-            "file": "../js/openGDSMobile/OGDSM_attributeTable.js",
+            "file": "../js/openGDSMobile/OGDSM_webSocket.js",
             "line": 7,
             "description": "속성정보 시각화 객체",
             "is_constructor": 1,
@@ -388,7 +395,7 @@
         },
         {
             "file": "../js/openGDSMobile/OGDSM_attributeTable.js",
-            "line": 287,
+            "line": 294,
             "description": "속성 정보 삭제",
             "itemtype": "method",
             "name": "removeAttribute",
@@ -404,7 +411,7 @@
         },
         {
             "file": "../js/openGDSMobile/OGDSM_attributeTable.js",
-            "line": 297,
+            "line": 304,
             "description": "속성 정보 수정",
             "itemtype": "method",
             "name": "removeAttribute",
@@ -420,7 +427,7 @@
         },
         {
             "file": "../js/openGDSMobile/OGDSM_attributeTable.js",
-            "line": 340,
+            "line": 347,
             "description": "속성 정보 검색",
             "itemtype": "method",
             "name": "selectAttribute",
@@ -450,7 +457,7 @@
         },
         {
             "file": "../js/openGDSMobile/OGDSM_attributeTable.js",
-            "line": 373,
+            "line": 380,
             "description": "속성 정보 선택",
             "itemtype": "method",
             "name": "selectAttribute",
@@ -471,7 +478,7 @@
         },
         {
             "file": "../js/openGDSMobile/OGDSM_attributeTable.js",
-            "line": 385,
+            "line": 392,
             "description": "속성 정보 선택 해제",
             "itemtype": "method",
             "name": "selectAttribute",
@@ -487,7 +494,7 @@
         },
         {
             "file": "../js/openGDSMobile/OGDSM_chartVisualization.js",
-            "line": 51,
+            "line": 58,
             "description": "지도 객체 받기",
             "itemtype": "method",
             "name": "getMap",
@@ -500,7 +507,7 @@
         },
         {
             "file": "../js/openGDSMobile/OGDSM_chartVisualization.js",
-            "line": 67,
+            "line": 74,
             "description": "수직 막대 차트 시각화",
             "itemtype": "method",
             "name": "vBarChart",
@@ -512,7 +519,7 @@
                 },
                 {
                     "name": "options",
-                    "description": "- 옵션 JSON 객체 키 값<br>\n     {range : [], color : ['#4AAEEA']}<br>",
+                    "description": "- 옵션 JSON 객체 키 값<br>\n     {range : null, color : ['#4AAEEA']}<br>",
                     "type": "JSON Object"
                 }
             ],
@@ -521,7 +528,7 @@
         },
         {
             "file": "../js/openGDSMobile/OGDSM_chartVisualization.js",
-            "line": 179,
+            "line": 191,
             "description": "수평 막대 차트 시각화",
             "itemtype": "method",
             "name": "hBarChart",
@@ -542,7 +549,7 @@
         },
         {
             "file": "../js/openGDSMobile/OGDSM_chartVisualization.js",
-            "line": 280,
+            "line": 297,
             "description": "라인 차트 시각화",
             "itemtype": "method",
             "name": "lineChart",
@@ -563,7 +570,7 @@
         },
         {
             "file": "../js/openGDSMobile/OGDSM_chartVisualization.js",
-            "line": 387,
+            "line": 407,
             "description": "영역 차트 시각화",
             "itemtype": "method",
             "name": "areaChart",
@@ -584,28 +591,7 @@
         },
         {
             "file": "../js/openGDSMobile/OGDSM_chartVisualization.js",
-            "line": 494,
-            "description": "라인 차트 시각화",
-            "itemtype": "method",
-            "name": "lineChart",
-            "params": [
-                {
-                    "name": "divId",
-                    "description": "- 막대 차트 시각화할 DIV 아이디 이름",
-                    "type": "String"
-                },
-                {
-                    "name": "options",
-                    "description": "- 옵션 JSON 객체 키 값<br>\n     {stroke : ['#4AAEEA'], width : 2,<br>\n      circleSize : 3, circleColor : ['#AAAAAA']}<br>",
-                    "type": "JSON Object"
-                }
-            ],
-            "class": "OGDSM.chartVisualization",
-            "module": "OGDSM.applyOptions"
-        },
-        {
-            "file": "../js/openGDSMobile/OGDSM_chartVisualization.js",
-            "line": 657,
+            "line": 590,
             "description": "파이 차트 시각화",
             "itemtype": "method",
             "name": "areaChart",
@@ -1013,7 +999,7 @@
         },
         {
             "file": "../js/openGDSMobile/OGDSM_eGovFrameUI.js",
-            "line": 654,
+            "line": 656,
             "description": "데이터 포털 온실가스배출량 조회 서비스 인터페이스",
             "itemtype": "method",
             "name": "dataPortalGreenGas",
@@ -1478,7 +1464,7 @@
         },
         {
             "file": "../js/openGDSMobile/OGDSM_visualization.js",
-            "line": 160,
+            "line": 161,
             "description": "배경지도 변경",
             "itemtype": "method",
             "name": "changeBaseMap",
@@ -1494,7 +1480,7 @@
         },
         {
             "file": "../js/openGDSMobile/OGDSM_visualization.js",
-            "line": 246,
+            "line": 247,
             "description": "지도 GPS 트래킹 스위치",
             "itemtype": "method",
             "name": "trackingGeoLocation",
@@ -1510,7 +1496,7 @@
         },
         {
             "file": "../js/openGDSMobile/OGDSM_visualization.js",
-            "line": 271,
+            "line": 272,
             "description": "해상도에 맞는 지도 레이아웃",
             "itemtype": "method",
             "name": "updateLayoutSetting",
@@ -1526,7 +1512,7 @@
         },
         {
             "file": "../js/openGDSMobile/OGDSM_visualization.js",
-            "line": 285,
+            "line": 286,
             "description": "WMS 및 WFS 맵 레이어 추가",
             "itemtype": "method",
             "name": "addMap",
@@ -1542,7 +1528,7 @@
         },
         {
             "file": "../js/openGDSMobile/OGDSM_visualization.js",
-            "line": 365,
+            "line": 366,
             "description": "이미지 레이어 시각화",
             "itemtype": "method",
             "name": "imageLayer",
@@ -1573,7 +1559,7 @@
         },
         {
             "file": "../js/openGDSMobile/OGDSM_visualization.js",
-            "line": 391,
+            "line": 392,
             "description": "맵 레이어 삭제",
             "itemtype": "method",
             "name": "removeMap",
@@ -1589,7 +1575,7 @@
         },
         {
             "file": "../js/openGDSMobile/OGDSM_visualization.js",
-            "line": 406,
+            "line": 407,
             "description": "맵 레이어 시각화 여부",
             "itemtype": "method",
             "name": "setVisible",
@@ -1610,7 +1596,7 @@
         },
         {
             "file": "../js/openGDSMobile/OGDSM_visualization.js",
-            "line": 419,
+            "line": 420,
             "description": "WFS 스타일 변경",
             "itemtype": "method",
             "name": "changeWFSStyle",
@@ -1632,6 +1618,35 @@
                 }
             ],
             "class": "OGDSM.visualization",
+            "module": "OGDSM.indexedDB"
+        },
+        {
+            "file": "../js/openGDSMobile/OGDSM_webSocket.js",
+            "line": 42,
+            "description": "수정 모드 여부 받기",
+            "itemtype": "method",
+            "name": "getEidtMode",
+            "return": {
+                "description": "True | False",
+                "type": "Boolean"
+            },
+            "class": "OGDSM.attributeTable",
+            "module": "OGDSM.indexedDB"
+        },
+        {
+            "file": "../js/openGDSMobile/OGDSM_webSocket.js",
+            "line": 55,
+            "description": "속성 정보 추가",
+            "itemtype": "method",
+            "name": "addAttribute",
+            "params": [
+                {
+                    "name": "layerName",
+                    "description": "- 데이터 베이스 테이블 이름",
+                    "type": "String"
+                }
+            ],
+            "class": "OGDSM.attributeTable",
             "module": "OGDSM.indexedDB"
         },
         {

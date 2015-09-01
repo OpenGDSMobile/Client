@@ -441,7 +441,10 @@ OGDSM.visualization.prototype.changeWFSStyle = function (layerName, colors, opti
         opt : 0.5,
         attr : null,
         range : null,
-        xyData : null
+        data : null,
+        rootKey : null,
+        labelKey : null,
+        valueKey : null
     };
 
     for (name in defaults) {
@@ -455,6 +458,7 @@ OGDSM.visualization.prototype.changeWFSStyle = function (layerName, colors, opti
         console.error('Not Map Layer');
         return -1;
     }
+    var data = defaults.data[defaults.rootKey];
     map.setStyle(function (f, r) {
         var i,
             j,
@@ -462,10 +466,10 @@ OGDSM.visualization.prototype.changeWFSStyle = function (layerName, colors, opti
             text = r < 5000 ? f.get(defaults.attr) : '';
         if (!styleCache[text]) {
             if (Array.isArray(colors)) {
-                for (i = 0; i < defaults.xyData[1].length; i += 1) {
-                    if (text === defaults.xyData[1][i]) {
+                for (i = 0; i < data.length; i += 1) {
+                    if (text === data[i][defaults.labelKey]) {
                         for (j = 0; j < defaults.range.length; j += 1) {
-                            if (defaults.xyData[0][i] <= defaults.range[j]) {
+                            if (data[i][defaults.valueKey] <= defaults.range[j]) {
                                 color = colors[j];
                                 break;
                             }

@@ -562,10 +562,10 @@ OGDSM.eGovFrameUI.prototype.seoulEnvironment = function (divId, options) {
         environmentType,
         i;
     for (i = 0; i < environmentValues.length; i += 3) {
-        environmentType = this.autoRadioBox(divId, 'areenvTypeaType',
+        environmentType = this.autoRadioBox(divId, 'envTypeRadio' + i,
                                       [environmentImages[i], environmentImages[i + 1], environmentImages[i + 2]],
                                       [environmentValues[i], environmentValues[i + 1], environmentValues[i + 2]],
-                                      {horizontal : true});
+                                      {horizontal : true, radioName : 'envTypeName'});
     }
     return [visualType, date, time, environmentType];
 };
@@ -608,20 +608,20 @@ OGDSM.eGovFrameUI.prototype.dataPortalEnvironment = function (divId, options) {
         environmentType;
 
     for (i = 0; i < areaTypes.length - 2; i += 3) {
-        areaRadio = this.autoRadioBox(divId, 'areaType',
+        areaRadio = this.autoRadioBox(divId, 'areaType' + i,
                                       [areaTypes[i], areaTypes[i + 1], areaTypes[i + 2]],
                                       [areaValues[i], areaValues[i + 1], areaValues[i + 2]],
-                                      {horizontal : true});
+                                      {horizontal : true, radioName : 'areaTypeName'});
     }
     areaRadio = this.autoRadioBox(divId, 'areaType',
                                   [areaTypes[areaTypes.length - 2], areaTypes[areaTypes.length - 1]],
                                   [areaValues[areaValues.length - 2], areaValues[areaValues.length - 1]],
-                                  {horizontal : true});
+                                  {horizontal : true, radioName : 'areaTypeName'});
     for (i = 0; i < environmentValues.length; i += 3) {
-        environmentType = this.autoRadioBox(divId, 'areenvTypeaType',
+        environmentType = this.autoRadioBox(divId, 'envType' + i,
                                       [environmentImages[i], environmentImages[i + 1], environmentImages[i + 2]],
                                       [environmentValues[i], environmentValues[i + 1], environmentValues[i + 2]],
-                                      {horizontal : true});
+                                      {horizontal : true, radioName : 'envRadioName'});
     }
     return [visualType, areaRadio, environmentType];
 };
@@ -645,9 +645,11 @@ OGDSM.eGovFrameUI.prototype.dataPortalNuclear = function (divId, options) {
     defaults = OGDSM.applyOptions(defaults, options);
     var rootDiv = $('#' + divId),
         visualType = this.autoRadioBox(divId, 'visualType', ['차트'], ['chart'], {horizontal : true}),
-        nuclearPos = this.autoRadioBox(divId, 'nuclearPos', ['월성', '고리'], ['WS', 'KR'], {horizontal : true});
+        nuclearPos = this.autoRadioBox(divId, 'nuclearPos1', ['월성', '고리'], ['WS', 'KR'],
+                                       {horizontal : true, radioName: 'nuclearName'});
 
-    nuclearPos = this.autoRadioBox(divId, 'nuclearPos', ['한빛', '한울'], ['YK', 'UJ'], {horizontal : true});
+    nuclearPos = this.autoRadioBox(divId, 'nuclearPos2', ['한빛', '한울'], ['YK', 'UJ'],
+                                        {horizontal : true, radioName: 'nuclearName'});
     return [visualType, nuclearPos];
 };
 

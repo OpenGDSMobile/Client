@@ -654,10 +654,10 @@
                                 environmentType,
                                 i;
                             for (i = 0; i &lt; environmentValues.length; i += 3) {
-                                environmentType = this.autoRadioBox(divId, &#x27;areenvTypeaType&#x27;,
+                                environmentType = this.autoRadioBox(divId, &#x27;envTypeRadio&#x27; + i,
                                                               [environmentImages[i], environmentImages[i + 1], environmentImages[i + 2]],
                                                               [environmentValues[i], environmentValues[i + 1], environmentValues[i + 2]],
-                                                              {horizontal : true});
+                                                              {horizontal : true, radioName : &#x27;envTypeName&#x27;});
                             }
                             return [visualType, date, time, environmentType];
                         };
@@ -700,20 +700,20 @@
                                 environmentType;
                         
                             for (i = 0; i &lt; areaTypes.length - 2; i += 3) {
-                                areaRadio = this.autoRadioBox(divId, &#x27;areaType&#x27;,
+                                areaRadio = this.autoRadioBox(divId, &#x27;areaType&#x27; + i,
                                                               [areaTypes[i], areaTypes[i + 1], areaTypes[i + 2]],
                                                               [areaValues[i], areaValues[i + 1], areaValues[i + 2]],
-                                                              {horizontal : true});
+                                                              {horizontal : true, radioName : &#x27;areaTypeName&#x27;});
                             }
                             areaRadio = this.autoRadioBox(divId, &#x27;areaType&#x27;,
                                                           [areaTypes[areaTypes.length - 2], areaTypes[areaTypes.length - 1]],
                                                           [areaValues[areaValues.length - 2], areaValues[areaValues.length - 1]],
-                                                          {horizontal : true});
+                                                          {horizontal : true, radioName : &#x27;areaTypeName&#x27;});
                             for (i = 0; i &lt; environmentValues.length; i += 3) {
-                                environmentType = this.autoRadioBox(divId, &#x27;areenvTypeaType&#x27;,
+                                environmentType = this.autoRadioBox(divId, &#x27;envType&#x27; + i,
                                                               [environmentImages[i], environmentImages[i + 1], environmentImages[i + 2]],
                                                               [environmentValues[i], environmentValues[i + 1], environmentValues[i + 2]],
-                                                              {horizontal : true});
+                                                              {horizontal : true, radioName : &#x27;envRadioName&#x27;});
                             }
                             return [visualType, areaRadio, environmentType];
                         };
@@ -737,9 +737,11 @@
                             defaults = OGDSM.applyOptions(defaults, options);
                             var rootDiv = $(&#x27;#&#x27; + divId),
                                 visualType = this.autoRadioBox(divId, &#x27;visualType&#x27;, [&#x27;차트&#x27;], [&#x27;chart&#x27;], {horizontal : true}),
-                                nuclearPos = this.autoRadioBox(divId, &#x27;nuclearPos&#x27;, [&#x27;월성&#x27;, &#x27;고리&#x27;], [&#x27;WS&#x27;, &#x27;KR&#x27;], {horizontal : true});
-                            
-                            nuclearPos = this.autoRadioBox(divId, &#x27;nuclearPos&#x27;, [&#x27;한빛&#x27;, &#x27;한울&#x27;], [&#x27;YK&#x27;, &#x27;UJ&#x27;], {horizontal : true});
+                                nuclearPos = this.autoRadioBox(divId, &#x27;nuclearPos1&#x27;, [&#x27;월성&#x27;, &#x27;고리&#x27;], [&#x27;WS&#x27;, &#x27;KR&#x27;],
+                                                               {horizontal : true, radioName: &#x27;nuclearName&#x27;});
+
+                            nuclearPos = this.autoRadioBox(divId, &#x27;nuclearPos2&#x27;, [&#x27;한빛&#x27;, &#x27;한울&#x27;], [&#x27;YK&#x27;, &#x27;UJ&#x27;],
+                                                                {horizontal : true, radioName: &#x27;nuclearName&#x27;});
                             return [visualType, nuclearPos];
                         };
                         

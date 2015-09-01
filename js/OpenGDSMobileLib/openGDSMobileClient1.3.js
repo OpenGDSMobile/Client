@@ -1308,6 +1308,7 @@ OGDSM.visualization.prototype.olMapView = function (latlng, mapType, baseProj) {
     this.mapObj = map;
     this.baseProj = baseProj;
     this.changeBaseMap(mapType);
+    this.mapObj.updateSize();
     return this.mapObj;
 };
 
@@ -1595,7 +1596,10 @@ OGDSM.visualization.prototype.changeWFSStyle = function (layerName, colors, opti
         opt : 0.5,
         attr : null,
         range : null,
-        xyData : null
+        data : null,
+        rootKey : null,
+        labelKey : null,
+        valueKey : null
     };
 
     for (name in defaults) {
@@ -1609,6 +1613,7 @@ OGDSM.visualization.prototype.changeWFSStyle = function (layerName, colors, opti
         console.error('Not Map Layer');
         return -1;
     }
+    var data = defaults.data[defaults.rootKey];
     map.setStyle(function (f, r) {
         var i,
             j,
@@ -1616,10 +1621,10 @@ OGDSM.visualization.prototype.changeWFSStyle = function (layerName, colors, opti
             text = r < 5000 ? f.get(defaults.attr) : '';
         if (!styleCache[text]) {
             if (Array.isArray(colors)) {
-                for (i = 0; i < defaults.xyData[1].length; i += 1) {
-                    if (text === defaults.xyData[1][i]) {
+                for (i = 0; i < data.length; i += 1) {
+                    if (text === data[i][defaults.labelKey]) {
                         for (j = 0; j < defaults.range.length; j += 1) {
-                            if (defaults.xyData[0][i] <= defaults.range[j]) {
+                            if (data[i][defaults.valueKey] <= defaults.range[j]) {
                                 color = colors[j];
                                 break;
                             }
@@ -2638,10 +2643,10 @@ OGDSM.eGovFrameUI.prototype.seoulEnvironment = function (divId, options) {
         environmentType,
         i;
     for (i = 0; i < environmentValues.length; i += 3) {
-        environmentType = this.autoRadioBox(divId, 'areenvTypeaType',
+        environmentType = this.autoRadioBox(divId, 'envTypeRadio' + i,
                                       [environmentImages[i], environmentImages[i + 1], environmentImages[i + 2]],
                                       [environmentValues[i], environmentValues[i + 1], environmentValues[i + 2]],
-                                      {horizontal : true});
+                                      {horizontal : true, radioName : 'envTypeName'});
     }
     return [visualType, date, time, environmentType];
 };
@@ -2684,20 +2689,20 @@ OGDSM.eGovFrameUI.prototype.dataPortalEnvironment = function (divId, options) {
         environmentType;
 
     for (i = 0; i < areaTypes.length - 2; i += 3) {
-        areaRadio = this.autoRadioBox(divId, 'areaType',
+        areaRadio = this.autoRadioBox(divId, 'areaType' + i,
                                       [areaTypes[i], areaTypes[i + 1], areaTypes[i + 2]],
                                       [areaValues[i], areaValues[i + 1], areaValues[i + 2]],
-                                      {horizontal : true});
+                                      {horizontal : true, radioName : 'areaTypeName'});
     }
     areaRadio = this.autoRadioBox(divId, 'areaType',
                                   [areaTypes[areaTypes.length - 2], areaTypes[areaTypes.length - 1]],
                                   [areaValues[areaValues.length - 2], areaValues[areaValues.length - 1]],
-                                  {horizontal : true});
+                                  {horizontal : true, radioName : 'areaTypeName'});
     for (i = 0; i < environmentValues.length; i += 3) {
-        environmentType = this.autoRadioBox(divId, 'areenvTypeaType',
+        environmentType = this.autoRadioBox(divId, 'envType' + i,
                                       [environmentImages[i], environmentImages[i + 1], environmentImages[i + 2]],
                                       [environmentValues[i], environmentValues[i + 1], environmentValues[i + 2]],
-                                      {horizontal : true});
+                                      {horizontal : true, radioName : 'envRadioName'});
     }
     return [visualType, areaRadio, environmentType];
 };
@@ -2721,9 +2726,11 @@ OGDSM.eGovFrameUI.prototype.dataPortalNuclear = function (divId, options) {
     defaults = OGDSM.applyOptions(defaults, options);
     var rootDiv = $('#' + divId),
         visualType = this.autoRadioBox(divId, 'visualType', ['차트'], ['chart'], {horizontal : true}),
-        nuclearPos = this.autoRadioBox(divId, 'nuclearPos', ['월성', '고리'], ['WS', 'KR'], {horizontal : true});
+        nuclearPos = this.autoRadioBox(divId, 'nuclearPos1', ['월성', '고리'], ['WS', 'KR'],
+                                       {horizontal : true, radioName: 'nuclearName'});
 
-    nuclearPos = this.autoRadioBox(divId, 'nuclearPos', ['한빛', '한울'], ['YK', 'UJ'], {horizontal : true});
+    nuclearPos = this.autoRadioBox(divId, 'nuclearPos2', ['한빛', '한울'], ['YK', 'UJ'],
+                                        {horizontal : true, radioName: 'nuclearName'});
     return [visualType, nuclearPos];
 };
 
@@ -2977,18 +2984,18 @@ OGDSM.mapLayerList.prototype.addList = function (obj, label, color, type) {
     if (label.length > 10) {
         sublabel = sublabel.substr(0, 10) + '...';
     }
-    olList.prepend('<li id="layer' + label + '" style="float:left">' +
+    olList.prepend('<li id="layer' + label + '" style="float:left;">' +
                    '<fieldset data-role="controlgroup" data-type="horizontal" style="margin:0px">' +
                    '<div style="width:15%; float:left;">' +
                    '<canvas id="' + label + 'canvas" width="100%" height=30px; class="drag-handle" ></canvas>' +
-                   '</div> <div id="chkRoot' + label + '" style="width:70%; float:left; padding:0px; margin:0px;">' +
+                   '</div> <div id="chkRoot' + label + '" style="width:60%; float:left; padding:0px; margin:0px;">' +
                    '<input type="checkbox" name="listCheckBox" data-corners="false" data-mini="true" class="custom" ' +
                    'id="' + 'visualSW' + thisObj.getLabels().length + '" data-label="' + label + '" checked/>' +
                    '<label for="' + 'visualSW' + thisObj.getLabels().length + '" style="width:100%">' + sublabel + '</label>' +
-                   '</div> <div style="width:15%; float:left;">' +
+                   '</div> <div style="width:25%; float:left;">' +
                    '<a id="hrefRoot' + label + '" data-role="button" data-rel="popup" data-theme="b" data-icon="gear"' +
-                   'data-corners="false" data-mini="true" data-transition="pop"' +
-                   'data-label="' + label + '" href="#popup' + label + '">　</a>' +
+                   'data-corners="false" data-transition="pop" data-iconpos="notext"  data-mini="true" ' +
+                   'data-label="' + label + '" href="#popup' + label + '" style="width:25%; height:6px;"></a>' +
                    '</div>' +
                    '</fieldset>' +
                    '<div data-role="popup" id="popup' + label + '" style="width:' + 200 + 'px">' +
@@ -2997,7 +3004,7 @@ OGDSM.mapLayerList.prototype.addList = function (obj, label, color, type) {
                    '<a data-role="button" data-theme="f" data-mini="true"' +
                    'id="' + label + 'delete" data-label="' + label + '">Delete</a>' +
                    '</div>' +
-                   '</li>');
+                   '</li>'); //　   style="width:25%;"
     var labelCanvas = document.getElementById(label + 'canvas').getContext('2d');
     if (type === 'MultiPolygon') {
         labelCanvas.fillStyle = color;
@@ -3023,7 +3030,7 @@ OGDSM.mapLayerList.prototype.addList = function (obj, label, color, type) {
     $('#' + label + 'slider').on('change', sliderEvent);
     $('#' + label + 'delete').on('click', deleteEvent);
     $('input[name=listCheckBox]').on('click', checkBoxEvent);
-    $('#chkRoot' + label + ' > div').css('width', '98%');
+    $('#chkRoot' + label + ' > div').css('width', '80%');
     //$('#hrefRoot' + label + ' > span').css('margin', '-1.5px');
 };
 
@@ -3171,8 +3178,13 @@ OGDSM.indexedDB = function (dbName, options) { //dbName_ StoreName, storeName, s
         searchData = (typeof (searchData) !== 'undefined') ? searchData : null;
         editData = (typeof (editData) !== 'undefined') ? editData : null;
         var req = dbObject.open(dbName, localStorage.openGDSMobileDBVersion);
+        console.log(req);
         req.onsuccess = function (event) {
             iDB.db = event.target.result;
+            if (iDB.db.objectStoreNames.length === 0) {
+                console.log('Not Object Store');
+                return -1;
+            }
             var trans = iDB.db.transaction(storeName, 'readonly');
             var resultAll = [];
             var result = null;
@@ -3255,6 +3267,19 @@ OGDSM.indexedDB = function (dbName, options) { //dbName_ StoreName, storeName, s
                 }
             };
         };
+        req.onupgradeneeded = function (event) {
+            iDB.db = event.target.result;
+            console.log("new DB in search");
+            if (storeName !== null) {
+                if (iDB.db.objectStoreNames.contains(storeName)) {
+                    console.log('Exist Store Name.');
+                    //iDB.db.deleteObjectStore(storeName);
+
+                } else {
+                    iDB.db.createObjectStore(storeName);
+                }
+            }
+        };
     }
     function edit(dbName, storeName, srcKey, srcData, dstData) {
         search('edit', dbName, storeName, srcKey, srcData, dstData);
@@ -3277,12 +3302,14 @@ OGDSM.indexedDB = function (dbName, options) { //dbName_ StoreName, storeName, s
         };
         req.onupgradeneeded = function (event) {
             iDB.db = event.target.result;
+            console.log("new DB in openDB");
             if (storeName !== null) {
                 if (iDB.db.objectStoreNames.contains(storeName)) {
-                    console.log('Exist Store Name. Therefore New Create After Remove');
-                    iDB.db.deleteObjectStore(storeName);
+                    console.log('Exist Store Name.');
+                  //  iDB.db.deleteObjectStore(storeName);
+                } else {
+                    iDB.db.createObjectStore(storeName);
                 }
-                iDB.db.createObjectStore(storeName);
             }
         };
         req.onerror = function (e) {
@@ -3614,8 +3641,15 @@ OGDSM.attributeTable.prototype.addAttribute = function (layerName) {
 
     function indexedDBEvent(layerName, data) {
         OGDSM.indexedDB('webMappingDB', {
-            insertKey : layerName + '--Local',
-            insertData : data
+//            insertKey : layerName + '--Local',
+            insertKey : layerName,
+            insertData : data,
+            success : function () {
+                console.log("test");
+            },
+            fail : function () {
+                console.log("test11");
+            }
         });
     }
 
@@ -3856,6 +3890,9 @@ OGDSM.namesapce('chartVisualization');
        max:jsonData min value (based on valueKey), min:jsonData max value (based on valueKey)}<br>
     */
     OGDSM.chartVisualization = function (jsonData, options) {
+        function isInt(n) {
+            return n % 1 === 0;
+        }
         options = (typeof (options) !== 'undefined') ? options : {};
         this.defaults = {
             rootKey : null,
@@ -3880,12 +3917,16 @@ OGDSM.namesapce('chartVisualization');
 	        for (d in this.data) {
 	            if (this.data.hasOwnProperty(d)) {
 	                this.defaults.max = Math.max(this.data[d][options.valueKey], this.defaults.max);
-	                this.defaults.min = Math.min(this.data[d][options.valueKey], this.defaults.max);
+	                this.defaults.min = Math.min(this.data[d][options.valueKey], this.defaults.min);
+                    if (!isInt(Number(this.data[d][options.valueKey]))) {
+                        this.data[d][options.valueKey] = Number(this.data[d][options.valueKey]).toFixed(3);
+                    }
 	            }
 	        }
 	        this.defaults.max = (typeof (options.max) !== 'undefined') ? options.max : this.defaults.max;
 	        this.defaults.min = (typeof (options.min) !== 'undefined') ? options.min : this.defaults.min;
-
+        } else {
+            console.log('kMap function Mode');
         }
     };
     OGDSM.chartVisualization.prototype = {
@@ -3911,7 +3952,7 @@ OGDSM.namesapce('chartVisualization');
  * @method vBarChart
  * @param {String} divId - 막대 차트 시각화할 DIV 아이디 이름
  * @param {JSON Object} options - 옵션 JSON 객체 키 값<br>
-      {range : [], color : ['#4AAEEA']}<br>
+      {range : null, color : ['#4AAEEA']}<br>
  */
 OGDSM.chartVisualization.prototype.vBarChart = function (rootDiv, subOptions) {
     'use strict';
@@ -3920,45 +3961,63 @@ OGDSM.chartVisualization.prototype.vBarChart = function (rootDiv, subOptions) {
         options = this.defaults,
         chartOptions = {
             range : null,
-            color : ['#4AAEEA']
+            color : ['#4AAEEA'],
+            top : 20,
+            right : 25,
+            bottom : 70,
+            left : 45,
+            tick : 10
         };
     chartOptions = OGDSM.applyOptions(chartOptions, subOptions);
     var rootDivObj = $('#' + rootDiv),
-        margin = {top : 20, right : 25, bottom : 130, left : 45},
-        barWidth = rootDivObj.width() - margin.left - margin.right,
-        barHeight = rootDivObj.height() - margin.top - margin.bottom;
+        contentWidth = rootDivObj.width() + chartOptions.left + chartOptions.right,
+        contentHeight = rootDivObj.height() + chartOptions.top + chartOptions.bottom,
+        barWidth = rootDivObj.width() - chartOptions.left - chartOptions.right,
+        barHeight = rootDivObj.height() - chartOptions.top - chartOptions.bottom;
     $('#' + rootDiv).empty();
-    var labels = d3.scale.ordinal().rangeRoundBands([0, barWidth], 0.1);
+    var labels = d3.scale.ordinal().rangeRoundBands([0, barWidth], 0.05);
     var values = d3.scale.linear().range([barHeight, 0]);
-    var chartSVG = d3.select('#' + rootDiv).append('svg').attr('id', rootDiv + 'Bar')
-        .attr('width', barWidth + margin.left + margin.right)
-        .attr('height', barHeight + margin.top + margin.bottom);
-
     var labelAxis = d3.svg.axis().scale(labels).orient('bottom');
-    var valueAxis = d3.svg.axis().scale(values).orient('left');
+    var valueAxis = d3.svg.axis().scale(values).orient('left').ticks(chartOptions.tick);
+    var chartSVG = d3.select('#' + rootDiv).append('svg').attr('id', rootDiv + 'Bar')
+        .attr('width', contentWidth)
+        .attr('height', contentHeight)
+        .append('g')
+        .attr('transform', 'translate(' + chartOptions.left + ', ' + chartOptions.top + ')');
+
     labels.domain(data.map(function (d) {
         return d[options.labelKey];
     }));
     values.domain([options.min, options.max]);
-
-    var bar = chartSVG.selectAll('g').data(data).enter()
-        .append('g')
-        .attr('transform', function (d, i) {
-            return 'translate(' + labels(d[options.labelKey]) + ', ' + margin.top + ')';
+    chartSVG.append('g')
+            .attr('class', 'y axis')
+            .call(valueAxis)
+            .attr('fill', 'none')
+            .attr('stroke', '#000')
+            .attr('shape-rendering', 'crispEdges')
+            .append('text')
+            .attr('transform', 'rotate(-90)')
+            .attr('y', 7)
+            .attr('dy', '.71em')
+            .style('text-anchor', 'end')
+            .style('font-size', '0.7em')
+            .text(options.valueKey);
+    chartSVG.append('g').attr('class', 'x axis')
+        .attr('transform', 'translate(0, ' + barHeight + ')')
+        .call(labelAxis)
+        .attr('fill', 'none')
+        .attr('stroke', '#000')
+        .attr('shape-rendering', 'crispEdges')
+        .selectAll('text')
+        .style('text-anchor', 'end')
+        .style('font-size', '0.7em')
+        .attr('dx', '-.8em')
+        .attr('dy', '.15em')
+        .attr('transform', function (d) {
+            return 'rotate(-65)';
         });
 
-    var barRect = bar.append('rect')
-        .attr('y', function (d) {
-            return values(d[options.valueKey]);
-        })
-        .attr('x', function (d, i) {
-            return labels.rangeBand() + (margin.left / 3); //+(margin.left/4)
-      //      return (labels(d[options.labelKey]) / data.length) + margin.left;
-        })
-        .attr('height', function (d) {
-            return barHeight - values(d[options.valueKey]);
-        })
-        .attr('width', labels.rangeBand())
+    chartSVG.selectAll('bar').data(data).enter().append('rect')
         .attr('fill', function (d) {
             if ($.isArray(chartOptions.range) === true) {
                 var z = 0;
@@ -3970,50 +4029,37 @@ OGDSM.chartVisualization.prototype.vBarChart = function (rootDiv, subOptions) {
             } else {
                 return chartOptions.color;
             }
-        });/*
-    barRect.transition()
-        .duration(2000)
-        .attr('height', function (d) {
-            return barHeight - values(d[options.valueKey]);
-        });*/
-
-    bar.append('text')
-        .attr('x', labels.rangeBand() + margin.left)
-        .attr('y', function (d) {
-            return values(d[options.valueKey]) - 10;
         })
+        .attr('x', function (d, i) {
+            return labels(d[options.labelKey]);
+        })
+        .attr('width', labels.rangeBand())
+        .attr('y', function (d) {
+            if (isNaN(values(d[options.valueKey]))) {
+                return 0;
+            }
+            return values(d[options.valueKey]);
+        })
+        .attr('height', function (d) {
+            if (isNaN(values(d[options.valueKey]))) {
+                return 0;
+            }
+            return barHeight - values(d[options.valueKey]);
+        });
+    chartSVG.selectAll('bar').data(data).enter().append('text')
+        .attr('x', function (d, i) {
+            return labels(d[options.labelKey]) + labels.rangeBand() / 2;
+        })
+        .attr('y', function (d) {
+            return values(d[options.valueKey]);
+        })
+        .attr('dx', '-5')
         .attr('dy', '.75em')
-        .attr('text-anchor', 'end')
+        .style('font-size', '0.75em')
+        .attr('text-anchor', 'start')
         .text(function (d) {
             return d[options.valueKey];
         });
-
-    chartSVG.append('g').attr('class', 'x axis')
-        .attr('transform', 'translate(' + margin.left + ', ' + (barHeight + margin.top) + ')')
-        .call(labelAxis)
-        .attr('fill', 'none')
-        .attr('stroke', '#000')
-        .attr('shape-rendering', 'crispEdges')
-        .selectAll('text')
-        .style('text-anchor', 'end')
-        .attr('dx', '-.8em')
-        .attr('dy', '.15em')
-        .attr('transform', function (d) {
-            return 'rotate(-65)';
-        });
-
-    chartSVG.append('g').attr('class', 'y axis')
-            .attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')')
-            .call(valueAxis)
-            .attr('fill', 'none')
-            .attr('stroke', '#000')
-            .attr('shape-rendering', 'crispEdges')
-            .append('text')
-            .attr('transform', 'rotate(-90)')
-            .attr('y', 5)
-            .attr('dy', '.71em')
-            .style('text-anchor', 'end')
-            .text(options.valueKey);
 };
 
 
@@ -4032,43 +4078,68 @@ OGDSM.chartVisualization.prototype.hBarChart = function (rootDiv, subOptions) {
         options = this.defaults,
         chartOptions = {
             range : null,
-            color : ['#4AAEEA']
+            color : ['#4AAEEA'],
+            top : 20,
+            right : 60,
+            bottom : 20,
+            left : 80,
+            tick : 10
         };
     chartOptions = OGDSM.applyOptions(chartOptions, subOptions);
     var rootDivObj = $('#' + rootDiv),
-        margin = {top : 0, right : 60, bottom : 20, left : 80},
-        barWidth = rootDivObj.width() - margin.left - margin.right,
-        barHeight = rootDivObj.height() - margin.top - margin.bottom;
+        contentWidth = rootDivObj.width() + chartOptions.left + chartOptions.right,
+        contentHeight = rootDivObj.height() + chartOptions.top + chartOptions.bottom,
+        barWidth = rootDivObj.width() - chartOptions.left - chartOptions.right,
+        barHeight = rootDivObj.height() - chartOptions.top - chartOptions.bottom;
     $('#' + rootDiv).empty();
-    var labels = d3.scale.ordinal().rangeRoundBands([0, barHeight], 0.1);
-    var values = d3.scale.linear().range([barWidth, 0]);
+    var labels = d3.scale.ordinal().rangeRoundBands([0, barHeight], 0.02);
+    var values = d3.scale.linear().range([0, barWidth]);
     var chartSVG = d3.select('#' + rootDiv).append('svg').attr('id', rootDiv + 'Bar')
-        .attr('width', barWidth + margin.left + margin.right)
-        .attr('height', barHeight + margin.top + margin.bottom);
+        .attr('width', contentWidth)
+        .attr('height', contentHeight)
+        .append('g')
+        .attr('transform', 'translate(' + chartOptions.left + ', ' + chartOptions.top + ')');
 
     var labelAxis = d3.svg.axis().scale(labels).orient('left');
-    var valueAxis = d3.svg.axis().scale(values).orient('bottom');
+    var valueAxis = d3.svg.axis().scale(values).orient('top');
     labels.domain(data.map(function (d) {
         return d[options.labelKey];
     }));
     values.domain([options.min, options.max]);
-    console.log(options.min + ' ' + options.max);
-    var bar = chartSVG.selectAll('g').data(data).enter()
-        .append('g')
-        .attr('transform', function (d, i) {
-            return 'translate(' + margin.left + ', ' + labels(d[options.labelKey]) + ')';
-        });
-    bar.append('rect')
-        .attr('y', function (d) {
-            return labels.rangeBand() + (margin.top / 3); //+(margin.left/4)
-        })
+
+    chartSVG.append('g').attr('class', 'y axis')
+        .call(labelAxis)
+        .attr('fill', 'none')
+        .attr('stroke', '#000')
+        .attr('shape-rendering', 'crispEdges')
+        .selectAll('text')
+        .style('text-anchor', 'end')
+        .style('font-size', '0.75em')
+        .attr('dx', '-.8em')
+        .attr('dy', '.15em');
+    chartSVG.append('g')
+        .attr('class', 'x axis')
+        .call(valueAxis)
+        .attr('fill', 'none')
+        .attr('stroke', '#000')
+        .style('font-size', '0.75em')
+        .attr('shape-rendering', 'crispEdges')
+        .append('text')
+        .attr('x', barWidth)
+        .attr('dy', '1.2em')
+        .style('text-anchor', 'end')
+        .style('font-size', '0.75em')
+        .text(options.valueKey);
+    chartSVG.selectAll('bar').data(data).enter().append('rect')
         .attr('x', function (d, i) {
-            return margin.left;
+            return 0.5;
         })
-        .attr('height', labels.rangeBand())
+        .attr('y', function (d) {
+            return labels(d[options.labelKey]);
+        })
+        .attr('height', labels.rangeBand() - 0.5)
         .attr('width', function (d) {
-            //return barWidth - values(d[options.valueKey]);
-            return barWidth - values(d[options.valueKey]);
+            return values(d[options.valueKey]);
         })
         .attr('fill', function (d) {
             if ($.isArray(chartOptions.range) === true) {
@@ -4082,39 +4153,19 @@ OGDSM.chartVisualization.prototype.hBarChart = function (rootDiv, subOptions) {
                 return chartOptions.color;
             }
         });
-    bar.append('text')
+    chartSVG.selectAll('bar').data(data).enter().append('text')
         .attr('x', function (d) {
-            return barWidth + (margin.left) - values(d[options.valueKey]);
+            return values(d[options.valueKey]);
         })
-        .attr('y', labels.rangeBand())
+        .attr('y', function (d) {
+            return labels(d[options.labelKey]);
+        })
         .attr('dy', '.75em')
-        .attr('text-anchor', 'end')
+        .style('font-size', '0.75em')
+        .attr('text-anchor', 'start')
         .text(function (d) {
             return d[options.valueKey];
         });
-
-    chartSVG.append('g').attr('class', 'y axis')
-        .attr('transform', 'translate(' + (margin.left) * 2 + ', ' + labels.rangeBand() + ')')
-        .call(labelAxis)
-        .attr('fill', 'none')
-        .attr('stroke', '#000')
-        .attr('shape-rendering', 'crispEdges')
-        .selectAll('text')
-        .style('text-anchor', 'end')
-        .attr('dx', '-.8em')
-        .attr('dy', '.15em');
-    //Bug ......
-    chartSVG.append('g').attr('class', 'x axis')
-            .attr('transform', 'translate(' + (margin.left) * 2 + ', ' + barHeight + ')')
-            .call(valueAxis)
-            .attr('fill', 'none')
-            .attr('stroke', '#000')
-            .attr('shape-rendering', 'crispEdges')
-            .append('text')
-            .attr('y', 5)
-            .attr('dy', '.71em')
-            .style('text-anchor', 'end')
-            .text(options.valueKey);
 };
 
 
@@ -4137,19 +4188,26 @@ OGDSM.chartVisualization.prototype.lineChart = function (rootDiv, subOptions) {
             stroke : ['#4AAEEA'],
             width : 2,
             circleSize : 3,
-            circleColor : ['#AAAAAA']
+            circleColor : ['#AAAAAA'],
+            top : 20,
+            right : 25,
+            bottom : 100,
+            left : 45
         };
     chartOptions = OGDSM.applyOptions(chartOptions, subOptions);
     var rootDivObj = $('#' + rootDiv),
-        margin = {top : 20, right : 25, bottom : 130, left : 45},
-        barWidth = rootDivObj.width() - margin.left - margin.right,
-        barHeight = rootDivObj.height() - margin.top - margin.bottom;
+        contentWidth = rootDivObj.width() + chartOptions.left + chartOptions.right,
+        contentHeight = rootDivObj.height() + chartOptions.top + chartOptions.bottom,
+        barWidth = rootDivObj.width() - chartOptions.left - chartOptions.right,
+        barHeight = rootDivObj.height() - chartOptions.top - chartOptions.bottom;
     $('#' + rootDiv).empty();
-    var labels = d3.scale.ordinal().rangeRoundBands([0, barWidth], 0.1);
+    var labels = d3.scale.ordinal().rangeRoundBands([0, barWidth], 0.05);
     var values = d3.scale.linear().range([barHeight, 0]);
-    var chartSVG = d3.select('#' + rootDiv).append('svg').attr('id', rootDiv + 'Bar')
-        .attr('width', barWidth + margin.left + margin.right)
-        .attr('height', barHeight + margin.top + margin.bottom);
+    var chartSVG = d3.select('#' + rootDiv).append('svg').attr('id', rootDiv + 'line')
+        .attr('width', contentWidth)
+        .attr('height', contentHeight)
+        .append('g')
+        .attr('transform', 'translate(' + chartOptions.left + ', ' + chartOptions.top + ')');
 
     var labelAxis = d3.svg.axis().scale(labels).orient('bottom');
     var valueAxis = d3.svg.axis().scale(values).orient('left');
@@ -4160,71 +4218,67 @@ OGDSM.chartVisualization.prototype.lineChart = function (rootDiv, subOptions) {
 
     var lineXY = d3.svg.line()
         .x(function (d, i) {
-            return labels(d[options.labelKey]);
+            return labels(d[options.labelKey]) + labels.rangeBand() / 2;
         })
         .y(function (d, i) {
             return values(d[options.valueKey]);
         });
-    //var bar = chartSVG.append('path').attr('d', lineFunc(
 
     chartSVG.append('path').attr('d', lineXY(data))
-        .attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')')
         .attr('stroke', chartOptions.stroke)
-        .attr('stroke-width', options.stroke)
+        .attr('stroke-width', chartOptions.stroke)
         .attr('fill', 'none');
-    var circleText = chartSVG.selectAll('g').data(data).enter()
-        .append('g')
-        .attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')');
-
-    circleText.append('circle')
-        .attr('cy', function (d, i) {
-            return values(d[options.valueKey]);
-        })
-        .attr('cx', function (d, i) {
-            return labels(d[options.labelKey]);
-        })
-        .attr('r', chartOptions.circleSize)
-        .attr('fill', chartOptions.circleColor);
-    circleText.append('text')
-        .attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')')
-        .attr('x', function (d, i) {
-            return labels(d[options.labelKey]) - 15;
-        })
-        .attr('y', function (d, i) {
-            return values(d[options.valueKey]) - 20;
-        })
-        .attr('dy', '.75em')
-        .attr('text-anchor', 'end')
-        .text(function (d) {
-            return d[options.valueKey];
-        });
-    chartSVG.append('g').attr('class', 'x axis')
-        .attr('transform', 'translate(' + margin.left + ', ' + (barHeight + margin.top) + ')')
-        .call(labelAxis)
+    chartSVG.append('g').attr('class', 'x axis').call(labelAxis)
+        .attr('transform', 'translate(0, ' + barHeight + ')')
         .attr('fill', 'none')
         .attr('stroke', '#000')
         .attr('shape-rendering', 'crispEdges')
         .selectAll('text')
         .style('text-anchor', 'end')
+        .style('font-size', '0.7em')
         .attr('dx', '-.8em')
         .attr('dy', '.15em')
         .attr('transform', function (d) {
             return 'rotate(-65)';
         });
-    chartSVG.append('g').attr('class', 'y axis')
-        .attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')')
-        .call(valueAxis)
+    chartSVG.append('g').attr('class', 'y axis').call(valueAxis)
         .attr('fill', 'none')
         .attr('stroke', '#000')
         .attr('shape-rendering', 'crispEdges')
+        .style('text-anchor', 'end')
+        .style('font-size', '0.7em')
         .append('text')
         .attr('transform', 'rotate(-90)')
-        .attr('y', 5)
+        .attr('y', 7)
         .attr('dy', '.71em')
         .style('text-anchor', 'end')
+        .style('font-size', '0.7em')
         .text(options.valueKey);
-};
 
+    var textCircle = chartSVG.selectAll('circle').data(data).enter().append('g');
+    textCircle.append('circle')
+        .attr('r', chartOptions.circleSize)
+        .attr('fill', chartOptions.circleColor)
+        .attr('cy', function (d, i) {
+            return values(d[options.valueKey]);
+        })
+        .attr('cx', function (d, i) {
+            return labels(d[options.labelKey]) + labels.rangeBand() / 2;
+        });
+    textCircle.append('text')
+        .attr('dy', '-.5em')
+        .style('font-size', '0.55em')
+        .style('text-anchor', 'start')
+        .text(function (d) {
+            return d[options.valueKey];
+        })
+        .attr('x', function (d, i) {
+            return labels(d[options.labelKey]);
+        })
+        .attr('y', function (d, i) {
+            return values(d[options.valueKey]);
+        });
+};
 
 /**
  * 영역 차트 시각화
@@ -4241,19 +4295,26 @@ OGDSM.chartVisualization.prototype.areaChart = function (rootDiv, subOptions) {
         chartOptions = {
             fill : ['#4AAEEA'],
             circleSize : 3,
-            circleColor : ['#AAAAAA']
+            circleColor : ['#AAAAAA'],
+            top : 20,
+            right : 0,
+            bottom : 100,
+            left : 45
         };
     chartOptions = OGDSM.applyOptions(chartOptions, subOptions);
     var rootDivObj = $('#' + rootDiv),
-        margin = {top : 20, right : 25, bottom : 130, left : 45},
-        barWidth = rootDivObj.width() - margin.left - margin.right,
-        barHeight = rootDivObj.height() - margin.top - margin.bottom;
+        contentWidth = rootDivObj.width() + chartOptions.left + chartOptions.right,
+        contentHeight = rootDivObj.height() + chartOptions.top + chartOptions.bottom,
+        barWidth = rootDivObj.width() - chartOptions.left - chartOptions.right,
+        barHeight = rootDivObj.height() - chartOptions.top - chartOptions.bottom;
     $('#' + rootDiv).empty();
     var labels = d3.scale.ordinal().rangeRoundBands([0, barWidth], 0.1);
     var values = d3.scale.linear().range([barHeight, 0]);
     var chartSVG = d3.select('#' + rootDiv).append('svg').attr('id', rootDiv + 'Bar')
-        .attr('width', barWidth + margin.left + margin.right)
-        .attr('height', barHeight + margin.top + margin.bottom);
+        .attr('width', contentWidth)
+        .attr('height', contentHeight)
+        .append('g')
+        .attr('transform', 'translate(' + chartOptions.left + ', ' + chartOptions.top + ')');
 
     var labelAxis = d3.svg.axis().scale(labels).orient('bottom');
     var valueAxis = d3.svg.axis().scale(values).orient('left');
@@ -4264,188 +4325,118 @@ OGDSM.chartVisualization.prototype.areaChart = function (rootDiv, subOptions) {
 
     var areaXY = d3.svg.area()
         .x(function (d, i) {
-            return labels(d[options.labelKey]);
+            return labels(d[options.labelKey]) + labels.rangeBand() / 2;
         })
         .y0(barHeight)
         .y1(function (d, i) {
             return values(d[options.valueKey]);
         });
     chartSVG.append('path').attr('d', areaXY(data))
-        .attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')')
         .attr('class', 'area')
         .attr('fill', chartOptions.fill);
 
-
-    var circleText = chartSVG.selectAll('g').data(data).enter()
-        .append('g')
-        .attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')');
-
-    circleText.append('circle')
+    var textCircle = chartSVG.selectAll('circle').data(data).enter().append('g');
+    textCircle.append('circle')
+        .attr('r', chartOptions.circleSize)
+        .attr('fill', chartOptions.circleColor)
         .attr('cy', function (d, i) {
             return values(d[options.valueKey]);
         })
         .attr('cx', function (d, i) {
-            return labels(d[options.labelKey]);
-        })
-        .attr('r', chartOptions.circleSize)
-        .attr('fill', chartOptions.circleColor);
-    circleText.append('text')
-        .attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')')
-        .attr('x', function (d, i) {
-            return labels(d[options.labelKey]) - 15;
-        })
-        .attr('y', function (d, i) {
-            return values(d[options.valueKey]) - 20;
-        })
-        .attr('dy', '.75em')
-        .attr('text-anchor', 'end')
+            return labels(d[options.labelKey]) + labels.rangeBand() / 2;
+        });
+    textCircle.append('text')
+        .attr('dy', '-.5em')
+        .style('font-size', '0.55em')
+        .style('text-anchor', 'start')
         .text(function (d) {
             return d[options.valueKey];
+        })
+        .attr('x', function (d, i) {
+            return labels(d[options.labelKey]) + labels.rangeBand() / 2;
+        })
+        .attr('y', function (d, i) {
+            return values(d[options.valueKey]);
         });
 
-    chartSVG.append('g').attr('class', 'x axis')
-        .attr('transform', 'translate(' + margin.left + ', ' + (barHeight + margin.top) + ')')
-        .call(labelAxis)
+    chartSVG.append('g').attr('class', 'x axis').call(labelAxis)
+        .attr('transform', 'translate(0, ' + barHeight + ')')
         .attr('fill', 'none')
         .attr('stroke', '#000')
         .attr('shape-rendering', 'crispEdges')
         .selectAll('text')
         .style('text-anchor', 'end')
+        .style('font-size', '0.7em')
         .attr('dx', '-.8em')
         .attr('dy', '.15em')
         .attr('transform', function (d) {
             return 'rotate(-65)';
         });
-
-    chartSVG.append('g').attr('class', 'y axis')
-            .attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')')
-            .call(valueAxis)
-            .attr('fill', 'none')
-            .attr('stroke', '#000')
-            .attr('shape-rendering', 'crispEdges')
-            .append('text')
-            .attr('transform', 'rotate(-90)')
-            .attr('y', 5)
-            .attr('dy', '.71em')
-            .style('text-anchor', 'end')
-            .text(options.valueKey);
-};
-
-
-
-/**
- * 라인 차트 시각화
- * @method lineChart
- * @param {String} divId - 막대 차트 시각화할 DIV 아이디 이름
- * @param {JSON Object} options - 옵션 JSON 객체 키 값<br>
-      {stroke : ['#4AAEEA'], width : 2,<br>
-       circleSize : 3, circleColor : ['#AAAAAA']}<br>
- */
-OGDSM.chartVisualization.prototype.lineChart = function (rootDiv, subOptions) {
-    'use strict';
-    subOptions = (typeof (subOptions) !== 'undefined') ? subOptions : {};
-    var data = this.data,
-        options = this.defaults,
-        chartOptions = {
-            range : null,
-            stroke : ['#4AAEEA'],
-            width : 2,
-            circleSize : 3,
-            circleColor : ['#AAAAAA']
-        };
-    chartOptions = OGDSM.applyOptions(chartOptions, subOptions);
-    var rootDivObj = $('#' + rootDiv),
-        margin = {top : 20, right : 25, bottom : 130, left : 45},
-        barWidth = rootDivObj.width() - margin.left - margin.right,
-        barHeight = rootDivObj.height() - margin.top - margin.bottom;
-    $('#' + rootDiv).empty();
-    var labels = d3.scale.ordinal().rangeRoundBands([0, barWidth], 0.1);
-    var values = d3.scale.linear().range([barHeight, 0]);
-    var chartSVG = d3.select('#' + rootDiv).append('svg').attr('id', rootDiv + 'Bar')
-        .attr('width', barWidth + margin.left + margin.right)
-        .attr('height', barHeight + margin.top + margin.bottom);
-
-    var labelAxis = d3.svg.axis().scale(labels).orient('bottom');
-    var valueAxis = d3.svg.axis().scale(values).orient('left');
-    labels.domain(data.map(function (d) {
-        return d[options.labelKey];
-    }));
-    values.domain([options.min, options.max]);
-
-    var lineXY = d3.svg.line()
-        .x(function (d, i) {
-            return labels(d[options.labelKey]);
-        })
-        .y(function (d, i) {
-            return values(d[options.valueKey]);
-        });
-    //var bar = chartSVG.append('path').attr('d', lineFunc(
-
-    chartSVG.append('path').attr('d', lineXY(data))
-        .attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')')
-        .attr('stroke', chartOptions.stroke)
-        .attr('stroke-width', options.stroke)
-        .attr('fill', 'none');
-    var circleText = chartSVG.selectAll('g').data(data).enter()
-        .append('g')
-        .attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')');
-
-    circleText.append('circle')
-        .attr('cy', function (d, i) {
-            return values(d[options.valueKey]);
-        })
-        .attr('cx', function (d, i) {
-            return labels(d[options.labelKey]);
-        })
-        .attr('r', chartOptions.circleSize)
-        .attr('fill', chartOptions.circleColor);
-    circleText.append('text')
-        .attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')')
-        .attr('x', function (d, i) {
-            return labels(d[options.labelKey]) - 15;
-        })
-        .attr('y', function (d, i) {
-            return values(d[options.valueKey]) - 20;
-        })
-        .attr('dy', '.75em')
-        .attr('text-anchor', 'end')
-        .text(function (d) {
-            return d[options.valueKey];
-        });
-    chartSVG.append('g').attr('class', 'x axis')
-        .attr('transform', 'translate(' + margin.left + ', ' + (barHeight + margin.top) + ')')
-        .call(labelAxis)
+    chartSVG.append('g').attr('class', 'y axis').call(valueAxis)
         .attr('fill', 'none')
         .attr('stroke', '#000')
         .attr('shape-rendering', 'crispEdges')
-        .selectAll('text')
         .style('text-anchor', 'end')
-        .attr('dx', '-.8em')
-        .attr('dy', '.15em')
-        .attr('transform', function (d) {
-            return 'rotate(-65)';
-        });
-    chartSVG.append('g').attr('class', 'y axis')
-        .attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')')
-        .call(valueAxis)
-        .attr('fill', 'none')
-        .attr('stroke', '#000')
-        .attr('shape-rendering', 'crispEdges')
+        .style('font-size', '0.7em')
         .append('text')
         .attr('transform', 'rotate(-90)')
-        .attr('y', 5)
+        .attr('y', 7)
         .attr('dy', '.71em')
         .style('text-anchor', 'end')
+        .style('font-size', '0.7em')
         .text(options.valueKey);
 };
 
 
-OGDSM.chartVisualization.prototype.kMap = function (divId, serverAddr, geodata, center_lat, center_lon, map_scale) {
+OGDSM.chartVisualization.prototype.kMap = function (rootDiv, serverAddr, geodata, subOptions) {
     'use strict';
-    var rootDiv = $('#' + divId),
+    subOptions = (typeof (subOptions) !== 'undefined') ? subOptions : {};
+    var data = this.data,
+        options = this.defaults,
+        mapOptions = {
+            center_lat : 34.0,
+            center_lon : 131.0,
+            map_scale : 3500,
+            top : 0,
+            right : 0,
+            bottom : 0,
+            left : 0
+        };
+    mapOptions = OGDSM.applyOptions(mapOptions, subOptions);
+    var rootDivObj = $('#' + rootDiv),
+        contentWidth = rootDivObj.width() + mapOptions.left + mapOptions.right,
+        contentHeight = rootDivObj.height() + mapOptions.top + mapOptions.bottom,
+        barWidth = rootDivObj.width() - mapOptions.left - mapOptions.right,
+        barHeight = rootDivObj.height() - mapOptions.top - mapOptions.bottom,
+        objNames = [
+            { geoName : 'SIDO', objName : 'All_TL_SCCO_CTPRVN_4326', propEnName : 'CTP_ENG_NM'},
+            { geoName : 'GU', objName : 'All_TL_SCCO_SIG_4326', propEnName : 'SIG_ENG_NM'},
+            { geoName : 'DONG', objName : 'All_TL_SCCO_EMD_4326', propEnName : 'EMD_ENG_NM'}
+        ],
         paramData = {};
     paramData.jsonName = geodata;
-    rootDiv.empty();
+    rootDivObj.empty();
+    var svg = d3.select('#' + rootDiv)
+                .append('svg')
+                .attr("width", contentWidth)
+                .attr("height", contentHeight);
+    var projection = d3.geo.mercator()
+                .center([mapOptions.center_lon, mapOptions.center_lat])
+                .scale(mapOptions.map_scale)
+                .rotate([2, 2.5])
+                .translate([barWidth / 2, barHeight / 2]);
+    var path = d3.geo.path().projection(projection);
+    var curObj = null, curPropEn = null;
+    $.each(objNames, function (i, d) {
+        if (d.geoName === geodata) {
+            curObj = d.objName;
+            curPropEn = d.propEnName;
+        }
+    });
+    if (curObj === null) {
+        console.log('Not support Map');
+        return -1;
+    }
     $.ajax({
         type : 'POST',
         url : serverAddr,
@@ -4454,40 +4445,16 @@ OGDSM.chartVisualization.prototype.kMap = function (divId, serverAddr, geodata, 
         dataType : 'json',
         success : function (msg) {
             var topology = JSON.parse(msg.data);
-
-            var svg = d3.select('#' + divId)
-                        .append('svg')
-                        .attr("width", 500)
-                        .attr("height", 600);
-            var projection = d3.geo.mercator()
-                                .center([center_lon, center_lat])
-                                .scale(map_scale);
-            var path = d3.geo.path()
-                            .projection(projection);
-            var g = svg.append("g");
-
-            if (geodata === "SIDO") {
-                g.selectAll("path")
-                    .data(topojson.feature(topology, topology.objects.All_TL_SCCO_CTPRVN_4326).features)
-                    .enter().append("path")
-                    .attr("class", function (d) { return "sido_" + d.properties.CTP_ENG_NM; })
-                    .style("fill", function (d) { return "#" + Math.random().toString(16).slice(2, 8); })
-                    .attr("d", path);
-            } else if (geodata === "GU") {
-                g.selectAll("path")
-                    .data(topojson.feature(topology, topology.objects.All_TL_SCCO_SIG_4326).features)
-                    .enter().append("path")
-                    .attr("class", function (d) { return "gu_" + d.properties.SIG_ENG_NM; })
-                    .style("fill", function (d) { return "#" + Math.random().toString(16).slice(2, 8); })
-                    .attr("d", path);
-            } else if (geodata === "DONG") {
-                g.selectAll("path")
-                    .data(topojson.feature(topology, topology.objects.All_TL_SCCO_EMD_4326).features)
-                    .enter().append("path")
-                    .attr("class", function (d) { return "dong_" + d.properties.EMD_ENG_NM; })
-                    .style("fill", function (d) { return "#" + Math.random().toString(16).slice(2, 8); })
-                    .attr("d", path);
-            }
+            var objs = topology.objects;
+            svg.selectAll("path")
+                .data(topojson.feature(topology, objs[curObj]).features)
+                .enter().append("path")
+                .attr('data-prop', function (d) {
+                    return JSON.stringify(d.properties);
+                })
+                .style("fill", function (d) { return "#" + Math.random().toString(16).slice(2, 8); })
+                .style('fill-opacity', 0.5)
+                .attr("d", path);
         },
         error : function (e) {
             console.log(e);

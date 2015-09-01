@@ -217,8 +217,13 @@
                                 searchData = (typeof (searchData) !== &#x27;undefined&#x27;) ? searchData : null;
                                 editData = (typeof (editData) !== &#x27;undefined&#x27;) ? editData : null;
                                 var req = dbObject.open(dbName, localStorage.openGDSMobileDBVersion);
+                                console.log(req);
                                 req.onsuccess = function (event) {
                                     iDB.db = event.target.result;
+                                    if (iDB.db.objectStoreNames.length === 0) {
+                                        console.log(&#x27;Not Object Store&#x27;);
+                                        return -1;
+                                    }
                                     var trans = iDB.db.transaction(storeName, &#x27;readonly&#x27;);
                                     var resultAll = [];
                                     var result = null;
@@ -301,6 +306,19 @@
                                         }
                                     };
                                 };
+                                req.onupgradeneeded = function (event) {
+                                    iDB.db = event.target.result;
+                                    console.log(&quot;new DB in search&quot;);
+                                    if (storeName !== null) {
+                                        if (iDB.db.objectStoreNames.contains(storeName)) {
+                                            console.log(&#x27;Exist Store Name.&#x27;);
+                                            //iDB.db.deleteObjectStore(storeName);
+
+                                        } else {
+                                            iDB.db.createObjectStore(storeName);
+                                        }
+                                    }
+                                };
                             }
                             function edit(dbName, storeName, srcKey, srcData, dstData) {
                                 search(&#x27;edit&#x27;, dbName, storeName, srcKey, srcData, dstData);
@@ -323,12 +341,14 @@
                                 };
                                 req.onupgradeneeded = function (event) {
                                     iDB.db = event.target.result;
+                                    console.log(&quot;new DB in openDB&quot;);
                                     if (storeName !== null) {
                                         if (iDB.db.objectStoreNames.contains(storeName)) {
-                                            console.log(&#x27;Exist Store Name. Therefore New Create After Remove&#x27;);
-                                            iDB.db.deleteObjectStore(storeName);
+                                            console.log(&#x27;Exist Store Name.&#x27;);
+                                          //  iDB.db.deleteObjectStore(storeName);
+                                        } else {
+                                            iDB.db.createObjectStore(storeName);
                                         }
-                                        iDB.db.createObjectStore(storeName);
                                     }
                                 };
                                 req.onerror = function (e) {

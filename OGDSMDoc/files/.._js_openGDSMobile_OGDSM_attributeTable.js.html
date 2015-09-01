@@ -264,8 +264,15 @@
                         
                             function indexedDBEvent(layerName, data) {
                                 OGDSM.indexedDB(&#x27;webMappingDB&#x27;, {
-                                    insertKey : layerName + &#x27;--Local&#x27;,
-                                    insertData : data
+                        //            insertKey : layerName + &#x27;--Local&#x27;,
+                                    insertKey : layerName,
+                                    insertData : data,
+                                    success : function () {
+                                        console.log(&quot;test&quot;);
+                                    },
+                                    fail : function () {
+                                        console.log(&quot;test11&quot;);
+                                    }
                                 });
                             }
                         
@@ -291,8 +298,8 @@
                         
                             var parm = {};
                             parm.tableName = layerName;
-                            
-                            
+
+
                             if (layerName.split(&#x27;--&#x27;)[1]) {
                                 OGDSM.indexedDB(&#x27;webMappingDB&#x27;, {
                                     type : &#x27;search&#x27;,
@@ -329,7 +336,7 @@
                         
                                     }
                                 });
-                                
+
                             } else {
                                 $.ajax({
                                     type : &#x27;POST&#x27;,
