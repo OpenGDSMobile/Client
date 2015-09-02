@@ -26,22 +26,14 @@
         }
         </style>
         <script>
-            //var ws = new WebSocket("ws://113.198.80.60:8083/events/");
-            //var ws = new WebSocket("ws://113.198.80.59:8080/spring4-chap09-ws/chat-ws");
-            var ws = new WebSocket("ws://113.198.80.59:8080/ApplicationServer/testWebSocket");
-
-            var testWebSocket = new OGDSM.webSocket(addr, 'test');
-            function webSocketTest(){
-                /*
-                var addr = "ws://113.198.80.60:8083/events/";
-                var testWebSocket = new OGDSM.webSocket(addr, 'test');
-                */
-
-                /*
+            var ws;
+            var addr = "ws://113.198.80.60:8081/ApplicationServer/attr-ws.do";
+            function connected(){
                 if ("WebSocket" in window) {
                     console.log("webSocket is supported by your browser!");
+                    ws = new WebSocket(addr);
                     ws.onopen = function(){
-                        ws.send('enter User');
+                      //  ws.send('enter User');
                     };
                     ws.onmessage = function (evt) {
                         var received_msg = evt.data;
@@ -59,9 +51,8 @@
                 } else {
                     alert("websocket Not supported by your Browser!");
                 }
-                */
             }
-            function send() {
+            function sended() {
                 var input = document.getElementById("message");
                 var inputId = document.getElementById("yourid");
                 var jsonObj = {};
@@ -74,12 +65,12 @@
                 //container.appendChild(p);
                 //ws.send(input.value);
                 console.log(jsonObj);
-                testWebSocket.send(JSON.stringify(jsonObj));
+                ws.send(JSON.stringify(jsonObj));
                 input.value="";
             }
-            $(function(){
-                webSocketTest();
-            });
+            function closed() {
+                ws.close();
+            }
         </script>
 
     </head>
@@ -87,8 +78,10 @@
         <div id="container">
 
         </div>
-        <input type="text" id="yourid">
-        <input type="text" id="message" name="message" onchange="send()">
-        <!--<button type="button" id="send" onclick="send()">send</button>-->
+        <input type="text" id="yourid" value="test">
+        <button type="button" id="conn" onclick="connected()">connect</button>
+        <input type="text" id="message" name="message">
+        <button type="button" id="send" onclick="sended()">send</button>
+        <button type="button" id="close" onclick="closed()">close</button>
     </body>
 </html>
