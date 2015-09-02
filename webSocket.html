@@ -27,12 +27,17 @@
         </style>
         <script>
             //var ws = new WebSocket("ws://113.198.80.60:8083/events/");
-            var ws = new WebSocket("ws://113.198.80.59:8080//websocket");
+            //var ws = new WebSocket("ws://113.198.80.59:8080/spring4-chap09-ws/chat-ws");
+            var ws = new WebSocket("ws://113.198.80.59:8080/ApplicationServer/testWebSocket");
+
+            var testWebSocket = new OGDSM.webSocket(addr, 'test');
             function webSocketTest(){
                 /*
                 var addr = "ws://113.198.80.60:8083/events/";
                 var testWebSocket = new OGDSM.webSocket(addr, 'test');
                 */
+
+                /*
                 if ("WebSocket" in window) {
                     console.log("webSocket is supported by your browser!");
                     ws.onopen = function(){
@@ -54,17 +59,23 @@
                 } else {
                     alert("websocket Not supported by your Browser!");
                 }
+                */
             }
             function send() {
                 var input = document.getElementById("message");
-                var p = document.createElement("p");
-                p.setAttribute("class", "client");
-                p.innerHTML = "Me : " + input.value;
-                var container = document.getElementById("container");
-                container.appendChild(p);
-                ws.send(input.value);
+                var inputId = document.getElementById("yourid");
+                var jsonObj = {};
+                jsonObj.userId = inputId.value;
+                jsonObj.text = input.value;
+                //var p = document.createElement("p");
+                //p.setAttribute("class", "client");
+                //p.innerHTML = "Me : " + input.value;
+                //var container = document.getElementById("container");
+                //container.appendChild(p);
+                //ws.send(input.value);
+                console.log(jsonObj);
+                testWebSocket.send(JSON.stringify(jsonObj));
                 input.value="";
-
             }
             $(function(){
                 webSocketTest();
@@ -76,7 +87,7 @@
         <div id="container">
 
         </div>
-
+        <input type="text" id="yourid">
         <input type="text" id="message" name="message" onchange="send()">
         <!--<button type="button" id="send" onclick="send()">send</button>-->
     </body>

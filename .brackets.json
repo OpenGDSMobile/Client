@@ -19,6 +19,13 @@
         "D:/Apache24/htdocs/OpenGDSMobileClient/js/ol3/ol.js",
         "/var/www/html/2_study/openGDSMobileClient/Gruntfile.js",
         "/var/www/html/2_study/openGDSMobileClient/js/ol3/3.5/ol.js",
-        "rbush.js"
+        "rbush.js",
+        "/home/intruder/git/Client/Gruntfile.js",
+        "/home/intruder/git/Client/js/main.js",
+        "/home/intruder/git/Client/js/serverAddr.js",
+        "/home/intruder/git/Client/js/proj4js/2.2.2/EPSGdefs.js",
+        "/home/intruder/git/Client/js/proj4js/2.2.2/proj4.js",
+        "/home/intruder/git/Client/js/syntaxhighlighter/shBrushJScript.js",
+        "/home/intruder/git/Client/js/syntaxhighlighter/shCore.js"
     ]
 }

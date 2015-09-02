@@ -19,11 +19,15 @@ OGDSM.namesapce('webSocket');
         var ws = new WebSocket(addr);
         this.ws = ws;
         ws.onopen = function () {
-            ws.send('Connent');
+            var jsonObj = {};
+            jsonObj.userId = '';
+            jsonObj.text = 'Connect Complate';
+            ws.send(JSON.stringify(jsonObj));
         };
 
         ws.onmessage = function (evt) {
             var received_msg = evt.data;
+            console.log(evt);
             console.log('message is receiced...');
             var p = document.createElement("p");
             p.setAttribute("class", "server");
@@ -57,7 +61,8 @@ OGDSM.namesapce('webSocket');
  * @method addAttribute
  * @param {String}  layerName   - 데이터 베이스 테이블 이름
  */
-OGDSM.webSocket.prototype.close = function () {
+OGDSM.webSocket.prototype.send = function (data) {
     'use strict';
     var ws = this.ws;
+    ws.send(data);
 };
