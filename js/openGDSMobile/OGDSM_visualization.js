@@ -64,6 +64,23 @@ OGDSM.namesapce('visualization');
             return this.mapObj;
         },
         /**
+         *
+         *
+         *
+         */
+        getLayersTitle : function () {
+            var i,
+                maps = this.getMap().getLayers().getArray(),
+                arrObjs = [];
+            for (i = 1; i < maps.length; i += 1) {
+                var objs = {};
+                objs.id = i;
+                objs.title = maps[i].get('title');
+                arrObjs.push(objs);
+            }
+            return arrObjs;
+        },
+        /**
          * 지도 레이어 존재 여부 확인
          * @method layerCheck
          * @param {String} layerName - 레이어 이름

@@ -132,8 +132,8 @@ OGDSM.eGovFrameUI.prototype.autoRadioBox = function (rootDivId, radioId, labels,
     options = (typeof (options) !== 'undefined') ? options : {};
     var rootDiv = $('#' + rootDivId),
         html = '<fieldset data-role="controlgroup" style="margin:0px; align:center;"',
-        optionName = ['data-type', 'data-theme'],
-        optionData = ['', this.dataTheme],
+  //      optionName = ['data-type', 'data-theme'],
+  //      optionData = ['', this.dataTheme],
         i = 0,
         name = 0;
 
@@ -227,8 +227,8 @@ OGDSM.eGovFrameUI.prototype.autoSwitch = function (rootDivId, switchId, switchNa
     options = (typeof (options) !== 'undefined') ? options : {};
     var rootDiv = $('#' + rootDivId), name,
         html = '',
-        optionName = ['data-theme', 'data-track-theme'],
-        optionData = [this.dataTheme, this.dataTheme],
+   //     optionName = ['data-theme', 'data-track-theme'],
+    //    optionData = [this.dataTheme, this.dataTheme],
         i = 0;
 
     var defaults = {
@@ -247,6 +247,56 @@ OGDSM.eGovFrameUI.prototype.autoSwitch = function (rootDivId, switchId, switchNa
     return $('#' + switchId);
 };
 
+
+/**
+ * 리스트 뷰 자동 생성
+ * @method autoListView
+ * @param {String} divId - 최상위 DIV 아이디 이름
+ * @param {String} listViewId - 생성될 스위치 아이디 이름
+ * @param {String} item - 리스트 아이템
+ * @param {JSON Object} options - 옵션 JSON 객체 키 값<br>
+  {inset:true, link:null}<br>
+  inset(Boolean) : 동근 모서리<br>
+  link(Boolean) : 오른쪽 화살표 여부<br>
+ * @return {jQuery Object} 제이쿼리 li 객체
+ */
+OGDSM.eGovFrameUI.prototype.autoListView = function (rootDivId, listViewId, item, options) {
+    'use strict';
+    options = (typeof (options) !== 'undefined') ? options : {};
+    var rootDiv = $('#' + rootDivId), name,
+        html = '',
+//        optionName = ['inset', 'link'],
+//        optionData = [true, true],
+        i = 0;
+
+    var defaults = {
+        inset : true,
+        link : true,
+        itemKey : 'title',
+        divide : ''
+    };
+    defaults = OGDSM.applyOptions(defaults, options);
+    html = '<ul id="' + listViewId + '" data-role="listview" data-inset="' + defaults.inset + '">';
+    if (defaults.divide !== '') {
+        html += '<li data-role="list-divider">' + defaults.divide + '</li>';
+    }
+    for (i in item) {
+        if (item.hasOwnProperty(i)) {
+            html += '<li data-title="' + item[i][defaults.itemKey] + '">';
+            if (defaults.link) {
+                html += '<a href="#">';
+                html += item[i][defaults.itemKey] + '</a>';
+            } else {
+                html += item[i][defaults.itemKey];
+            }
+            html += '</li>';
+        }
+    }
+    html += '</ul>';
+    rootDiv.append(html);
+    rootDiv.trigger('create');
+    return $('#' + listViewId + ' li');
+};
 /**
  * 시간 태그 생성
  * @method timeInput

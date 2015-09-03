@@ -44,18 +44,41 @@ function mapAttrUI() {
 //실시간 통신
 function realTimeFunc() {
     'use strict';
-    var realEditChk = $('#realEditChk');
-    realEditChk.click(function () {
-        var chk = $(this).is(':checked');
-        if (chk === true) {
-            console.log("websocket connect");
-            var ws = OGDSM.webSocket('ws://113.198.80.59:8080//websocket');
-            //사용할 아이디 작성
-            //local storage에 저장
-            //WebSocket 접속
-        } else {
-            //
+    var realEditChk = $('input[name=editFlag]');
+    realEditChk.change(function () {
+        var val = $(this).val();
+        if (val === 'online') {
+            $('#localCurView').empty();
+            $('#remoteCurView').empty();
+            var allTitle = openGDSMObj.getLayersTitle(),
+                ui = new OGDSM.eGovFrameUI(),
+                localListView = ui.autoListView('localCurView', 'curListView', allTitle, { divide : '현재 시각화 목록'});
+            $('#curList').popup('open', {
+                positionTo : '#editOnline'
+            });
+            localListView.click(function (e) {
+                console.log($(this).attr('data-title'));
+            });
+            //1. remote list view connected...
+            //li 클릭시 .. 사용자 아이디 작성
+            //session storage에 저장
+            // webSocket 접속..
+            // 수정 수정 수정
+        } else if (val === 'offline') {
+            //session storage 확인 있을 경우 삭제
+            //리스트 뷰 ..... 생성 이땐 로컬만..
+            //클릭 하면 해당 속성정보만 편집 기능 활성화...
             console.log("websocket cancel");
+        } else {
+            //webSocket 접속의 경우 끊음
+            //session storage 내용 삭제
+            console.log('exit');
+        }
+    });
+    $('#curList').on({
+        popupafterclose : function (evt, ui) {
+            console.log("test");
+            //session Storage 검사 후... 널일 경우에는... 편집모드(실시간) -> 편집모드(종료)
         }
     });
 
