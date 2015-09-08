@@ -38,7 +38,7 @@
 
     <script>
         var addr = 'http://113.198.80.60:8081';
-      //  addr = 'http://192.168.0.16:8081';
+        addr = 'http://192.168.0.16:8081';
         var serverName = '/ApplicationServer';
         var serverAddr = addr + serverName;
         //var geoServerAddr = addr;
@@ -312,11 +312,11 @@
             </ul>
         </div>
     <!-- current list-->
-    <div data-role="popup" id="curList">
+    <div data-role="popup" id="curList"  style="float:left">
         <a href="#" data-rel="back" data-role="button" data-theme="a" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a>
-        <div id="localCurView">
+        <div id="localCurView" style="float:left" >
         </div>
-        <div id="remoteCurView">
+        <div id="remoteCurView" style="float:left" >
         </div>
     </div>
 

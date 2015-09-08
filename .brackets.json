@@ -26,6 +26,8 @@
         "/home/intruder/git/Client/js/proj4js/2.2.2/EPSGdefs.js",
         "/home/intruder/git/Client/js/proj4js/2.2.2/proj4.js",
         "/home/intruder/git/Client/js/syntaxhighlighter/shBrushJScript.js",
-        "/home/intruder/git/Client/js/syntaxhighlighter/shCore.js"
+        "/home/intruder/git/Client/js/syntaxhighlighter/shCore.js",
+        "/home/intruder/git/Client/OGDSMDoc/api.js",
+        "/home/intruder/git/Client/js/syntaxhighlighter/shBrushCss.js"
     ]
 }

@@ -273,12 +273,17 @@ OGDSM.eGovFrameUI.prototype.autoListView = function (rootDivId, listViewId, item
         inset : true,
         link : true,
         itemKey : 'title',
-        divide : ''
+        divide : '',
+        noDataTitle : '데이터 없음'
     };
     defaults = OGDSM.applyOptions(defaults, options);
     html = '<ul id="' + listViewId + '" data-role="listview" data-inset="' + defaults.inset + '">';
     if (defaults.divide !== '') {
         html += '<li data-role="list-divider">' + defaults.divide + '</li>';
+    }
+    console.log(item.length);
+    if (item.length === 0) {
+        html += '<li>' + defaults.noDataTitle + '</li>';
     }
     for (i in item) {
         if (item.hasOwnProperty(i)) {

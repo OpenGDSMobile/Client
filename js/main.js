@@ -45,6 +45,14 @@ function mapAttrUI() {
 function realTimeFunc() {
     'use strict';
     var realEditChk = $('input[name=editFlag]');
+    function listClickEvt(data) {
+        console.log(data);
+        $('#curList').popup('close');
+        setTimeout(function () {
+            console.log('id popup');
+        }, 1000);
+    }
+
     realEditChk.change(function () {
         var val = $(this).val();
         if (val === 'online') {
@@ -53,29 +61,33 @@ function realTimeFunc() {
             var allTitle = openGDSMObj.getLayersTitle(),
                 ui = new OGDSM.eGovFrameUI(),
                 localListView = ui.autoListView('localCurView', 'curListView', allTitle, { divide : '현재 장치 시각화 목록'});
-            /*$('#curList').popup('open', {
-                positionTo : '#editOnline'
-            });*/
+            console.log(allTitle);
             var parm = {column : 'subject'};
             $.ajax({
                 type : 'POST',
-                url : addr + serverName + '/realtimeInfoSearch.do',
+                url : serverAddr + '/realtimeInfoSearch.do',
                 data : JSON.stringify(parm),
                 contentType : 'application/json;charset=UTF-8',
                 dataType : 'json',
                 success : function (msg) {
-                    console.log(msg);
+                    console.log(msg.data);
+                    var subject = msg.data;
+                    var remoteListView = ui.autoListView('remoteCurView', 'curRemoteListView', subject, {divide : '실시간 편집 목록', itemKey : 'subject'});
+                    remoteListView.click(function (e) {
+                        listClickEvt($(this).attr('data-title'));
+                    });
                 },
                 error : function (error) {
                     console.error(error);
                 }
             });
-
+            $('#curList').popup('open', {
+                positionTo : 'window'
+            });
             localListView.click(function (e) {
-                console.log($(this).attr('data-title'));
+                listClickEvt($(this).attr('data-title'));
             });
 
-            //1. remote list view connected...
             //li 클릭시 .. 사용자 아이디 작성
             //session storage에 저장
             // webSocket 접속..
