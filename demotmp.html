@@ -37,8 +37,8 @@
     <script type="text/javascript" src="./js/openGDSMobile/Sortable.js"></script>
 
     <script>
-        var addr = 'http://113.198.80.59:8080';
-        addr = 'http://192.168.0.16:8081';
+        var addr = 'http://113.198.80.60:8081';
+      //  addr = 'http://192.168.0.16:8081';
         var serverName = '/ApplicationServer';
         var serverAddr = addr + serverName;
         //var geoServerAddr = addr;
@@ -97,7 +97,7 @@
         .OGDSPosTransLeftHide{
             transition: right 0.1s ease;
             position : absolute;
-            right : -350px;
+            right : -410px;
         }
         .OGDSPosTransLeftShow{
             transition: right 0.1s ease;
@@ -180,8 +180,8 @@
         <div id="dataViewCheckBox" class="OGDSPosBottomRight OGDSPosTransLeftHide">
             <fieldset data-role="controlgroup" data-type="horizontal">
                 <input type="checkbox" id="attrChk" data-theme="g"> <label for="attrChk">속성정보</label>
-                <input type="radio" id="editOff" name="editFlag" data-theme="a" value="exit" checked> <label for="editOff">편집모드(종료)</label>
-                <input type="radio" id="editOffline" name="editFlag" data-theme="a" value="offline"> <label for="editOffline">편집모드(오프라인)</label>
+                <input type="radio" id="editOff" name="editFlag" data-theme="a" value="exit" checked> <label for="editOff">편집모드 종료</label>
+                <input type="radio" id="editOffline" name="editFlag" data-theme="a" value="offline"> <label for="editOffline">편집모드</label>
                 <input type="radio" id="editOnline" name="editFlag" data-theme="a" value="online"> <label for="editOnline">편집모드(실시간)</label>
             </fieldset>
         </div>

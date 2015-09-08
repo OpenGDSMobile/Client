@@ -52,13 +52,29 @@ function realTimeFunc() {
             $('#remoteCurView').empty();
             var allTitle = openGDSMObj.getLayersTitle(),
                 ui = new OGDSM.eGovFrameUI(),
-                localListView = ui.autoListView('localCurView', 'curListView', allTitle, { divide : '현재 시각화 목록'});
-            $('#curList').popup('open', {
+                localListView = ui.autoListView('localCurView', 'curListView', allTitle, { divide : '현재 장치 시각화 목록'});
+            /*$('#curList').popup('open', {
                 positionTo : '#editOnline'
+            });*/
+            var parm = {column : 'subject'};
+            $.ajax({
+                type : 'POST',
+                url : addr + serverName + '/realtimeInfoSearch.do',
+                data : JSON.stringify(parm),
+                contentType : 'application/json;charset=UTF-8',
+                dataType : 'json',
+                success : function (msg) {
+                    console.log(msg);
+                },
+                error : function (error) {
+                    console.error(error);
+                }
             });
+
             localListView.click(function (e) {
                 console.log($(this).attr('data-title'));
             });
+
             //1. remote list view connected...
             //li 클릭시 .. 사용자 아이디 작성
             //session storage에 저장

@@ -12,7 +12,7 @@
 * - Options
 *   옵션 JSON 객체 키 값<br>
 {type:'new', storeName:dbName, insertKey:null, insertData:null,
-searchKey: null, searchData: null, editData: null, deleteKey: null, success: false, dbFile : false}<br>
+searchKey: null, searchData: null, editData: null, deleteKey: null, success: false, file : false}<br>
 <p style="font-weight:bold;">
 type (String) : 모듈 실행 타입 설정 (필요 파라미터)
 </p>
@@ -33,7 +33,7 @@ searchData (String) : 검색할 데이터<br>
 editData (String) : 수정할 데이터<br>
 deleteKey (String) : 삭제할 키 데이터<br>
 success (function) : 성공 콜백 함수 (데이터 검색일 경우 데이터 파라미터로 보내짐)<br>
-dbFail (function) : 실패 콜백 함수<br>
+fail (function) : 실패 콜백 함수<br>
 </p>
 * @module OGDSM.indexedDB
 **/
@@ -152,7 +152,7 @@ OGDSM.indexedDB = function (dbName, options) { //dbName_ StoreName, storeName, s
                 } else if (type === 'search' || type === 'edit') {
                     if (result !== null) {
                         if (searchData === null) {
-                            console.log('OGDSM log : Not input search data. So search result based On Key');
+                            console.log('OGDSM log : All search result based On Key');
                             defaults.success(result);
                             return -1;
                         }
@@ -194,6 +194,7 @@ OGDSM.indexedDB = function (dbName, options) { //dbName_ StoreName, storeName, s
                         }
                     } else {
                         console.error('OGDSM Error : Not data key');
+                        defaults.fail('Not');
                     }
                 }
             };
