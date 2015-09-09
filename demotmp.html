@@ -38,7 +38,7 @@
 
     <script>
         var addr = 'http://113.198.80.60:8081';
-        addr = 'http://192.168.0.16:8081';
+      //  addr = 'http://192.168.0.16:8081';
         var serverName = '/ApplicationServer';
         var serverAddr = addr + serverName;
         //var geoServerAddr = addr;
@@ -311,14 +311,23 @@
                     온실가스배출량 조회 서비스(공공데이터포털: 한국지역난방공사)</a></li>
             </ul>
         </div>
-    <!-- current list-->
-    <div data-role="popup" id="curList"  style="float:left">
-        <a href="#" data-rel="back" data-role="button" data-theme="a" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a>
-        <div id="localCurView" style="float:left" >
+<!-- current list-->
+        <div data-role="popup" id="curList"  style="float:left">
+            <a href="#" data-rel="back" data-role="button" data-theme="a" data-icon="delete" data-iconpos="notext"
+               class="ui-btn-right">Close</a>
+            <div id="localCurView" style="float:left" >
+            </div>
+            <div id="remoteCurView" style="float:left" >
+            </div>
         </div>
-        <div id="remoteCurView" style="float:left" >
+<!-- input id PopUp-->
+        <div data-role="popup" id="idInputDiv">
+            <form id="idform" action="#" method="post">
+                <label for="idTextInput"> 아이디 입력 :</label>
+                <input type="text" id="idTextInput" value="user">
+                <input type="button" data-theme="b" id="realTimeBtn" value="실시간 편집 시작">
+            </form>
         </div>
-    </div>
 
     </div>
 </body>

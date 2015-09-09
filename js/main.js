@@ -46,10 +46,29 @@ function realTimeFunc() {
     'use strict';
     var realEditChk = $('input[name=editFlag]');
     function listClickEvt(data) {
-        console.log(data);
+        var attrObj = openGDSMObj.getAttrObj(),
+            ui = new OGDSM.eGovFrameUI(),
+            exConnect = new OGDSM.externalConnection();
         $('#curList').popup('close');
         setTimeout(function () {
-            console.log('id popup');
+            $('#idInputDiv').popup('open');
+            var id = $('#idTextInput').val();
+            var jsonData = {};
+            jsonData.subject = data;
+            jsonData.userid = id;
+            $('#idTextInput').change(function () {
+                jsonData.userid = $(this).val();
+                console.log(jsonData);
+            });
+            exConnect.ajaxRequest(serverAddr + '/realtimeInfoInsert.do', {
+                submitBtn : 'realTimeBtn',
+                data : jsonData,
+                callback : function (data) {
+                    $('#idInputDiv').popup('close');
+                    console.log(data.data);
+                }
+            });
+
         }, 1000);
     }
 
@@ -60,27 +79,23 @@ function realTimeFunc() {
             $('#remoteCurView').empty();
             var allTitle = openGDSMObj.getLayersTitle(),
                 ui = new OGDSM.eGovFrameUI(),
+                exConnect = new OGDSM.externalConnection(),
                 localListView = ui.autoListView('localCurView', 'curListView', allTitle, { divide : '현재 장치 시각화 목록'});
             console.log(allTitle);
             var parm = {column : 'subject'};
-            $.ajax({
-                type : 'POST',
-                url : serverAddr + '/realtimeInfoSearch.do',
-                data : JSON.stringify(parm),
-                contentType : 'application/json;charset=UTF-8',
-                dataType : 'json',
-                success : function (msg) {
-                    console.log(msg.data);
-                    var subject = msg.data;
+
+
+            exConnect.ajaxRequest(serverAddr + '/realtimeInfoSearch.do', {
+                data : parm,
+                callback : function (data) {
+                    var subject = data.data;
                     var remoteListView = ui.autoListView('remoteCurView', 'curRemoteListView', subject, {divide : '실시간 편집 목록', itemKey : 'subject'});
                     remoteListView.click(function (e) {
                         listClickEvt($(this).attr('data-title'));
                     });
-                },
-                error : function (error) {
-                    console.error(error);
                 }
             });
+
             $('#curList').popup('open', {
                 positionTo : 'window'
             });

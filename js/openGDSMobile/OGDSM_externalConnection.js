@@ -19,6 +19,92 @@ OGDSM.namesapce('externalConnection');
 }(OGDSM));
 
 /**
+ * 폼 타입 에이젝스 요청
+ * @method formAjaxRequest
+ * @param {String} addr - 서버 주소
+ * @param {String} formID - form ID
+ * @param {String} submitID - 전송 버튼 아이디<input type="button">
+ * @param {Function} callback - 콜백 함수 function (resultData) {...}
+ */
+OGDSM.externalConnection.prototype.formAjaxRequest = function (addr, formID, submitBtnID, callback) {
+    'use strict';
+    $('#' + submitBtnID).click(function () {
+        var formData = $('#' + formID).serialize();
+        console.log(formData);
+        $.mobile.loading('show', {
+            text : 'Loading',
+            textVisible : 'true',
+            theme : 'c',
+            textonlt : 'false'
+        });
+        $.ajax({
+            type : 'POST',
+            url : addr,
+            cache : false,
+            data : formData,
+            success : function (msg) {
+                callback(msg);
+            },
+            error : function (e) {
+                console.log(e);
+            }
+        });
+    });
+};
+
+/**
+ * JSON 기반 에이젝스 요청
+ * @method ajaxRequest
+ * @param {String} addr - 서버 주소
+ * @param {JSON Object} options - 콜백 함수 function (resultData) {...}
+ *
+ *
+ *
+ */
+OGDSM.externalConnection.prototype.ajaxRequest = function (addr, options) {
+    'use strict';
+    options = (typeof (options) !== 'undefined') ? options : {};
+    var defaults = {
+        data : null,
+        submitBtn : null,
+        callback : function (data) { console.log("Please create callback function"); }
+    };
+    defaults = OGDSM.applyOptions(defaults, options);
+    function ajax() {
+        $.mobile.loading('show', {
+            text : 'Loading',
+            textVisible : 'true',
+            theme : 'c',
+            textonlt : 'false'
+        });
+        $.ajax({
+            type : 'POST',
+            url : addr,
+            cache : false,
+            data : JSON.stringify(defaults.data),
+            contentType : 'application/json;charset=UTF-8',
+            dataType : 'json',
+            success : function (msg) {
+                defaults.callback(msg);
+                $.mobile.loading('hide');
+            },
+            error : function (e) {
+                console.log(e);
+                $.mobile.loading('hide');
+            }
+        });
+    }
+
+    if (defaults.submitBtn !== null) {
+        $('#' + defaults.submitBtn).click(function () {
+            ajax();
+        });
+    } else {
+        ajax();
+    }
+};
+
+/**
  * GeoServer WFS 데이터 요청 (OpenLayers3 ol.source.GeoJSON)
  * @method geoServerGeoJsonLoad
  * @param {OGDSM Obj} obj - OpenGDS Mobile 시각화 객체
@@ -43,13 +129,7 @@ OGDSM.externalConnection.prototype.geoServerGeoJsonLoad = function (obj, addr, w
         label : null,
         callback : function (wfslayer) {}
     };
-    for (name in defaults) {
-        if (defaults.hasOwnProperty(name)) {
-            if (options.hasOwnProperty(name)) {
-                defaults[name] = options[name];
-            }
-        }
-	}
+    defaults = OGDSM.applyOptions(defaults, options);
     $.mobile.loading('show', {
         text : 'Loading',
         textVisible : 'true',
@@ -125,6 +205,7 @@ OGDSM.externalConnection.prototype.geoServerGeoJsonLoad = function (obj, addr, w
         },
         error : function (e) {
             console.log(e);
+            $.mobile.loading('hide');
         }
     });
 };
@@ -403,3 +484,4 @@ OGDSM.externalConnection.prototype.getLayersGeoServer = function (addr, wsName, 
         }
     });
 };
+
