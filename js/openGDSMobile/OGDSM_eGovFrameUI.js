@@ -262,11 +262,10 @@ OGDSM.eGovFrameUI.prototype.autoSwitch = function (rootDivId, switchId, switchNa
  */
 OGDSM.eGovFrameUI.prototype.autoListView = function (rootDivId, listViewId, item, options) {
     'use strict';
+    //item = (typeof (item) !== 'undefined') ? item : {};
     options = (typeof (options) !== 'undefined') ? options : {};
     var rootDiv = $('#' + rootDivId), name,
         html = '',
-//        optionName = ['inset', 'link'],
-//        optionData = [true, true],
         i = 0;
 
     var defaults = {
@@ -281,8 +280,7 @@ OGDSM.eGovFrameUI.prototype.autoListView = function (rootDivId, listViewId, item
     if (defaults.divide !== '') {
         html += '<li data-role="list-divider">' + defaults.divide + '</li>';
     }
-    console.log(item.length);
-    if (item.length === 0) {
+    if (item ===  null || item.length === 0) {
         html += '<li>' + defaults.noDataTitle + '</li>';
     }
     for (i in item) {

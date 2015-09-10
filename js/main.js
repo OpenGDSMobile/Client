@@ -29,7 +29,7 @@ function mapAttrUI() {
             $('#attributeTable').removeClass('OGDSPosTransTopDownShow');
             $('#attributeTable').addClass('OGDSPosTransTopDownHide');
         }
-    });
+    });/*
     attrEditChk.click(function () {
         var chk = $(this).is(':checked'),
             attrObj = openGDSMObj.getAttrObj();
@@ -39,51 +39,35 @@ function mapAttrUI() {
             attrObj.editAttribute(false);
 
         }
-    });
+    });*/
 }
 //실시간 통신
 function realTimeFunc() {
     'use strict';
+    var allTitle = null, localListView = null, attrObj = null,
+        ui = new OGDSM.eGovFrameUI(),
+        exConnect = new OGDSM.externalConnection();
     var realEditChk = $('input[name=editFlag]');
+    var jsonData = {};
+    jsonData.subject = null;
+    jsonData.userid = $('#idTextInput').val();
     function listClickEvt(data) {
-        var attrObj = openGDSMObj.getAttrObj(),
-            ui = new OGDSM.eGovFrameUI(),
-            exConnect = new OGDSM.externalConnection();
         $('#curList').popup('close');
         setTimeout(function () {
             $('#idInputDiv').popup('open');
-            var id = $('#idTextInput').val();
-            var jsonData = {};
-            jsonData.subject = data;
-            jsonData.userid = id;
-            $('#idTextInput').change(function () {
-                jsonData.userid = $(this).val();
-                console.log(jsonData);
-            });
-            exConnect.ajaxRequest(serverAddr + '/realtimeInfoInsert.do', {
-                submitBtn : 'realTimeBtn',
-                data : jsonData,
-                callback : function (data) {
-                    $('#idInputDiv').popup('close');
-                    console.log(data.data);
-                }
-            });
-
         }, 1000);
     }
-
+    $('#idTextInput').change(function () {
+        jsonData.userid = $(this).val();
+    });
     realEditChk.change(function () {
         var val = $(this).val();
         if (val === 'online') {
             $('#localCurView').empty();
             $('#remoteCurView').empty();
-            var allTitle = openGDSMObj.getLayersTitle(),
-                ui = new OGDSM.eGovFrameUI(),
-                exConnect = new OGDSM.externalConnection(),
-                localListView = ui.autoListView('localCurView', 'curListView', allTitle, { divide : '현재 장치 시각화 목록'});
-            console.log(allTitle);
+            allTitle = openGDSMObj.getLayersTitle();
+            localListView = ui.autoListView('localCurView', 'curListView', allTitle, { divide : '현재 장치 시각화 목록'});
             var parm = {column : 'subject'};
-
 
             exConnect.ajaxRequest(serverAddr + '/realtimeInfoSearch.do', {
                 data : parm,
@@ -91,7 +75,11 @@ function realTimeFunc() {
                     var subject = data.data;
                     var remoteListView = ui.autoListView('remoteCurView', 'curRemoteListView', subject, {divide : '실시간 편집 목록', itemKey : 'subject'});
                     remoteListView.click(function (e) {
-                        listClickEvt($(this).attr('data-title'));
+                        var title = $(this).attr('data-title');
+                        jsonData.subject = title;
+                        if (typeof title !== 'undefined') {
+                            listClickEvt($(this).attr('data-title'));
+                        }
                     });
                 }
             });
@@ -100,30 +88,67 @@ function realTimeFunc() {
                 positionTo : 'window'
             });
             localListView.click(function (e) {
-                listClickEvt($(this).attr('data-title'));
+                var title = $(this).attr('data-title');
+                jsonData.subject = title;
+                if (typeof title !== 'undefined') {
+                    listClickEvt($(this).attr('data-title'));
+                }
             });
+            ////////////아이디 입력 후 요청//////////////////////////
+            exConnect.ajaxRequest(serverAddr + '/realtimeInfoInsert.do', {
+                submitBtn : 'realTimeBtn',
+                data : jsonData,
+                callback : function (data) {
+                    if (data.data === -1) {
+                        alert("같은 아이디가 있습니다. 아이디를 다시 입력해주시기 바랍니다");
+                    } else if (data.data === 0) {
+                        $('#idInputDiv').popup('close');
+                        alert("시스템 오류 관리자에게 문의하시기 바랍니다");
+                    } else if (data.data === 1) {
+                        $('#idInputDiv').popup('close');
+                        console.log("실시간 편집을 시작합니다");
+                        //편집 모드 활성화... 그 해당 속성정보에게만...
+                        //session storage에 저장
+                        // webSocket 연결....
+                    }
 
-            //li 클릭시 .. 사용자 아이디 작성
-            //session storage에 저장
-            // webSocket 접속..
-            // 수정 수정 수정
+                }
+            });
         } else if (val === 'offline') {
+            $('#localCurView').empty();
+            $('#remoteCurView').empty();
+            $('#curList').popup('open', {
+                positionTo : 'window'
+            });
+            allTitle = openGDSMObj.getLayersTitle();
+            localListView = ui.autoListView('localCurView', 'curListView', allTitle, { divide : '현재 장치 시각화 목록'});
+            localListView.click(function (e) {
+                var title = $(this).attr('data-title');
+                if (typeof title !== 'undefined') {
+                    $('#curList').popup('close');
+                    attrObj = openGDSMObj.getAttrObj();
+                    attrObj.editAttribute(true, title);
+                }
+            });
             //session storage 확인 있을 경우 삭제
             //리스트 뷰 ..... 생성 이땐 로컬만..
             //클릭 하면 해당 속성정보만 편집 기능 활성화...
             console.log("websocket cancel");
         } else {
+            attrObj = openGDSMObj.getAttrObj();
             //webSocket 접속의 경우 끊음
             //session storage 내용 삭제
+            attrObj.editAttribute(false);
             console.log('exit');
         }
     });
+    /*
     $('#curList').on({
         popupafterclose : function (evt, ui) {
             console.log("test");
             //session Storage 검사 후... 널일 경우에는... 편집모드(실시간) -> 편집모드(종료)
         }
-    });
+    });*/
 
 }
 //브이월드 WMS 데이터 선택 사용자 인터페이스 생성 / 시각화 함수

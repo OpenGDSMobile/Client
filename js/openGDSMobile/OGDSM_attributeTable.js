@@ -287,12 +287,14 @@ OGDSM.attributeTable.prototype.removeAttribute = function (layerName) {
  * @method removeAttribute
  * @param {boolean}  sw   - 수정 스위치
  */
-OGDSM.attributeTable.prototype.editAttribute = function (sw) {
+OGDSM.attributeTable.prototype.editAttribute = function (sw, layer) {
     'use strict';
-    var textInput = $('.editSW');
+    layer = (typeof (layer) !== 'undefined')  ? '#attrTable' + layer + ' ' : '';
+    var textInput = $(layer + '.editSW');
     var thisObj = this;
     function editDataResult(src, dst) {
         console.log('Update data');
+        //변경 사항 내용... json으로 저장... (왜? 나중에 실시간클릭했을때 보내기 위해...)
     }
     if (sw === true) {
         var oldValue = null;
