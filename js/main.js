@@ -1,5 +1,5 @@
 /*jslint devel: true, vars: true, plusplus: true*/
-/*global $, jQuery, ol, OGDSM, geoServerAddr, serverAddr*/
+/*global $, jQuery, ol, OGDSM, geoServerAddr, serverAddr, wsServerAddr*/
 var openGDSMObj;
 
 //배경지도 라디오 버튼 사용자 인터페이스 생성 함수
@@ -49,10 +49,13 @@ function realTimeFunc() {
         exConnect = new OGDSM.externalConnection();
     var realEditChk = $('input[name=editFlag]');
     var jsonData = {};
+    var wsObj = null;
     jsonData.subject = null;
     jsonData.userid = $('#idTextInput').val();
+    var title = null;
     function listClickEvt(data) {
         $('#curList').popup('close');
+        title = data;
         setTimeout(function () {
             $('#idInputDiv').popup('open');
         }, 1000);
@@ -83,7 +86,6 @@ function realTimeFunc() {
                     });
                 }
             });
-
             $('#curList').popup('open', {
                 positionTo : 'window'
             });
@@ -94,7 +96,7 @@ function realTimeFunc() {
                     listClickEvt($(this).attr('data-title'));
                 }
             });
-            ////////////아이디 입력 후 요청//////////////////////////
+
             exConnect.ajaxRequest(serverAddr + '/realtimeInfoInsert.do', {
                 submitBtn : 'realTimeBtn',
                 data : jsonData,
@@ -107,6 +109,19 @@ function realTimeFunc() {
                     } else if (data.data === 1) {
                         $('#idInputDiv').popup('close');
                         console.log("실시간 편집을 시작합니다");
+                        attrObj = openGDSMObj.getAttrObj();
+                        attrObj.editAttribute(true, title);
+                        OGDSM.indexedDB('webMappingDB', {
+                            type : 'search',
+                            searchKey : 'editedData',
+                            success : function (result) {
+                                console.log(result);
+                                wsObj = new OGDSM.webSocket(wsServerAddr + '/attr-ws.do', jsonData.userid);
+                            },
+                            fail : function () {
+                                wsObj = new OGDSM.webSocket(wsServerAddr + '/attr-ws.do', jsonData.userid);
+                            }
+                        });
                         //편집 모드 활성화... 그 해당 속성정보에게만...
                         //session storage에 저장
                         // webSocket 연결....
@@ -115,6 +130,15 @@ function realTimeFunc() {
                 }
             });
         } else if (val === 'offline') {
+            //webSocket 접속의 경우 끊음
+            wsObj.webSocketClose();
+            exConnect.ajaxRequest(serverAddr + '/realtimeInfoDelete.do', {
+                data : jsonData,
+                callback : function (data) {
+                    console.log(data);
+                }
+            });
+
             $('#localCurView').empty();
             $('#remoteCurView').empty();
             $('#curList').popup('open', {
@@ -130,15 +154,17 @@ function realTimeFunc() {
                     attrObj.editAttribute(true, title);
                 }
             });
-            //session storage 확인 있을 경우 삭제
-            //리스트 뷰 ..... 생성 이땐 로컬만..
-            //클릭 하면 해당 속성정보만 편집 기능 활성화...
-            console.log("websocket cancel");
         } else {
+            wsObj.webSocketClose();
+            exConnect.ajaxRequest(serverAddr + '/realtimeInfoDelete.do', {
+                data : jsonData,
+                callback : function (data) {
+                    console.log(data);
+                }
+            });
             attrObj = openGDSMObj.getAttrObj();
-            //webSocket 접속의 경우 끊음
-            //session storage 내용 삭제
             attrObj.editAttribute(false);
+            //webSocket 접속의 경우 끊음
             console.log('exit');
         }
     });

@@ -289,25 +289,51 @@ OGDSM.attributeTable.prototype.removeAttribute = function (layerName) {
  */
 OGDSM.attributeTable.prototype.editAttribute = function (sw, layer) {
     'use strict';
-    layer = (typeof (layer) !== 'undefined')  ? '#attrTable' + layer + ' ' : '';
-    var textInput = $(layer + '.editSW');
+    var attrLayer = (typeof (layer) !== 'undefined')  ? '#attrTable' + layer + ' ' : '';
+    var textInput = $(attrLayer + '.editSW');
     var thisObj = this;
-    function editDataResult(src, dst) {
+    var oldValue = null;
+    var searchData = {};
+    function editDataResult(edit, src, dst) {
+        var jsonObj = {};
         console.log('Update data');
-        //변경 사항 내용... json으로 저장... (왜? 나중에 실시간클릭했을때 보내기 위해...)
+        function addArrayJSON(arrJSON) {
+            jsonObj.tableName = layer;
+            jsonObj.column = Object.keys(searchData)[0];
+            jsonObj.srcData = oldValue;
+            jsonObj.dstData = edit;
+            arrJSON.push(jsonObj);
+            OGDSM.indexedDB('webMappingDB', {
+                type : 'forceInsert',
+                insertKey : 'editedData',
+                insertData : arrJSON
+            });
+        }
+        OGDSM.indexedDB('webMappingDB', {
+            type : 'search',
+            searchKey : 'editedData',
+            success : function (result) {
+                addArrayJSON(result);
+            },
+            fail : function () {
+                addArrayJSON([]);
+            }
+        });
+
+
     }
     if (sw === true) {
-        var oldValue = null;
         textInput.attr('disabled', false);
         textInput.on('focus', function () {
             oldValue = $(this).val();
         });
         textInput.on('change', function () {
-            var searchData = {};
+            searchData = {};
             if (oldValue === $(this).val()) {
                 return -1;
             }
             searchData[$(this).attr('data-key')] = oldValue;
+            console.log(searchData);
             if (thisObj.indexedDB_SW === true) {
                 OGDSM.indexedDB('webMappingDB', {
                     type : 'edit',

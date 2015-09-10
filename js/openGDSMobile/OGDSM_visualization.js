@@ -370,6 +370,7 @@ OGDSM.visualization.prototype.addMap = function (data) {
                 var label = event.target.item(0).get('label');
                 var selectValue = event.target.item(0).get(label);
                 var trNumber = attrTableObj.searchAttribute(data.get('title'), label, selectValue);
+                console.log(label, selectValue);
                 attrTableObj.selectAttribute(data.get('title'), trNumber);
             });
             interaction.getFeatures().on('remove', function (event) {

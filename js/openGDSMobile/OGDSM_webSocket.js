@@ -20,7 +20,7 @@ OGDSM.namesapce('webSocket');
         this.ws = ws;
         ws.onopen = function () {
             var jsonObj = {};
-            jsonObj.userId = '';
+            jsonObj.userId = userName;
             jsonObj.text = 'Connect Complate';
             ws.send(JSON.stringify(jsonObj));
         };
@@ -29,16 +29,9 @@ OGDSM.namesapce('webSocket');
             var received_msg = evt.data;
             console.log(evt);
             console.log('message is receiced...');
-            var p = document.createElement("p");
-            p.setAttribute("class", "server");
-            p.innerHTML = evt.data;
-            var container = document.getElementById("container");
-            container.appendChild(p);
         };
 
-        ws.onclose = function () {
-            console.log('Connection is closed...');
-        };
+     //   ws.onclose = this.webSocketClose;
     };
     OGDSM.webSocket.prototype = {
         constructor : OGDSM.webSocket,
@@ -65,4 +58,10 @@ OGDSM.webSocket.prototype.send = function (data) {
     'use strict';
     var ws = this.ws;
     ws.send(data);
+};
+
+OGDSM.webSocket.prototype.webSocketClose = function () {
+    'use strict';
+    var ws = this.ws;
+    ws.close();
 };

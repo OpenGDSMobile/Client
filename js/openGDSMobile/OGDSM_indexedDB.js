@@ -125,7 +125,7 @@ OGDSM.indexedDB = function (dbName, options) { //dbName_ StoreName, storeName, s
         searchData = (typeof (searchData) !== 'undefined') ? searchData : null;
         editData = (typeof (editData) !== 'undefined') ? editData : null;
         var req = dbObject.open(dbName, localStorage.openGDSMobileDBVersion);
-        console.log(req);
+//        console.log(req);
         req.onsuccess = function (event) {
             iDB.db = event.target.result;
             if (iDB.db.objectStoreNames.length === 0) {
@@ -178,12 +178,12 @@ OGDSM.indexedDB = function (dbName, options) { //dbName_ StoreName, storeName, s
                             if (defaults.success) {
                                 if (searchResult !== null) {
                                     if (type === 'edit') {
-                                        defaults.success(srcResult, dstResult);
+                                        defaults.success(editData, srcResult, dstResult);
                                     } else {
                                         defaults.success(result, srcResult);
                                     }
                                 } else {
-                                    console.error('OGDSM Error : Not data');
+                                    console.log('OGDSM Error : Not data');
                                 }
                             } else {
                                 console.log('Success search Data. Please call the second parameter of the callback function');
@@ -193,7 +193,7 @@ OGDSM.indexedDB = function (dbName, options) { //dbName_ StoreName, storeName, s
                             console.log('object object');
                         }
                     } else {
-                        console.error('OGDSM Error : Not data key');
+                        console.log('OGDSM Error : Not data key');
                         defaults.fail('Not');
                     }
                 }
