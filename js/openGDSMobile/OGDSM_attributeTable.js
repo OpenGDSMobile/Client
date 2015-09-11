@@ -203,7 +203,7 @@ OGDSM.attributeTable.prototype.addAttribute = function (layerName) {
     /*Event*/
     $('.attrTable').hide();
     $('#attrContent' + layerName).css('display', 'block');
-    $('#attrTab' + layerName + ' a').bind('click', tabClickEvent);
+    $('#attrTab' + layerName + ' a').on('click', tabClickEvent);
 
     var parm = {};
     parm.tableName = layerName;
@@ -259,6 +259,8 @@ OGDSM.attributeTable.prototype.addAttribute = function (layerName) {
             searchKey : layerName,
             success : function (attrContents) {
                 console.log('indexedDB Data OK');
+                //indexed 에 있는 걸 불러올건지.... 아님 요청할껀지....에 대한.... 확인메시지
+                //확인시.... 기존 저장 데이터 삭제 후 다시 저장....
                 visTableAttr(attrContents);
             },
             fail : function (result) {
@@ -287,8 +289,9 @@ OGDSM.attributeTable.prototype.removeAttribute = function (layerName) {
  * @method removeAttribute
  * @param {boolean}  sw   - 수정 스위치
  */
-OGDSM.attributeTable.prototype.editAttribute = function (sw, layer) {
+OGDSM.attributeTable.prototype.editAttribute = function (sw, layer, wsObj) {
     'use strict';
+    wsObj = (typeof (wsObj) !== 'undefined')  ? wsObj : null;
     var attrLayer = (typeof (layer) !== 'undefined')  ? '#attrTable' + layer + ' ' : '';
     var textInput = $(attrLayer + '.editSW');
     var thisObj = this;
@@ -303,11 +306,19 @@ OGDSM.attributeTable.prototype.editAttribute = function (sw, layer) {
             jsonObj.srcData = oldValue;
             jsonObj.dstData = edit;
             arrJSON.push(jsonObj);
-            OGDSM.indexedDB('webMappingDB', {
-                type : 'forceInsert',
-                insertKey : 'editedData',
-                insertData : arrJSON
-            });
+            if (wsObj !== null) {
+                wsObj.send(JSON.stringify(arrJSON));
+                OGDSM.indexedDB('webMappingDB', {
+                    type : 'remove',
+                    deleteKey : 'editedData'
+                });
+            } else {
+                OGDSM.indexedDB('webMappingDB', {
+                    type : 'forceInsert',
+                    insertKey : 'editedData',
+                    insertData : arrJSON
+                });
+            }
         }
         OGDSM.indexedDB('webMappingDB', {
             type : 'search',
@@ -319,11 +330,12 @@ OGDSM.attributeTable.prototype.editAttribute = function (sw, layer) {
                 addArrayJSON([]);
             }
         });
-
-
     }
+
+
     if (sw === true) {
         textInput.attr('disabled', false);
+        console.log(textInput);
         textInput.on('focus', function () {
             oldValue = $(this).val();
         });

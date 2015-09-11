@@ -107,6 +107,7 @@ OGDSM.indexedDB = function (dbName, options) { //dbName_ StoreName, storeName, s
             var trans = iDB.db.transaction(storeName, 'readwrite').objectStore(storeName);
             trans.put(data, keyColumn);
             trans.onsuccess = function (e) {
+                console.log("test");
                 if (defaults.success) {
                     defaults.success(data);
                 } else {

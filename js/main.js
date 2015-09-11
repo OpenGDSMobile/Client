@@ -60,6 +60,11 @@ function realTimeFunc() {
             $('#idInputDiv').popup('open');
         }, 1000);
     }
+    function realtimeReceived(reData) {
+        console.log(reData.data);
+        //var changeData = JSON.parse(reData);
+        //console.log(changeData);
+    }
     $('#idTextInput').change(function () {
         jsonData.userid = $(this).val();
     });
@@ -97,6 +102,7 @@ function realTimeFunc() {
                 }
             });
 
+
             exConnect.ajaxRequest(serverAddr + '/realtimeInfoInsert.do', {
                 submitBtn : 'realTimeBtn',
                 data : jsonData,
@@ -109,17 +115,46 @@ function realTimeFunc() {
                     } else if (data.data === 1) {
                         $('#idInputDiv').popup('close');
                         console.log("실시간 편집을 시작합니다");
-                        attrObj = openGDSMObj.getAttrObj();
-                        attrObj.editAttribute(true, title);
+                        if (!openGDSMObj.layerCheck(title)) {
+                            var r = Math.floor(Math.random() * 256),
+                                g = Math.floor(Math.random() * 256),
+                                b = Math.floor(Math.random() * 256);
+                            var color = 'rgb(' + r + ',' + g + ',' + b + ')';
+                            exConnect.geoServerGeoJsonLoad(openGDSMObj, geoServerAddr, 'opengds', title, {
+                                color : color,
+                                label : 'sig_kor_nm',
+                                callback : function (d) {
+                                    setTimeout(function () {
+                                        attrObj = openGDSMObj.getAttrObj();
+                                        attrObj.editAttribute(true, title, wsObj);
+                                    }, 1500);
+                                }
+                            });
+                        } else {
+                            attrObj = openGDSMObj.getAttrObj();
+                            attrObj.editAttribute(true, title, wsObj);
+                        }
+                        if (wsObj !== null) {
+                            wsObj.webSocketClose();
+                            wsObj = null;
+                        }
                         OGDSM.indexedDB('webMappingDB', {
                             type : 'search',
                             searchKey : 'editedData',
                             success : function (result) {
-                                console.log(result);
-                                wsObj = new OGDSM.webSocket(wsServerAddr + '/attr-ws.do', jsonData.userid);
+                                wsObj = new OGDSM.webSocket(wsServerAddr + '/attr-ws.do', jsonData.userid, realtimeReceived);
+                                setTimeout(function () {
+                                    //데이터를 보낼껀지 말껀지에 대한... 확인 창.....
+                                    wsObj.send(JSON.stringify(result));
+                                    OGDSM.indexedDB('webMappingDB', {
+                                        type : 'remove',
+                                        deleteKey : 'editedData'
+                                    });
+                                }, 1000);
+
                             },
                             fail : function () {
-                                wsObj = new OGDSM.webSocket(wsServerAddr + '/attr-ws.do', jsonData.userid);
+                                wsObj = new OGDSM.webSocket(wsServerAddr + '/attr-ws.do', jsonData.userid, realtimeReceived);
                             }
                         });
                         //편집 모드 활성화... 그 해당 속성정보에게만...
@@ -131,7 +166,9 @@ function realTimeFunc() {
             });
         } else if (val === 'offline') {
             //webSocket 접속의 경우 끊음
-            wsObj.webSocketClose();
+            if (wsObj !== null) {
+                wsObj.webSocketClose();
+            }
             exConnect.ajaxRequest(serverAddr + '/realtimeInfoDelete.do', {
                 data : jsonData,
                 callback : function (data) {
@@ -155,7 +192,9 @@ function realTimeFunc() {
                 }
             });
         } else {
-            wsObj.webSocketClose();
+            if (wsObj !== null) {
+                wsObj.webSocketClose();
+            }
             exConnect.ajaxRequest(serverAddr + '/realtimeInfoDelete.do', {
                 data : jsonData,
                 callback : function (data) {
