@@ -11,21 +11,29 @@ OGDSM.namesapce('webSocket');
      * @param {String} RootDiv - 속성 테이블 DIV 이름
      * @param {String} addr - PostgreSQL 접속 주소
      */
-    OGDSM.webSocket = function (addr, userName, callback) {
+    OGDSM.webSocket = function (addr, userName, options) {
         if (typeof (window.WebSocket) === 'undefined') {
             console.error("webSocket is not supported by your browser!");
             return -1;
         }
-        callback = (typeof (callback) !== 'undefined') ? callback : function (evt) { console.log("Plase create callback function"); };
+        var defaults = {
+            data : null,
+            subject : null,
+            callback : function (evt) { console.log("Plase create callback function"); }
+        };
+        defaults = OGDSM.applyOptions(defaults, options);
         var ws = new WebSocket(addr);
         this.ws = ws;
+        /**
+         * JSON Object {userid : '', subject : ''} based on ApplicationServer
+         */
         ws.onopen = function () {
             var jsonObj = {};
             jsonObj.userId = userName;
-            jsonObj.text = 'Connect Complate';
+            jsonObj.subject = defaults.subject;
             ws.send(JSON.stringify(jsonObj));
         };
-        ws.onmessage = callback;
+        ws.onmessage = defaults.callback;
     };
     OGDSM.webSocket.prototype = {
         constructor : OGDSM.webSocket,
