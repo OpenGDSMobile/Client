@@ -44,37 +44,147 @@ function mapAttrUI() {
 //실시간 통신
 function realTimeFunc() {
     'use strict';
-    var allTitle = null, localListView = null, attrObj = null,
-        ui = new OGDSM.eGovFrameUI(),
-        exConnect = new OGDSM.externalConnection();
-    var realEditChk = $('input[name=editFlag]');
-    var param = {};
+    var attrObj = null;
+    var modeType = 'OFF';
+    var param = {}; //column, userid, subject
     var wsObj = null;
-    function listClickEvt(data) {
-        $('#curList').popup('close');
-        param.subject = data;
-        setTimeout(function () {
-            $('#idInputDiv').popup('open');
-            param.column = 'userid';
-            param.userid = $('#idTextInput').val();
-        }, 1000);
+    function userInputTextChange(evt) {
+        param.userid = $(evt.currentTarget).val();
     }
+
     function realtimeReceived(reData) {
         console.log(reData.data);
         //var changeData = JSON.parse(reData);
         //console.log(changeData);
     }
-    $('#idTextInput').change(function () {
-        param.userid = $(this).val();
-    });
-    realEditChk.change(function () {
-        var val = $(this).val();
-        if (val === 'online') {
-            $('#localCurView').empty();
-            $('#remoteCurView').empty();
-            allTitle = openGDSMObj.getLayersTitle();
-            localListView = ui.autoListView('localCurView', 'curListView', allTitle, { divide : '현재 장치 시각화 목록'});
+    function startedEdit(resultData) {
+        function attributeEditEnable() {
+            setTimeout(function () {
+                function attrSW() {
+                    attrObj = openGDSMObj.getAttrObj();
+                    attrObj.editAttribute(true, param.subject, wsObj);
+                }
+                OGDSM.indexedDB('webMappingDB', {
+                    type : 'search',
+                    searchKey : 'editedData',
+                    success : function (result) {
+                        console.log("편집된 데이터가 있을 경우");
+                        wsObj = new OGDSM.webSocket(wsServerAddr + '/attr-ws.do', param.userid, {
+                            subject : param.subject,
+                            callback : realtimeReceived
+                        });
+                        attrSW();
+                        setTimeout(function () {
+                            //데이터를 보낼껀지 말껀지에 대한... 확인 창.....
+                            wsObj.send(JSON.stringify(result));
+                            OGDSM.indexedDB('webMappingDB', {
+                                type : 'remove',
+                                deleteKey : 'editedData'
+                            });
+                        }, 1000);
 
+                    },
+                    fail : function () {
+                        console.log("편집된 데이터가 없을 경우");
+                        wsObj = new OGDSM.webSocket(wsServerAddr + '/attr-ws.do', param.userid, {
+                            subject : param.subject,
+                            callback : realtimeReceived
+                        });
+                        attrSW();
+                    }
+                });
+            }, 1000);
+        }
+        if (resultData.data === false) {
+            alert("같은 아이디가 있습니다 다시 입력해주시기 바랍니다");
+            return -1;
+        }
+        $('#idInputDiv').popup('close');
+        // websocket 접속 여부 관련 내부 함수로 적용...
+        if (wsObj !== null) {
+            wsObj.webSocketClose();
+            wsObj = null;
+        }
+        if (!openGDSMObj.layerCheck(param.subject)) {
+            console.log("시각화된 데이터가 없으므로 시각화 요청을 합니다");
+            var exConnect = new OGDSM.externalConnection();
+            var r = Math.floor(Math.random() * 256),
+                g = Math.floor(Math.random() * 256),
+                b = Math.floor(Math.random() * 256);
+            var color = 'rgb(' + r + ',' + g + ',' + b + ')';
+            exConnect.geoServerGeoJsonLoad(openGDSMObj, geoServerAddr, 'opengds', param.subject, {
+                color : color,
+                label : 'sig_kor_nm',
+                callback : attributeEditEnable
+            });
+        } else {
+            attributeEditEnable();
+        }
+
+    }
+    function editStartClick(evt) {
+        var exConnect = new OGDSM.externalConnection();
+        exConnect.ajaxRequest(serverAddr + '/realtimeInfoSearch.do', {
+            data : param,
+            callback : startedEdit
+        });
+    }
+    function listViewClick(evt) {
+        $('#curList').popup('close');
+        var clickTitle = $(evt.currentTarget).attr('data-title');
+        param.subject = clickTitle;
+        //사실상 로그인을 한 상태일 경우... 바로 편집모드로 ... 가면됨..
+        //현재는 아이디를 받는 방식.. 변경 예정..
+        setTimeout(function () {
+            $('#idInputDiv').popup('open');
+            param.column = 'userid';
+            param.userid = $('#idTextInput').val();
+        }, 1000);
+
+    }
+    function editModeChange(evt) {
+        $('#localCurView').empty();
+        $('#remoteCurView').empty();
+        var ui = new OGDSM.eGovFrameUI();
+        var exConnect = new OGDSM.externalConnection();
+        var curVal = $(evt.currentTarget).val();
+        var curVisData = openGDSMObj.getLayersTitle();
+        var localListView = ui.autoListView('localCurView', 'curListView', curVisData, { divide : '현재 장치 시각화 목록'});
+        localListView.click(listViewClick);
+        if (curVal === 'online') {
+            param.column = 'subject';
+            exConnect.ajaxRequest(serverAddr + '/realtimeInfoSearch.do', {
+                data : param,
+                callback : function (result) {
+                    var subject = result.data;
+                    var remoteListView = ui.autoListView('remoteCurView', 'curRemoteListView', subject, {
+                        divide : '실시간 편집 목록',
+                        itemKey : 'subject'
+                    });
+                    remoteListView.click(listViewClick);
+                    $('#curList').popup('open', {
+                        positionTo : 'window'
+                    });
+                }
+            });
+        } else if (curVal === 'offline') {
+            $('#curList').popup('open', {
+                positionTo : 'window'
+            });
+        } else {
+            console.log("편집 종료");
+            if (wsObj !== null) {
+                wsObj.webSocketClose();
+                wsObj = null;
+            }
+            attrObj = openGDSMObj.getAttrObj();
+            attrObj.editAttribute(false);
+        }
+    }
+
+    /*
+    realEditChk.change(function () {
+            localListView = ui.autoListView('localCurView', 'curListView', allTitle, { divide : '현재 장치 시각화 목록'});
             param.column = 'subject';
             exConnect.ajaxRequest(serverAddr + '/realtimeInfoSearch.do', {
                 data : param,
@@ -100,7 +210,8 @@ function realTimeFunc() {
                     listClickEvt($(this).attr('data-title'));
                 }
             });
-
+        */
+/*
             exConnect.ajaxRequest(serverAddr + '/realtimeInfoSearch.do', {
                 submitBtn : 'realTimeBtn',
                 data : param,
@@ -111,7 +222,12 @@ function realTimeFunc() {
                     } else if (data.data === true) {
                         $('#idInputDiv').popup('close');
                         console.log("실시간 편집을 시작합니다");
+                        if (wsObj !== null) {
+                            wsObj.webSocketClose();
+                            wsObj = null;
+                        }
                         if (!openGDSMObj.layerCheck(param.subject)) {
+                            console.log("시각화된 데이터가 없으므로 시각화 요청을 합니다");
                             var r = Math.floor(Math.random() * 256),
                                 g = Math.floor(Math.random() * 256),
                                 b = Math.floor(Math.random() * 256);
@@ -120,45 +236,20 @@ function realTimeFunc() {
                                 color : color,
                                 label : 'sig_kor_nm',
                                 callback : function (d) {
+                                    // 데이터가 없을 경우.... 로딩
                                     setTimeout(function () {
                                         attrObj = openGDSMObj.getAttrObj();
                                         attrObj.editAttribute(true, param.subject, wsObj);
+                                     //   ttt();
                                     }, 1500);
                                 }
                             });
                         } else {
                             attrObj = openGDSMObj.getAttrObj();
                             attrObj.editAttribute(true, param.subject, wsObj);
+                         //   ttt();
                         }
-                        if (wsObj !== null) {
-                            wsObj.webSocketClose();
-                            wsObj = null;
-                        }
-                        OGDSM.indexedDB('webMappingDB', {
-                            type : 'search',
-                            searchKey : 'editedData',
-                            success : function (result) {
-                                wsObj = new OGDSM.webSocket(wsServerAddr + '/attr-ws.do', param.userid, {
-                                    subject : param.subject,
-                                    callback : realtimeReceived
-                                });
-                                setTimeout(function () {
-                                    //데이터를 보낼껀지 말껀지에 대한... 확인 창.....
-                                    wsObj.send(JSON.stringify(result));
-                                    OGDSM.indexedDB('webMappingDB', {
-                                        type : 'remove',
-                                        deleteKey : 'editedData'
-                                    });
-                                }, 1000);
 
-                            },
-                            fail : function () {
-                                wsObj = new OGDSM.webSocket(wsServerAddr + '/attr-ws.do', param.userid, {
-                                    subject : param.subject,
-                                    callback : realtimeReceived
-                                });
-                            }
-                        });
                         //편집 모드 활성화... 그 해당 속성정보에게만...
                         //session storage에 저장
                         // webSocket 연결....
@@ -166,6 +257,8 @@ function realTimeFunc() {
 
                 }
             });
+*/
+    /*
         } else if (val === 'offline') {
             //webSocket 접속의 경우 끊음
             if (wsObj !== null) {
@@ -209,6 +302,10 @@ function realTimeFunc() {
             console.log('exit');
         }
     });
+    */
+    $('#idTextInput').change(userInputTextChange);
+    $('input[name=editFlag]:radio').on('change', editModeChange);
+    $('#editStartBtn').click(editStartClick);
     /*
     $('#curList').on({
         popupafterclose : function (evt, ui) {

@@ -185,6 +185,7 @@ OGDSM.indexedDB = function (dbName, options) { //dbName_ StoreName, storeName, s
                                     }
                                 } else {
                                     console.log('OGDSM Error : Not data');
+                                    return -1;
                                 }
                             } else {
                                 console.log('Success search Data. Please call the second parameter of the callback function');

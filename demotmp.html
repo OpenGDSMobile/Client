@@ -38,9 +38,9 @@
 
     <script>
         var addr = 'http://113.198.80.60:8081';
-        //addr = 'http://192.168.0.16:8081';
+        addr = 'http://192.168.0.16:8081';
         var wsAddr = 'ws://113.198.80.60:8081';
-        //wsAddr = 'ws://192.168.0.16:8081';
+        wsAddr = 'ws://192.168.0.16:8081';
         var serverName = '/ApplicationServer';
         var serverAddr = addr + serverName;
         var wsServerAddr = wsAddr + serverName;
@@ -327,7 +327,7 @@
         <div data-role="popup" id="idInputDiv">
                 <label for="idTextInput"> 아이디 입력 :</label>
                 <input type="text" id="idTextInput" value="user">
-                <input type="button" data-theme="b" id="realTimeBtn" value="실시간 편집 시작">
+                <input type="button" data-theme="b" id="editStartBtn" value="실시간 편집 시작">
         </div>
 
     </div>

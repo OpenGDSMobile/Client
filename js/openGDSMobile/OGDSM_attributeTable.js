@@ -307,12 +307,14 @@ OGDSM.attributeTable.prototype.editAttribute = function (sw, layer, wsObj) {
             jsonObj.dstData = edit;
             arrJSON.push(jsonObj);
             if (wsObj !== null) {
+                console.log("실시간 편집중입니다");
                 wsObj.send(JSON.stringify(arrJSON));
                 OGDSM.indexedDB('webMappingDB', {
                     type : 'remove',
                     deleteKey : 'editedData'
                 });
             } else {
+                console.log("실시간 편집중이 아니므로 디비에 저장합니다");
                 OGDSM.indexedDB('webMappingDB', {
                     type : 'forceInsert',
                     insertKey : 'editedData',

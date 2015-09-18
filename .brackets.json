@@ -28,6 +28,7 @@
         "/home/intruder/git/Client/js/syntaxhighlighter/shBrushJScript.js",
         "/home/intruder/git/Client/js/syntaxhighlighter/shCore.js",
         "/home/intruder/git/Client/OGDSMDoc/api.js",
-        "/home/intruder/git/Client/js/syntaxhighlighter/shBrushCss.js"
+        "/home/intruder/git/Client/js/syntaxhighlighter/shBrushCss.js",
+        "/home/intruder/git/Client/js/syntaxhighlighter/shAutoloader.js"
     ]
 }

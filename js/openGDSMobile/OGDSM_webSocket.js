@@ -31,6 +31,7 @@ OGDSM.namesapce('webSocket');
             var jsonObj = {};
             jsonObj.userId = userName;
             jsonObj.subject = defaults.subject;
+            console.log(jsonObj);
             ws.send(JSON.stringify(jsonObj));
         };
         ws.onmessage = defaults.callback;

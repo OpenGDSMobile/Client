@@ -89,7 +89,8 @@ OGDSM.externalConnection.prototype.ajaxRequest = function (addr, options) {
                 $.mobile.loading('hide');
             },
             error : function (e) {
-                console.log(e);
+                //console.log(e);
+                console.log("OpenGDS Mobile Log : Server Error");
                 $.mobile.loading('hide');
             }
         });
