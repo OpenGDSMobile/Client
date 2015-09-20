@@ -19,6 +19,7 @@ OGDSM.namesapce('attributeTable');
         this.visualObj = visualObj;
         this.attrSelected = false;
         this.indexedDB_SW = indexedDB_SW;
+        this.attrTableObjs = [];
         var rootElement = document.getElementById(rootDiv),
             ulElement = document.createElement('ul'),
             contentsElement = document.createElement('div');
@@ -91,6 +92,7 @@ OGDSM.attributeTable.prototype.addAttribute = function (layerName) {
         visualObj = this.visualObj,
         attrSelected = this.attrSelected,
         tableObj = null;
+    var tableObjs = this.attrTableObjs;
     var aBaseCSS = 'display:block; padding:6px 15px; text-decoration:none; border-right:1px solid #000;' +
                    'border-top:1px solid #000; margin:0;',
         backgroundNotSelected = '#fff',
@@ -98,6 +100,24 @@ OGDSM.attributeTable.prototype.addAttribute = function (layerName) {
         colorSelected = '#344385',
         borderSelected = '1px solid #fff',
         textInputCSS = 'background-color: transparent; border:0px solid; font-size:15px;';
+    var featureOverlay = null;
+    if (visualObj !== null) {
+        featureOverlay = new ol.FeatureOverlay({
+            map : visualObj.getMap(),
+            style : function (feature, resolution) {
+                var styleStroke = new ol.style.Stroke({
+                    color : 'rgba(255, 0, 0, 1.0)',
+                    width : 3
+                });
+                return [new ol.style.Style({
+                    fill : feature.get('styleFill'),
+                    stroke : styleStroke,
+                    text : feature.get('styleText')
+                })];
+            }
+        });
+        this.featureOverlay = featureOverlay;
+    }
     function tabClickEvent(e) {
         $('#' + rootDiv + 'Tab a').css('border-bottom', '');
         $('#' + rootDiv + 'Tab a').css('background', backgroundNotSelected);
@@ -117,28 +137,10 @@ OGDSM.attributeTable.prototype.addAttribute = function (layerName) {
             }
             var newCell = tableBody.find('tr:last').attr('data-row', i + 1);
             newCell.append('<td>' +
-                           '<input type="text" value="' + value + '" class="editSW" style="' + textInputCSS + '"' +
+                           '<input type="text" id="' + layerName + key + i + '" value="' + value + '" class="editSW" style="' + textInputCSS + '"' +
                            'data-key="' + key + '" data-label="' + layerName + '" disabled=true>' +
                            '</td>');
         });
-    }
-    var featureOverlay = null;
-    if (visualObj !== null) {
-        featureOverlay = new ol.FeatureOverlay({
-            map : visualObj.getMap(),
-            style : function (feature, resolution) {
-                var styleStroke = new ol.style.Stroke({
-                    color : 'rgba(255, 0, 0, 1.0)',
-                    width : 3
-                });
-                return [new ol.style.Style({
-                    fill : feature.get('styleFill'),
-                    stroke : styleStroke,
-                    text : feature.get('styleText')
-                })];
-            }
-        });
-        this.featureOverlay = featureOverlay;
     }
     function tableEvent(evtLayerName) {
         /*tr select*/
@@ -170,7 +172,6 @@ OGDSM.attributeTable.prototype.addAttribute = function (layerName) {
             }, 200);
         });
     }
-
     function indexedDBEvent(layerName, data) {
         OGDSM.indexedDB('webMappingDB', {
 //            insertKey : layerName + '--Local',
@@ -181,6 +182,57 @@ OGDSM.attributeTable.prototype.addAttribute = function (layerName) {
             },
             fail : function () {
                 console.log("fail");
+            }
+        });
+    }
+
+    function visTableAttr(attrContents) {
+        var i = 0;
+        var tableDiv = $('#attrContent' + layerName),
+            tableTh = tableDiv.find('thead').find('tr'),
+            tableBody = tableDiv.find('tbody');
+        for (i = 0; i < attrContents.length; i++) {
+            tableBody.append('<tr>');
+            createTableCol(attrContents[i], i, tableBody, tableTh);
+            tableBody.append('</tr>');
+        }
+
+        var thHeight = $('thead').height() + 7;
+        var obj = {};
+        tableObj = $('#attrTable' + layerName).DataTable({
+            'bFilter' : false,
+            'bLengthChange' : 10,
+            'bPaginate' : true,
+            "dom": 'rt<"bottom"ip><"clear">'
+        });
+        obj.attrName = layerName;
+        obj.attrObj = tableObj;
+        tableObjs.push(obj);
+        tableEvent(layerName);
+    }
+
+    function requestAttr(addr) {
+        var parm = {};
+        parm.tableName = layerName;
+        $.ajax({
+            type : 'POST',
+            url : addr,
+            data : JSON.stringify(parm),
+            contentType : "application/json;charset=UTF-8",
+            dataType : 'json',
+            success : function (msg) {
+                var attrContents = msg.data, i = 0;
+                if (attrContents === null) {
+                    console.log('Not attribute information');
+                    return -1;
+                }
+                visTableAttr(attrContents);
+                if (indexedDB_SW === true) {
+                    indexedDBEvent(layerName, attrContents);
+                }
+            },
+            error : function (error) {
+                console.log(error);
             }
         });
     }
@@ -205,53 +257,7 @@ OGDSM.attributeTable.prototype.addAttribute = function (layerName) {
     $('#attrContent' + layerName).css('display', 'block');
     $('#attrTab' + layerName + ' a').on('click', tabClickEvent);
 
-    var parm = {};
-    parm.tableName = layerName;
 
-    function visTableAttr(attrContents) {
-        var i = 0;
-        var tableDiv = $('#attrContent' + layerName),
-            tableTh = tableDiv.find('thead').find('tr'),
-            tableBody = tableDiv.find('tbody');
-        for (i = 0; i < attrContents.length; i++) {
-            tableBody.append('<tr>');
-            createTableCol(attrContents[i], i, tableBody, tableTh);
-            tableBody.append('</tr>');
-        }
-
-        var thHeight = $('thead').height() + 7;
-        tableObj = $('#attrTable' + layerName).DataTable({
-            'bFilter' : false,
-            'bLengthChange' : 10,
-            'bPaginate' : true,
-            "dom": 'rt<"bottom"ip><"clear">'
-        });
-        tableEvent(layerName);
-    }
-
-    function requestAttr(addr) {
-        $.ajax({
-            type : 'POST',
-            url : addr,
-            data : JSON.stringify(parm),
-            contentType : "application/json;charset=UTF-8",
-            dataType : 'json',
-            success : function (msg) {
-                var attrContents = msg.data, i = 0;
-                if (attrContents === null) {
-                    console.log('Not attribute information');
-                    return -1;
-                }
-                visTableAttr(attrContents);
-                if (indexedDB_SW === true) {
-                    indexedDBEvent(layerName, attrContents);
-                }
-            },
-            error : function (error) {
-                console.log(error);
-            }
-        });
-    }
     if (indexedDB_SW === true) {
         OGDSM.indexedDB('webMappingDB', {
             type : 'search',
@@ -357,6 +363,9 @@ OGDSM.attributeTable.prototype.editAttribute = function (sw, layer, wsObj) {
                     success : editDataResult
                 });
             }
+            var ttt = $(this).attr('id');
+            console.log(' new value id : ' + ttt);
+            $('#' + ttt).val($(this).val());
         });
         this.editMode = true;
     } else {
@@ -377,10 +386,16 @@ OGDSM.attributeTable.prototype.editAttribute = function (sw, layer, wsObj) {
  */
 OGDSM.attributeTable.prototype.searchAttribute = function (tableName, header, value) {
     'use strict';
-    var tableObj = $('#attrTable' + tableName).DataTable();
+    var tableObjs = this.attrTableObjs;
+    var tableObj = null;
     var searchIdx = 0;
     var resultIdx = null;
-    //console.log(tableName + ' ' + header + ' ' + value);
+    $.each(tableObjs, function (i, d) {
+        if (d.attrName === tableName) {
+            tableObj = d.attrObj;
+            return 0;
+        }
+    });
     tableObj.columns().header().each(function (data, i) {
         var tableHeader = $(data).attr('data-value');
         if (header === tableHeader) {
@@ -388,7 +403,6 @@ OGDSM.attributeTable.prototype.searchAttribute = function (tableName, header, va
             return false;
         }
     });
-
     tableObj.columns(searchIdx).every(function () {
         $(this.data()).each(function (i, data) {
             if ($(this).val() === value) {
@@ -400,6 +414,37 @@ OGDSM.attributeTable.prototype.searchAttribute = function (tableName, header, va
     return resultIdx;
 };
 
+/**
+ * 속성 정보 수정
+ * @method selectAttribute
+ * @param {String}  tableName   - 테이블 이름
+ * @param {String}  header   - 검색 컬럼
+ * @param {String}  value   - 검색 값
+ * @param {String}  edit   - 변경 값
+ * @return {Number}
+ */
+OGDSM.attributeTable.prototype.editValueAttribute = function (tableName, header, value, editValue) {
+    'use strict';
+    editValue = (typeof (editValue) !== 'undefined')  ? editValue : null;
+    var tableObjs = this.attrTableObjs;
+    var tableObj = null;
+    var searchIdx;
+    $.each(tableObjs, function (i, d) {
+        if (d.attrName === tableName) {
+            tableObj = d.attrObj;
+            return 0;
+        }
+    });
+    tableObj.columns().header().each(function (data, i) {
+        var tableHeader = $(data).attr('data-value');
+        if (header === tableHeader) {
+            searchIdx = i;
+            return false;
+        }
+    });
+    var allData = tableObj.column(searchIdx).data();
+  //  console.log(allData);
+};
 /**
  * 속성 정보 선택
  * @method selectAttribute

@@ -53,9 +53,24 @@ function realTimeFunc() {
     }
 
     function realtimeReceived(reData) {
-        console.log(reData.data);
-        //var changeData = JSON.parse(reData);
-        //console.log(changeData);
+        var arrData = JSON.parse(reData.data);
+        $.each(arrData, function (i, d) {
+            //console.log(d.tableName);
+            attrObj = openGDSMObj.getAttrObj();
+            attrObj.editValueAttribute(d.tableName, d.column, d.srcData, d.dstData);
+            /*
+            OGDSM.indexedDB('webMappingDB', {
+                type : 'edit',
+                searchKey : d.tableName,
+                searchData : d.srcData,
+                editData : d.dstData,
+                success : function (s, d) {
+                    console.log(d);
+                }
+            });
+              */
+        });
+
     }
     function startedEdit(resultData) {
         function attributeEditEnable() {
@@ -181,128 +196,6 @@ function realTimeFunc() {
             attrObj.editAttribute(false);
         }
     }
-
-    /*
-    realEditChk.change(function () {
-            localListView = ui.autoListView('localCurView', 'curListView', allTitle, { divide : '현재 장치 시각화 목록'});
-            param.column = 'subject';
-            exConnect.ajaxRequest(serverAddr + '/realtimeInfoSearch.do', {
-                data : param,
-                callback : function (data) {
-                    var subject = data.data;
-                    var remoteListView = ui.autoListView('remoteCurView', 'curRemoteListView', subject, {divide : '실시간 편집 목록', itemKey : 'subject'});
-                    remoteListView.click(function (e) {
-                        var title = $(this).attr('data-title');
-                        param.subject = title;
-                        if (typeof title !== 'undefined') {
-                            listClickEvt($(this).attr('data-title'));
-                        }
-                    });
-                }
-            });
-            $('#curList').popup('open', {
-                positionTo : 'window'
-            });
-            localListView.click(function (e) {
-                var title = $(this).attr('data-title');
-                param.subject = title;
-                if (typeof title !== 'undefined') {
-                    listClickEvt($(this).attr('data-title'));
-                }
-            });
-        */
-/*
-            exConnect.ajaxRequest(serverAddr + '/realtimeInfoSearch.do', {
-                submitBtn : 'realTimeBtn',
-                data : param,
-                callback : function (data) {
-                    console.log(data);
-                    if (data.data === false) {
-                        alert("같은 아이디가 있습니다 다시 입력해주시기 바랍니다.");
-                    } else if (data.data === true) {
-                        $('#idInputDiv').popup('close');
-                        console.log("실시간 편집을 시작합니다");
-                        if (wsObj !== null) {
-                            wsObj.webSocketClose();
-                            wsObj = null;
-                        }
-                        if (!openGDSMObj.layerCheck(param.subject)) {
-                            console.log("시각화된 데이터가 없으므로 시각화 요청을 합니다");
-                            var r = Math.floor(Math.random() * 256),
-                                g = Math.floor(Math.random() * 256),
-                                b = Math.floor(Math.random() * 256);
-                            var color = 'rgb(' + r + ',' + g + ',' + b + ')';
-                            exConnect.geoServerGeoJsonLoad(openGDSMObj, geoServerAddr, 'opengds', param.subject, {
-                                color : color,
-                                label : 'sig_kor_nm',
-                                callback : function (d) {
-                                    // 데이터가 없을 경우.... 로딩
-                                    setTimeout(function () {
-                                        attrObj = openGDSMObj.getAttrObj();
-                                        attrObj.editAttribute(true, param.subject, wsObj);
-                                     //   ttt();
-                                    }, 1500);
-                                }
-                            });
-                        } else {
-                            attrObj = openGDSMObj.getAttrObj();
-                            attrObj.editAttribute(true, param.subject, wsObj);
-                         //   ttt();
-                        }
-
-                        //편집 모드 활성화... 그 해당 속성정보에게만...
-                        //session storage에 저장
-                        // webSocket 연결....
-                    }
-
-                }
-            });
-*/
-    /*
-        } else if (val === 'offline') {
-            //webSocket 접속의 경우 끊음
-            if (wsObj !== null) {
-                wsObj.webSocketClose();
-            }
-            exConnect.ajaxRequest(serverAddr + '/realtimeInfoDelete.do', {
-                data : param,
-                callback : function (data) {
-                    console.log(data);
-                }
-            });
-
-            $('#localCurView').empty();
-            $('#remoteCurView').empty();
-            $('#curList').popup('open', {
-                positionTo : 'window'
-            });
-            allTitle = openGDSMObj.getLayersTitle();
-            localListView = ui.autoListView('localCurView', 'curListView', allTitle, { divide : '현재 장치 시각화 목록'});
-            localListView.click(function (e) {
-                var title = $(this).attr('data-title');
-                if (typeof title !== 'undefined') {
-                    $('#curList').popup('close');
-                    attrObj = openGDSMObj.getAttrObj();
-                    attrObj.editAttribute(true, title);
-                }
-            });
-        } else {
-            if (wsObj !== null) {
-                wsObj.webSocketClose();
-            }
-            exConnect.ajaxRequest(serverAddr + '/realtimeInfoDelete.do', {
-                data : param,
-                callback : function (data) {
-                    console.log(data);
-                }
-            });
-            attrObj = openGDSMObj.getAttrObj();
-            attrObj.editAttribute(false);
-            //webSocket 접속의 경우 끊음
-            console.log('exit');
-        }
-    });
-    */
     $('#idTextInput').change(userInputTextChange);
     $('input[name=editFlag]:radio').on('change', editModeChange);
     $('#editStartBtn').click(editStartClick);
@@ -313,7 +206,6 @@ function realTimeFunc() {
             //session Storage 검사 후... 널일 경우에는... 편집모드(실시간) -> 편집모드(종료)
         }
     });*/
-
 }
 //브이월드 WMS 데이터 선택 사용자 인터페이스 생성 / 시각화 함수
 function vworldWMSUI() {

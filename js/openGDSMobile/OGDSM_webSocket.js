@@ -68,8 +68,9 @@ OGDSM.webSocket.prototype.webSocketClose = function () {
     var ws = this.ws;
     ws.close();
 };
-
+/*
 OGDSM.webSocket.prototype.received = function (evt) {
     'use strict';
 
 };
+*/
