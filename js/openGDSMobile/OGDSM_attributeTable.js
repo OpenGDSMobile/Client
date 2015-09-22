@@ -20,6 +20,8 @@ OGDSM.namesapce('attributeTable');
         this.attrSelected = false;
         this.indexedDB_SW = indexedDB_SW;
         this.attrTableObjs = [];
+        this.curTab = null;
+        this.wsObj = null;
         var rootElement = document.getElementById(rootDiv),
             ulElement = document.createElement('ul'),
             contentsElement = document.createElement('div');
@@ -71,6 +73,12 @@ OGDSM.namesapce('attributeTable');
         },
         setolSelectObj : function (obj) {
             this.olSelectObj = obj;
+        },
+        getCurTab : function () {
+            return this.curTab;
+        },
+        getWsObj : function () {
+            return this.wsObj;
         }
     };
     return OGDSM.attributeTable;
@@ -87,19 +95,21 @@ OGDSM.attributeTable.prototype.addAttribute = function (layerName) {
         addr = this.addr,
         rootDiv = this.rootDiv,
         indexedDB_SW = this.indexedDB_SW,
-        tabs = $('#' + rootDiv + 'Tab'),
-        contents = $('#' + rootDiv + 'Contents'),
         visualObj = this.visualObj,
         attrSelected = this.attrSelected,
+        tabs = $('#' + rootDiv + 'Tab'),
+        contents = $('#' + rootDiv + 'Contents'),
         tableObj = null;
-    var tableObjs = this.attrTableObjs;
+    var tableObjs = this.attrTableObjs,
+        curTab = this.curTab,
+        wsObj = this.wsObj;
     var aBaseCSS = 'display:block; padding:6px 15px; text-decoration:none; border-right:1px solid #000;' +
                    'border-top:1px solid #000; margin:0;',
         backgroundNotSelected = '#fff',
         backgroundSelected = '#ffd89b',
         colorSelected = '#344385',
         borderSelected = '1px solid #fff',
-        textInputCSS = 'background-color: transparent; border:0px solid; font-size:15px;';
+        textInputCSS = 'background-color: transparent; border:0px solid; font-size:15px; margin:0px;';
     var featureOverlay = null;
     if (visualObj !== null) {
         featureOverlay = new ol.FeatureOverlay({
@@ -126,6 +136,7 @@ OGDSM.attributeTable.prototype.addAttribute = function (layerName) {
         $('.attrTable').hide();
         $('#attrContent' + layerName).css('display', 'block');
         $('.attrTable tr.selected').removeClass('selected');
+        curTab = layerName;
     }
     function createTableCol(attrContents, i, tableBody, tableTh) {
         $.each(attrContents, function (key, value) {
@@ -136,10 +147,18 @@ OGDSM.attributeTable.prototype.addAttribute = function (layerName) {
                 tableTh.append('<th data-value="' + key + '">' + key + '</th>');
             }
             var newCell = tableBody.find('tr:last').attr('data-row', i + 1);
-            newCell.append('<td>' +
+            /*newCell.append('<td>' +
                            '<input type="text" id="' + layerName + key + i + '" value="' + value + '" class="editSW" style="' + textInputCSS + '"' +
                            'data-key="' + key + '" data-label="' + layerName + '" disabled=true>' +
-                           '</td>');
+                           '</td>');*/
+            /*newCell.append('<td>' +
+                           '<p class="editSW" style="' + textInputCSS + '"' + 'data-key="' + key +
+                           '" data-label="' + layerName + '">' + value +
+                           '</p></td>');*/
+
+            newCell.append('<td data-key="' + key + '" data-label="' + layerName +
+                           '" class="editSW" id="' + layerName + key + i + '">' +
+                           value + '</td>');
         });
     }
     function tableEvent(evtLayerName) {
@@ -168,7 +187,7 @@ OGDSM.attributeTable.prototype.addAttribute = function (layerName) {
         /*page change*/
         $('#attrTable' + evtLayerName).on('page.dt', function (e, settings) {
             setTimeout(function () {
-                attrObj.editAttribute(attrObj.getEditMode());
+                attrObj.editAttribute(attrObj.getEditMode(), attrObj.getCurTab(), attrObj.getWsObj());
             }, 200);
         });
     }
@@ -238,6 +257,7 @@ OGDSM.attributeTable.prototype.addAttribute = function (layerName) {
     }
 
     /*Add tab*/
+    this.curTab = layerName;
     tabs.prepend('<li id="attrTab' + layerName + '" style="float:left;">' +
                  '<a href="#" style="' + aBaseCSS + '">' + layerName + '</a></li>');
     $('#' + rootDiv + 'Tab a').css('background', backgroundNotSelected);
@@ -297,16 +317,19 @@ OGDSM.attributeTable.prototype.removeAttribute = function (layerName) {
  */
 OGDSM.attributeTable.prototype.editAttribute = function (sw, layer, wsObj) {
     'use strict';
-    wsObj = (typeof (wsObj) !== 'undefined')  ? wsObj : null;
+    wsObj = this.wsObj = (typeof (wsObj) !== 'undefined')  ? wsObj : null;
     var attrLayer = (typeof (layer) !== 'undefined')  ? '#attrTable' + layer + ' ' : '';
     var textInput = $(attrLayer + '.editSW');
     var thisObj = this;
     var oldValue = null;
     var searchData = {};
+    var popupDIV = 'editValueTextDIV';
+    var editInputId = 'editValueTextId';
+    this.editMode = sw;
     function editDataResult(edit, src, dst) {
         var jsonObj = {};
-        console.log('Update data');
         function addArrayJSON(arrJSON) {
+            console.log(jsonObj);
             jsonObj.tableName = layer;
             jsonObj.column = Object.keys(searchData)[0];
             jsonObj.srcData = oldValue;
@@ -339,41 +362,55 @@ OGDSM.attributeTable.prototype.editAttribute = function (sw, layer, wsObj) {
             }
         });
     }
-
-
-    if (sw === true) {
-        textInput.attr('disabled', false);
-        console.log(textInput);
-        textInput.on('focus', function () {
-            oldValue = $(this).val();
-        });
-        textInput.on('change', function () {
-            searchData = {};
-            if (oldValue === $(this).val()) {
-                return -1;
-            }
-            searchData[$(this).attr('data-key')] = oldValue;
-            console.log(searchData);
-            if (thisObj.indexedDB_SW === true) {
-                OGDSM.indexedDB('webMappingDB', {
-                    type : 'edit',
-                    searchKey : $(this).attr('data-label'),
-                    searchData : searchData,
-                    editData : $(this).val(),
-                    success : editDataResult
-                });
-            }
-            var ttt = $(this).attr('id');
-            console.log(' new value id : ' + ttt);
-            $('#' + ttt).val($(this).val());
-        });
-        this.editMode = true;
-    } else {
-        textInput.attr('disabled', true);
-        textInput.off('change');
-        textInput.off('focus');
-        this.editMode = false;
+    if ($('#' + popupDIV).length === 0) {
+        var bodyObj = $('body');
+        var html = '<div data-role="popup" id="' + popupDIV + '">' +
+                   '<input type="text" value="' + oldValue + '" id="' + editInputId + '">' +
+                   '</div>';
+        bodyObj.append(html);
+        bodyObj.trigger("create");
     }
+    if (sw === true) {
+        this.editMode = true;
+        var tableObjs = this.attrTableObjs;
+        textInput.off('click');
+        textInput.on('click', function () {
+            oldValue = $(this).html();
+            var dataKey = $(this).attr('data-key');
+            var dataLabel = $(this).attr('data-label');
+            $('#' + editInputId).val(oldValue);
+            $('#' + popupDIV).popup('open');
+            $('#' + popupDIV).off();
+            $('#' + popupDIV).on({
+                popupafterclose : function (event, ui) {
+                    searchData = {};
+                    var textInputObj = $('#' + editInputId);
+                    if (oldValue === textInputObj.val()) {
+                        return -1;
+                    }
+                    searchData[dataKey] = oldValue;
+                    if (thisObj.indexedDB_SW === true) {
+                        console.log(dataLabel + ' ' + searchData + ' ' + textInputObj.val());
+                        OGDSM.indexedDB('webMappingDB', {
+                            type : 'edit',
+                            searchKey : dataLabel,
+                            searchData : searchData,
+                            editData : textInputObj.val(),
+                            success : editDataResult
+                        });
+                    }
+                }
+            });
+        });
+    } else {
+        this.editMode = false;
+        console.log("click event 해지");
+        $('#' + popupDIV).off();
+        $('#' + popupDIV).remove();
+        $('#' + editInputId).off('change');
+        $('#' + editInputId).off('focus');
+    }
+    //page 동기화 안됨... 버그...
 };
 
 /**
@@ -442,8 +479,33 @@ OGDSM.attributeTable.prototype.editValueAttribute = function (tableName, header,
             return false;
         }
     });
-    var allData = tableObj.column(searchIdx).data();
-  //  console.log(allData);
+    var allData = tableObj.column(searchIdx);
+    var rowIdx;
+    tableObj.columns(searchIdx).every(function () {
+        $(this.data()).each(function (i, data) {
+            if (data === value) {
+                rowIdx = i;
+            }
+        });
+    });
+    var editObj = $('#' + tableName + header + rowIdx);
+    editObj.html(editValue);
+
+    if (this.indexedDB_SW === true) {
+        console.log('update indexedDB : ' + tableName + ' ' + value + ' ' + editValue);
+        var searchData = {};
+        searchData[header] = value;
+        console.log(searchData);
+        OGDSM.indexedDB('webMappingDB', {
+            type : 'edit',
+            searchKey : tableName,
+            searchData : searchData,
+            editData : editValue,
+            success : function () {
+                console.log("indexedDB edit");
+            }
+        });
+    }
 };
 /**
  * 속성 정보 선택

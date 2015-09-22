@@ -55,7 +55,7 @@ function realTimeFunc() {
     function realtimeReceived(reData) {
         var arrData = JSON.parse(reData.data);
         $.each(arrData, function (i, d) {
-            //console.log(d.tableName);
+            console.log(d.tableName);
             attrObj = openGDSMObj.getAttrObj();
             attrObj.editValueAttribute(d.tableName, d.column, d.srcData, d.dstData);
             /*
