@@ -13,15 +13,15 @@ OGDSM.namesapce('attributeTable');
      */
     OGDSM.attributeTable = function (rootDiv, addr, visualObj, indexedDB_SW) {
         visualObj = (typeof (visualObj) !== 'undefined') ? visualObj : null;
-        this.rootDiv = rootDiv;
-        this.addr = addr;
-        this.editMode = false;
-        this.visualObj = visualObj;
-        this.attrSelected = false;
-        this.indexedDB_SW = indexedDB_SW;
-        this.attrTableObjs = [];
-        this.curTab = null;
-        this.wsObj = null;
+        this.rootDiv = rootDiv;         //속성정보 테이블 최상위 엘리먼트
+        this.visualObj = visualObj;     //OpenGDS Mobile Visualization 객체
+        this.addr = addr;               //속성정보 PostgreSQL 접속 주소 (ApplicationServer)
+        this.editMode = false;          //속성정보 편집 모드
+        this.indexedDB_SW = indexedDB_SW;   //indexedDB 여부
+        this.attrTableObjs = [];            //속성정보 객체 배열
+        this.curTab = null;                 //현재 시각화되고 있는 속성정보 탭
+        this.wsObj = null;                  //webSocket 객체
+        this.attrSelected = false;      //속성정보 테이블 선택 여부
         var rootElement = document.getElementById(rootDiv),
             ulElement = document.createElement('ul'),
             contentsElement = document.createElement('div');
@@ -38,31 +38,25 @@ OGDSM.namesapce('attributeTable');
     };
     OGDSM.attributeTable.prototype = {
         constructor : OGDSM.attributeTable,
-
+        /**this object get and set function***/
         /**
          * 수정 모드 여부 받기
          * @method getEidtMode
-         * @return {Boolean} True | False
+         * @return {Boolean} true | false
          */
-        getEditMode : function () {
-            return this.editMode;
-        },
+        getEditMode : function () { return this.editMode; },
         /**
          * 현재 선택 객체 받기 (테이블)
          * @method getSelectObj
          * @return {Object}
          */
-        getSelectObj : function () {
-            return this.attrSelected;
-        },
+        getSelectObj : function () { return this.attrSelected; },
         /**
          * 현재 선택 객체 설정 (테이블)
          * @method setSelectObj
          * @param {Object} obj - 테이블 객체
          **/
-        setSelectObj : function (obj) {
-            this.attrSelected = obj;
-        },
+        setSelectObj : function (obj) { this.attrSelected = obj; },
         /**
          * 현재 선택 객체 설정 (오픈레이어)
          * @method getolSelectObj
@@ -74,9 +68,17 @@ OGDSM.namesapce('attributeTable');
         setolSelectObj : function (obj) {
             this.olSelectObj = obj;
         },
-        getCurTab : function () {
-            return this.curTab;
-        },
+        /**
+         * 현재 시각화 속성테이블 레이어 이름 SET
+         * @method setCurTab
+         */
+        setCurTab : function (obj) { this.usrTab = obj; },
+        /**
+         * 현재 시각화 속성테이블 레이어 이름 GET
+         * @method getCurTab
+         * @return {String}
+         */
+        getCurTab : function () { return this.curTab; },
         getWsObj : function () {
             return this.wsObj;
         }
@@ -91,26 +93,20 @@ OGDSM.namesapce('attributeTable');
  */
 OGDSM.attributeTable.prototype.addAttribute = function (layerName) {
     'use strict';
-    var attrObj = this,
-        addr = this.addr,
-        rootDiv = this.rootDiv,
-        indexedDB_SW = this.indexedDB_SW,
-        visualObj = this.visualObj,
-        attrSelected = this.attrSelected,
-        tabs = $('#' + rootDiv + 'Tab'),
-        contents = $('#' + rootDiv + 'Contents'),
-        tableObj = null;
-    var tableObjs = this.attrTableObjs,
-        curTab = this.curTab,
-        wsObj = this.wsObj;
-    var aBaseCSS = 'display:block; padding:6px 15px; text-decoration:none; border-right:1px solid #000;' +
-                   'border-top:1px solid #000; margin:0;',
+    var attrObj = this, addr = this.addr, rootDiv = this.rootDiv,
+        indexedDB_SW = this.indexedDB_SW, visualObj = this.visualObj,
+        attrSelected = this.attrSelected, attrTableObjs = this.attrTableObjs,
+        curTab = this.curTab,   wsObj = this.wsObj;
+    var tabs = $('#' + rootDiv + 'Tab'), contents = $('#' + rootDiv + 'Contents'),
+        featureOverlay = null, tableObj = null;
+    var aBaseCSS = 'display:block; padding:6px 15px; text-decoration:none;' +
+                   'border-right:1px solid #000; border-top:1px solid #000; margin:0;',
         backgroundNotSelected = '#fff',
         backgroundSelected = '#ffd89b',
         colorSelected = '#344385',
         borderSelected = '1px solid #fff',
         textInputCSS = 'background-color: transparent; border:0px solid; font-size:15px; margin:0px;';
-    var featureOverlay = null;
+    // 선택 객체 색상
     if (visualObj !== null) {
         featureOverlay = new ol.FeatureOverlay({
             map : visualObj.getMap(),
@@ -128,6 +124,7 @@ OGDSM.attributeTable.prototype.addAttribute = function (layerName) {
         });
         this.featureOverlay = featureOverlay;
     }
+    //탭 클릭시 탭 배경 / 테이블 시각화 변경
     function tabClickEvent(e) {
         $('#' + rootDiv + 'Tab a').css('border-bottom', '');
         $('#' + rootDiv + 'Tab a').css('background', backgroundNotSelected);
@@ -138,37 +135,26 @@ OGDSM.attributeTable.prototype.addAttribute = function (layerName) {
         $('.attrTable tr.selected').removeClass('selected');
         curTab = layerName;
     }
+    //속성정보 테이블 내용 생성
     function createTableCol(attrContents, i, tableBody, tableTh) {
         $.each(attrContents, function (key, value) {
-            if (key === 'geom') {
-                return true;
-            }
             if (i === 0) {
                 tableTh.append('<th data-value="' + key + '">' + key + '</th>');
             }
+            console.log(attrContents);
             var newCell = tableBody.find('tr:last').attr('data-row', i + 1);
-            /*newCell.append('<td>' +
-                           '<input type="text" id="' + layerName + key + i + '" value="' + value + '" class="editSW" style="' + textInputCSS + '"' +
-                           'data-key="' + key + '" data-label="' + layerName + '" disabled=true>' +
-                           '</td>');*/
-            /*newCell.append('<td>' +
-                           '<p class="editSW" style="' + textInputCSS + '"' + 'data-key="' + key +
-                           '" data-label="' + layerName + '">' + value +
-                           '</p></td>');*/
-
             newCell.append('<td data-key="' + key + '" data-label="' + layerName +
                            '" class="editSW" id="' + layerName + key + i + '">' +
                            value + '</td>');
         });
     }
+    //속성정보 테이블 클릭 이벤트/*tr select*/
     function tableEvent(evtLayerName) {
-        /*tr select*/
         $('#attrTable' + evtLayerName + ' tbody').on('click', 'tr', function () {
             var i = 0;
             tableObj.$('tr.selected').removeClass('selected');
             $(this).addClass('selected');
 
-            // selected layer color change...
             if (visualObj !== null) {
                 var eachFeatures = visualObj.layerCheck(evtLayerName).getSource().getFeatures();
                 featureOverlay.removeFeature(attrObj.getSelectObj());
@@ -191,21 +177,44 @@ OGDSM.attributeTable.prototype.addAttribute = function (layerName) {
             }, 200);
         });
     }
+    //indexedDB 데이터 저장
     function indexedDBEvent(layerName, data) {
         OGDSM.indexedDB('webMappingDB', {
-//            insertKey : layerName + '--Local',
             insertKey : layerName,
             insertData : data,
             success : function () {
-                console.log("success");
+                console.log('OpenGDS Mobile : ' + layerName + ', indexedDB save success');
             },
             fail : function () {
-                console.log("fail");
+                console.log('OpenGDS Mobile : ' + layerName + ', indexedDB save fail');
             }
         });
     }
-
+    //테이블 시각화 jQuery Table plugin 사용
     function visTableAttr(attrContents) {
+        function addTab() {
+            attrObj.setCurTab(layerName);
+            /*Add tab*/
+            tabs.prepend('<li id="attrTab' + layerName + '" style="float:left;">' +
+                         '<a href="#" style="' + aBaseCSS + '">' + layerName + '</a></li>');
+            $('#' + rootDiv + 'Tab a').css('background', backgroundNotSelected);
+            $('#attrTab' + layerName + ' a').css('border-bottom', borderSelected);
+            $('#attrTab' + layerName + ' a').css('background', backgroundSelected);
+            $('#attrTab' + layerName + ' a').css('color', colorSelected);
+
+            /*Add Content*/
+            var attrDivHeight = $('#' + rootDiv + 'Contents').height();
+            contents.prepend('<div id="attrContent' + layerName + '" class="attrTable">' +
+                             '<table id="attrTable' + layerName + '" class="display compact" cellspacing="0" width="100%">' +
+                             '<thead style="width:100%;"><tr></tr></thead>' +
+                             '<tbody style="text-align:center"></tbody></table></div>');
+
+            /*Event*/
+            $('.attrTable').hide();
+            $('#attrContent' + layerName).css('display', 'block');
+            $('#attrTab' + layerName + ' a').on('click', tabClickEvent);
+        }
+        addTab();
         var i = 0;
         var tableDiv = $('#attrContent' + layerName),
             tableTh = tableDiv.find('thead').find('tr'),
@@ -226,7 +235,7 @@ OGDSM.attributeTable.prototype.addAttribute = function (layerName) {
         });
         obj.attrName = layerName;
         obj.attrObj = tableObj;
-        tableObjs.push(obj);
+        attrTableObjs.push(obj);
         tableEvent(layerName);
     }
 
@@ -256,46 +265,24 @@ OGDSM.attributeTable.prototype.addAttribute = function (layerName) {
         });
     }
 
-    /*Add tab*/
-    this.curTab = layerName;
-    tabs.prepend('<li id="attrTab' + layerName + '" style="float:left;">' +
-                 '<a href="#" style="' + aBaseCSS + '">' + layerName + '</a></li>');
-    $('#' + rootDiv + 'Tab a').css('background', backgroundNotSelected);
-    $('#attrTab' + layerName + ' a').css('border-bottom', borderSelected);
-    $('#attrTab' + layerName + ' a').css('background', backgroundSelected);
-    $('#attrTab' + layerName + ' a').css('color', colorSelected);
-
-    /*Add Content*/
-    var attrDivHeight = $('#' + rootDiv + 'Contents').height();
-    contents.prepend('<div id="attrContent' + layerName + '" class="attrTable">' +
-                     '<table id="attrTable' + layerName + '" class="display compact" cellspacing="0" width="100%">' +
-                     '<thead style="width:100%;"><tr></tr></thead>' +
-                     '<tbody style="text-align:center"></tbody></table></div>');
-
-    /*Event*/
-    $('.attrTable').hide();
-    $('#attrContent' + layerName).css('display', 'block');
-    $('#attrTab' + layerName + ' a').on('click', tabClickEvent);
-
-
     if (indexedDB_SW === true) {
         OGDSM.indexedDB('webMappingDB', {
             type : 'search',
             storeName : 'webMappingDB',
             searchKey : layerName,
             success : function (attrContents) {
-                console.log('indexedDB Data OK');
+                console.log('OpenGDS Mobile : indexedDB 데이터 O');
                 //indexed 에 있는 걸 불러올건지.... 아님 요청할껀지....에 대한.... 확인메시지
-                //확인시.... 기존 저장 데이터 삭제 후 다시 저장....
+                //확인시.... indexedDB 저장 데이터 삭제 후 다시 저장....
                 visTableAttr(attrContents);
             },
             fail : function (result) {
-                console.log('indexedDB Data Not request Data');
+                console.log('OpenGDS Mobile : indexedDB 데이터 X, 서버 요청');
                 requestAttr(addr);
             }
         });
     } else {
-        console.log('indexedDB SW false request Data');
+        console.log('OpenGDS Mobile : indexedDB 설정 X, 서버 요청');
         requestAttr(addr);
     }
 };
@@ -344,6 +331,7 @@ OGDSM.attributeTable.prototype.editAttribute = function (sw, layer, wsObj) {
                 });
             } else {
                 console.log("실시간 편집중이 아니므로 디비에 저장합니다");
+                thisObj.editValueAttribute(jsonObj.tableName, jsonObj.column, jsonObj.srcData, jsonObj.dstData);
                 OGDSM.indexedDB('webMappingDB', {
                     type : 'forceInsert',
                     insertKey : 'editedData',

@@ -1,14 +1,16 @@
 /*jslint devel: true, vars: true, plusplus: true*/
 /*global $, jQuery, ol, OGDSM, geoServerAddr, serverAddr, wsServerAddr*/
+
+//OpenGDS Mobile
 var openGDSMObj;
 
-//배경지도 라디오 버튼 사용자 인터페이스 생성 함수
-function mapSelectUI(openGDSMObj) {
+//배경지도 라디오 버튼 사용자 인터페이스 생성
+function mapSelectUI() {
     'use strict';
     var ui = new OGDSM.eGovFrameUI();
     ui.baseMapSelect(openGDSMObj, 'mapSelect', 'OSM VWorld VWorld_m VWorld_s VWorld_g'); //현재.... 데이터 체크...
 }
-//데이터 라디오 버튼 사용자 인터페이스 생성 함수
+//데이터 라디오 버튼 사용자 인터페이스 생성
 function mapAttrUI() {
     'use strict';
     var attrChk = $('#attrChk');
@@ -29,53 +31,51 @@ function mapAttrUI() {
             $('#attributeTable').removeClass('OGDSPosTransTopDownShow');
             $('#attributeTable').addClass('OGDSPosTransTopDownHide');
         }
-    });/*
-    attrEditChk.click(function () {
-        var chk = $(this).is(':checked'),
-            attrObj = openGDSMObj.getAttrObj();
-        if (chk === true) {
-            attrObj.editAttribute(true);
-        } else {
-            attrObj.editAttribute(false);
-
-        }
-    });*/
+    });
 }
-//실시간 통신
-function realTimeFunc() {
+//indexedDB 속성정보 편집 / 실시간 속성정보 편집
+function editAttributeFunc() {
     'use strict';
     var attrObj = null;
     var modeType = 'OFF';
     var param = {}; //column, userid, subject
     var wsObj = null;
+    var globCurVal = null;
+    //사용자 아이디 변경시 업데이트 이벤트
     function userInputTextChange(evt) {
         param.userid = $(evt.currentTarget).val();
     }
+    //레이어 리스트 클릭 이벤트
+    function listViewClick(evt) {
+        var clickTitle = $(evt.currentTarget).attr('data-title');
+        if (typeof (clickTitle) === 'undefined') {
+            return -1;
+        }
+        $('#curList').popup('close');
+        param.subject = clickTitle;
+        //사실상 로그인을 한 상태일 경우... 바로 편집모드로 ... 가면됨..
+        //현재는 아이디를 받는 방식.. 변경 예정..
+        setTimeout(function () {
+            $('#idInputDiv').popup('open');
+            param.column = 'userid';
+            param.userid = $('#idTextInput').val();
+        }, 1000);
 
+    }
+    //웹 소켓 received
     function realtimeReceived(reData) {
         var arrData = JSON.parse(reData.data);
         $.each(arrData, function (i, d) {
             console.log(d.tableName);
             attrObj = openGDSMObj.getAttrObj();
             attrObj.editValueAttribute(d.tableName, d.column, d.srcData, d.dstData);
-            /*
-            OGDSM.indexedDB('webMappingDB', {
-                type : 'edit',
-                searchKey : d.tableName,
-                searchData : d.srcData,
-                editData : d.dstData,
-                success : function (s, d) {
-                    console.log(d);
-                }
-            });
-              */
         });
-
     }
+    //편집 시작
     function startedEdit(resultData) {
         function attributeEditEnable() {
             setTimeout(function () {
-                function attrSW() {
+                function attrSW(wsObj) {
                     attrObj = openGDSMObj.getAttrObj();
                     attrObj.editAttribute(true, param.subject, wsObj);
                 }
@@ -84,28 +84,36 @@ function realTimeFunc() {
                     searchKey : 'editedData',
                     success : function (result) {
                         console.log("편집된 데이터가 있을 경우");
-                        wsObj = new OGDSM.webSocket(wsServerAddr + '/attr-ws.do', param.userid, {
-                            subject : param.subject,
-                            callback : realtimeReceived
-                        });
-                        attrSW();
-                        setTimeout(function () {
-                            //데이터를 보낼껀지 말껀지에 대한... 확인 창.....
-                            wsObj.send(JSON.stringify(result));
-                            OGDSM.indexedDB('webMappingDB', {
-                                type : 'remove',
-                                deleteKey : 'editedData'
+                        if (globCurVal === 'online') {
+                            wsObj = new OGDSM.webSocket(wsServerAddr + '/attr-ws.do', param.userid, {
+                                subject : param.subject,
+                                callback : realtimeReceived
                             });
-                        }, 1000);
+                            attrSW(wsObj);
+                            setTimeout(function () {
+                                //데이터를 보낼껀지 말껀지에 대한... 확인 창.....
+                                wsObj.send(JSON.stringify(result));
+                                OGDSM.indexedDB('webMappingDB', {
+                                    type : 'remove',
+                                    deleteKey : 'editedData'
+                                });
+                            }, 1000);
+                        } else if (globCurVal === 'offline') {
+                            attrSW(null);
+                        }
 
                     },
                     fail : function () {
                         console.log("편집된 데이터가 없을 경우");
-                        wsObj = new OGDSM.webSocket(wsServerAddr + '/attr-ws.do', param.userid, {
-                            subject : param.subject,
-                            callback : realtimeReceived
-                        });
-                        attrSW();
+                        if (globCurVal === 'online') {
+                            wsObj = new OGDSM.webSocket(wsServerAddr + '/attr-ws.do', param.userid, {
+                                subject : param.subject,
+                                callback : realtimeReceived
+                            });
+                            attrSW(wsObj);
+                        } else if (globCurVal === 'offline') {
+                            attrSW(null);
+                        }
                     }
                 });
             }, 1000);
@@ -137,6 +145,7 @@ function realTimeFunc() {
         }
 
     }
+    //서버상 같은 아이디가 있는지 여부 확인
     function editStartClick(evt) {
         var exConnect = new OGDSM.externalConnection();
         exConnect.ajaxRequest(serverAddr + '/realtimeInfoSearch.do', {
@@ -144,19 +153,7 @@ function realTimeFunc() {
             callback : startedEdit
         });
     }
-    function listViewClick(evt) {
-        $('#curList').popup('close');
-        var clickTitle = $(evt.currentTarget).attr('data-title');
-        param.subject = clickTitle;
-        //사실상 로그인을 한 상태일 경우... 바로 편집모드로 ... 가면됨..
-        //현재는 아이디를 받는 방식.. 변경 예정..
-        setTimeout(function () {
-            $('#idInputDiv').popup('open');
-            param.column = 'userid';
-            param.userid = $('#idTextInput').val();
-        }, 1000);
-
-    }
+    //속성정보 편집 라디오 버튼 이벤트
     function editModeChange(evt) {
         $('#localCurView').empty();
         $('#remoteCurView').empty();
@@ -166,6 +163,10 @@ function realTimeFunc() {
         var curVisData = openGDSMObj.getLayersTitle();
         var localListView = ui.autoListView('localCurView', 'curListView', curVisData, { divide : '현재 장치 시각화 목록'});
         localListView.click(listViewClick);
+        if (globCurVal === curVal) {
+            return -1;
+        }
+        globCurVal = curVal;
         if (curVal === 'online') {
             param.column = 'subject';
             exConnect.ajaxRequest(serverAddr + '/realtimeInfoSearch.do', {
@@ -199,15 +200,12 @@ function realTimeFunc() {
     $('#idTextInput').change(userInputTextChange);
     $('input[name=editFlag]:radio').on('change', editModeChange);
     $('#editStartBtn').click(editStartClick);
-    /*
-    $('#curList').on({
-        popupafterclose : function (evt, ui) {
-            console.log("test");
-            //session Storage 검사 후... 널일 경우에는... 편집모드(실시간) -> 편집모드(종료)
-        }
-    });*/
+    // 추가 및 변경 작업.. (향후)
+    // 1. 아이디 입력 -> 로그인
+    // 2. 편집 데이터가 있을 경우 업데이트를 할 건지에 대한 여부.. 안할 경우 그냥 편집 데이터는 모두 삭제..
+    //    현 상황 : 무조건 편집 데이터를 보내도록 되어 있음
 }
-//브이월드 WMS 데이터 선택 사용자 인터페이스 생성 / 시각화 함수
+//VWorld WMS 데이터 선택 사용자 인터페이스 생성 / 시각화
 function vworldWMSUI() {
     'use strict';
     $('#vworldSelect').empty();
@@ -229,7 +227,7 @@ function vworldWMSUI() {
         openGDSMObj.addMap(wmsData);
     });
 }
-//지오서버 WFS 데이터 시각화 함수
+//GeoServer WFS 데이터 시각화
 function wfsLoad(str, label) {
     'use strict';
     label = (typeof (label) !== 'undefined') ? label : null;
@@ -244,6 +242,7 @@ function wfsLoad(str, label) {
         label : label
     });
 }
+//D3 활용 벡터 데이터 시각화 (TopoJSON)
 function kMapLoad(str) {
     'use strict';
     $('#opendataList').popup('close');
@@ -262,7 +261,7 @@ function kMapLoad(str) {
         $('#dataSelect').popup('open');
     }, 1000);
 }
-//서울 열린데이터 광장 데이터 선택 사용자 인터페이스 생성 / 시각화 함수
+//서울 열린데이터 광장 데이터 선택 사용자 인터페이스 생성 / 시각화
 function createSeoulPublicAreaEnvUI(str) {
     'use strict';
     $('#setting').empty();
@@ -347,6 +346,7 @@ function createSeoulPublicAreaEnvUI(str) {
         });
     });
 }
+//공공데이터포털 사용자 인터페이스 생성 / 시각화
 function createPublicPortalUI(service) {
     'use strict';
     $('#setting').empty();
@@ -500,6 +500,7 @@ function createPublicPortalUI(service) {
         });
     }
 }
+//공공데이터포털 PopUp close 이벤트
 function popupCloseEvent(service, param) {
     'use strict';
     $('#opendataList').popup('close');
@@ -512,6 +513,7 @@ function popupCloseEvent(service, param) {
         $('#setting').popup('open');
     }, 1000);
 }
+//indexedDB 속성정보 데이터 모두 삭제
 function deleteDB() {
     'use strict';
     OGDSM.indexedDB('webMappingDB', {
@@ -521,7 +523,8 @@ function deleteDB() {
     $('#NotData').show();
     $('#attrList').empty();
 }
-function searchDB() {
+//속성정보 저장 데이터 리스트 생성
+function attrSearchAndList() {
     'use strict';
     OGDSM.indexedDB('webMappingDB', {
         type : 'searchAll',
@@ -554,11 +557,10 @@ function searchDB() {
         }
     });
 }
+//메인 함수
 $(function () {
     'use strict';
-
     $('#map').height($(window).height());
-
     openGDSMObj = new OGDSM.visualization('map', {
         layerListDiv : 'layerList',
         attrTableDiv : 'attributeTable',
@@ -566,10 +568,11 @@ $(function () {
     }); //map div, layerList switch
     openGDSMObj.olMapView([127.010031, 37.582200], 'OSM', 'EPSG:900913'); //VWorld
     //openGDSMObj.trackingGeoLocation(true);
-    mapSelectUI(openGDSMObj);
+
+    mapSelectUI();
     mapAttrUI();
-    realTimeFunc();
-    searchDB();
+    editAttributeFunc();
+    attrSearchAndList();
     /***************************************************/
 	$('#d3viewonMap').hide();
 	$("#d3viewonMap").attr('width', $(window).width() - 50);
@@ -578,9 +581,6 @@ $(function () {
 	$('#interpolationMap').hide();
 	$("#interpolationMap").attr('width', $(window).width() - 50);
 	$('#interpolationMap').css('top', $(window).height() - 600);
-
-/*    $('#dataSelect').attr('width', $(window).width() - 50);
-    $('#dataSelect').attr('height', $(window).height() - 200);*/
     /***************************************************/
   //  testfunction();
 });
