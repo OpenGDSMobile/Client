@@ -22,6 +22,7 @@ OGDSM.namesapce('visualization');
         this.updateLayoutSetting(mapDiv);
         this.mapDiv = mapDiv;
         this.geoLocation = null;
+        this.featureOverlay = null;
         OGDSM.visualization = this;
         var defaults = {
             layerListDiv : null,
@@ -118,6 +119,9 @@ OGDSM.namesapce('visualization');
          */
         getAttrObj : function () {
             return this.attrTableObj;
+        },
+        getFeatureOverlay : function () {
+            return this.featureOverlay;
         }
     };
     return OGDSM.visualization;
@@ -167,6 +171,61 @@ OGDSM.visualization.prototype.olMapView = function (latlng, mapType, baseProj) {
         view : baseView,
         controls: []
     });
+    this.featureOverlay = new ol.FeatureOverlay({
+        map : map,
+        style : (function () {
+            var styleStroke = new ol.style.Stroke({
+                color : 'rgba(255, 0, 0, 1.0)',
+                width : 3
+            });
+            return function (feature, resolution) {
+                var type = feature.getGeometry().getType();
+                var styleCircle = new ol.style.Circle({
+                    radius : 10,
+                    fill : feature.get('styleCircle').getFill(),
+                    stroke : styleStroke
+                });
+                if (type === 'MultiPolygon') {
+                    return [new ol.style.Style({
+                        fill : feature.get('styleFill'),
+                        stroke : styleStroke,
+                        text : feature.get('styleText')
+                    })];
+                } else if (type === 'Point') {
+                    return [new ol.style.Style({
+                        image : styleCircle,
+                        text : feature.get('styleText')
+                    })];
+                }
+            };
+        }())
+    });
+    var featureOverlay = this.featureOverlay;
+    this.interaction = new ol.interaction.Select({
+        layers : function (layer) {
+            return true;
+        },
+        style : (function () {
+            var styleStroke = new ol.style.Stroke({
+                color : 'rgba(255, 0, 0, 1.0)',
+                width : 3
+            });
+            return featureOverlay.getStyle();
+        }())
+    });
+    map.addInteraction(this.interaction);
+        /*
+        function (feature, resolution) {
+            var styleStroke = new ol.style.Stroke({
+                color : 'rgba(255, 0, 0, 1.0)',
+                width : 3
+            });
+            return [new ol.style.Style({
+                fill : feature.get('styleFill'),
+                stroke : styleStroke,
+                text : feature.get('styleText')
+            })];
+        */
     this.mapObj = map;
     this.baseProj = baseProj;
     this.changeBaseMap(mapType);
@@ -299,7 +358,6 @@ OGDSM.visualization.prototype.updateLayoutSetting = function (mapDiv) {
     }
 };
 
-
 /**
  * WMS 및 WFS 맵 레이어 추가
  * @method addMap
@@ -308,78 +366,68 @@ OGDSM.visualization.prototype.updateLayoutSetting = function (mapDiv) {
 OGDSM.visualization.prototype.addMap = function (data) {
     'use strict';
     var chkData = this.layerCheck(data.get('title'));
-    var interaction;
-    if (chkData === false) {
-        this.getMap().addLayer(data);
-        this.mapObj.removeInteraction(this.mapObj.getInteractions());
-        /*interaction*/
-        interaction = new ol.interaction.Select({
-            layers : function (layer) {
-                return true;
-            },
-            style : (function () {
-                var styleStroke = new ol.style.Stroke({
-                    color : 'rgba(255, 0, 0, 1.0)',
-                    width : 3
-                });
-                return function (feature, resolution) {
-                    var type = feature.getGeometry().getType();
-                    var styleCircle = new ol.style.Circle({
-                        radius : 10,
-                        fill : feature.get('styleCircle').getFill(),
-                        stroke : styleStroke
-                    });
-                    if (type === 'MultiPolygon') {
-                        return [new ol.style.Style({
-                            fill : feature.get('styleFill'),
-                            stroke : styleStroke,
-                            text : feature.get('styleText')
-                        })];
-                    } else if (type === 'Point') {
-                        return [new ol.style.Style({
-                            image : styleCircle,
-                            text : feature.get('styleText')
-                        })];
-                    }
-                };
-            }())
-        });
-        this.mapObj.addInteraction(interaction);
-        this.mapObj.removeLayer(interaction);
-        //console.log(interaction.deselected(null));
-        /*layer list On*/
-        if (typeof (this.layerListObj) !== 'undefined') {
-            var color;
-            var geometryObj = data.getSource().getFeatures()[0].getGeometry();
-            var geoType = geometryObj.getType();
-            if (typeof data.getStyle !== 'undefined') {
-                color = data.get('styleFill');
-            } else {
-                color =  'rgb(0, 0, 0)';
-            }
-            this.layerListObj.addList(data, data.get('title'), color, geoType);
-        }
-        /*attribute On*/
-        if (typeof (this.attrTableObj) !== 'undefined') {
-            var attrTableObj = this.attrTableObj;
-            this.attrTableObj.addAttribute(data.get('title'));
-            this.attrTableObj.setolSelectObj(interaction);
-            interaction.getFeatures().on('add', function (event) {
-                attrTableObj.unSelectAttribute(data.get('title'));
-                var obj = event.target.item(0);
-                var label = event.target.item(0).get('label');
-                var selectValue = event.target.item(0).get(label);
-                var trNumber = attrTableObj.searchAttribute(data.get('title'), label, selectValue);
-                console.log(label, selectValue);
-                attrTableObj.selectAttribute(data.get('title'), trNumber);
-            });
-            interaction.getFeatures().on('remove', function (event) {
-                attrTableObj.unSelectAttribute(data.get('title'));
-            });
-        }
-    } else {
-        console.log("Layer is existence");
+    var featureOverlay = this.featureOverlay;
+    var interaction = this.interaction;
+    if (chkData === true) {
+        console.log("OpenGDS Mobile : Layer is existence");
+        return -1;
     }
+    this.getMap().addLayer(data);
+    featureOverlay.getFeatures().clear();
+    //this.getMap().removeInteraction(this.getMap().getInteractions());
+    //this.mapObj.removeInteraction(this.mapObj.getInteractions());
+    /*interaction*/
+   /* interaction = new ol.interaction.Select({
+        layers : function (layer) {
+            return true;
+        },
+        style : (function () {
+            var styleStroke = new ol.style.Stroke({
+                color : 'rgba(255, 0, 0, 1.0)',
+                width : 3
+            });
+            return featureOverlay.getStyle();
+        }())
+    });*/
+
+    //this.mapObj.removeLayer(interaction);
+    //console.log(interaction.deselected(null));
+    /*layer list On*/
+    if (typeof (this.layerListObj) !== 'undefined') {
+        var color;
+        var geometryObj = data.getSource().getFeatures()[0].getGeometry();
+        var geoType = geometryObj.getType();
+        if (typeof data.getStyle !== 'undefined') {
+            color = data.get('styleFill');
+        } else {
+            color =  'rgb(0, 0, 0)';
+        }
+        this.layerListObj.addList(data, data.get('title'), color, geoType);
+    }
+    /*attribute On*/
+    if (typeof (this.attrTableObj) !== 'undefined') {
+        var attrTableObj = this.attrTableObj;
+        attrTableObj.addAttribute(data.get('title'));
+        //this.attrTableObj.setolSelectObj(interaction);
+        interaction.getFeatures().on('add', function (event) {
+            console.log(data.get('title'));
+            var label = event.target.item(0).get('label');
+            var selectValue = event.target.item(0).get(label);
+            //attrTableObj.unSelectAttribute(data.get('title'));
+            featureOverlay.getFeatures().clear();
+            attrTableObj.selectAttribute(data.get('title'), label, selectValue);
+            /*
+            attrTableObj.unSelectAttribute(data.get('title'));
+            var obj = event.target.item(0);
+            var trNumber = attrTableObj.searchAttribute(data.get('title'), label, selectValue);
+            console.log(label, selectValue);
+            attrTableObj.selectAttribute(data.get('title'), trNumber);*/
+        });
+        interaction.getFeatures().on('remove', function (event) {
+            attrTableObj.unSelectAttribute();
+        });
+    }
+
 };
 /**
  * 이미지 레이어 시각화
