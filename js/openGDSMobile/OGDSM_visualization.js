@@ -368,30 +368,13 @@ OGDSM.visualization.prototype.addMap = function (data) {
     var chkData = this.layerCheck(data.get('title'));
     var featureOverlay = this.featureOverlay;
     var interaction = this.interaction;
+    var mapObj = this.getMap();
     if (chkData === true) {
         console.log("OpenGDS Mobile : Layer is existence");
         return -1;
     }
-    this.getMap().addLayer(data);
+    mapObj.addLayer(data);
     featureOverlay.getFeatures().clear();
-    //this.getMap().removeInteraction(this.getMap().getInteractions());
-    //this.mapObj.removeInteraction(this.mapObj.getInteractions());
-    /*interaction*/
-   /* interaction = new ol.interaction.Select({
-        layers : function (layer) {
-            return true;
-        },
-        style : (function () {
-            var styleStroke = new ol.style.Stroke({
-                color : 'rgba(255, 0, 0, 1.0)',
-                width : 3
-            });
-            return featureOverlay.getStyle();
-        }())
-    });*/
-
-    //this.mapObj.removeLayer(interaction);
-    //console.log(interaction.deselected(null));
     /*layer list On*/
     if (typeof (this.layerListObj) !== 'undefined') {
         var color;
@@ -408,23 +391,16 @@ OGDSM.visualization.prototype.addMap = function (data) {
     if (typeof (this.attrTableObj) !== 'undefined') {
         var attrTableObj = this.attrTableObj;
         attrTableObj.addAttribute(data.get('title'));
-        //this.attrTableObj.setolSelectObj(interaction);
         interaction.getFeatures().on('add', function (event) {
-            console.log(data.get('title'));
             var label = event.target.item(0).get('label');
             var selectValue = event.target.item(0).get(label);
-            //attrTableObj.unSelectAttribute(data.get('title'));
             featureOverlay.getFeatures().clear();
-            attrTableObj.selectAttribute(data.get('title'), label, selectValue);
-            /*
-            attrTableObj.unSelectAttribute(data.get('title'));
-            var obj = event.target.item(0);
-            var trNumber = attrTableObj.searchAttribute(data.get('title'), label, selectValue);
-            console.log(label, selectValue);
-            attrTableObj.selectAttribute(data.get('title'), trNumber);*/
+            attrTableObj.selectAttribute(data.get('title'), label, selectValue, attrTableObj);
         });
-        interaction.getFeatures().on('remove', function (event) {
-            attrTableObj.unSelectAttribute();
+        featureOverlay.getFeatures().on('add', function (event) {
+            attrTableObj.unSelectAttribute(attrTableObj);
+            mapObj.removeInteraction(interaction);
+            mapObj.addInteraction(interaction);
         });
     }
 

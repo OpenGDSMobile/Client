@@ -66,7 +66,6 @@ function editAttributeFunc() {
     function realtimeReceived(reData) {
         var arrData = JSON.parse(reData.data);
         $.each(arrData, function (i, d) {
-            console.log(d.tableName);
             attrObj = openGDSMObj.getAttrObj();
             attrObj.editValueAttribute(d.tableName, d.column, d.srcData, d.dstData);
         });
@@ -77,7 +76,7 @@ function editAttributeFunc() {
             setTimeout(function () {
                 function attrSW(wsObj) {
                     attrObj = openGDSMObj.getAttrObj();
-                    attrObj.editAttribute(true, param.subject, wsObj);
+                    attrObj.editAttributeMode(true, param.subject, wsObj);
                 }
                 OGDSM.indexedDB('webMappingDB', {
                     type : 'search',
@@ -194,7 +193,7 @@ function editAttributeFunc() {
                 wsObj = null;
             }
             attrObj = openGDSMObj.getAttrObj();
-            attrObj.editAttribute(false);
+            attrObj.editAttributeMode(false);
         }
     }
     $('#idTextInput').change(userInputTextChange);

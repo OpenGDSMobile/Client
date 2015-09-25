@@ -22,6 +22,7 @@ OGDSM.namesapce('attributeTable');
         this.curTab = null;                 //현재 시각화되고 있는 속성정보 탭
         this.wsObj = null;                  //webSocket 객체
         this.attrSelected = false;      //속성정보 테이블 선택 여부
+        this.storeEditTable = [];
         var rootElement = document.getElementById(rootDiv),
             ulElement = document.createElement('ul'),
             contentsElement = document.createElement('div');
@@ -61,7 +62,7 @@ OGDSM.namesapce('attributeTable');
          * 현재 시각화 속성테이블 레이어 이름 SET
          * @method setCurTab
          */
-        setCurTab : function (obj) { this.usrTab = obj; },
+        setCurTab : function (obj) { this.curTab = obj; },
         /**
          * 현재 시각화 속성테이블 레이어 이름 GET
          * @method getCurTab
@@ -70,6 +71,9 @@ OGDSM.namesapce('attributeTable');
         getCurTab : function () { return this.curTab; },
         getWsObj : function () {
             return this.wsObj;
+        },
+        getStoreEditTable : function () {
+            return this.storeEditTable;
         }
     };
     return OGDSM.attributeTable;
@@ -125,12 +129,12 @@ OGDSM.attributeTable.prototype.addAttribute = function (layerName) {
     }
     //속성정보 테이블 클릭 이벤트/*tr select*/
     function tableEvent(evtLayerName) {
-        $('#attrTable' + evtLayerName + ' tbody').on('click', 'tr', function () {
+
+        $('#attrTable' + evtLayerName + ' tbody').on('click', 'td', function () {
             var i = 0, j = 0, z = 0;
-            var tds = $(this).children();
+            var tr = $(this).parent();
+            var tds = $(tr).children();
             var tableKeyContent = {}, tableKeys = [];
-            tableObj.$('tr.selected').removeClass('selected');
-            $(this).addClass('selected');
             for (i = 0; i < tds.length; i++) {
                 tableKeys.push($(tds[i]).attr('data-key'));
                 tableKeyContent[$(tds[i]).attr('data-key')] = $(tds[i]).html();
@@ -146,20 +150,36 @@ OGDSM.attributeTable.prototype.addAttribute = function (layerName) {
                             if (tableKeyContent[tableKeys[j]] !== property[tableKeys[j]]) {
                                 break;
                             }
-                            visualObj.getFeatureOverlay().addFeature(vectorObj);
-                            attrObj.setSelectObj($(this));
+                            if (j === tableKeys.length - 1) {
+                                visualObj.getFeatureOverlay().addFeature(vectorObj);
+                                attrObj.selectAttribute(evtLayerName, $(this).attr('data-key'), $(this).html(), attrObj);
+                            }
                         }
                     }
                 }
 
             }
         });
-
         /*page change*/
         $('#attrTable' + evtLayerName).on('page.dt', function (e, settings) {
-            attrObj.selectAttributeObj(attrObj, attrObj.getSelectObj());
+            var selectJSON = attrObj.getSelectObj();
             setTimeout(function () {
-                attrObj.editAttribute(attrObj.getEditMode(), attrObj.getCurTab(), attrObj.getWsObj());
+                attrObj.editAttributeMode(attrObj.getEditMode(), attrObj.getCurTab(), attrObj.getWsObj());
+                if (selectJSON !== false) {
+                    attrObj.selectAttribute(selectJSON.tableName, selectJSON.key, selectJSON.value, attrObj);
+                }
+                if (attrObj.getStoreEditTable().length !== 0) {
+                    var i = 0;
+                    var objs = attrObj.getStoreEditTable();
+                    console.log(objs);
+                    for (i = 0; i < objs.length; i++) {
+                        var obj = objs[i];
+                        var wh = attrObj.editValueAttribute(obj.tableName, obj.header, obj.value, obj.editValue);
+                        if (wh !== -1) {
+                            objs.splice(i, 1); //향후수정......
+                        }
+                    }
+                }
             }, 200);
         });
     }
@@ -288,7 +308,7 @@ OGDSM.attributeTable.prototype.removeAttribute = function (layerName) {
  * @method removeAttribute
  * @param {boolean}  sw   - 수정 스위치
  */
-OGDSM.attributeTable.prototype.editAttribute = function (sw, layer, wsObj) {
+OGDSM.attributeTable.prototype.editAttributeMode = function (sw, layer, wsObj) {
     'use strict';
     wsObj = this.wsObj = (typeof (wsObj) !== 'undefined')  ? wsObj : null;
     var attrLayer = (typeof (layer) !== 'undefined')  ? '#attrTable' + layer + ' ' : '';
@@ -377,8 +397,8 @@ OGDSM.attributeTable.prototype.editAttribute = function (sw, layer, wsObj) {
             });
         });
     } else {
-        this.editMode = false;
         console.log("click event 해지");
+        this.editMode = false;
         $('#' + popupDIV).off();
         $('#' + popupDIV).remove();
         $('#' + editInputId).off('change');
@@ -397,34 +417,8 @@ OGDSM.attributeTable.prototype.editAttribute = function (sw, layer, wsObj) {
  */
 OGDSM.attributeTable.prototype.searchAttribute = function (tableName, header, value) {
     'use strict';
-    //var tableObjs = this.attrTableObjs;
-    //var tableObj = null;
-    //var searchIdx = 0;
-    //var resultIdx = null, rowIdx;
-    var trObj = $('.' + tableName + header + value).parent();
-    /*
-    $.each(tableObjs, function (i, d) {
-        if (d.attrName === tableName) {
-            tableObj = d.attrObj;
-            return 0;
-        }
-    });
-    tableObj.columns().header().each(function (data, i) {
-        var tableHeader = $(data).attr('data-value');
-        if (header === tableHeader) {
-            searchIdx = i;
-            return false;
-        }
-    });
-    tableObj.columns(searchIdx).every(function () {
-        $(this.data()).each(function (i, data) {
-            if (data === value) {
-                rowIdx = i;
-            }
-        });
-    });*/
-//    console.log('search Attr: ' + resultIdx);
-//    return resultIdx;
+    var searchClassName = tableName + header + value;
+    var trObj = $('.' + searchClassName).parent();
     return trObj;
 };
 
@@ -437,36 +431,36 @@ OGDSM.attributeTable.prototype.searchAttribute = function (tableName, header, va
  * @param {String}  edit   - 변경 값
  * @return {Number}
  */
-// 값이 두개일 경우에는???
 OGDSM.attributeTable.prototype.editValueAttribute = function (tableName, header, value, editValue) {
     'use strict';
     editValue = (typeof (editValue) !== 'undefined')  ? editValue : null;
-    var tableObjs = this.attrTableObjs;
-    var tableObj = null;
-    var searchIdx, rowIdx;
-    $.each(tableObjs, function (i, d) {
-        if (d.attrName === tableName) {
-            tableObj = d.attrObj;
-            return 0;
-        }
-    });
-    tableObj.columns().header().each(function (data, i) {
-        var tableHeader = $(data).attr('data-value');
-        if (header === tableHeader) {
-            searchIdx = i;
-            return false;
-        }
-    });
-    tableObj.columns(searchIdx).every(function () {
-        $(this.data()).each(function (i, data) {
-            if (data === value) {
-                rowIdx = i;
+    var searchClassName = tableName + header + value;
+    var reClassName = tableName + header + editValue;
+    var trObj = $('.' + searchClassName);
+    var returnValue = null;
+    if (trObj.length === 0) {
+        var tmpStore = this.storeEditTable;
+        var i = 0;
+        for (i = 0; i < tmpStore.length; i++) {
+            var obj = tmpStore[i];
+            if (obj.value === value) {
+                if (obj.editValue === editValue) {
+                    console.log("OpenGDS Mobile : ext");
+                    return -1;
+                }
             }
-        });
-    });
-    var editObj = $('#' + tableName + header + rowIdx);
-    editObj.html(editValue);
-
+        }
+        var tmpStoreObj = {};
+        tmpStoreObj.tableName = tableName;
+        tmpStoreObj.header = header;
+        tmpStoreObj.value = value;
+        tmpStoreObj.editValue = editValue;
+        this.storeEditTable.push(tmpStoreObj);
+    } else {
+        trObj.html(editValue);
+        trObj.removeClass(searchClassName);
+        trObj.addClass(reClassName);
+    }
     if (this.indexedDB_SW === true) {
         console.log('update indexedDB : ' + tableName + ' ' + value + ' ' + editValue);
         var searchData = {};
@@ -479,6 +473,9 @@ OGDSM.attributeTable.prototype.editValueAttribute = function (tableName, header,
             editData : editValue,
             success : function () {
                 console.log("indexedDB edit");
+            },
+            fail : function () {
+                console.log("fail");
             }
         });
     }
@@ -489,48 +486,32 @@ OGDSM.attributeTable.prototype.editValueAttribute = function (tableName, header,
  * @param {String}  tableName   - 테이블 이름
  * @param {String}  trNum   - 테이블 인덱스
  */
-OGDSM.attributeTable.prototype.selectAttributeObj = function (attrObj, trObj) {
+OGDSM.attributeTable.prototype.selectAttribute = function (tableName, key, value, attrObj) {
     'use strict';
+    attrObj = (typeof (attrObj) !== 'undefined') ? attrObj : this;
+    var searchClassName = tableName + key + value;
+    var trObj = $('.' + searchClassName).parent();
+    var selectJSON = {};
+    selectJSON.tableName = tableName;
+    selectJSON.key = key;
+    selectJSON.value = value;
     attrObj.unSelectAttribute(attrObj);
-    console.log(attrObj);
-    console.log(trObj);
     trObj.addClass('selected');
-    attrObj.setSelectObj(trObj);
-};
-/**
- * 속성 정보 선택
- * @method selectAttribute
- * @param {String}  tableName   - 테이블 이름
- * @param {String}  trNum   - 테이블 인덱스
- */
-OGDSM.attributeTable.prototype.selectAttribute = function (tableName, key, value) {
-    'use strict';
-//    var tableObj = $('#attrTable' + tableName).DataTable();
-//    tableObj.$('tr.selected').removeClass('selected');
-//    tableObj.$('tr').eq(trNum).addClass('selected');
-    this.unSelectAttribute();
-    var trObj = $('.' + tableName + key + value).parent();
-    trObj.addClass('selected');
-    this.setSelectObj(trObj);
+    attrObj.setSelectObj(selectJSON);
 };
 /**
  * 속성 정보 선택 해제
  * @method selectAttribute
  * @param {String}  tableName   - 테이블 이름
  */
-//OGDSM.attributeTable.prototype.unSelectAttribute = function (tableName) {
 OGDSM.attributeTable.prototype.unSelectAttribute = function (attrObj) {
     'use strict';
     attrObj = (typeof (attrObj) !== 'undefined') ? attrObj : this;
-    console.log(attrObj.getSelectObj());
     if (attrObj.getSelectObj() !== false) {
-        attrObj.getSelectObj().removeClass('selected');
+        var selectJSON = attrObj.getSelectObj();
+        var searchClassName = selectJSON.tableName + selectJSON.key + selectJSON.value;
+        var trObj = $('.' + searchClassName).parent();
+        trObj.removeClass('selected');
+        attrObj.setSelectObj(false);
     }
-    //var tableObj = $('#attrTable' + tableName).DataTable();
-    //tableObj.$('tr.selected').removeClass('selected');
-    // selected layer color change...
-    //if (this.getSelectObj() !== false) {
-        //this.featureOverlay.removeFeature(this.getSelectObj());
-//        this.attrSelected = false;
-//    }
 };
