@@ -322,12 +322,12 @@ OGDSM.attributeTable.prototype.editAttributeMode = function (sw, layer, wsObj) {
     function editDataResult(edit, src, dst) {
         var jsonObj = {};
         function addArrayJSON(arrJSON) {
-            console.log(jsonObj);
             jsonObj.tableName = layer;
             jsonObj.column = Object.keys(searchData)[0];
             jsonObj.srcData = oldValue;
             jsonObj.dstData = edit;
             arrJSON.push(jsonObj);
+            console.log(arrJSON);
             if (wsObj !== null) {
                 console.log("실시간 편집중입니다");
                 wsObj.send(JSON.stringify(arrJSON));

@@ -29,7 +29,7 @@ OGDSM.namesapce('webSocket');
          */
         ws.onopen = function () {
             var jsonObj = {};
-            jsonObj.userId = userName;
+            jsonObj.userid = userName;
             jsonObj.subject = defaults.subject;
             console.log(jsonObj);
             ws.send(JSON.stringify(jsonObj));

@@ -1,0 +1,21 @@
+{
+  "name": "opengdsmobile",
+  "homepage": "https://github.com/OpenGDSMobile/Client",
+  "authors": [
+    "engintruder <engkwangseob@gmail.com>"
+  ],
+  "description": "OpenGDS Mobile Client library",
+  "main": "",
+  "keywords": [
+    "OpenGDS",
+    "OpenGDSMobile"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

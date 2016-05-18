@@ -1,5 +1,5 @@
 /*jslint devel: true, vars: true, plusplus: true*/
-/*global $, jQuery, ol, OGDSM, geoServerAddr, serverAddr, wsServerAddr*/
+/*global $, jQuery, ol, OGDSM, geoServerAddr, serverAddr, wsServerAddr, workspace*/
 
 //OpenGDS Mobile
 var openGDSMObj;
@@ -57,7 +57,7 @@ function editAttributeFunc() {
         //현재는 아이디를 받는 방식.. 변경 예정..
         setTimeout(function () {
             $('#idInputDiv').popup('open');
-            param.column = 'userid';
+            param.column = 'USER_ID';
             param.userid = $('#idTextInput').val();
         }, 1000);
 
@@ -134,7 +134,7 @@ function editAttributeFunc() {
                 g = Math.floor(Math.random() * 256),
                 b = Math.floor(Math.random() * 256);
             var color = 'rgb(' + r + ',' + g + ',' + b + ')';
-            exConnect.geoServerGeoJsonLoad(openGDSMObj, geoServerAddr, 'opengds', param.subject, {
+            exConnect.geoServerGeoJsonLoad(openGDSMObj, geoServerAddr, workspace, param.subject, {
                 color : color,
                 label : 'sig_kor_nm',
                 callback : attributeEditEnable
@@ -147,7 +147,7 @@ function editAttributeFunc() {
     //서버상 같은 아이디가 있는지 여부 확인
     function editStartClick(evt) {
         var exConnect = new OGDSM.externalConnection();
-        exConnect.ajaxRequest(serverAddr + '/realtimeInfoSearch.do', {
+        exConnect.ajaxRequest(serverAddr + '/api/realtimeInfoSearch.do', {
             data : param,
             callback : startedEdit
         });
@@ -167,14 +167,14 @@ function editAttributeFunc() {
         }
         globCurVal = curVal;
         if (curVal === 'online') {
-            param.column = 'subject';
-            exConnect.ajaxRequest(serverAddr + '/realtimeInfoSearch.do', {
+            param.column = 'SUBJECT';
+            exConnect.ajaxRequest(serverAddr + '/api/realtimeInfoSearch.do', {
                 data : param,
                 callback : function (result) {
                     var subject = result.data;
                     var remoteListView = ui.autoListView('remoteCurView', 'curRemoteListView', subject, {
                         divide : '실시간 편집 목록',
-                        itemKey : 'subject'
+                        itemKey : 'SUBJECT'
                     });
                     remoteListView.click(listViewClick);
                     $('#curList').popup('open', {
@@ -236,7 +236,7 @@ function wfsLoad(str, label) {
     var color = 'rgb(' + r + ',' + g + ',' + b + ')';
     var externalServer = new OGDSM.externalConnection();
     var ui = new OGDSM.eGovFrameUI();
-    externalServer.geoServerGeoJsonLoad(openGDSMObj, geoServerAddr, 'opengds', str, {
+    externalServer.geoServerGeoJsonLoad(openGDSMObj, geoServerAddr, workspace, str, {
         color : color,
         label : label
     });
@@ -251,7 +251,7 @@ function kMapLoad(str) {
     setTimeout(function () {
         var chartObj = new OGDSM.chartVisualization();
         $('.range').hide();
-        chartObj.kMap('d3View', serverAddr + '/geojson.do', str, {
+        chartObj.kMap('d3View', serverAddr + '/api/getGeoJson.do', str, {
             map_scale : 8000
         });
         $("#d3View").css('overflow-y', 'scroll');
@@ -279,7 +279,7 @@ function createSeoulPublicAreaEnvUI(str) {
     processBtn.click(function () {
         $('#setting').popup("close");
         var apiKey = '6473565a72696e7438326262524174',
-            addr = serverAddr + '/SeoulOpenData.do';
+            addr = serverAddr + '/api/SeoulOpenData.do';
         var visualType = $('input[name=' + envIds[0].attr('name') + ']:checked').val(),
             environmentType = $('input[name=' + envIds[3].attr('name') + ']:checked').val(),
             date = envIds[1].val().split('-').join(''),
@@ -306,7 +306,7 @@ function createSeoulPublicAreaEnvUI(str) {
         }
         externalServer.seoulEnvironmentLoad(addr, apiKey, environmentType, date, time, function (resultData) {
             if (visualType === 'map') {
-                externalServer.geoServerGeoJsonLoad(openGDSMObj, geoServerAddr, 'opengds', 'seoul_sig', {
+                externalServer.geoServerGeoJsonLoad(openGDSMObj, geoServerAddr, workspace, 'seoul_sig', {
                     callback : function (layer) {
                         console.log(layer);
                         openGDSMObj.changeWFSStyle('seoul_sig', colors, {
@@ -361,7 +361,7 @@ function createPublicPortalUI(service) {
         processBtn.click(function () {
             $('#setting').popup('close');
             var apiKey = 'kCxEhXiTf1qmDBlQFOOmw%2BemcPSxQXn5V5%2Fx8EthoHdbSojIdQvwX%2BHtWFyuJaIco0nUJtu12e%2F9acb7HeRRRA%3D%3D',
-                addr = serverAddr + '/PublicDataPortal.do';
+                addr = serverAddr + '/api/PublicDataPortal.do';
             var visualType = $('input[name=' + customUI[0].attr('name') + ']:checked').val(),
                 date = customUI[1].val().split('-').join('');
             console.log(addr + ' ' + date);
@@ -394,7 +394,7 @@ function createPublicPortalUI(service) {
         processBtn.click(function () {
             $('#setting').popup('close');
             var apiKey = 'kCxEhXiTf1qmDBlQFOOmw%2BemcPSxQXn5V5%2Fx8EthoHdbSojIdQvwX%2BHtWFyuJaIco0nUJtu12e%2F9acb7HeRRRA%3D%3D',
-                addr = serverAddr + '/PublicDataPortal.do';
+                addr = serverAddr + '/api/PublicDataPortal.do';
             var visualType = $('input[name=' + customUI[0].attr('name') + ']:checked').val(),
                 nuclearPos = $('input[name=' + customUI[1].attr('name') + ']:checked').val();
             console.log(addr + ' ' + visualType + ' ' + nuclearPos);
@@ -432,7 +432,7 @@ function createPublicPortalUI(service) {
         processBtn.click(function () {
             $('#setting').popup('close');
             var apiKey = 'kCxEhXiTf1qmDBlQFOOmw%2BemcPSxQXn5V5%2Fx8EthoHdbSojIdQvwX%2BHtWFyuJaIco0nUJtu12e%2F9acb7HeRRRA%3D%3D',
-                addr = serverAddr + '/PublicDataPortal.do';
+                addr = serverAddr + '/api/PublicDataPortal.do';
             var visualType = $('input[name=' + customUI[0].attr('name') + ']:checked').val(),
                 environmentType = $('input[name=' + customUI[2].attr('name') + ']:checked').val(),
                 area = $('input[name=' + customUI[1].attr('name') + ']:checked').val();
@@ -460,7 +460,7 @@ function createPublicPortalUI(service) {
             externalServer.dataPortalEnvironmentLoad(addr, apiKey, environmentType, area, function (resultData) {
                 var xyData = OGDSM.jsonToArray(resultData, environmentType, 'stationName');
                 if (visualType === 'map') {
-                    externalServer.geoServerGeoJsonLoad(openGDSMObj, geoServerAddr, 'opengds', 'seoul_sig', {
+                    externalServer.geoServerGeoJsonLoad(openGDSMObj, geoServerAddr, workspace, 'seoul_sig', {
                         callback : function (layer) {
                             console.log(resultData);
                             openGDSMObj.changeWFSStyle('seoul_sig', colors, {
@@ -563,7 +563,7 @@ $(function () {
     openGDSMObj = new OGDSM.visualization('map', {
         layerListDiv : 'layerList',
         attrTableDiv : 'attributeTable',
-        attrAddr : serverAddr + '/attrTable.do'
+        attrAddr : serverAddr + '/api/getAttrTable.do'
     }); //map div, layerList switch
     openGDSMObj.olMapView([127.010031, 37.582200], 'OSM', 'EPSG:900913'); //VWorld
     //openGDSMObj.trackingGeoLocation(true);

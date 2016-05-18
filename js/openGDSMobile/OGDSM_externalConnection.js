@@ -337,6 +337,7 @@ OGDSM.externalConnection.prototype.publicDataInterface = function (addr, jsonDat
         theme : 'c',
         textonlt : 'false'
     });
+    console.log(JSON.stringify(jsonData));
     $.ajax({
         type : 'POST',
         url : addr,
@@ -378,7 +379,6 @@ OGDSM.externalConnection.prototype.seoulEnvironmentLoad = function (addr, apiKey
     jsonData.amount = '1/100';
     jsonData.dateTimeValue = date + time;
     jsonData.envType = envType;
-
     this.publicDataInterface(addr, jsonData, function (resultData) {
         callback(resultData);
     });
