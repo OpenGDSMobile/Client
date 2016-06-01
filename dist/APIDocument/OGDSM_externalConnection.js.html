@@ -1,3 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>OGDSM_externalConnection.js - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="OGDSM.html">OGDSM</a></li><li><a href="OGDSM.attributeTable.html">attributeTable</a><ul class='methods'><li data-type='method'><a href="OGDSM.attributeTable.html#.getEidtMode">getEidtMode</a></li><li data-type='method'><a href="OGDSM.attributeTable.html#.getSelectObj">getSelectObj</a></li></ul></li><li><a href="OGDSM.chartVisualization.html">chartVisualization</a></li><li><a href="OGDSM.eGovFrameUI.html">eGovFrameUI</a></li><li><a href="OGDSM.externalConnection.html">externalConnection</a></li><li><a href="OGDSM.mapLayerList.html">mapLayerList</a></li><li><a href="OGDSM.visualization.html">visualization</a><ul class='methods'><li data-type='method'><a href="OGDSM.visualization.html#getLayersTitle">getLayersTitle</a></li></ul></li><li><a href="OGDSM.webSocket.html">webSocket</a></li></ul><h3>Modules</h3><ul><li><a href="OGDSM.module_applyOptions.html">applyOptions</a></li><li><a href="OGDSM.module_indexedDB.html">indexedDB</a></li><li><a href="OGDSM.module_jsontoArray.html">jsontoArray</a></li><li><a href="OGDSM.module_namespace.html">namespace</a></li></ul><h3>Global</h3><ul><li><a href="global.html#addAttribute">addAttribute</a></li><li><a href="global.html#addList">addList</a></li><li><a href="global.html#addMap">addMap</a></li><li><a href="global.html#ajaxRequest">ajaxRequest</a></li><li><a href="global.html#areaChart">areaChart</a></li><li><a href="global.html#autoButton">autoButton</a></li><li><a href="global.html#autoCheckBox">autoCheckBox</a></li><li><a href="global.html#autoListView">autoListView</a></li><li><a href="global.html#autoRadioBox">autoRadioBox</a></li><li><a href="global.html#autoSelect">autoSelect</a></li><li><a href="global.html#autoSwitch">autoSwitch</a></li><li><a href="global.html#baseMapRadioBox">baseMapRadioBox</a></li><li><a href="global.html#baseMapSelect">baseMapSelect</a></li><li><a href="global.html#changeBaseMap">changeBaseMap</a></li><li><a href="global.html#changeWFSStyle">changeWFSStyle</a></li><li><a href="global.html#dataPortalEnvironment">dataPortalEnvironment</a></li><li><a href="global.html#dataPortalEnvironmentLoad">dataPortalEnvironmentLoad</a></li><li><a href="global.html#dataPortalGreenGas">dataPortalGreenGas</a></li><li><a href="global.html#dataPortalNuclear">dataPortalNuclear</a></li><li><a href="global.html#dateInput">dateInput</a></li><li><a href="global.html#formAjaxRequest">formAjaxRequest</a></li><li><a href="global.html#geoServerGeoJsonLoad">geoServerGeoJsonLoad</a></li><li><a href="global.html#getAttrObj">getAttrObj</a></li><li><a href="global.html#getCurTab">getCurTab</a></li><li><a href="global.html#getEidtMode">getEidtMode</a></li><li><a href="global.html#getLayersGeoServer">getLayersGeoServer</a></li><li><a href="global.html#getMap">getMap</a></li><li><a href="global.html#greenGasEmissionLoad">greenGasEmissionLoad</a></li><li><a href="global.html#hBarChart">hBarChart</a></li><li><a href="global.html#imageLayer">imageLayer</a></li><li><a href="global.html#indexOf">indexOf</a></li><li><a href="global.html#layerCheck">layerCheck</a></li><li><a href="global.html#lineChart">lineChart</a></li><li><a href="global.html#olMapView">olMapView</a></li><li><a href="global.html#publicDataInterface">publicDataInterface</a></li><li><a href="global.html#realTimeLevelofRadiationLoad">realTimeLevelofRadiationLoad</a></li><li><a href="global.html#removeAttribute">removeAttribute</a></li><li><a href="global.html#removeList">removeList</a></li><li><a href="global.html#removeMap">removeMap</a></li><li><a href="global.html#selectAttribute">selectAttribute</a></li><li><a href="global.html#seoulEnvironment">seoulEnvironment</a></li><li><a href="global.html#seoulEnvironmentLoad">seoulEnvironmentLoad</a></li><li><a href="global.html#setCurTab">setCurTab</a></li><li><a href="global.html#setSelectObj">setSelectObj</a></li><li><a href="global.html#setVisible">setVisible</a></li><li><a href="global.html#timeInput">timeInput</a></li><li><a href="global.html#trackingGeoLocation">trackingGeoLocation</a></li><li><a href="global.html#updateLayoutSetting">updateLayoutSetting</a></li><li><a href="global.html#vBarChart">vBarChart</a></li><li><a href="global.html#vworldWMSList">vworldWMSList</a></li><li><a href="global.html#vworldWMSLoad">vworldWMSLoad</a></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">OGDSM_externalConnection.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/* GeoServer, Public data, VWorld Connect Class */
+/*jslint devel: true, vars : true */
 /*global $, jQuery, ol, OGDSM*/
 OGDSM.namesapce('externalConnection');
 (function (OGDSM) {
@@ -18,10 +60,11 @@ OGDSM.namesapce('externalConnection');
 
 /**
  * 폼 타입 에이젝스 요청
+ * @method formAjaxRequest
  * @param {String} addr - 서버 주소
  * @param {String} formID - form ID
- * @param {String} submitID - 전송 버튼 아이디<input type="button">
- * @param {function} callback - 콜백 함수 function (resultData) {...}
+ * @param {String} submitID - 전송 버튼 아이디&lt;input type="button">
+ * @param {Function} callback - 콜백 함수 function (resultData) {...}
  */
 OGDSM.externalConnection.prototype.formAjaxRequest = function (addr, formID, submitBtnID, callback) {
     'use strict';
@@ -51,8 +94,9 @@ OGDSM.externalConnection.prototype.formAjaxRequest = function (addr, formID, sub
 
 /**
  * JSON 기반 에이젝스 요청
+ * @method ajaxRequest
  * @param {String} addr - 서버 주소
- * @param {Object} options - 콜백 함수 function (resultData) {...}
+ * @param {JSON Object} options - 콜백 함수 function (resultData) {...}
  *
  *
  *
@@ -103,24 +147,23 @@ OGDSM.externalConnection.prototype.ajaxRequest = function (addr, options) {
 
 /**
  * GeoServer WFS 데이터 요청 (OpenLayers3 ol.source.GeoJSON)
- * @param {Object} obj - OpenGDS Mobile 시각화 객체
+ * @method geoServerGeoJsonLoad
+ * @param {OGDSM Obj} obj - OpenGDS Mobile 시각화 객체
  * @param {String} addr - 주소
  * @param {String} workspace - 워크스페이스
  * @param {String} layerName - 레이어 이름
- * @param {Object} options - 옵션 JSON 객체 키 값<br>
-  {color:'rgba(0, 0, 0, 0.0)', callback:function () {}}<br>
-    <ul>
-        <li>color(String) : 색상 rgba</li>
-        <li>label(String) : 라벨<br></li>
-        <li>callback(Function) : 콜백 함수 function (resultData) {...}</li>
-    </ul>
+ * @param {JSON Object} options - 옵션 JSON 객체 키 값&lt;br>
+  {color:'rgba(0, 0, 0, 0.0)', callback:function () {}}&lt;br>
+  color(String) : 색상 rgba&lt;br>
+  label(String) : 라벨&lt;br>
+  callback(Function) : 콜백 함수 function (resultData) {...}
  */
 OGDSM.externalConnection.prototype.geoServerGeoJsonLoad = function (obj, addr, workspace, layerName, options) {
     'use strict';
     options = (typeof (options) !== 'undefined') ? options : {};
     console.log(layerName);
-    var fullAddr = addr + '/geoserver/wfs?service=WFS&version=1.1.0&request=GetFeature&typeNames=' + workspace + ':' +
-        layerName.split('--')[0] + '&outputFormat=json&srsname=' + obj.baseProj;
+    var fullAddr = addr + '/geoserver/wfs?service=WFS&amp;version=1.1.0&amp;request=GetFeature&amp;typeNames=' + workspace + ':' +
+        layerName.split('--')[0] + '&amp;outputFormat=json&amp;srsname=' + obj.baseProj;
     var objStyles, name;
     var defaults = {
         color : 'rgba(0, 0, 0, 0.0)',
@@ -134,7 +177,7 @@ OGDSM.externalConnection.prototype.geoServerGeoJsonLoad = function (obj, addr, w
         theme : 'c',
         textonlt : 'false'
     });
-    layerName = layerName.replace(/[ \{\}\[\]\/?.,;:|\)*~`!\+┼<>@\#$%&\'\"\\\(\=]/gi);
+    layerName = layerName.replace(/[ \{\}\[\]\/?.,;:|\)*~`!\+┼&lt;>@\#$%&amp;\'\"\\\(\=]/gi);
     $.ajax({
         type : 'POST',
         url : fullAddr,
@@ -209,6 +252,7 @@ OGDSM.externalConnection.prototype.geoServerGeoJsonLoad = function (obj, addr, w
 };
 /**
  * VWorld WMS 데이터 요청
+ * @method vworldWMSLoad
  * @param {String} apiKey - API 키
  * @param {String} domain - 도메인
  * @param {String} data - WMS 레이어 이름
@@ -238,8 +282,9 @@ OGDSM.externalConnection.prototype.vworldWMSLoad = function (apiKey, domain, dat
 
 /**
  * 공공 데이터 요청 인터페이스
+ * @method publicDataInterface
  * @param {String} addr - 어플리케이션 서버 요청 주소
- * @param {Object} jsonData - 데이터 요청 파라미터 {serviceName : ??(필수), serviceKey ??(필수), ...}
+ * @param {JSON Object} jsonData - 데이터 요청 파라미터 {serviceName : ??(필수), serviceKey ??(필수), ...}
  * @param {function} callback - 콜백 함수 function (resultData) {...}
  *
  */
@@ -276,6 +321,7 @@ OGDSM.externalConnection.prototype.publicDataInterface = function (addr, jsonDat
 
 /**
  * 서울 열린 데이터 광장 환경 데이터 요청
+ * @method seoulEnvironmentLoad
  * @param {String} addr - 주소
  * @param {String} apiKey - api 키
  * @param {String} envType - 환경 정보 이름
@@ -300,6 +346,7 @@ OGDSM.externalConnection.prototype.seoulEnvironmentLoad = function (addr, apiKey
 
 /**
  * 데이터 포털 환경 데이터 요청
+ * @method dataPortalEnvironmentLoad
  * @param {String} addr - 주소
  * @param {String} apiKey - API 키
  * @param {String} envType - 환경 정보 이름
@@ -323,6 +370,7 @@ OGDSM.externalConnection.prototype.dataPortalEnvironmentLoad = function (addr, a
 
 /**
  * 데이터 포털 온실가스배출량 조회 서비스
+ * @method greenGasEmissionLoad
  * @param {String} addr - 주소
  * @param {String} apiKey - API 키
  * @param {String} startDate - 시작 날짜 (YYYYMM 200701 ~ 201412 까지만 데이터 존재)
@@ -346,6 +394,7 @@ OGDSM.externalConnection.prototype.greenGasEmissionLoad = function (addr, apiKey
 
 /**
  * 원자력발전소 실시간 주변 방사선량
+ * @method realTimeLevelofRadiationLoad
  * @param {String} addr - 주소
  * @param {String} apiKey - API 키
  * @param {String} genName - 원자력 발전소 이름 (WS, KR, YK, Plant)
@@ -365,6 +414,7 @@ OGDSM.externalConnection.prototype.realTimeLevelofRadiationLoad = function (addr
 
 /**
  * geoServer 데이터 리스트 요청
+ * @method getLayersGeoServer
  * @param {String} addr - 서버 주소
  * @param {String} wsName - 워크스페이스 이름
  * @param {Function} callback - 콜백 함수 function (resultData) {...}
@@ -395,3 +445,22 @@ OGDSM.externalConnection.prototype.getLayersGeoServer = function (addr, wsName, 
     });
 };
 
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Wed Jun 01 2016 18:44:34 GMT+0900 (KST) using the Minami theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>

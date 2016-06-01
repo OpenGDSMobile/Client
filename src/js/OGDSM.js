@@ -1,5 +1,4 @@
-/*jslint devel: true, vars : true */
-/*global $, jQuery, ol*/
+
 /*
  * OpenGDS Mobile JavaScript Library
  * Released under the MIT license

@@ -1,6 +1,3 @@
-/*jslint devel: true, vars : true plusplus : true*/
-/*global $, jQuery, ol, OGDSM, mappingDB, WebSocket*/
-
 OGDSM.namesapce('webSocket');
 (function (OGDSM) {
     'use strict';
@@ -41,7 +38,6 @@ OGDSM.namesapce('webSocket');
 
         /**
          * 수정 모드 여부 받기
-         * @method getEidtMode
          * @return {Boolean} True | False
          */
         getEditMode : function () {
@@ -54,7 +50,6 @@ OGDSM.namesapce('webSocket');
 
 /**
  * 속성 정보 추가
- * @method addAttribute
  * @param {String}  layerName   - 데이터 베이스 테이블 이름
  */
 OGDSM.webSocket.prototype.send = function (data) {
@@ -63,14 +58,11 @@ OGDSM.webSocket.prototype.send = function (data) {
     ws.send(data);
 };
 
+/**
+ * 연결 종료
+ */
 OGDSM.webSocket.prototype.webSocketClose = function () {
     'use strict';
     var ws = this.ws;
     ws.close();
 };
-/*
-OGDSM.webSocket.prototype.received = function (evt) {
-    'use strict';
-
-};
-*/

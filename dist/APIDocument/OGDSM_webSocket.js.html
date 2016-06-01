@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>OGDSM_webSocket.js - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="OGDSM.html">OGDSM</a></li><li><a href="OGDSM.attributeTable.html">attributeTable</a><ul class='methods'><li data-type='method'><a href="OGDSM.attributeTable.html#.getEidtMode">getEidtMode</a></li><li data-type='method'><a href="OGDSM.attributeTable.html#.getSelectObj">getSelectObj</a></li></ul></li><li><a href="OGDSM.chartVisualization.html">chartVisualization</a></li><li><a href="OGDSM.eGovFrameUI.html">eGovFrameUI</a></li><li><a href="OGDSM.externalConnection.html">externalConnection</a></li><li><a href="OGDSM.mapLayerList.html">mapLayerList</a></li><li><a href="OGDSM.visualization.html">visualization</a><ul class='methods'><li data-type='method'><a href="OGDSM.visualization.html#getLayersTitle">getLayersTitle</a></li></ul></li><li><a href="OGDSM.webSocket.html">webSocket</a></li></ul><h3>Modules</h3><ul><li><a href="OGDSM.module_applyOptions.html">applyOptions</a></li><li><a href="OGDSM.module_indexedDB.html">indexedDB</a></li><li><a href="OGDSM.module_jsontoArray.html">jsontoArray</a></li><li><a href="OGDSM.module_namespace.html">namespace</a></li></ul><h3>Global</h3><ul><li><a href="global.html#addAttribute">addAttribute</a></li><li><a href="global.html#addList">addList</a></li><li><a href="global.html#addMap">addMap</a></li><li><a href="global.html#ajaxRequest">ajaxRequest</a></li><li><a href="global.html#areaChart">areaChart</a></li><li><a href="global.html#autoButton">autoButton</a></li><li><a href="global.html#autoCheckBox">autoCheckBox</a></li><li><a href="global.html#autoListView">autoListView</a></li><li><a href="global.html#autoRadioBox">autoRadioBox</a></li><li><a href="global.html#autoSelect">autoSelect</a></li><li><a href="global.html#autoSwitch">autoSwitch</a></li><li><a href="global.html#baseMapRadioBox">baseMapRadioBox</a></li><li><a href="global.html#baseMapSelect">baseMapSelect</a></li><li><a href="global.html#changeBaseMap">changeBaseMap</a></li><li><a href="global.html#changeWFSStyle">changeWFSStyle</a></li><li><a href="global.html#dataPortalEnvironment">dataPortalEnvironment</a></li><li><a href="global.html#dataPortalEnvironmentLoad">dataPortalEnvironmentLoad</a></li><li><a href="global.html#dataPortalGreenGas">dataPortalGreenGas</a></li><li><a href="global.html#dataPortalNuclear">dataPortalNuclear</a></li><li><a href="global.html#dateInput">dateInput</a></li><li><a href="global.html#formAjaxRequest">formAjaxRequest</a></li><li><a href="global.html#geoServerGeoJsonLoad">geoServerGeoJsonLoad</a></li><li><a href="global.html#getAttrObj">getAttrObj</a></li><li><a href="global.html#getCurTab">getCurTab</a></li><li><a href="global.html#getEidtMode">getEidtMode</a></li><li><a href="global.html#getLayersGeoServer">getLayersGeoServer</a></li><li><a href="global.html#getMap">getMap</a></li><li><a href="global.html#greenGasEmissionLoad">greenGasEmissionLoad</a></li><li><a href="global.html#hBarChart">hBarChart</a></li><li><a href="global.html#imageLayer">imageLayer</a></li><li><a href="global.html#indexOf">indexOf</a></li><li><a href="global.html#layerCheck">layerCheck</a></li><li><a href="global.html#lineChart">lineChart</a></li><li><a href="global.html#olMapView">olMapView</a></li><li><a href="global.html#publicDataInterface">publicDataInterface</a></li><li><a href="global.html#realTimeLevelofRadiationLoad">realTimeLevelofRadiationLoad</a></li><li><a href="global.html#removeAttribute">removeAttribute</a></li><li><a href="global.html#removeList">removeList</a></li><li><a href="global.html#removeMap">removeMap</a></li><li><a href="global.html#selectAttribute">selectAttribute</a></li><li><a href="global.html#seoulEnvironment">seoulEnvironment</a></li><li><a href="global.html#seoulEnvironmentLoad">seoulEnvironmentLoad</a></li><li><a href="global.html#setCurTab">setCurTab</a></li><li><a href="global.html#setSelectObj">setSelectObj</a></li><li><a href="global.html#setVisible">setVisible</a></li><li><a href="global.html#timeInput">timeInput</a></li><li><a href="global.html#trackingGeoLocation">trackingGeoLocation</a></li><li><a href="global.html#updateLayoutSetting">updateLayoutSetting</a></li><li><a href="global.html#vBarChart">vBarChart</a></li><li><a href="global.html#vworldWMSList">vworldWMSList</a></li><li><a href="global.html#vworldWMSLoad">vworldWMSLoad</a></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">OGDSM_webSocket.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/*jslint devel: true, vars : true plusplus : true*/
+/*global $, jQuery, ol, OGDSM, mappingDB, WebSocket*/
+
+OGDSM.namesapce('webSocket');
+(function (OGDSM) {
+    'use strict';
+    /**
+     * 속성정보 시각화 객체
+     * @class OGDSM.attributeTable
+     * @constructor
+     * @param {String} RootDiv - 속성 테이블 DIV 이름
+     * @param {String} addr - PostgreSQL 접속 주소
+     */
+    OGDSM.webSocket = function (addr, userName, options) {
+        if (typeof (window.WebSocket) === 'undefined') {
+            console.error("webSocket is not supported by your browser!");
+            return -1;
+        }
+        var defaults = {
+            data : null,
+            subject : null,
+            callback : function (evt) { console.log("Plase create callback function"); }
+        };
+        defaults = OGDSM.applyOptions(defaults, options);
+        var ws = new WebSocket(addr);
+        this.ws = ws;
+        /**
+         * JSON Object {userid : '', subject : ''} based on ApplicationServer
+         */
+        ws.onopen = function () {
+            var jsonObj = {};
+            jsonObj.userid = userName;
+            jsonObj.subject = defaults.subject;
+            console.log(jsonObj);
+            ws.send(JSON.stringify(jsonObj));
+        };
+        ws.onmessage = defaults.callback;
+    };
+    OGDSM.webSocket.prototype = {
+        constructor : OGDSM.webSocket,
+
+        /**
+         * 수정 모드 여부 받기
+         * @method getEidtMode
+         * @return {Boolean} True | False
+         */
+        getEditMode : function () {
+            return this.editMode;
+        }
+    };
+    return OGDSM.webSocket;
+}(OGDSM));
+
+
+/**
+ * 속성 정보 추가
+ * @method addAttribute
+ * @param {String}  layerName   - 데이터 베이스 테이블 이름
+ */
+OGDSM.webSocket.prototype.send = function (data) {
+    'use strict';
+    var ws = this.ws;
+    ws.send(data);
+};
+
+OGDSM.webSocket.prototype.webSocketClose = function () {
+    'use strict';
+    var ws = this.ws;
+    ws.close();
+};
+/*
+OGDSM.webSocket.prototype.received = function (evt) {
+    'use strict';
+
+};
+*/
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Wed Jun 01 2016 18:44:34 GMT+0900 (KST) using the Minami theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>
