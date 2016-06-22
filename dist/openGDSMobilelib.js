@@ -3322,7 +3322,9 @@ OGDSM.visualization.prototype.addMap = function (data) {
     /*layer list On*/
     if (typeof (this.layerListObj) !== 'undefined') {
         var color;
+
         var geometryObj = data.getSource().getFeatures()[0].getGeometry();
+
         var geoType = geometryObj.getType();
         if (typeof data.getStyle !== 'undefined') {
             color = data.get('styleFill');
