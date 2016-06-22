@@ -1,9 +1,4 @@
-/data
-/node_modules
-.idea/modules.xml
-.idea/openGDSMobileClient.iml
-.idea/workspace.xml
-.brackets.json
-.idea/jsLinters/
+data
 closure-library
+.idea
 favicon.ico

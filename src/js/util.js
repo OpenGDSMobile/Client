@@ -30,7 +30,27 @@ openGDSMobile.util.applyOptions = function (defaults, options) {
     }
     return defaults;
 }
+/*
 
+ var i,
+ maps = this.getMap().getLayers().getArray();
+ for (i = 0; i < maps.length; i += 1) {
+ if (maps[i].get('title') === layerName) {
+ return maps[i];
+ }
+ }
+ return false;
+ */
+openGDSMobile.util.getOlLayer = function (_olObj, _name) {
+    var mapArray = _olObj.getLayers().getArray();
+    var result = false;
+    goog.array.forEach(mapArray, function (position, index, arr) {
+        if (mapArray[index].get('title') === _name) {
+            result = mapArray[index];
+        }
+    });
+    return result;
+}
 
 
 
