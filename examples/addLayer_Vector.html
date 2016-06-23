@@ -26,8 +26,21 @@
     <script>
         $(document).ready(function (){
             var test = new openGDSMobile.MapVis('MapVis');
-            test.addLayer('backgroundMap');
+            var addr = 'http://113.198.80.9/geoserver/wfs?service=WFS&version=1.1.0&request=GetFeature&typeNames=OpenGDSMobile:seoul_sig&outputFormat=json&srsname=EPSG:3857';
+            $.ajax({
+                type : 'POST',
+                url : addr,
+                crossDomain: true,
+                dataType : 'json',
+                success : function (evt) {
+                    test.addGeoJSONLayer(evt, 'polygon', 'seoul_vector', {
+                        attrKey : 'sig_kor_nm'
+                    });
+                },
+                error : function (err) {
 
+                }
+            });
         });
     </script>
 </head>

@@ -22,19 +22,33 @@
             width: 100%;
             height: 100%;
         }
-
     </style>
-
     <script>
         $(document).ready(function (){
             var test = new openGDSMobile.MapVis('MapVis');
-            var test2 = new openGDSMobile.MapVis('MapVis2');
+            var addr = 'http://113.198.80.9/geoserver/wfs?service=WFS&version=1.1.0&request=GetFeature&typeNames=OpenGDSMobile:seoul_sig&outputFormat=json&srsname=EPSG:3857';
+            $.ajax({
+                type : 'POST',
+                url : addr,
+                crossDomain: true,
+                dataType : 'json',
+                success : function (evt) {
+                    test.addGeoJSONLayer(evt, 'polygon', 'seoul_vector', {
+                        attrKey : 'sig_kor_nm'
+                    });
+                    test.changeVectorStyle('seoul_vector', {
+                        attrKey : 'sig_kor_nm',
+                        fillColor : '#FF0000'
+                    })
+                },
+                error : function (err) {
+
+                }
+            });
         });
     </script>
 </head>
 <body>
-<div id="MapVis" style="width:100%; height: 50%;"></div>
-<div id="MapVis2" style="width:100%; height: 50%;"></div>
-    eee
+<div id="MapVis" style="width:100%; height: 100%;"></div>
 </body>
 </html>

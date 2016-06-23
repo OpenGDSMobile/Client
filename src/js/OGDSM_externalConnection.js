@@ -122,6 +122,7 @@ OGDSM.externalConnection.prototype.geoServerGeoJsonLoad = function (obj, addr, w
     var fullAddr = addr + '/geoserver/wfs?service=WFS&version=1.1.0&request=GetFeature&typeNames=' + workspace + ':' +
         layerName.split('--')[0] + '&outputFormat=json&srsname=' + obj.baseProj;
     var objStyles, name;
+    console.log(fullAddr);
     var defaults = {
         color : 'rgba(0, 0, 0, 0.0)',
         label : null,
