@@ -69,18 +69,35 @@ openGDSMobile.MapVis.textStyleFunction = function (feature, resolution, attrKey)
     });
 };
 
-openGDSMobile.MapVis.styleFunction = function (feature, resolution, options) {
+openGDSMobile.MapVis.styleFunction = function (feature, resolution, type, options) {
+    if (type === 'polygon') {
+        return new ol.style.Style({
+            stroke: new ol.style.Stroke({
+                color: options.strokeColor,
+                width: options.strokeWidth
+            }),
+            fill: new ol.style.Fill({
+                color: options.fillColor
+            }),
+            text: openGDSMobile.MapVis.textStyleFunction(feature, resolution, options.attrKey)
+        });
+    } else if (type === 'line') {
 
-    return new ol.style.Style({
-        stroke: new ol.style.Stroke({
-            color : options.strokeColor,
-            width : options.strokeWidth
-        }),
-        fill : new ol.style.Fill({
-            color : options.fillColor
-        }),
-        text : openGDSMobile.MapVis.textStyleFunction(feature, resolution, options.attrKey)
-    });
+    } else if (type === 'point') {
+        return new ol.style.Style({
+            image : new ol.style.Circle({
+                radius : options.radius,
+                stroke : new ol.style.Stroke({
+                    color: options.strokeColor,
+                    width: options.strokeWidth
+                }),
+                fill : new ol.style.Fill({
+                    color : options.fillColor
+                }),
+                text: openGDSMobile.MapVis.textStyleFunction(feature, resolution, options.attrKey)
+            })
+        })
+    }
 }
 
 
@@ -148,12 +165,17 @@ openGDSMobile.MapVis.prototype.addGeoJSONLayer = function (_geoJSON, _type, _tit
             features : (new ol.format.GeoJSON()).readFeatures(_geoJSON)
         }),
         style : (function (feature, resolution) {
-            return openGDSMobile.MapVis.styleFunction(feature, resolution, options);
+            return openGDSMobile.MapVis.styleFunction(feature, resolution, _type , options);
         })
     });
     geoJSONLayer.set('type', _type);
+    geoJSONLayer.set('attrKey', options.attrKey);
+    geoJSONLayer.set('fillColor', options.fillColor);
+    geoJSONLayer.set('strokeColor', options.strokeColor);
+    geoJSONLayer.set('strokeWidth', options.strokeWidth);
+    geoJSONLayer.set('opt', options.opt);
     if (typeof (openGDSMobile.util.getOlLayer(this.mapObj, geoJSONLayer.get(_title))) === false) {
-        console.error('Layer is existence');
+        console.error('Layer is not existence');
         return -1;
     }
     geoJSONLayer.setOpacity(options.opt);
@@ -187,83 +209,118 @@ openGDSMobile.MapVis.prototype.changeVectorStyle = function (_layerName, _option
         valueKey : null,
         data : null
     }
-    var options = openGDSMobile.util.applyOptions(defaultOptions, _options);
+    var styleCache = {};
     var layerObj = openGDSMobile.util.getOlLayer(this.mapObj, _layerName);
     if (typeof (layerObj) === false) {
         console.error('Layer is existence');
         return -1;
     }
-    console.log("test");
+    defaultOptions.attrKey = layerObj.get('attrKey');
+    defaultOptions.fillColor = layerObj.get('fillColor');
+    defaultOptions.strokeColor = layerObj.get('strokeColor');
+    defaultOptions.strokeWidth = layerObj.get('strokeWidth');
+    defaultOptions.opt = layerObj.get('opt');
+    var type = layerObj.get('type');
+
+    var options = openGDSMobile.util.applyOptions(defaultOptions, _options);
     layerObj.setStyle(function(feature, resolution){
         if (options.data === null) {
-            return openGDSMobile.MapVis.styleFunction(feature, resolution, options);
+            return openGDSMobile.MapVis.styleFunction(feature, resolution, type, options);
+        } else {
+            var i, j;
+            var tmpColor = '#FFFFFF';
+            var text = resolution < 76 ? feature.get(options.attrKey) : '';
+            if (!styleCache[text]){
+                if (Array.isArray(options.fillColor)) {
+                    for (i = 0; i < data.length; i += 1) {
+                        if (text == data[i][options.labelKey]) {
+                            for (j = 0; j < options.range.length; j += 1) {
+                                if (data[i][options.valueKey] <= options.range[j]){
+                                    tmpColor = options.fillColor[j];
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    console.error('Color is not array.')
+                }
+                styleCache[text] = [openGDSMobile.MapVis.styleFunction(feature, resolution, type, options)];
+            }
+            return styleCache[text];
         }
-
     });
+    layerObj.setOpacity(options.opt);
 };
-/*
-
- var i,
- j,
- color = '#FFFFFF',
- text = r < 5000 ? f.get(defaults.attr) : '';
- if (!styleCache[text]) {
- if (Array.isArray(colors)) {
- for (i = 0; i < data.length; i += 1) {
- if (text === data[i][defaults.labelKey]) {
- for (j = 0; j < defaults.range.length; j += 1) {
- if (data[i][defaults.valueKey] <= defaults.range[j]) {
- color = colors[j];
- break;
- }
- }
- }
- }
- } else {
- color = colors;
- }
- if (defaults.type === 'polygon') {
- styleCache[text] = [new ol.style.Style({
- fill : new ol.style.Fill({
- color : color
- }),
- stroke : new ol.style.Stroke({
- color : '#00000',
- width : 1
- }),
- text : new ol.style.Text({
- font : '9px Calibri,sans-serif',
- text : text,
- fill : new ol.style.Fill({
- color : '#000000'
- })
- })
- })];
- } else if (defaults.type === 'point') {
- styleCache[text] = [new ol.style.Style({
- image : new ol.style.Circle({
- radius : 5,
- fill : new ol.style.Fill({
- color : color
- }),
- stroke : new ol.style.Stroke({
- color : '#000000',
- width : 1
- })
- })
- })];
- }
-
-
- }
- return styleCache[text];
- */
 ////////// 이벤트 ...
-////////// 스타일 최초 설정 및 변경...
 ////////// 레이어 삭제 ...
 ////////// 레이어 시각화 여부 설정
 
 
+/**
+ * 맵 레이어 삭제
+ * @param {String} layerName - 레이어 이름
+ */
+openGDSMobile.MapVis.prototype.removeLayer = function (_layerName) {
+    var layerObj = openGDSMobile.util.getOlLayer(this.mapObj, _layerName);
+    if (typeof (layerObj) === false) {
+        console.error('Layer is not existence');
+        return -1;
+    }
+    this.mapObj.removeLayer(layerObj);
+    /*
+     if (typeof (this.layerListObj) !== 'undefined') {
+        this.layerListObj.removeList(layerName);
+     }
+     */
+}
+
+
+
+/**
+ * 맵 레이어 시각화 여부
+ * @param {String} layerName - 레이어 이름
+ * @param {Boolean} flag - 시각화 스위치 [true | false}
+ */
+openGDSMobile.MapVis.prototype.setVisible = function (_layerName, _flag) {
+    var layerObj = openGDSMobile.util.getOlLayer(this.mapObj, _layerName);
+    if (typeof (layerObj) === false) {
+        console.error('Layer is not existence');
+        return -1;
+    }
+    layerObj.setVisible(_flag);
+
+};
+
+
+/**
+ * 이미지 레이어 시각화
+ * @param {String} imgURL - 이미지 주소
+ * @param {String} imgTitle - 이미지 타이틀
+ * @param {Array} imgSize - 이미지 사이즈 [width, height]
+ * @param {Array} imgExtent - 이미지 위치 [lower left lon, lower left lat, upper right lon, upper right lat] or [left, bottom, right, top]
+ */
+openGDSMobile.MapVis.prototype.addImageLayer = function (_imgUrl, _imgTitle, _options) {
+    _options = (typeof (_options) !== 'undefined') ? _options : {};
+    var defaultOptions = {
+        opt : 0.7,
+        extent : [],
+        size: 256
+    }
+    var options = openGDSMobile.util.applyOptions(defaultOptions, _options);
+
+    var imgLayer = new ol.layer.Image({
+        opacity : options.opt,
+        title : _imgTitle,
+        source : new ol.source.ImageStatic({
+            url : _imgUrl + '?' + Math.random(),
+            imageSize : options.size,
+            projection : this.mapObj.getView().getProjection(),
+            imageExtent : options.extent
+        })
+    });
+
+    this.mapObj.addLayer(imgLayer);
+}
 /**
  * 지도 GPS 트래킹
  * @param {boolean} sw - Geolocation 스위치 (true | false)
