@@ -24,11 +24,11 @@ openGDSMobile.MapVis = function (_mapDIV, _options) {
         indexedDB : true
     };
 
-    this.mapDIV = _mapDIV;
     this.geoLocation = null;
     this.featureOverlay = null;
     this.attrObj = null;
-    this.listObj = null;
+//    this.mapDIV = _mapDIV;
+//    this.listObj = null;
 
     var options = openGDSMobile.util.applyOptions(defaultOptions, _options);
 
@@ -160,7 +160,7 @@ openGDSMobile.MapVis.prototype.addGeoJSONLayer = function (_geoJSON, _type, _tit
 
     var geoJSONLayer;
     geoJSONLayer = new ol.layer.Vector({
-        title: 'seoul_vector',
+        title: _title,
         source : new ol.source.Vector({
             features : (new ol.format.GeoJSON()).readFeatures(_geoJSON)
         }),
@@ -221,7 +221,6 @@ openGDSMobile.MapVis.prototype.changeVectorStyle = function (_layerName, _option
     defaultOptions.strokeWidth = layerObj.get('strokeWidth');
     defaultOptions.opt = layerObj.get('opt');
     var type = layerObj.get('type');
-
     var options = openGDSMobile.util.applyOptions(defaultOptions, _options);
     layerObj.setStyle(function(feature, resolution){
         if (options.data === null) {

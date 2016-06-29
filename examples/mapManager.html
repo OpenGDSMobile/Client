@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <title>OpenGDS Mobile Visualization Example</title>
@@ -14,6 +14,7 @@
 
     <script type="text/javascript" src="../src/js/OpenGDSMobile.js"></script>
     <script type="text/javascript" src="../src/js/Util.js"></script>
+    <script type="text/javascript" src="../src/js/Sortable.js"></script>
     <script type="text/javascript" src="../src/js/MapsVis.js"></script>
     <script type="text/javascript" src="../src/js/MapsManager.js"></script>
     <style>
@@ -26,7 +27,8 @@
     </style>
     <script>
         $(document).ready(function (){
-            var test = new openGDSMobile.MapVis('MapVis');
+            var mapVis = new openGDSMobile.MapVis('MapVis');
+            var mapManager = new openGDSMobile.MapManager('MapList', mapVis);
             var addr = 'http://113.198.80.9/geoserver/wfs?service=WFS&version=1.1.0&request=GetFeature&typeNames=OpenGDSMobile:seoul_sig&outputFormat=json&srsname=EPSG:3857';
             $.ajax({
                 type : 'POST',
@@ -34,8 +36,31 @@
                 crossDomain: true,
                 dataType : 'json',
                 success : function (evt) {
-                    test.addGeoJSONLayer(evt, 'polygon', 'seoul_vector', {
+                    mapVis.addGeoJSONLayer(evt, 'polygon', '서울_시', {
                         attrKey : 'sig_kor_nm'
+                    });
+                    mapVis.changeVectorStyle('서울_시', {
+                        fillColor : '#FF0000'
+                    });
+                    mapManager.addLayer('서울_시');
+                },
+                error : function (err) {
+
+                }
+            });
+
+            addr = 'http://113.198.80.9/geoserver/wfs?service=WFS&version=1.1.0&request=GetFeature&typeNames=OpenGDSMobile:seoul_emd&outputFormat=json&srsname=EPSG:3857';
+            $.ajax({
+                type : 'POST',
+                url : addr,
+                crossDomain: true,
+                dataType : 'json',
+                success : function (evt) {
+                    mapVis.addGeoJSONLayer(evt, 'polygon', '서울_동', {
+                        attrKey : 'emd_kor_nm'
+                    });
+                    mapVis.changeVectorStyle('서울_동', {
+                        fillColor : '#FFFF00'
                     });
                 },
                 error : function (err) {
@@ -49,6 +74,9 @@
     </script>
 </head>
 <body>
+<div id="MapList" style="width:20%; height: 100%; position:absolute; z-index:1;">
+
+</div>
 <div id="MapVis" style="width:100%; height: 100%;"></div>
 </body>
 </html>

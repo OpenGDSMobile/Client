@@ -1,13 +1,8 @@
 goog.provide('openGDSMobile.util.jsonToArray');
 goog.provide('openGDSMobile.util.applyOptions');
+goog.provide('openGDSMobile.util.getOlLayer');
 goog.require('goog.array');
 
-/**
- * @constructor
- */
-openGDSMobile.util = function () {
-
-};
 openGDSMobile.util.jsonToArray = function (obj, x, y) {
     var xyAxis = [],
         row = obj.row;
@@ -30,17 +25,7 @@ openGDSMobile.util.applyOptions = function (defaults, options) {
     }
     return defaults;
 }
-/*
 
- var i,
- maps = this.getMap().getLayers().getArray();
- for (i = 0; i < maps.length; i += 1) {
- if (maps[i].get('title') === layerName) {
- return maps[i];
- }
- }
- return false;
- */
 openGDSMobile.util.getOlLayer = function (_olObj, _name) {
     var mapArray = _olObj.getLayers().getArray();
     var result = false;
