@@ -48,7 +48,8 @@
                         attrKey : 'sig_kor_nm'
                     });
                     mapVis.changeVectorStyle('서울_시', {
-                        fillColor : '#FF0000'
+                        fillColor : '#FF0000',
+                        opt: 1.0
                     });
                     mapManager.addLayer('서울_시');
                 },
@@ -68,9 +69,31 @@
                         attrKey : 'emd_kor_nm'
                     });
                     mapVis.changeVectorStyle('서울_동', {
-                        fillColor : '#FFFF00'
+                        fillColor : '#FFFF00',
+                        opt: 1.0
                     });
                     mapManager.addLayer('서울_동');
+                },
+                error : function (err) {
+
+                }
+            });
+
+            addr = 'http://113.198.80.9/geoserver/wfs?service=WFS&version=1.1.0&request=GetFeature&typeNames=OpenGDSMobile:seoul_sig&outputFormat=json&srsname=EPSG:3857';
+            $.ajax({
+                type : 'POST',
+                url : addr,
+                crossDomain: true,
+                dataType : 'json',
+                success : function (evt) {
+                    mapVis.addGeoJSONLayer(evt, 'polygon', '서울_시_복사', {
+                        attrKey : 'sig_kor_nm'
+                    });
+                    mapVis.changeVectorStyle('서울_시_복사', {
+                        fillColor : '#00FF00',
+                        opt: 1.0
+                    });
+                    mapManager.addLayer('서울_시_복사');
                 },
                 error : function (err) {
 

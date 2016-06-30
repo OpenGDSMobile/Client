@@ -50,14 +50,14 @@ openGDSMobile.MapVis = function (_mapDIV, _options) {
         maxZoom : options.maxZoom,
         minZoom : options.minZoom
     });
+    var baseLayer = new ol.layer.Tile({
+            title : 'backgroundMap',
+            source : new ol.source.OSM(),
+    });
+    baseLayer.setZIndex(0);
     this.mapObj = new ol.Map({
         target : _mapDIV,
-        layers : [
-            new ol.layer.Tile({
-                title : 'backgroundMap',
-                source : new ol.source.OSM()
-            })
-        ],
+        layers : [baseLayer],
         view : baseView
     });
 }
