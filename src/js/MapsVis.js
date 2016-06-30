@@ -222,6 +222,12 @@ openGDSMobile.MapVis.prototype.changeVectorStyle = function (_layerName, _option
     defaultOptions.opt = layerObj.get('opt');
     var type = layerObj.get('type');
     var options = openGDSMobile.util.applyOptions(defaultOptions, _options);
+
+    layerObj.set('attrKey', options.attrKey);
+    layerObj.set('fillColor', options.fillColor);
+    layerObj.set('strokeColor', options.strokeColor);
+    layerObj.set('strokeWidth', options.strokeWidth);
+    
     layerObj.setStyle(function(feature, resolution){
         if (options.data === null) {
             return openGDSMobile.MapVis.styleFunction(feature, resolution, type, options);
