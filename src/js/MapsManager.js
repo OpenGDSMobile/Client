@@ -2,24 +2,28 @@ goog.provide('openGDSMobile.MapManager');
 
 goog.require('openGDSMobile.util.applyOptions');
 goog.require('goog.dom');
+goog.require('goog.array');
 
 
 /**
- * CSS Values..
+ * CSS / ID Values..
  */
-openGDSMobile.MANAGER_ROOT = 'openGDSMobile-manager';
+openGDSMobile.Manager = {};
+openGDSMobile.Manager.MANAGER_ID = 'openGDSMobileManager';
 
-openGDSMobile.MANAGER_LIST_STYLE = 'openGDSMobile-manager-list';
+openGDSMobile.Manager.MANAGER_STYLE = 'openGDSMobile-manager';
 
-openGDSMobile.MANAGER_ITEM_TYPE_STYLE = 'openGDSMobile-manager-type';
+openGDSMobile.Manager.MANAGER_LIST_STYLE = 'openGDSMobile-manager-list';
 
-openGDSMobile.MANAGER_ITEM_TITLE_STYLE = 'openGDSMobile-manager-title';
+openGDSMobile.Manager.MANAGER_ITEM_TYPE_STYLE = 'openGDSMobile-manager-type';
 
-openGDSMobile.MANAGER_ITEM_SETTING_STYLE = 'openGDSMobile-manager-setting';
+openGDSMobile.Manager.MANAGER_ITEM_TITLE_STYLE = 'openGDSMobile-manager-title';
 
-openGDSMobile.SORTABLE_STYLE = 'drag-handle';
+openGDSMobile.Manager.MANAGER_ITEM_SETTING_STYLE = 'openGDSMobile-manager-setting';
 
-openGDSMobile.MANAGER_ITEM_TYPE_CANVAS_STYLE = 'openGDSMobile-manager-canvas';
+openGDSMobile.Manager.SORTABLE_STYLE = 'drag-handle';
+
+openGDSMobile.Manager.MANAGER_ITEM_TYPE_CANVAS_STYLE = 'openGDSMobile-manager-canvas';
 
 
 /**
@@ -49,8 +53,8 @@ openGDSMobile.MapManager = function (_layerDIV, _visObj, _options) {
     var options = openGDSMobile.util.applyOptions(defaultOptions, _options);
     this.rootDOM = goog.dom.getElement(_layerDIV);
     this.listDOM = goog.dom.createDom('ul', {
-        'id' : 'openGDSMobileManager',
-        'class' : openGDSMobile.MANAGER_ROOT,
+        'id' : openGDSMobile.Manager.MANAGER_ID,
+        'class' : openGDSMobile.Manager.MANAGER_STYLE,
         'style' : 'background-color:' + options.fillColor
     });
     this.visObj = _visObj;
@@ -142,7 +146,7 @@ openGDSMobile.MapManager.prototype.addLayer = function (_layerName) {
     var fillColor = layerObj.get('fillColor');
 
     var itemDOM = goog.dom.createDom('li',{
-        'class' : openGDSMobile.MANAGER_LIST_STYLE
+        'class' : openGDSMobile.Manager.MANAGER_LIST_STYLE
     });
     if (openGDSMobile.listStatus.length === 0) {
         this.listDOM.appendChild(itemDOM);
@@ -152,7 +156,7 @@ openGDSMobile.MapManager.prototype.addLayer = function (_layerName) {
 
     /*Type Root**/
     var typeDOM = goog.dom.createDom('div',{
-        'class' : openGDSMobile.MANAGER_ITEM_TYPE_STYLE
+        'class' : openGDSMobile.Manager.MANAGER_ITEM_TYPE_STYLE
     });
     itemDOM.appendChild(typeDOM);
     /*Title Root**/
@@ -166,7 +170,7 @@ openGDSMobile.MapManager.prototype.addLayer = function (_layerName) {
     itemDOM.appendChild(titleRootDOM);
     /*Setting Root**/
     var settingDOM = goog.dom.createDom('div', {
-        'class' : openGDSMobile.MANAGER_ITEM_SETTING_STYLE
+        'class' : openGDSMobile.Manager.MANAGER_ITEM_SETTING_STYLE
     });
     itemDOM.appendChild(settingDOM);
 
@@ -174,14 +178,14 @@ openGDSMobile.MapManager.prototype.addLayer = function (_layerName) {
     /*Type Content**/
     var canvasDOM = goog.dom.createDom('canvas', {
         'id' : 'canvas-' + title,
-        'class' : ' '+ openGDSMobile.MANAGER_ITEM_TYPE_CANVAS_STYLE +' ' + openGDSMobile.SORTABLE_STYLE
+        'class' : ' '+ openGDSMobile.Manager.MANAGER_ITEM_TYPE_CANVAS_STYLE +' ' + openGDSMobile.SORTABLE_STYLE
     });
     typeDOM.appendChild(canvasDOM);
     //type = 'line';
     openGDSMobile.MapManager.drawCanvas('canvas-' + title, type, fillColor, canvasDOM.width, canvasDOM.height);
     /*Title Content**/
     var titleDOM = goog.dom.createDom('div', {
-        'class' : openGDSMobile.MANAGER_ITEM_TITLE_STYLE
+        'class' : openGDSMobile.Manager.MANAGER_ITEM_TITLE_STYLE
     }, title);
     titleCellDOM.appendChild(titleDOM);
 
@@ -201,18 +205,42 @@ openGDSMobile.MapManager.prototype.addLayers = function () {
     for(var i = 1; i < allLayers.length; i++) {
         this.addLayer(allLayers[i].get('title'));
     }
-
-
-
 }
 
 
 
 openGDSMobile.MapManager.prototype.removeLayer = function (_layerName) {
+    if (typeof (_layerName) === 'undefined') {
+        console.error('Please input layer name. If you want all the layers that have not been removed, Use the removeLayers function');
+        return -1;
+    }
+    console.log(_layerName);
+
+    var layerObj = openGDSMobile.util.getOlLayer(this.visObj.mapObj, _layerName);
+    console.log(layerObj);
+    if (layerObj === false) {
+        console.error('Not exist layer in list. Therefore not is removed');
+        return -1;
+    }
+    var ulDOM = goog.dom.getElement(openGDSMobile.Manager.MANAGER_ID);
+    var items = ulDOM.getElementsByTagName('li');
+    console.log(goog.dom.DomHelper(ulDOM));
+
+    goog.array.forEach(items, function (obj, index, arr) {
+        var el = goog.dom.getAncestorByTagNameAndClass(obj, undefined, openGDSMobile.Manager.MANAGER_ITEM_TITLE_STYLE);
+        console.log(obj);
+        console.log(el);
+
+    });
+
+
 
 }
 
 
 openGDSMobile.MapManager.prototype.removeLayers = function () {
-
+    var allLayers = this.visObj.mapObj.getLayers().getArray();
+    for(var i = 1; i < allLayers.length; i++) {
+        this.removeLayer(allLayers[i].get('title'));
+    }
 }

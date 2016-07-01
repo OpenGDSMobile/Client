@@ -36,9 +36,11 @@
 #openGDSMobileCell{
     display:table-cell;
     vertical-align:middle;
+    padding : 0;
+    background-color: #b7ddda;
 }
 .openGDSMobile-manager-title{
-    background-color : #b7ddda;
+    font-size : 1.0em;
 }
 .openGDSMobile-manager-setting{
     float :left;

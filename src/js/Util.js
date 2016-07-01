@@ -29,9 +29,9 @@ openGDSMobile.util.applyOptions = function (defaults, options) {
 openGDSMobile.util.getOlLayer = function (_olObj, _name) {
     var mapArray = _olObj.getLayers().getArray();
     var result = false;
-    goog.array.forEach(mapArray, function (position, index, arr) {
-        if (mapArray[index].get('title') === _name) {
-            result = mapArray[index];
+    goog.array.forEach(mapArray, function (obj, index, arr) {
+        if (obj.get('title') === _name) {
+            result = obj;
         }
     });
     return result;
