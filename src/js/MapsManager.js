@@ -211,30 +211,31 @@ openGDSMobile.MapManager.prototype.addLayers = function () {
 
 openGDSMobile.MapManager.prototype.removeLayer = function (_layerName) {
     if (typeof (_layerName) === 'undefined') {
-        console.error('Please input layer name. If you want all the layers that have not been removed, Use the removeLayers function');
+        console.error('Please input layer name. ' +
+            'If you want all the layers that have not been removed, ' +
+            'Use the removeLayers function');
         return -1;
     }
-    console.log(_layerName);
-
     var layerObj = openGDSMobile.util.getOlLayer(this.visObj.mapObj, _layerName);
-    console.log(layerObj);
+    //console.log(layerObj);
     if (layerObj === false) {
         console.error('Not exist layer in list. Therefore not is removed');
         return -1;
     }
+    this.visObj.mapObj.removeLayer(layerObj);
+
     var ulDOM = goog.dom.getElement(openGDSMobile.Manager.MANAGER_ID);
     var items = ulDOM.getElementsByTagName('li');
-    console.log(goog.dom.DomHelper(ulDOM));
-
     goog.array.forEach(items, function (obj, index, arr) {
-        var el = goog.dom.getAncestorByTagNameAndClass(obj, undefined, openGDSMobile.Manager.MANAGER_ITEM_TITLE_STYLE);
-        console.log(obj);
-        console.log(el);
-
+        var el = goog.dom.getElementsByTagNameAndClass(
+            'div',
+            openGDSMobile.Manager.MANAGER_ITEM_TITLE_STYLE,
+            obj);
+        if (el[0].innerHTML === _layerName) {
+            obj.parentNode.removeChild(obj);
+            openGDSMobile.listStatus.objs.splice(openGDSMobile.listStatus.length - index, 1);
+        }
     });
-
-
-
 }
 
 

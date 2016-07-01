@@ -1,13 +1,12 @@
 goog.provide('openGDSMobile.MapVis');
 goog.require('openGDSMobile.util.applyOptions');
 
+
+//이벤트
 /**
  * @constructor
  * @param {String} _mapDIV - 지도 DIV 객체
  * @param {Object} _options - 지도 관련 옵션 (JSON 객체)
- * {
- *
- * }
  */
 openGDSMobile.MapVis = function (_mapDIV, _options) {
     _options = (typeof (_options) !== 'undefined') ? _options : {};
@@ -24,11 +23,11 @@ openGDSMobile.MapVis = function (_mapDIV, _options) {
         indexedDB : true
     };
 
-    this.geoLocation = null;
-    this.featureOverlay = null;
-    this.attrObj = null;
-//    this.mapDIV = _mapDIV;
-//    this.listObj = null;
+    /**
+     * @type {boolean}
+     * @private
+     */
+    this.geoLocation = false;
 
     var options = openGDSMobile.util.applyOptions(defaultOptions, _options);
 
@@ -55,20 +54,51 @@ openGDSMobile.MapVis = function (_mapDIV, _options) {
             source : new ol.source.OSM(),
     });
     baseLayer.setZIndex(0);
+
+    /**
+     * @private
+     * @type {ol.Map}
+     */
     this.mapObj = new ol.Map({
         target : _mapDIV,
         layers : [baseLayer],
         view : baseView
     });
+
+    /****Click EVENT ****/
 }
 
+/**
+ * 지도 객체 받기 함수
+ * @returns {ol.Map} OpenLayers 3 지도 객체
+ */
+openGDSMobile.MapVis.prototype.getMapObj = function () {
+    return this.mapObj;
+}
 
+/**
+ * 텍스트 스타일 적용 함수
+ * @private
+ * @param {ol.Feature} feature  Vector 단위 객체
+ * @param {Number} resolution 지도 해상도
+ * @param {String }attrKey 속성정보 키값
+ * @returns {ol.style.Text} OpenLayers 3 텍스트 스타일 객체
+ */
 openGDSMobile.MapVis.textStyleFunction = function (feature, resolution, attrKey) {
+    console.log(resolution);
     return new ol.style.Text({
         text : resolution < 76 ? feature.get(attrKey) : ''
     });
 };
 
+/**
+ * 스타일 적용 함수
+ * @param {ol.Feature} feature  Vector 단위 객체
+ * @param {Number} resolution 지도 해상도
+ * @param {String} type 지도 타입(Polygon, Line, Point)
+ * @param {Object} options 스타일 선 및 채우기 색상, 선 굵기, 속성 키 값 투명도  
+ * @returns {ol.style.Style} OpenLayers 3 스타일 객체
+ */
 openGDSMobile.MapVis.styleFunction = function (feature, resolution, type, options) {
     if (type === 'polygon') {
         return new ol.style.Style({
@@ -142,10 +172,10 @@ openGDSMobile.MapVis.prototype.changeBgMap = function (_mapType) {
 
 /**
  * GeoJSON 레이어 추가
- * @param {Object} _geoJSON - 벡터 GeoJSON 객체
- * @param {String} _type - 벡터 타입 (Point | Line | Polygon)
- * @param {String} _title - 레이어 제목
- * @param {Object} _options -
+ * @param {Object} _geoJSON 벡터 GeoJSON 객체
+ * @param {String} _type 벡터 타입 (Point | Line | Polygon)
+ * @param {String} _title 레이어 제목
+ * @param {Object} _options 속성 값, 색상 채우기, 선 색상, 선 너비, 투명도 값 설정
  */
 openGDSMobile.MapVis.prototype.addGeoJSONLayer = function (_geoJSON, _type, _title, _options) {
     _options = (typeof (_options) !== 'undefined') ? _options : {};
@@ -184,8 +214,7 @@ openGDSMobile.MapVis.prototype.addGeoJSONLayer = function (_geoJSON, _type, _tit
 
 /**
  * 벡터 스타일 변경
- * @param {String} layerName - 오픈레이어3 레이어 이름
- * @param {Object} colors - 변경할 색상(Hex Color, String or Array)
+ * @param {String} _layerName - 시각화 된 레이어 제목
  * @param {Object} options - 옵션 JSON 객체 키 값 <br>
  *     {type:'polygon', opt : '0.5', attr: null, range: null, xyData: null}<br>
  <ul>
@@ -256,14 +285,10 @@ openGDSMobile.MapVis.prototype.changeVectorStyle = function (_layerName, _option
     });
     layerObj.setOpacity(options.opt);
 };
-////////// 이벤트 ...
-////////// 레이어 삭제 ...
-////////// 레이어 시각화 여부 설정
-
 
 /**
  * 맵 레이어 삭제
- * @param {String} layerName - 레이어 이름
+ * @param {String} _layerName 레이어 제목
  */
 openGDSMobile.MapVis.prototype.removeLayer = function (_layerName) {
     var layerObj = openGDSMobile.util.getOlLayer(this.mapObj, _layerName);
@@ -283,8 +308,8 @@ openGDSMobile.MapVis.prototype.removeLayer = function (_layerName) {
 
 /**
  * 맵 레이어 시각화 여부
- * @param {String} layerName - 레이어 이름
- * @param {Boolean} flag - 시각화 스위치 [true | false}
+ * @param {String} _layerName - 레이어 이름
+ * @param {Boolean} _flag - 시각화 값 설정 [true | false}
  */
 openGDSMobile.MapVis.prototype.setVisible = function (_layerName, _flag) {
     var layerObj = openGDSMobile.util.getOlLayer(this.mapObj, _layerName);
@@ -299,11 +324,14 @@ openGDSMobile.MapVis.prototype.setVisible = function (_layerName, _flag) {
 
 /**
  * 이미지 레이어 시각화
- * @param {String} imgURL - 이미지 주소
- * @param {String} imgTitle - 이미지 타이틀
- * @param {Array} imgSize - 이미지 사이즈 [width, height]
- * @param {Array} imgExtent - 이미지 위치 [lower left lon, lower left lat, upper right lon, upper right lat] or [left, bottom, right, top]
+ * @param {String} _imgURL 이미지 주소
+ * @param {String} _imgTitle - 이미지 타이틀
+ * @param {Object} _options - 옵션
+ *
+ *
  */
+//@param {Array} imgSize - 이미지 사이즈 [width, height]
+//@param {Array} imgExtent - 이미지 위치 [lower left lon, lower left lat, upper right lon, upper right lat] or [left, bottom, right, top]
 openGDSMobile.MapVis.prototype.addImageLayer = function (_imgUrl, _imgTitle, _options) {
     _options = (typeof (_options) !== 'undefined') ? _options : {};
     var defaultOptions = {
@@ -328,7 +356,7 @@ openGDSMobile.MapVis.prototype.addImageLayer = function (_imgUrl, _imgTitle, _op
 }
 /**
  * 지도 GPS 트래킹
- * @param {boolean} sw - Geolocation 스위치 (true | false)
+ * @param {Boolean} sw - Geolocation 설정
  **/
 openGDSMobile.MapVis.prototype.trackingGeoLocation = function (_sw) {
     'use strict';

@@ -52,13 +52,12 @@
                         opt: 1.0
                     });
                     mapManager.addLayer('서울_시');
-                    mapManager.removeLayer('서울_시');
+    //                mapManager.removeLayer('서울_시');
                 },
                 error : function (err) {
 
                 }
             });
-/*
 
             addr = 'http://113.198.80.9/geoserver/wfs?service=WFS&version=1.1.0&request=GetFeature&typeNames=OpenGDSMobile:seoul_emd&outputFormat=json&srsname=EPSG:3857';
             $.ajax({
@@ -74,7 +73,8 @@
                         fillColor : '#FFFF00',
                         opt: 1.0
                     });
-                    mapManager.addLayer('서울_동');
+                    mapManagerVis.addLayer('서울_동');
+   //                 mapManager.removeLayer('서울_동');
                 },
                 error : function (err) {
 
@@ -95,13 +95,12 @@
                         fillColor : '#00FF00',
                         opt: 1.0
                     });
-                    mapManager.addLayer('서울_시_복사');
+                    mapManagerVis.addLayer('서울_시_복사');
                 },
                 error : function (err) {
 
                 }
             });
-*/
 
 
 
