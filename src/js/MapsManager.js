@@ -90,6 +90,14 @@ openGDSMobile.MapManager = function (_layerDIV, _visObj, _options) {
     });
 };
 
+/**
+ *
+ * @param _canvasID
+ * @param _type
+ * @param _fillColor
+ * @param _x
+ * @param _y
+ */
 openGDSMobile.MapManager.drawCanvas = function (_canvasID, _type, _fillColor, _x, _y) { var padding = 20;
     var startX = 0 + padding;
     var startY = 0 + padding;
@@ -127,7 +135,12 @@ openGDSMobile.MapManager.drawCanvas = function (_canvasID, _type, _fillColor, _x
 
 };
 
-openGDSMobile.MapManager.prototype.addLayer = function (_layerName) {
+/**
+ *
+ * @param _layerName
+ * @returns {number}
+ */
+openGDSMobile.MapManager.prototype.addItem = function (_layerName) {
     if (typeof (_layerName) === 'undefined') {
         console.error('Please input layer name. If you want all the layers that have not been added, Use the addLayers function');
         return -1;
@@ -199,17 +212,23 @@ openGDSMobile.MapManager.prototype.addLayer = function (_layerName) {
     layerObj.setZIndex(++openGDSMobile.listStatus.length);
 };
 
-openGDSMobile.MapManager.prototype.addLayers = function () {
+/**
+ *
+ */
+openGDSMobile.MapManager.prototype.addItems = function () {
     var allLayers = this.visObj.mapObj.getLayers().getArray();
 
     for(var i = 1; i < allLayers.length; i++) {
         this.addLayer(allLayers[i].get('title'));
     }
-}
+};
 
-
-
-openGDSMobile.MapManager.prototype.removeLayer = function (_layerName) {
+/**
+ *
+ * @param _layerName
+ * @returns {number}
+ */
+openGDSMobile.MapManager.prototype.removeItem = function (_layerName) {
     if (typeof (_layerName) === 'undefined') {
         console.error('Please input layer name. ' +
             'If you want all the layers that have not been removed, ' +
@@ -239,7 +258,10 @@ openGDSMobile.MapManager.prototype.removeLayer = function (_layerName) {
 }
 
 
-openGDSMobile.MapManager.prototype.removeLayers = function () {
+/**
+ * 
+ */
+openGDSMobile.MapManager.prototype.removeItems = function () {
     var allLayers = this.visObj.mapObj.getLayers().getArray();
     for(var i = 1; i < allLayers.length; i++) {
         this.removeLayer(allLayers[i].get('title'));
