@@ -103,7 +103,7 @@ OGDSM.chartVisualization.prototype.vBarChart = function (rootDiv, subOptions) {
         .attr('height', contentHeight)
         .append('g')
         .attr('transform', 'translate(' + chartOptions.left + ', ' + chartOptions.top + ')');
-
+    console.log(data);
     labels.domain(data.map(function (d) {
         return d[options.labelKey];
     }));

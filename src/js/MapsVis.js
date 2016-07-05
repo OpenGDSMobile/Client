@@ -184,6 +184,7 @@ openGDSMobile.MapVis.prototype.addGeoJSONLayer = function (_geoJSON, _type, _tit
         fillColor : '#FFFFFF',
         strokeColor : '#000000',
         strokeWidth : 1,
+        radius : 5,
         opt : 0.7
     };
     var options = openGDSMobile.util.applyOptions(defaultOptions, _options);
@@ -230,6 +231,7 @@ openGDSMobile.MapVis.prototype.changeVectorStyle = function (_layerName, _option
     var defaultOptions = {
         fillColor : '#FFFFFF',
         strokeColor : '#000000',
+        radius : 5,
         strokeWidth : 1,
         opt : 0.7,
         attrKey : null,

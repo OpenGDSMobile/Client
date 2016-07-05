@@ -3,12 +3,22 @@ goog.provide('openGDSMobile.MapManager');
 goog.require('openGDSMobile.util.applyOptions');
 goog.require('goog.dom');
 goog.require('goog.array');
+goog.require('goog.ui.Button');
+goog.require('goog.ui.ButtonRenderer');
+goog.require('goog.ui.CustomButton');
+goog.require('goog.ui.CustomButtonRenderer');
+goog.require('goog.events');
+goog.require('goog.events.EventType');
+
 
 
 /**
  * CSS / ID Values..
  */
 openGDSMobile.Manager = {};
+
+openGDSMobile.Manager.SORTABLE_STYLE = 'drag-handle';
+
 openGDSMobile.Manager.MANAGER_ID = 'openGDSMobileManager';
 
 openGDSMobile.Manager.MANAGER_STYLE = 'openGDSMobile-manager';
@@ -17,13 +27,19 @@ openGDSMobile.Manager.MANAGER_LIST_STYLE = 'openGDSMobile-manager-list';
 
 openGDSMobile.Manager.MANAGER_ITEM_TYPE_STYLE = 'openGDSMobile-manager-type';
 
+openGDSMobile.Manager.MANAGER_ITEM_TYPE_CANVAS_STYLE = 'openGDSMobile-manager-canvas';
+
 openGDSMobile.Manager.MANAGER_ITEM_TITLE_STYLE = 'openGDSMobile-manager-title';
 
 openGDSMobile.Manager.MANAGER_ITEM_SETTING_STYLE = 'openGDSMobile-manager-setting';
 
-openGDSMobile.Manager.SORTABLE_STYLE = 'drag-handle';
+openGDSMobile.Manager.MANAGER_SETTING_BTN_STYLE = 'openGDSMobile-manager-setting-btn'
 
-openGDSMobile.Manager.MANAGER_ITEM_TYPE_CANVAS_STYLE = 'openGDSMobile-manager-canvas';
+openGDSMobile.Manager.MANAGER_SETTING_PANEL = 'openGDSMobile-manager-setting-panel'
+
+openGDSMobile.Manager.MANAGER_SETTING_PANEL_TITLE = 'openGDSMobile-manager-setting-panel-title';
+
+openGDSMobile.Manager.MANAGER_SETTING_PANEL_CLOSE = 'openGDSMobile-manager-setting-panel-close';
 
 
 /**
@@ -203,6 +219,55 @@ openGDSMobile.MapManager.prototype.addItem = function (_layerName) {
     titleCellDOM.appendChild(titleDOM);
 
     /*Setting Content**/
+    var setBtnDOM = new goog.ui.Button('Setting');
+    setBtnDOM.render(settingDOM);
+    setBtnDOM.addClassName(openGDSMobile.Manager.MANAGER_ITEM_SETTING_BTN_STYLE);
+    setBtnDOM.setTooltip(title + ' setting Button');
+    setBtnDOM.setValue(title);
+    goog.events.listen(setBtnDOM,
+        goog.ui.Component.EventType.ACTION,
+        function (e) {
+            //console.log(e.target.getValue());
+            var settingBtns = goog.dom.getElementsByTagNameAndClass('button', openGDSMobile.Manager.MANAGER_ITEM_SETTING_BTN_STYLE);
+            goog.array.forEach(settingBtns, function (obj){
+                var tmpBtn = new goog.ui.Button();
+                tmpBtn.decorate(obj);
+                tmpBtn.setEnabled(false);
+            });
+            var title =  e.target.getValue();
+            //중앙 DIV 패널
+            var panelDOM = goog.dom.createDom('div', {
+                'id' : 'settingPanel',
+                'class' : openGDSMobile.Manager.MANAGER_SETTING_PANEL
+            });
+            document.body.appendChild(panelDOM);
+            //Title
+            var titleDOM = goog.dom.createDom('h2', {
+                'class' : openGDSMobile.Manager.MANAGER_SETTING_PANEL_TITLE
+            }, title);
+            panelDOM.appendChild(titleDOM);
+            //투명도 슬라이드..
+            //색상 변경
+            //두깨 변경
+            //글자 크기 변경
+            //종료 버튼
+            var closeBtnDOM = new goog.ui.Button('Close');
+            closeBtnDOM.render(panelDOM);
+            closeBtnDOM.addClassName(openGDSMobile.Manager.MANAGER_SETTING_PANEL_CLOSE);
+            goog.events.listen(closeBtnDOM,
+                goog.ui.Component.EventType.ACTION,
+                function (e) {
+                    document.body.removeChild(panelDOM);
+                    goog.array.forEach(settingBtns, function (obj){
+                        var tmpBtn = new goog.ui.Button();
+                        tmpBtn.decorate(obj);
+                        tmpBtn.setEnabled(true);
+                    });
+                });
+        }
+    );
+
+    
 
     /*********************/
     openGDSMobile.listStatus.objs.push({
