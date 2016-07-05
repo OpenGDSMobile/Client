@@ -1,84 +1,81 @@
-OGDSM.namesapce('chartVisualization');
-(function (OGDSM) {
-    "use strict";
-    /**
-    * D3.js 기반 시각화 객체
-    * @class OGDSM.chartVisualization
-    * @constructor
-    * @param {Array} jsonData - JSON 기반 데이터
-    * @param {Object} options - 옵션 JSON 객체 키 값<br>
-      {rootKey : null, labelKey : null, valueKey : null, <br>
-       max:jsonData min value (based on valueKey), min:jsonData max value (based on valueKey)}<br>
-    */
-    OGDSM.chartVisualization = function (jsonData, options) {
-        function isInt(n) {
-            return n % 1 === 0;
-        }
-        options = (typeof (options) !== 'undefined') ? options : {};
-        this.defaults = {
-            rootKey : null,
-            labelKey : null,
-            valueKey : null,
-            max : null,
-            min : null
-        };
-        this.defaults = OGDSM.applyOptions(this.defaults, options);
-        if (typeof (jsonData) !== 'undefined') {
-            if (typeof (options.rootKey) === 'undefined' ||
-                    typeof (options.labelKey) === 'undefined' ||
-                    typeof (options.valueKey) === 'undefined') {
-                console.error('Please input option values : rootKey, label, value');
-                return null;
-            }
-	        this.jsonData = jsonData;
-	        this.data = jsonData[options.rootKey];
-	        this.defaults = OGDSM.applyOptions(this.defaults, options);
-	        var d = null;
-	        this.defaults.max = this.defaults.min = this.data[0][options.valueKey];
-	        for (d in this.data) {
-	            if (this.data.hasOwnProperty(d)) {
-	                this.defaults.max = Math.max(this.data[d][options.valueKey], this.defaults.max);
-	                this.defaults.min = Math.min(this.data[d][options.valueKey], this.defaults.min);
-                    if (!isInt(Number(this.data[d][options.valueKey]))) {
-                        this.data[d][options.valueKey] = Number(this.data[d][options.valueKey]).toFixed(3);
-                    }
-	            }
-	        }
-	        this.defaults.max = (typeof (options.max) !== 'undefined') ? options.max : this.defaults.max;
-	        this.defaults.min = (typeof (options.min) !== 'undefined') ? options.min : this.defaults.min;
-        } else {
-            console.log('kMap function Mode');
-        }
-    };
-    OGDSM.chartVisualization.prototype = {
-        constructor : OGDSM.chartVisualization,
-        /**
-         * 지도 객체 받기
-         * @return {ol.Map} 오픈레이어3 객체
-         */
-        getMap : function () {
-            return null;
-        },
-        max : function () {
+goog.provide('openGDSMobile.ChartVis');
 
-        }
-    };
-    return OGDSM.chartVisualization;
-}(OGDSM));
+goog.require('openGDSMobile.util.applyOptions');
+goog.require('goog.dom');
+goog.require('goog.array');
 
 
 /**
- * 수직 막대 차트 시각화
- * @param {String} div id - 막대 차트 시각화할 DIV 아이디 이름
- * @param {Object} options - 옵션 JSON 객체 키 값<br>
-      {range : null, color : ['#4AAEEA']}<br>
+ *
+ * @param _data
+ * @param _options
+ * @returns {number}
+ * @constructor
  */
-OGDSM.chartVisualization.prototype.vBarChart = function (rootDiv, subOptions) {
-    'use strict';
-    subOptions = (typeof (subOptions) !== 'undefined') ? subOptions : {};
-    var data = this.data,
-        options = this.defaults,
-        chartOptions = {
+openGDSMobile.ChartVis = function (_data, _options) {
+    function isInt(n) {
+        return n % 1 === 0;
+    }
+    _data = JSON.parse(_data);
+    _options = (typeof (_options) !== 'undefined') ? _options : {};
+    var defaultOptions = {
+        rootKey : null,
+        labelKey : null,
+        valueKey : null,
+        max : null,
+        min : null
+    };
+    var options = openGDSMobile.util.applyOptions(defaultOptions, _options);
+
+    if (typeof (_data) !== 'undefined') {
+        if (typeof (options.rootKey) === 'undefined' ||
+            typeof (options.labelKey) === 'undefined' ||
+            typeof (options.valueKey) === 'undefined') {
+            console.error('Please input option values : rootKey, label, value');
+            return -1;
+        }
+        var data = _data[options.rootKey];
+        
+        var d = null;
+        if (options.max === null) {
+            options.max = data[0][options.valueKey];
+            for (d in data) {
+                if (data.hasOwnProperty(d)) {
+                    options.max = Math.max(data[d][options.valueKey], options.max);
+                    if (!isInt(Number(data[d][options.valueKey]))) {
+                        data[d][options.valueKey] = Number(data[d][options.valueKey]).toFixed(3);
+                    }
+                }
+            }
+        }
+        if (options.min === null) {
+            options.min = data[0][options.valueKey];
+            for (d in data) {
+                if (data.hasOwnProperty(d)) {
+                    options.min = Math.min(data[d][options.valueKey], options.min);
+                    if (!isInt(Number(data[d][options.valueKey]))) {
+                        data[d][options.valueKey] = Number(data[d][options.valueKey]).toFixed(3);
+                    }
+                }
+            }
+        }
+
+        this.options = options;
+        this.data = _data[options.rootKey];
+    } else {
+        console.log('kMap function Mode');
+    }
+
+};
+
+/**
+ *
+ * @param _chartDIV
+ * @param _options
+ */
+openGDSMobile.ChartVis.prototype.vBarChart = function (_chartDIV, _options) {
+    _options = (typeof (_options) !== 'undefined') ? _options : {};
+    var defaultOptions = {
             range : null,
             color : ['#4AAEEA'],
             top : 20,
@@ -87,40 +84,45 @@ OGDSM.chartVisualization.prototype.vBarChart = function (rootDiv, subOptions) {
             left : 45,
             tick : 10
         };
-    chartOptions = OGDSM.applyOptions(chartOptions, subOptions);
-    var rootDivObj = $('#' + rootDiv),
+
+    var data = this.data;
+    var options = this.options;
+
+    var chartOptions = openGDSMobile.util.applyOptions(defaultOptions, _options);
+
+    var rootDivObj = $('#' + _chartDIV),
         contentWidth = rootDivObj.width() + chartOptions.left + chartOptions.right,
         contentHeight = rootDivObj.height() + chartOptions.top + chartOptions.bottom,
         barWidth = rootDivObj.width() - chartOptions.left - chartOptions.right,
         barHeight = rootDivObj.height() - chartOptions.top - chartOptions.bottom;
-    $('#' + rootDiv).empty();
+ //   $('#' + rootDiv).empty();
     var labels = d3.scale.ordinal().rangeRoundBands([0, barWidth], 0.05);
     var values = d3.scale.linear().range([barHeight, 0]);
     var labelAxis = d3.svg.axis().scale(labels).orient('bottom');
     var valueAxis = d3.svg.axis().scale(values).orient('left').ticks(chartOptions.tick);
-    var chartSVG = d3.select('#' + rootDiv).append('svg').attr('id', rootDiv + 'Bar')
+    var chartSVG = d3.select('#' + _chartDIV).append('svg').attr('id', _chartDIV + 'Bar')
         .attr('width', contentWidth)
         .attr('height', contentHeight)
         .append('g')
         .attr('transform', 'translate(' + chartOptions.left + ', ' + chartOptions.top + ')');
-    console.log(data);
+
     labels.domain(data.map(function (d) {
         return d[options.labelKey];
     }));
     values.domain([options.min, options.max]);
     chartSVG.append('g')
-            .attr('class', 'y axis')
-            .call(valueAxis)
-            .attr('fill', 'none')
-            .attr('stroke', '#000')
-            .attr('shape-rendering', 'crispEdges')
-            .append('text')
-            .attr('transform', 'rotate(-90)')
-            .attr('y', 7)
-            .attr('dy', '.71em')
-            .style('text-anchor', 'end')
-            .style('font-size', '0.7em')
-            .text(options.valueKey);
+        .attr('class', 'y axis')
+        .call(valueAxis)
+        .attr('fill', 'none')
+        .attr('stroke', '#000')
+        .attr('shape-rendering', 'crispEdges')
+        .append('text')
+        .attr('transform', 'rotate(-90)')
+        .attr('y', 7)
+        .attr('dy', '.71em')
+        .style('text-anchor', 'end')
+        .style('font-size', '0.7em')
+        .text(options.valueKey);
     chartSVG.append('g').attr('class', 'x axis')
         .attr('transform', 'translate(0, ' + barHeight + ')')
         .call(labelAxis)
@@ -181,38 +183,38 @@ OGDSM.chartVisualization.prototype.vBarChart = function (rootDiv, subOptions) {
         });
 };
 
-
-
 /**
- * 수평 막대 차트 시각화
- * @param {String} divId - 막대 차트 시각화할 DIV 아이디 이름
- * @param {Object} options - 옵션 JSON 객체 키 값<br>
-      {range : [], color : ['#4AAEEA']}<br>
+ *
+ * @param _chartDIV
+ * @param _options
  */
-OGDSM.chartVisualization.prototype.hBarChart = function (rootDiv, subOptions) {
-    'use strict';
-    subOptions = (typeof (subOptions) !== 'undefined') ? subOptions : {};
-    var data = this.data,
-        options = this.defaults,
-        chartOptions = {
-            range : null,
-            color : ['#4AAEEA'],
-            top : 20,
-            right : 60,
-            bottom : 20,
-            left : 80,
-            tick : 10
-        };
-    chartOptions = OGDSM.applyOptions(chartOptions, subOptions);
-    var rootDivObj = $('#' + rootDiv),
+openGDSMobile.ChartVis.prototype.hBarChart = function (_chartDIV, _options) {
+    _options = (typeof (_options) !== 'undefined') ? _options : {};
+    var defaultOptions = {
+        range : null,
+        color : ['#4AAEEA'],
+        top : 20,
+        right : 60,
+        bottom : 20,
+        left : 80,
+        tick : 10
+    };
+
+    var data = this.data;
+    var options = this.options;
+
+    var chartOptions = openGDSMobile.util.applyOptions(defaultOptions, _options);
+
+
+    var rootDivObj = $('#' + _chartDIV),
         contentWidth = rootDivObj.width() + chartOptions.left + chartOptions.right,
         contentHeight = rootDivObj.height() + chartOptions.top + chartOptions.bottom,
         barWidth = rootDivObj.width() - chartOptions.left - chartOptions.right,
         barHeight = rootDivObj.height() - chartOptions.top - chartOptions.bottom;
-    $('#' + rootDiv).empty();
+    $('#' + _chartDIV).empty();
     var labels = d3.scale.ordinal().rangeRoundBands([0, barHeight], 0.02);
     var values = d3.scale.linear().range([0, barWidth]);
-    var chartSVG = d3.select('#' + rootDiv).append('svg').attr('id', rootDiv + 'Bar')
+    var chartSVG = d3.select('#' + _chartDIV).append('svg').attr('id', _chartDIV + 'Bar')
         .attr('width', contentWidth)
         .attr('height', contentHeight)
         .append('g')
@@ -284,43 +286,43 @@ OGDSM.chartVisualization.prototype.hBarChart = function (rootDiv, subOptions) {
         .text(function (d) {
             return d[options.valueKey];
         });
-};
-
+}
 
 
 /**
- * 라인 차트 시각화
- * @param {String} divId - 막대 차트 시각화할 DIV 아이디 이름
- * @param {Object} options - 옵션 JSON 객체 키 값<br>
-      {stroke : ['#4AAEEA'], width : 2,<br>
-       circleSize : 3, circleColor : ['#AAAAAA']}<br>
+ *
+ * @param _chartDIV
+ * @param _options
  */
-OGDSM.chartVisualization.prototype.lineChart = function (rootDiv, subOptions) {
-    'use strict';
-    subOptions = (typeof (subOptions) !== 'undefined') ? subOptions : {};
-    var data = this.data,
-        options = this.defaults,
-        chartOptions = {
-            range : null,
-            stroke : ['#4AAEEA'],
-            width : 2,
-            circleSize : 3,
-            circleColor : ['#AAAAAA'],
-            top : 20,
-            right : 25,
-            bottom : 100,
-            left : 45
-        };
-    chartOptions = OGDSM.applyOptions(chartOptions, subOptions);
-    var rootDivObj = $('#' + rootDiv),
+openGDSMobile.ChartVis.prototype.lineChart = function (_chartDIV, _options) {
+
+    _options = (typeof (_options) !== 'undefined') ? _options : {};
+    var defaultOptions = {
+        range : null,
+        stroke : ['#4AAEEA'],
+        width : 2,
+        circleSize : 3,
+        circleColor : ['#AAAAAA'],
+        top : 20,
+        right : 25,
+        bottom : 100,
+        left : 45
+    };
+
+    var data = this.data;
+    var options = this.options;
+
+    var chartOptions = openGDSMobile.util.applyOptions(defaultOptions, _options);
+
+    var rootDivObj = $('#' + _chartDIV),
         contentWidth = rootDivObj.width() + chartOptions.left + chartOptions.right,
         contentHeight = rootDivObj.height() + chartOptions.top + chartOptions.bottom,
         barWidth = rootDivObj.width() - chartOptions.left - chartOptions.right,
         barHeight = rootDivObj.height() - chartOptions.top - chartOptions.bottom;
-    $('#' + rootDiv).empty();
+    $('#' + _chartDIV).empty();
     var labels = d3.scale.ordinal().rangeRoundBands([0, barWidth], 0.05);
     var values = d3.scale.linear().range([barHeight, 0]);
-    var chartSVG = d3.select('#' + rootDiv).append('svg').attr('id', rootDiv + 'line')
+    var chartSVG = d3.select('#' + _chartDIV).append('svg').attr('id', _chartDIV + 'line')
         .attr('width', contentWidth)
         .attr('height', contentHeight)
         .append('g')
@@ -395,38 +397,42 @@ OGDSM.chartVisualization.prototype.lineChart = function (rootDiv, subOptions) {
         .attr('y', function (d, i) {
             return values(d[options.valueKey]);
         });
-};
+
+}
 
 /**
- * 영역 차트 시각화
- * @param {String} divId - 막대 차트 시각화할 DIV 아이디 이름
- * @param {Object} options - 옵션 JSON 객체 키 값<br>
-      {fill : ['#4AAEEA'], circleSize : 3, circleColor : ['#AAAAAA']}<br>
+ *
+ * @param _chartDIV
+ * @param _options
  */
-OGDSM.chartVisualization.prototype.areaChart = function (rootDiv, subOptions) {
-    'use strict';
-    subOptions = (typeof (subOptions) !== 'undefined') ? subOptions : {};
-    var data = this.data,
-        options = this.defaults,
-        chartOptions = {
-            fill : ['#4AAEEA'],
-            circleSize : 3,
-            circleColor : ['#AAAAAA'],
-            top : 20,
-            right : 0,
-            bottom : 100,
-            left : 45
-        };
-    chartOptions = OGDSM.applyOptions(chartOptions, subOptions);
-    var rootDivObj = $('#' + rootDiv),
+openGDSMobile.ChartVis.prototype.areaChart = function (_chartDIV, _options) {
+
+    _options = (typeof (_options) !== 'undefined') ? _options : {};
+    var defaultOptions = {
+        fill : ['#4AAEEA'],
+        circleSize : 3,
+        circleColor : ['#AAAAAA'],
+        top : 20,
+        right : 0,
+        bottom : 100,
+        left : 45
+    };
+
+    var data = this.data;
+    var options = this.options;
+
+    var chartOptions = openGDSMobile.util.applyOptions(defaultOptions, _options);
+
+
+    var rootDivObj = $('#' + _chartDIV),
         contentWidth = rootDivObj.width() + chartOptions.left + chartOptions.right,
         contentHeight = rootDivObj.height() + chartOptions.top + chartOptions.bottom,
         barWidth = rootDivObj.width() - chartOptions.left - chartOptions.right,
         barHeight = rootDivObj.height() - chartOptions.top - chartOptions.bottom;
-    $('#' + rootDiv).empty();
+    $('#' + _chartDIV).empty();
     var labels = d3.scale.ordinal().rangeRoundBands([0, barWidth], 0.1);
     var values = d3.scale.linear().range([barHeight, 0]);
-    var chartSVG = d3.select('#' + rootDiv).append('svg').attr('id', rootDiv + 'Bar')
+    var chartSVG = d3.select('#' + _chartDIV).append('svg').attr('id', _chartDIV + 'Bar')
         .attr('width', contentWidth)
         .attr('height', contentHeight)
         .append('g')
@@ -501,32 +507,35 @@ OGDSM.chartVisualization.prototype.areaChart = function (rootDiv, subOptions) {
         .style('text-anchor', 'end')
         .style('font-size', '0.7em')
         .text(options.valueKey);
-};
+
+}
 
 
 /**
- * 한국 지도 시각화
- * @param {String} rootDiv - 막대 차트 시각화할 DIV 아이디 이름
- * @param {String} serverAddr - 저장되어 있는 서버 주소
- * @param {String} geodata - 공간 데이터 이름 (파일)
- * @param {Object} subOptions - 옵션 JSON 객체 키 값<br>
-    {center_lat : 34.0, center_lon : 131.0, map_scale : 3500, top:0, <br>
-     right: 0, bottom: 0, left: 0 }<br>
+ *
+ * @param rootDiv
+ * @param serverAddr
+ * @param geodata
+ * @param _options
+ * @returns {number}
  */
-OGDSM.chartVisualization.prototype.kMap = function (rootDiv, serverAddr, geodata, subOptions) {
-    'use strict';
-    subOptions = (typeof (subOptions) !== 'undefined') ? subOptions : {};
-    var data = this.data,
-        options = this.defaults,
-        mapOptions = {
-            center_lat : 34.0,
-            center_lon : 131.0,
-            map_scale : 3500,
-            top : 0,
-            right : 0,
-            bottom : 0,
-            left : 0
-        };
+openGDSMobile.ChartVis.prototype.kMap = function (rootDiv, serverAddr, geodata, _options) {
+    _options = (typeof (_options) !== 'undefined') ? _options : {};
+    var defaultOptions = {
+        center_lat : 34.0,
+        center_lon : 131.0,
+        map_scale : 3500,
+        top : 0,
+        right : 0,
+        bottom : 0,
+        left : 0
+    };
+
+    var data = this.data;
+    var options = this.options;
+
+    var mapOptions = openGDSMobile.util.applyOptions(defaultOptions, _options);
+
     mapOptions = OGDSM.applyOptions(mapOptions, subOptions);
     var rootDivObj = $('#' + rootDiv),
         contentWidth = rootDivObj.width() + mapOptions.left + mapOptions.right,
@@ -542,14 +551,14 @@ OGDSM.chartVisualization.prototype.kMap = function (rootDiv, serverAddr, geodata
     paramData.jsonName = geodata;
     rootDivObj.empty();
     var svg = d3.select('#' + rootDiv)
-                .append('svg')
-                .attr("width", contentWidth)
-                .attr("height", contentHeight);
+        .append('svg')
+        .attr("width", contentWidth)
+        .attr("height", contentHeight);
     var projection = d3.geo.mercator()
-                .center([mapOptions.center_lon, mapOptions.center_lat])
-                .scale(mapOptions.map_scale)
-                .rotate([2, 2.5])
-                .translate([barWidth / 2, barHeight / 2]);
+        .center([mapOptions.center_lon, mapOptions.center_lat])
+        .scale(mapOptions.map_scale)
+        .rotate([2, 2.5])
+        .translate([barWidth / 2, barHeight / 2]);
     var path = d3.geo.path().projection(projection);
     var curObj = null, curPropEn = null;
     $.each(objNames, function (i, d) {
