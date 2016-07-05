@@ -7,7 +7,7 @@ openGDSMobile.AttributeManager = function () {
 };
 
 
-openGDSMobile.AttributeManager.prototype.editItem = function () {
+openGDSMobile.AttributeManager.prototype.editEnable = function () {
 
 };
 

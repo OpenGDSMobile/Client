@@ -3,11 +3,14 @@ goog.provide('openGDSMobile.AttributeVis');
 goog.require('openGDSMobile.util.applyOptions');
 goog.require('goog.dom');
 goog.require('goog.array');
+goog.require('goog.ui.LabelInput');
 
 
 openGDSMobile.Attribute = {};
 
 openGDSMobile.Attribute.PANEL_STYLE = 'openGDSMobile-attr-panel';
+
+openGDSMobile.Attribute.PANEL_INPUT_STYLE = 'openGDSMobile-attr-textInput';
 
 
 openGDSMobile.attrListStatus = {
@@ -135,47 +138,52 @@ openGDSMobile.AttributeVis.prototype.addAttr = function (_layerName) {
                 }
             }
             var attrDOM = goog.dom.getElement('openGDSMobileAttr');
+            attrDOM.innerHTML = null;
             var titleDOM = goog.dom.createDom('h4', {
                 'style' : 'text-align:center; margin:0px;'
             }, obj[options.attrKey]);
 
             attrDOM.appendChild(titleDOM);
             var tableDOM = goog.dom.createDom('table', {
+                //style 적용
 
             });
             var theadDOM = goog.dom.createDom('thead', {
+                //style 적용
 
             });
             var tbodyDOM = goog.dom.createDom('tbody', {
+                //style 적용
 
             });
             tableDOM.appendChild(theadDOM);
             tableDOM.appendChild(tbodyDOM);
             attrDOM.appendChild(tableDOM);
             var theadTrDOM = goog.dom.createDom('tr', {
-
+                //style 적용
             });
             var tbodyTrDOM = goog.dom.createDom('tr', {
-
+                //style 적용
             });
+            theadDOM.appendChild(theadTrDOM);
+            tbodyDOM.appendChild(tbodyTrDOM);
             for (var j = 0; j < keys.length; j++){
                 var thDOM = goog.dom.createDom('th', {
-
+                    //style 적용
                 }, keys[j]);
                 var tdDOM = goog.dom.createDom('td', {
-
-                }, obj[keys[j]]);
+                    //style 적용
+                });
+                var inputDOM = new goog.ui.LabelInput('');
+                inputDOM.render(tdDOM);
+                inputDOM.setValue(obj[keys[j]]);
+                goog.dom.classlist.add(inputDOM.getElement(), openGDSMobile.Attribute.PANEL_INPUT_STYLE);
+                inputDOM.setEnabled(false);
 
                 theadTrDOM.appendChild(thDOM);
                 tbodyTrDOM.appendChild(tdDOM);
             }
-            for (var i = 0 ; i <keys.length; i++) {
-                console.log(obj[keys[i]]);
-            }
-
             //모든 객체 저장..??
-            console.log(openGDSMobile.attrListStatus.objs);
-
         } else {
             overlay.setPosition(undefined);
         }

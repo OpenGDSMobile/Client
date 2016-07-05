@@ -7,4 +7,14 @@
     border-radius: 10px;
     border : dashed;
     border-width : 1px;
+    overflow-x: auto;
+}
+
+.openGDSMobile-attr-textInput{
+    background-color: transparent;
+    border:0px solid;
+    font-size:15px;
+    text-align:center;
+    width: 120px;
+    margin:0px;
 }

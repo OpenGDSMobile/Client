@@ -221,14 +221,14 @@ openGDSMobile.MapManager.prototype.addItem = function (_layerName) {
     /*Setting Content**/
     var setBtnDOM = new goog.ui.Button('Setting');
     setBtnDOM.render(settingDOM);
-    setBtnDOM.addClassName(openGDSMobile.Manager.MANAGER_ITEM_SETTING_BTN_STYLE);
+    setBtnDOM.addClassName(openGDSMobile.Manager.MANAGER_SETTING_BTN_STYLE);
     setBtnDOM.setTooltip(title + ' setting Button');
     setBtnDOM.setValue(title);
     goog.events.listen(setBtnDOM,
         goog.ui.Component.EventType.ACTION,
         function (e) {
             //console.log(e.target.getValue());
-            var settingBtns = goog.dom.getElementsByTagNameAndClass('button', openGDSMobile.Manager.MANAGER_ITEM_SETTING_BTN_STYLE);
+            var settingBtns = goog.dom.getElementsByTagNameAndClass('button', openGDSMobile.Manager.MANAGER_SETTING_BTN_STYLE);
             goog.array.forEach(settingBtns, function (obj){
                 var tmpBtn = new goog.ui.Button();
                 tmpBtn.decorate(obj);
