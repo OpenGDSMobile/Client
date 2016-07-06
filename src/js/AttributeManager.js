@@ -13,3 +13,4 @@ openGDSMobile.AttributeManager.prototype.editEnable = function () {
 
 
 
+goog.exportSymbol('openGDSMobile.AttributeManager', openGDSMobile.AttributeManager);

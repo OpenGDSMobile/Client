@@ -596,3 +596,5 @@ openGDSMobile.ChartVis.prototype.kMap = function (rootDiv, serverAddr, geodata, 
         }
     });
 };
+
+goog.exportSymbol('openGDSMobile.ChartVis', openGDSMobile.ChartVis);

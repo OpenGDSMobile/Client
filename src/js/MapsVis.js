@@ -30,13 +30,14 @@ openGDSMobile.MapVis = function (_mapDIV, _options) {
     this.geoLocation = false;
 
     var options = openGDSMobile.util.applyOptions(defaultOptions, _options);
-
+/*
     if (options.attribute !== null) {
         //this.attrObj =
     }
     if (options.list !== null) {
         //this.listObj =
     }
+*/
     if (typeof (ol) === 'undefined') {
         console.error("Not Import OpenLayers 3 Library....");
         return -1;
@@ -377,3 +378,6 @@ openGDSMobile.MapVis.prototype.trackingGeoLocation = function (_sw) {
         location.un('change:position');
     }
 };
+
+
+goog.exportSymbol('openGDSMobile.MapVis', openGDSMobile.MapVis);

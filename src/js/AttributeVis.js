@@ -253,3 +253,6 @@ openGDSMobile.AttributeVis.prototype.allDisplay = function (_layerName) {
 
 
 };
+
+
+goog.exportSymbol('openGDSMobile.AttributeVis', openGDSMobile.AttributeVis);

@@ -3,6 +3,7 @@ goog.provide('openGDSMobile.util.applyOptions');
 goog.provide('openGDSMobile.util.getOlLayer');
 goog.require('goog.array');
 
+
 openGDSMobile.util.jsonToArray = function (obj, x, y) {
     var xyAxis = [],
         row = obj.row;
@@ -37,5 +38,8 @@ openGDSMobile.util.getOlLayer = function (_olObj, _name) {
     return result;
 }
 
+goog.exportSymbol('openGDSMobile.util.jsonToArray', openGDSMobile.util.jsonToArray);
+goog.exportSymbol('openGDSMobile.util.applyOptions', openGDSMobile.util.applyOptions);
+goog.exportSymbol('openGDSMobile.util.getOlLayer', openGDSMobile.util.getOlLayer);
 
 

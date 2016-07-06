@@ -1,5 +1,5 @@
 goog.provide('openGDSMobile');
-
+ 
 
 /**
  * @constructor
@@ -8,3 +8,6 @@ goog.provide('openGDSMobile');
 openGDSMobile = function () {
 
 };
+
+
+goog.exportSymbol('openGDSMobile', openGDSMobile);

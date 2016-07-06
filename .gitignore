@@ -1,4 +1,11 @@
 data
 closure-library
+
 .idea
 favicon.ico
+.brackets.json
+closure-compiler/
+node_modules/.bin/
+node_modules/gulp-concat/
+node_modules/gulp-jsdoc3/
+node_modules/gulp/

@@ -332,3 +332,5 @@ openGDSMobile.MapManager.prototype.removeItems = function () {
         this.removeLayer(allLayers[i].get('title'));
     }
 }
+
+goog.exportSymbol('openGDSMobile.MapManager', openGDSMobile.MapManager);
