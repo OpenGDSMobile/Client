@@ -14,23 +14,25 @@ gulp.task('doc', function (cb){
     .pipe(jsdoc(cb));
 });
 
-gulp.task('closure-compiler', function() {
+gulp.task('closure-compiler-debug', function() {
 	return gulp.src([
-		/*'dist/openGDSMobilelib.js',*/
 		'src/js/*.js',
-		'clsoure-library/closure/goog/**.js'])
+		'closure-library/closure/goog/**.js'])
 		.pipe(closureCompiler({
-			compilerPath: 'closure-compiler/compiler.jar',
-			fileName: 'ttt.js',
+			compilerPath: 'bower_components/closure-compiler/compiler.jar',
+			fileName: 'dist/openGDSMobile-debug.js',
 			compilerFlags: {
-				closure_entry_point: 'openGDSMobile.MapVis',
-				only_closure_dependencies: true,
-				warning_level: 'VERBOSE'
+				entry_point: [
+					'openGDSMobile','openGDSMobile.MapVis'
+				],
+				/*closure_entry_point: 'openGDSMobile',*/
+				/*only_closure_dependencies: true,
+				warning_level: 'VERBOSE'*/
 			}
 		}))
 		.pipe(gulp.dest('dist'));
 });
 
 //gulp.task('default', ['combine-js']);
-gulp.task('default', ['closure-compiler']);
+gulp.task('default', ['closure-compiler-debug']);
 

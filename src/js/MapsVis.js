@@ -86,7 +86,6 @@ openGDSMobile.MapVis.prototype.getMapObj = function () {
  * @returns {ol.style.Text} OpenLayers 3 텍스트 스타일 객체
  */
 openGDSMobile.MapVis.textStyleFunction = function (feature, resolution, attrKey) {
-    console.log(resolution);
     return new ol.style.Text({
         text : resolution < 76 ? feature.get(attrKey) : ''
     });

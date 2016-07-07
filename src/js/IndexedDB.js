@@ -1,3 +1,1 @@
-/**
- * Created by Administrator on 2016-07-02.
- */
+goog.provide('openGDSMobile.IndexedDB');

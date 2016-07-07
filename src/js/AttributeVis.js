@@ -101,7 +101,6 @@ openGDSMobile.AttributeVis.prototype.addAttr = function (_layerName) {
     var options = this.options;
     var overlay = this.overlay;
     var layer = openGDSMobile.util.getOlLayer(mapObj, _layerName);
-    console.log(layer);
     options.attrKey = layer.get('attrKey');
     /***
      * 모든 객체...
