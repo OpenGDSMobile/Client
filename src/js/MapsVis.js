@@ -170,6 +170,19 @@ openGDSMobile.MapVis.prototype.changeBgMap = function (_mapType) {
     }
 };
 
+openGDSMobile.MapVis.prototype.addLayer = function (_layerObj, _type, _title, _options) {
+    _options = (typeof (_options) !== 'undefined') ? _options : {};
+    var defaultOptions = {
+
+    };
+    var options = openGDSMobile.util.applyOptions(defaultOptions, _options);
+    _layerObj.set('type', _type);
+    _layerObj.set('title', _title);
+
+    this.mapObj.addLayer(_layerObj);
+
+}
+
 /**
  * GeoJSON 레이어 추가
  * @param {Object} _geoJSON 벡터 GeoJSON 객체
