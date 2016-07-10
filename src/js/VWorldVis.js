@@ -50,7 +50,7 @@ openGDSMobile.VWorld.prototype.WFSRequest = function (_title, _layers, _styles, 
                 format: new ol.format.WFS(),
                 url : function (extent) {
                     return '../test.xml'
-                  /*   return 'http://map.vworld.kr/js/wfs.do?' + parameter;*/
+                     return 'http://map.vworld.kr/js/wfs.do?' + parameter;
                 },
         strategy: ol.loadingstrategy.bbox
         })

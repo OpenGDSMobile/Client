@@ -4,6 +4,10 @@ goog.require('openGDSMobile.util.applyOptions');
 goog.require('goog.dom');
 goog.require('goog.array');
 goog.require('goog.ui.LabelInput');
+goog.require('goog.events');
+goog.require('goog.events.EventType');
+goog.require('goog.events.FocusHandler');
+goog.require('goog.events.InputHandler');
 
 
 openGDSMobile.Attribute = {};
@@ -13,10 +17,6 @@ openGDSMobile.Attribute.PANEL_STYLE = 'openGDSMobile-attr-panel';
 openGDSMobile.Attribute.PANEL_INPUT_STYLE = 'openGDSMobile-attr-textInput';
 
 
-openGDSMobile.attrListStatus = {
-    length : 0,
-    objs : []
-};
 
 openGDSMobile.AttributeVis = function (_addr, _mapObj, _options) {
     _mapObj = (typeof (_mapObj) !== 'undefined') ? _mapObj : null;
@@ -34,6 +34,7 @@ openGDSMobile.AttributeVis = function (_addr, _mapObj, _options) {
     var options = openGDSMobile.util.applyOptions(defaultOptions, _options);
     this.options = options;
     this.addr = _addr;
+    this.editModeSW = false;
 
     if (_mapObj === null) {
         console.log("Only attribute visualization. Not linked map.");
@@ -94,6 +95,25 @@ openGDSMobile.AttributeVis.styleFunction = function (feature, resolution, option
         })
     }
 }
+openGDSMobile.AttributeVis.getEditMode = function () {
+    return this.editModeSW;
+}
+
+openGDSMobile.Attribute.curText = null;
+openGDSMobile.AttributeVis.updateText = function(e) {
+    var inputEl = e.target;
+    if (e.type == 'focusin') {
+        openGDSMobile.Attribute.curText = inputEl.value;
+    } else if (e.type == 'focusout') {
+        openGDSMobile.Attribute.curText = null;
+    } else {
+        var searchInfo = e.target.getAttribute('data-info').split('-');
+        var attrInfo = openGDSMobile.attrListStatus.objs;
+        console.log(openGDSMobile.attrListStatus);
+        openGDSMobile.attrListStatus.changeContent(searchInfo[0], searchInfo[1], openGDSMobile.Attribute.curText, inputEl.value);
+        openGDSMobile.Attribute.curText = inputEl.value;
+    }
+};
 
 openGDSMobile.AttributeVis.prototype.addAttr = function (_layerName) {
     var addr = this.addr;
@@ -102,20 +122,16 @@ openGDSMobile.AttributeVis.prototype.addAttr = function (_layerName) {
     var overlay = this.overlay;
     var layer = openGDSMobile.util.getOlLayer(mapObj, _layerName);
     options.attrKey = layer.get('attrKey');
-    /***
-     * 모든 객체...
-     */
-    var obj = {
-        layerName : _layerName
-    };
-    /*
-     ++openGDSMobile.attrListStatus;
-     console.log(openGDSMobile.attrListStatus);
-     openGDSMobile.attrListStatus.objs.push({
-     layerName : _layerName
-     });
-     */
 
+    /*console.log(layer.getSource().getFeatures());*/
+
+     ++openGDSMobile.attrListStatus.length;
+    /**백터 일때...**/
+     openGDSMobile.attrListStatus.objs.push({
+        layerName : _layerName,
+        obj : layer,
+        attr : layer.getSource().getFeatures()
+     });
     var select = new ol.interaction.Select({
         condition: ol.events.condition.click,
         style : (function (feature, resolution) {
@@ -125,7 +141,9 @@ openGDSMobile.AttributeVis.prototype.addAttr = function (_layerName) {
 
     mapObj.addInteraction(select);
     select.on('select', function(e) {
-        // 여기에다가 ......
+        var attrDOM = goog.dom.getElement('openGDSMobileAttr');
+        attrDOM.innerHTML = null;
+        overlay.setPosition(undefined);
         if (e.selected.length !== 0) {
             overlay.setPosition(e.mapBrowserEvent.coordinate);
             //console.log(e.selected[0]);
@@ -136,8 +154,6 @@ openGDSMobile.AttributeVis.prototype.addAttr = function (_layerName) {
                     keys.push(k);
                 }
             }
-            var attrDOM = goog.dom.getElement('openGDSMobileAttr');
-            attrDOM.innerHTML = null;
             var titleDOM = goog.dom.createDom('h4', {
                 'style' : 'text-align:center; margin:0px;'
             }, obj[options.attrKey]);
@@ -176,18 +192,54 @@ openGDSMobile.AttributeVis.prototype.addAttr = function (_layerName) {
                 var inputDOM = new goog.ui.LabelInput('');
                 inputDOM.render(tdDOM);
                 inputDOM.setValue(obj[keys[j]]);
+                inputDOM.getElement().setAttribute('data-info', _layerName + '-' + keys[j]);
                 goog.dom.classlist.add(inputDOM.getElement(), openGDSMobile.Attribute.PANEL_INPUT_STYLE);
-                inputDOM.setEnabled(false);
 
+                var inputHandler = new goog.events.InputHandler(inputDOM.getElement());
+                var focusHandler = new goog.events.FocusHandler(inputDOM.getElement());
+                if (openGDSMobile.AttributeVis.editModeSW === true) {
+                    goog.events.listen(focusHandler, goog.events.FocusHandler.EventType.FOCUSIN,
+                        openGDSMobile.AttributeVis.updateText);
+                    goog.events.listen(inputHandler, goog.events.InputHandler.EventType.INPUT,
+                        openGDSMobile.AttributeVis.updateText);
+                    goog.events.listen(focusHandler, goog.events.FocusHandler.EventType.FOCUSOUT,
+                        openGDSMobile.AttributeVis.updateText);
+                } else {
+                    goog.events.unlisten(focusHandler, goog.events.FocusHandler.EventType.FOCUSIN,
+                        openGDSMobile.AttributeVis.updateText);
+                    goog.events.unlisten(inputHandler, goog.events.InputHandler.EventType.INPUT,
+                        openGDSMobile.AttributeVis.updateText);
+                    goog.events.unlisten(focusHandler, goog.events.FocusHandler.EventType.FOCUSOUT,
+                        openGDSMobile.AttributeVis.updateText);
+                }
                 theadTrDOM.appendChild(thDOM);
                 tbodyTrDOM.appendChild(tdDOM);
             }
-            //모든 객체 저장..??
-        } else {
-            overlay.setPosition(undefined);
         }
     });
 };
+
+openGDSMobile.AttributeVis.prototype.editMode = function (_sw) {
+    if (_sw === true) {
+        openGDSMobile.AttributeVis.editModeSW = true;
+    } else {
+        openGDSMobile.AttributeVis.editModeSW = false;
+    }
+};
+
+openGDSMobile.AttributeVis.prototype.removeAttr = function (_tableName, _layerName) {
+
+};
+
+openGDSMobile.AttributeVis.prototype.allDisplay = function (_layerName) {
+
+
+};
+
+
+goog.exportSymbol('openGDSMobile.AttributeVis', openGDSMobile.AttributeVis);
+
+
 /*
  openGDSMobile.AttributeVis.prototype.addAttr = function (_tableName, _layerName) {
  var addr = this.addr;
@@ -244,14 +296,3 @@ openGDSMobile.AttributeVis.prototype.addAttr = function (_layerName) {
  });
  };
  */
-openGDSMobile.AttributeVis.prototype.removeAttr = function (_tableName, _layerName) {
-
-};
-
-openGDSMobile.AttributeVis.prototype.allDisplay = function (_layerName) {
-
-
-};
-
-
-goog.exportSymbol('openGDSMobile.AttributeVis', openGDSMobile.AttributeVis);

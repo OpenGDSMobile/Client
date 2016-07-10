@@ -42,14 +42,6 @@ openGDSMobile.Manager.MANAGER_SETTING_PANEL_TITLE = 'openGDSMobile-manager-setti
 openGDSMobile.Manager.MANAGER_SETTING_PANEL_CLOSE = 'openGDSMobile-manager-setting-panel-close';
 
 
-/**
- * 리스트 현황 JSON 객체
- * @type {{length: number, objs: [{title: string, obj : object}, ...]}
-     */
-openGDSMobile.listStatus = {
-    length : 0,
-    objs : []
-};
 
 /**
  * @constructor
