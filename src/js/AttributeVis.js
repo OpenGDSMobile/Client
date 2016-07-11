@@ -18,7 +18,7 @@ openGDSMobile.Attribute.PANEL_INPUT_STYLE = 'openGDSMobile-attr-textInput';
 
 
 
-openGDSMobile.AttributeVis = function (_addr, _mapObj, _options) {
+openGDSMobile.AttributeVis = function (_mapObj, _options) {
     _mapObj = (typeof (_mapObj) !== 'undefined') ? _mapObj : null;
     _options = (typeof (_options) !== 'undefined') ? _options : {};
 
@@ -33,8 +33,6 @@ openGDSMobile.AttributeVis = function (_addr, _mapObj, _options) {
 
     var options = openGDSMobile.util.applyOptions(defaultOptions, _options);
     this.options = options;
-    this.addr = _addr;
-    this.editModeSW = false;
 
     if (_mapObj === null) {
         console.log("Only attribute visualization. Not linked map.");
@@ -95,9 +93,20 @@ openGDSMobile.AttributeVis.styleFunction = function (feature, resolution, option
         })
     }
 }
-openGDSMobile.AttributeVis.getEditMode = function () {
-    return this.editModeSW;
-}
+
+openGDSMobile.AttributeVis.prototype.getEditMode = function () {
+    return openGDSMobile.Attribute.editModeSW;
+};
+
+openGDSMobile.Attribute.editModeSW = false;
+openGDSMobile.AttributeVis.prototype.setEditMode = function (_sw) {
+    if (_sw === true) {
+        openGDSMobile.Attribute.editModeSW = true;
+
+    } else {
+        openGDSMobile.Attribute.editModeSW = false;
+    }
+};
 
 openGDSMobile.Attribute.curText = null;
 openGDSMobile.AttributeVis.updateText = function(e) {
@@ -109,9 +118,13 @@ openGDSMobile.AttributeVis.updateText = function(e) {
     } else {
         var searchInfo = e.target.getAttribute('data-info').split('-');
         var attrInfo = openGDSMobile.attrListStatus.objs;
-        console.log(openGDSMobile.attrListStatus);
-        openGDSMobile.attrListStatus.changeContent(searchInfo[0], searchInfo[1], openGDSMobile.Attribute.curText, inputEl.value);
+        openGDSMobile.attrListStatus.changeAttrContent(searchInfo[0], searchInfo[1], openGDSMobile.Attribute.curText, inputEl.value);
         openGDSMobile.Attribute.curText = inputEl.value;
+        if (openGDSMobile.IndexedDBSW === true) {
+            ////////////////
+
+            ///////////////
+        }
     }
 };
 
@@ -123,7 +136,6 @@ openGDSMobile.AttributeVis.prototype.addAttr = function (_layerName) {
     var layer = openGDSMobile.util.getOlLayer(mapObj, _layerName);
     options.attrKey = layer.get('attrKey');
 
-    /*console.log(layer.getSource().getFeatures());*/
 
      ++openGDSMobile.attrListStatus.length;
     /**백터 일때...**/
@@ -193,11 +205,11 @@ openGDSMobile.AttributeVis.prototype.addAttr = function (_layerName) {
                 inputDOM.render(tdDOM);
                 inputDOM.setValue(obj[keys[j]]);
                 inputDOM.getElement().setAttribute('data-info', _layerName + '-' + keys[j]);
+                goog.dom.classlist.add(inputDOM.getElement(), 'openGDSMobile-sw-class');
                 goog.dom.classlist.add(inputDOM.getElement(), openGDSMobile.Attribute.PANEL_INPUT_STYLE);
-
                 var inputHandler = new goog.events.InputHandler(inputDOM.getElement());
                 var focusHandler = new goog.events.FocusHandler(inputDOM.getElement());
-                if (openGDSMobile.AttributeVis.editModeSW === true) {
+                if (openGDSMobile.Attribute.editModeSW === true) {
                     goog.events.listen(focusHandler, goog.events.FocusHandler.EventType.FOCUSIN,
                         openGDSMobile.AttributeVis.updateText);
                     goog.events.listen(inputHandler, goog.events.InputHandler.EventType.INPUT,
@@ -205,6 +217,7 @@ openGDSMobile.AttributeVis.prototype.addAttr = function (_layerName) {
                     goog.events.listen(focusHandler, goog.events.FocusHandler.EventType.FOCUSOUT,
                         openGDSMobile.AttributeVis.updateText);
                 } else {
+                    inputDOM.getElement().setAttribute('disabled', 'disabled');
                     goog.events.unlisten(focusHandler, goog.events.FocusHandler.EventType.FOCUSIN,
                         openGDSMobile.AttributeVis.updateText);
                     goog.events.unlisten(inputHandler, goog.events.InputHandler.EventType.INPUT,
@@ -219,15 +232,11 @@ openGDSMobile.AttributeVis.prototype.addAttr = function (_layerName) {
     });
 };
 
-openGDSMobile.AttributeVis.prototype.editMode = function (_sw) {
-    if (_sw === true) {
-        openGDSMobile.AttributeVis.editModeSW = true;
-    } else {
-        openGDSMobile.AttributeVis.editModeSW = false;
-    }
-};
 
 openGDSMobile.AttributeVis.prototype.removeAttr = function (_tableName, _layerName) {
+    //////////////////////////// openGDSMobile.attrListStatus remove
+
+    ///////////////////////////
 
 };
 

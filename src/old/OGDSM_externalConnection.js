@@ -218,6 +218,7 @@ OGDSM.externalConnection.prototype.geoServerGeoJsonLoad = function (obj, addr, w
 OGDSM.externalConnection.prototype.vworldWMSLoad = function (apiKey, domain, data) {
     'use strict';
     data = data.join(',');
+    console.log(data);
     var resultData = new ol.layer.Tile({
         title : 'VWorldWMS',
         source : new ol.source.TileWMS(({

@@ -6,6 +6,8 @@
 
     <link type="text/css" rel="stylesheet" href="../src/libs/css/ol3/ol.css" />
 
+    <link type="text/css" rel="stylesheet" href="../src/css/AttributeVis.css" />
+
 
     <script type="text/javascript" src="../closure-library/closure/goog/base.js"></script>
 
@@ -16,6 +18,7 @@
     <script type="text/javascript" src="../src/js/OpenGDSMobile.js"></script>
     <script type="text/javascript" src="../src/js/Util.js"></script>
     <script type="text/javascript" src="../src/js/MapsVis.js"></script>
+    <script type="text/javascript" src="../src/js/AttributeVis.js"></script>
     <script type="text/javascript" src="../src/js/IndexedDB.js"></script>
 
     <style>
@@ -27,8 +30,11 @@
         }
     </style>
     <script>
+        var indexedDBObj = new openGDSMobile.IndexedDB();
+
         $(document).ready(function (){
-            var test = new openGDSMobile.MapVis('MapVis');
+            var mapVis = new openGDSMobile.MapVis('MapVis');
+            var mapAttr = new openGDSMobile.AttributeVis(mapVis);
 
             var addr = 'http://113.198.80.9/geoserver/wfs?service=WFS&version=1.1.0&request=GetFeature&typeNames=OpenGDSMobile:seoul_sig&outputFormat=json&srsname=EPSG:3857';
             $.ajax({
@@ -37,17 +43,16 @@
                 crossDomain: true,
                 dataType : 'json',
                 success : function (evt) {
-                    test.addGeoJSONLayer(evt, 'polygon', 'seoul_vector', {
+                    mapVis.addGeoJSONLayer(evt, 'polygon', 'seoul_vector', {
                         attrKey : 'sig_kor_nm'
                     });
 
-                    var indexedDBObj = new openGDSMobile.IndexedDB();
-                        indexedDBObj.createDatabaseObject('seoul_vector');
-                        indexedDBObj.addData('seoul_vector');
 
+                    mapAttr.addAttr('seoul_vector');
+                    indexedDBObj.addData('seoul_vector');
 
+  //                    indexedDBObj.deleteDB();
 
-                //        indexedDBObj.deleteDB();
 
 
                 },

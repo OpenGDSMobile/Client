@@ -21,7 +21,6 @@
     <script type="text/javascript" src="../src/js/Util.js"></script>
     <script type="text/javascript" src="../src/js/MapsVis.js"></script>
     <script type="text/javascript" src="../src/js/AttributeVis.js"></script>
-    <script type="text/javascript" src="../src/js/AttributeManager.js"></script>
     <style>
         html, body{
             margin : 0;
@@ -37,7 +36,7 @@
     <script>
         $(document).ready(function (){
             var mapVis = new openGDSMobile.MapVis('MapVis');
-            var mapAttr = new openGDSMobile.AttributeVis('http://113.198.80.60/ApplicationServer/api/getAttrTable.do',mapVis);
+            var mapAttr = new openGDSMobile.AttributeVis(mapVis);
             var layerName = 'seoul_sig';
             var addr = 'http://113.198.80.9/geoserver/wfs?service=WFS&version=1.1.0&request=GetFeature&typeNames=OpenGDSMobile:seoul_sig&outputFormat=json&srsname=EPSG:3857';
             $.ajax({
@@ -55,7 +54,7 @@
                     });
 
                     mapAttr.addAttr('서울_시');
-                    mapAttr.editMode(true);
+                    mapAttr.setEditMode(true);
                 },
                 error : function (err) {
 

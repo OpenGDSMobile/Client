@@ -4,6 +4,26 @@ goog.provide('openGDSMobile.attrListStatus');
 
 
 
+openGDSMobile.IndexedDBSW = false;
+
+/**
+ *
+ * @type {{length: number, objs: Array}}
+ * [{attrKey: String, type: String, layerName : string, obj : GeoJSON}]
+ */
+openGDSMobile.geoJSONStatus = {
+    length : 0,
+    objs : [],
+    getContent : function (_layerName) {
+        for (var i = 0; i < this.length; i++) {
+            if (this.objs[i].layerName == _layerName) {
+                return this.objs[i];
+            }
+        }
+        return false;
+    }
+}
+
 /**
  * 리스트 현황 JSON 객체
  * @type {{length: number, objs: [{title: string, obj : object}, ...]}
@@ -17,8 +37,9 @@ openGDSMobile.listStatus = {
 /**
  *
  * @type {{length: number, objs: Array}}
+ * [{layerName : string, obj : Object, attr: Object }]
  */
-openGDSMobile.attrListStatus = ({
+openGDSMobile.attrListStatus = {
    length : 0,
     objs : [],
     getObjs : function () {
@@ -27,7 +48,7 @@ openGDSMobile.attrListStatus = ({
     setObj : function (index, obj) {
         this.objs[index] = obj;
     },
-    searchContent : function (_layerName, _attrKey, _content) {
+    searchAttrContent : function (_layerName, _attrKey, _content) {
         for (var i = 0; i < this.length; i++) {
             if (this.objs[i].layerName == _layerName) {
                 for (var j = 0; j < this.objs[i].attr.length; j++) {
@@ -43,12 +64,20 @@ openGDSMobile.attrListStatus = ({
         }
         return false;
     },
-    changeContent : function (_layerName, _attrKey, _content, _changeValue) {
-        var resultObj = this.searchContent(_layerName, _attrKey, _content);
+    changeAttrContent : function (_layerName, _attrKey, _content, _changeValue) {
+        var resultObj = this.searchAttrContent(_layerName, _attrKey, _content);
         resultObj.obj[_attrKey] = _changeValue;
         this.objs[resultObj.i].attr[resultObj.j].setProperties(resultObj.obj);
+    },
+    getContent : function (_layerName) {
+        for (var i = 0; i < this.length; i++) {
+            if (this.objs[i].layerName == _layerName) {
+                return this.objs[i];
+            }
+        }
+        return false;
     }
-});
+};
 
 
 goog.exportSymbol('openGDSMobile', openGDSMobile);

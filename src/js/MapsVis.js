@@ -180,6 +180,7 @@ openGDSMobile.MapVis.prototype.addLayer = function (_layerObj, _type, _title, _o
     _layerObj.set('title', _title);
 
     this.mapObj.addLayer(_layerObj);
+    return _layerObj;
 
 }
 
@@ -224,6 +225,14 @@ openGDSMobile.MapVis.prototype.addGeoJSONLayer = function (_geoJSON, _type, _tit
     }
     geoJSONLayer.setOpacity(options.opt);
     this.mapObj.addLayer(geoJSONLayer);
+    ++openGDSMobile.geoJSONStatus.length;
+    openGDSMobile.geoJSONStatus.objs.push({
+        layerName : _title,
+        attrKey : options.attrKey,
+        type : _type,
+        obj : _geoJSON
+    });
+    return geoJSONLayer;
 };
 
 /**
@@ -312,6 +321,10 @@ openGDSMobile.MapVis.prototype.removeLayer = function (_layerName) {
         return -1;
     }
     this.mapObj.removeLayer(layerObj);
+    --openGDSMobile.geoJSONStatus;
+    ////////////////////////// geoJSONStatus obj remove
+
+    //////////////////////////
     /*
      if (typeof (this.layerListObj) !== 'undefined') {
         this.layerListObj.removeList(layerName);

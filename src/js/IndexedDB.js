@@ -1,63 +1,78 @@
 goog.provide('openGDSMobile.IndexedDB');
 
+goog.require('openGDSMobile.util.applyOptions');
 
-openGDSMobile.IndexedDB = function () {
+
+openGDSMobile.IndexedDB.db = null;
+
+openGDSMobile.IndexedDB = function (_options) {
     window.indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
-    //_number = (typeof (_version) !== 'undefined') ? _number : 1.0;
+    _options = (typeof (_options) !== 'undefined') ? _options : {};
+    var defaultOptions = {
+        dbName : 'OpenGDSMobileDB',
+        storeName : 'vectorStore',
+        version : 1.0,
+        keyPath : 'layerName'
+    };
+    var options = openGDSMobile.util.applyOptions(defaultOptions, _options);
 
     if (!window.indexedDB) {
         window.alert('Your borwser does not support a stable version of IndexedDB.');
         this.avabile = false;
         return -1;
     }
-    this.avabile = true;
-    this.num = 0;
-    /*
-    this.request = window.indexedDB.open('OpenGDSMobileDB', _version ,
-    );
-    this.db = null;
+    this.request = window.indexedDB.open(options.dbName, options.version);
+    openGDSMobile.IndexedDB.db = null;
 
     this.request.onsuccess = function (evt) {
-        this.db = evt.target.result;
-        console.log('success');
+        openGDSMobile.IndexedDB.db = evt.target.result;
     };
     this.request.onerror = function (error) {
         console.error(error);
     };
 
     this.request.onupgradeneeded = function (evt) {
-        this.db = evt.target.result;
+        openGDSMobile.IndexedDB.db = evt.target.result;
+        var objectStore = openGDSMobile.IndexedDB.db.createObjectStore(options.storeName, {keyPath : 'layerName'});
         console.log('upgraded');
-    }
-    */
+    };
+    openGDSMobile.IndexedDBSW = true;
 };
 
-openGDSMobile.IndexedDB.prototype.createDatabaseObject = function (_objString, obj) {
-    this.request = window.indexedDB.open('OpenGDSMobileDB', ++this.num);
-    this.db = null;
-    this.request.onsuccess = function (evt) {
-        this.db = evt.target.result;
-    };
-    this.request.onerror = function (error) {
-        console.error(error);
-    };
 
-    this.request.onupgradeneeded = function (evt) {
-        this.db = evt.target.result;
-        var objectStore = this.db.createObjectStore(_objString, {keyPath : 'id'});
-        //objectStore.add(obj);
+openGDSMobile.IndexedDB.prototype.addData = function (_layerName, _options) {
+    _options = (typeof (_options) !== 'undefined') ? _options : {};
+    var defaultOptions = {
+        storeName: 'vectorStore'
+    }
+    var options = openGDSMobile.util.applyOptions(defaultOptions, _options);
+
+    var trans = openGDSMobile.IndexedDB.db.transaction([options.storeName], 'readwrite');
+    var objectStore = trans.objectStore(options.storeName);
+
+    /**
+     * Vector Layer...
+     */
+    if (openGDSMobile.geoJSONStatus.length !== 0) {
+        var contentObj = openGDSMobile.geoJSONStatus.getContent(_layerName);
+        if (contentObj !== false) {
+            objectStore.add(contentObj);
+        }
     }
 };
 
-openGDSMobile.IndexedDB.prototype.addData = function (_objString, obj) {
-    var transaction = this.db.transaction([_objString], 'readwrite');
-    var objectStore = transaction.objectStore(_objString);
-    objectStore.put({
-        key : 'eee',
-        value : 'wwwww'
-    })
-}
+openGDSMobile.IndexedDB.prototype.removeData = function (_layerName) {
+
+};
+
+openGDSMobile.IndexedDB.prototype.getData = function (_layerName, successCallback, errorCallback) {
+    
+};
+
+openGDSMobile.IndexedDB.prototype.deleteObjStore = function (_objStoreName) {
+
+};
 
 openGDSMobile.IndexedDB.prototype.deleteDB = function () {
     window.indexedDB.deleteDatabase('OpenGDSMobileDB');
-}
+};
