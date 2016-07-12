@@ -203,6 +203,7 @@ openGDSMobile.MapVis.prototype.addGeoJSONLayer = function (_geoJSON, _type, _tit
     };
     var options = openGDSMobile.util.applyOptions(defaultOptions, _options);
 
+    
     var geoJSONLayer;
     geoJSONLayer = new ol.layer.Vector({
         title: _title,
@@ -225,11 +226,13 @@ openGDSMobile.MapVis.prototype.addGeoJSONLayer = function (_geoJSON, _type, _tit
     }
     geoJSONLayer.setOpacity(options.opt);
     this.mapObj.addLayer(geoJSONLayer);
+
     ++openGDSMobile.geoJSONStatus.length;
     openGDSMobile.geoJSONStatus.objs.push({
         layerName : _title,
         attrKey : options.attrKey,
         type : _type,
+        id : _geoJSON.features[0].id.split('.')[0],
         obj : _geoJSON
     });
     return geoJSONLayer;

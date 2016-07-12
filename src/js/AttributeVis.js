@@ -116,14 +116,27 @@ openGDSMobile.AttributeVis.updateText = function(e) {
     } else if (e.type == 'focusout') {
         openGDSMobile.Attribute.curText = null;
     } else {
-        var searchInfo = e.target.getAttribute('data-info').split('-');
+        var searchInfo = e.target.getAttribute('data-info').split(',');
         var attrInfo = openGDSMobile.attrListStatus.objs;
-        openGDSMobile.attrListStatus.changeAttrContent(searchInfo[0], searchInfo[1], openGDSMobile.Attribute.curText, inputEl.value);
-        openGDSMobile.Attribute.curText = inputEl.value;
+        openGDSMobile.attrListStatus.changeAttrContent(searchInfo[1], searchInfo[2], openGDSMobile.Attribute.curText, inputEl.value);
         if (openGDSMobile.IndexedDBSW === true) {
             ////////////////
-
+            var trans = openGDSMobile.IndexedDB.db.transaction(['vectorStore'], 'readwrite');
+            var objectStore = trans.objectStore('vectorStore');
+            var searchResult = objectStore.get(searchInfo[0]);
+            searchResult.onsuccess = function (evt){
+                var obj = evt.target.result.obj;
+                for (var i=0; i<obj.features.length; i++) {
+                    if (obj.features[i].properties[searchInfo[2]] == openGDSMobile.Attribute.curText) {
+                        obj.features[i].properties[searchInfo[2]] = inputEl.value;
+                        objectStore.put(evt.target.result);
+                    }
+                }
+                openGDSMobile.Attribute.curText = inputEl.value;
+            }
             ///////////////
+        } else {
+            openGDSMobile.Attribute.curText = inputEl.value;
         }
     }
 };
@@ -158,7 +171,7 @@ openGDSMobile.AttributeVis.prototype.addAttr = function (_layerName) {
         overlay.setPosition(undefined);
         if (e.selected.length !== 0) {
             overlay.setPosition(e.mapBrowserEvent.coordinate);
-            //console.log(e.selected[0]);
+
             var obj = e.selected[0].getProperties();
             var keys = [];
             for (var k in obj) {
@@ -204,7 +217,8 @@ openGDSMobile.AttributeVis.prototype.addAttr = function (_layerName) {
                 var inputDOM = new goog.ui.LabelInput('');
                 inputDOM.render(tdDOM);
                 inputDOM.setValue(obj[keys[j]]);
-                inputDOM.getElement().setAttribute('data-info', _layerName + '-' + keys[j]);
+                var id = e.selected[0].getId().split('.')[0];
+                inputDOM.getElement().setAttribute('data-info', id + ',' + _layerName + ',' + keys[j]);
                 goog.dom.classlist.add(inputDOM.getElement(), 'openGDSMobile-sw-class');
                 goog.dom.classlist.add(inputDOM.getElement(), openGDSMobile.Attribute.PANEL_INPUT_STYLE);
                 var inputHandler = new goog.events.InputHandler(inputDOM.getElement());

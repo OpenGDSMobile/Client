@@ -14,9 +14,17 @@ openGDSMobile.IndexedDBSW = false;
 openGDSMobile.geoJSONStatus = {
     length : 0,
     objs : [],
-    getContent : function (_layerName) {
+    getContentLayerName : function (_layerName) {
         for (var i = 0; i < this.length; i++) {
             if (this.objs[i].layerName == _layerName) {
+                return this.objs[i];
+            }
+        }
+        return false;
+    },
+    getContentId : function (_id) {
+        for (var i = 0; i < this.length; i++) {
+            if (this.objs[i].id == _id) {
                 return this.objs[i];
             }
         }

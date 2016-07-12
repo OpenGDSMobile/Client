@@ -43,15 +43,32 @@
                 crossDomain: true,
                 dataType : 'json',
                 success : function (evt) {
-                    mapVis.addGeoJSONLayer(evt, 'polygon', 'seoul_vector', {
-                        attrKey : 'sig_kor_nm'
+                    var type = 'polygon';
+                    var title = 'seoul_vector';
+                    var attrKey = 'sig_kor_nm';
+
+                    indexedDBObj.getData('seoul_sig', function (data) {
+                        if (data !== null) {
+                            var cof = confirm('내부 저장소에 데이터 존재!! 내부 저장소 데이터를 불러오시겠습니까? \n ' +
+                                    '(주의: 불러오지 않을 경우 내부 저장소 데이터는 현재 불러오는 데이터로 업데이트됨)');
+                            if (cof === true) {
+                                evt = data.obj;
+                                type = data.type;
+                                title = data.layerName;
+                                attrKey = data.attrKey;
+                            }
+                        }
+
+                        mapVis.addGeoJSONLayer(evt, type, title, {
+                            attrKey : attrKey
+                        });
+                        mapAttr.addAttr('seoul_vector');
+                        indexedDBObj.addData('seoul_sig');
+
+                        mapAttr.setEditMode(true);
                     });
-
-
-                    mapAttr.addAttr('seoul_vector');
-                    indexedDBObj.addData('seoul_vector');
-
-  //                    indexedDBObj.deleteDB();
+  //                 indexedDBObj.removeData('seoul_vector');
+  //                 indexedDBObj.deleteDB();
 
 
 
