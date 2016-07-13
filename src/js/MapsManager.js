@@ -48,6 +48,9 @@ openGDSMobile.Manager.MANAGER_SETTING_PANEL_CLOSE = 'openGDSMobile-manager-setti
  * @param {String} _mapDIV - 지도 DIV 객체
  * @param {Object} _options - 지도 관련 옵션 (JSON 객체)
  * {
+ *      'id' : openGDSMobile.Manager.MANAGER_ID,
+ *      'class' : openGDSMobile.Manager.MANAGER_STYLE,
+ *      'style' : 'background-color:' + options.fillColor
  *
  * }
  */
@@ -270,7 +273,7 @@ openGDSMobile.MapManager.prototype.addItem = function (_layerName) {
 };
 
 /**
- *
+ * 
  */
 openGDSMobile.MapManager.prototype.addItems = function () {
     var allLayers = this.visObj.mapObj.getLayers().getArray();

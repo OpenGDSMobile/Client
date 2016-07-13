@@ -2,12 +2,28 @@ goog.provide('openGDSMobile.VWorld');
 
 goog.require('openGDSMobile.util.applyOptions');
 
+/**
+ *
+ * @param _test
+ * @param _apiKey
+ * @param _domain
+ * @constructor
+ */
 openGDSMobile.VWorld = function (_test, _apiKey, _domain) {
     this.mapObj = _test.mapObj;
     this.apiKey = _apiKey;
     this.domain = _domain;
 }
 
+
+/**
+ *
+ * @param title
+ * @param _layers
+ * @param _styles
+ * @returns {ol.layer.Tile}
+ * @constructor
+ */
 openGDSMobile.VWorld.prototype.WMSRequest = function (title, _layers, _styles) {
     var apiKey = this.apiKey;
     var domain = this.domain;
@@ -29,6 +45,16 @@ openGDSMobile.VWorld.prototype.WMSRequest = function (title, _layers, _styles) {
     });
 }
 
+
+/**
+ * 
+ * @param _title
+ * @param _layers
+ * @param _styles
+ * @param _options
+ * @returns {ol.layer.Vector}
+ * @constructor
+ */
 openGDSMobile.VWorld.prototype.WFSRequest = function (_title, _layers, _styles, _options) {
     var apiKey = this.apiKey;
     var domain = this.domain;

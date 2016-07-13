@@ -2,7 +2,7 @@ goog.provide('openGDSMobile.MapVis');
 goog.require('openGDSMobile.util.applyOptions');
 
 
-//이벤트
+
 /**
  * @constructor
  * @param {String} _mapDIV - 지도 DIV 객체
@@ -24,20 +24,13 @@ openGDSMobile.MapVis = function (_mapDIV, _options) {
     };
 
     /**
-     * @type {boolean}
+     * @type {boolean} GPS 객체
      * @private
      */
     this.geoLocation = false;
 
     var options = openGDSMobile.util.applyOptions(defaultOptions, _options);
-/*
-    if (options.attribute !== null) {
-        //this.attrObj =
-    }
-    if (options.list !== null) {
-        //this.listObj =
-    }
-*/
+
     if (typeof (ol) === 'undefined') {
         console.error("Not Import OpenLayers 3 Library....");
         return -1;
@@ -57,25 +50,24 @@ openGDSMobile.MapVis = function (_mapDIV, _options) {
     baseLayer.setZIndex(0);
 
     /**
+     * @type {ol.Map} OpenLayers 지도 객체
      * @private
-     * @type {ol.Map}
      */
     this.mapObj = new ol.Map({
         target : _mapDIV,
         layers : [baseLayer],
         view : baseView
     });
-
-    /****Click EVENT ****/
 }
 
 /**
- * 지도 객체 받기 함수
+ * 지도 객체 호출 함수
  * @returns {ol.Map} OpenLayers 3 지도 객체
  */
 openGDSMobile.MapVis.prototype.getMapObj = function () {
     return this.mapObj;
-}
+};
+
 
 /**
  * 텍스트 스타일 적용 함수
@@ -170,19 +162,23 @@ openGDSMobile.MapVis.prototype.changeBgMap = function (_mapType) {
     }
 };
 
-openGDSMobile.MapVis.prototype.addLayer = function (_layerObj, _type, _title, _options) {
-    _options = (typeof (_options) !== 'undefined') ? _options : {};
-    var defaultOptions = {
 
-    };
-    var options = openGDSMobile.util.applyOptions(defaultOptions, _options);
+/**
+ * 일반적인 지도 추가 함수
+ * @param {Object}   _layerObj 레이어 객체
+ * @param {String}      _type     레이어 타입 ('raster', 'image' ...)
+ * @param {String}      _title    레이어 제목
+ * @returns {*}
+ */
+openGDSMobile.MapVis.prototype.addLayer = function (_layerObj, _type, _title) {
+
     _layerObj.set('type', _type);
     _layerObj.set('title', _title);
 
     this.mapObj.addLayer(_layerObj);
     return _layerObj;
+};
 
-}
 
 /**
  * GeoJSON 레이어 추가
@@ -238,18 +234,23 @@ openGDSMobile.MapVis.prototype.addGeoJSONLayer = function (_geoJSON, _type, _tit
     return geoJSONLayer;
 };
 
+
 /**
  * 벡터 스타일 변경
  * @param {String} _layerName - 시각화 된 레이어 제목
  * @param {Object} options - 옵션 JSON 객체 키 값 <br>
- *     {type:'polygon', opt : '0.5', attr: null, range: null, xyData: null}<br>
- <ul>
- <li>type(String) : 객체 타입 (polygon, point)</li>
- <li>opt(Number) : 레이어 투명도 </li>
- <li>attr(String) : 속성 이름</li>
- <li>range(Array) : 색상 범위</li>
- <li>xyData(Array) : 색상 데이터</li>
- </ul>
+ *     {
+ *       fillColor : '#FFFFFF',
+ *       strokeColor : '#000000',
+ *       radius : 5,
+ *       strokeWidth : 1,
+ *       opt : 0.7,
+ *       attrKey : null,
+ *       range : null,
+ *       labelKey : null,
+ *       valueKey : null,
+ *       data : null
+ *     }
  */
 openGDSMobile.MapVis.prototype.changeVectorStyle = function (_layerName, _options) {
     _options = (typeof (_options) !== 'undefined') ? _options : {};
@@ -358,11 +359,12 @@ openGDSMobile.MapVis.prototype.setVisible = function (_layerName, _flag) {
  * @param {String} _imgURL 이미지 주소
  * @param {String} _imgTitle - 이미지 타이틀
  * @param {Object} _options - 옵션
- *
- *
+ * {
+ *       opt : 0.7,
+ *       extent : [],       [lower left lon, lower left lat, upper right lon, upper right lat] or [left, bottom, right, top]
+ *       size: [256,256]    [width, height]
+ * }
  */
-//@param {Array} imgSize - 이미지 사이즈 [width, height]
-//@param {Array} imgExtent - 이미지 위치 [lower left lon, lower left lat, upper right lon, upper right lat] or [left, bottom, right, top]
 openGDSMobile.MapVis.prototype.addImageLayer = function (_imgUrl, _imgTitle, _options) {
     _options = (typeof (_options) !== 'undefined') ? _options : {};
     var defaultOptions = {
@@ -385,6 +387,8 @@ openGDSMobile.MapVis.prototype.addImageLayer = function (_imgUrl, _imgTitle, _op
 
     this.mapObj.addLayer(imgLayer);
 }
+
+
 /**
  * 지도 GPS 트래킹
  * @param {Boolean} sw - Geolocation 설정

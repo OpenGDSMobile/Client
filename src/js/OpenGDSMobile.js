@@ -3,13 +3,30 @@ goog.provide('openGDSMobile.listStatus');
 goog.provide('openGDSMobile.attrListStatus');
 
 
-
+/**
+ * @type {boolean} IndexedDB 사용 상태. 기본값: 'false'.
+ */
 openGDSMobile.IndexedDBSW = false;
 
 /**
- *
- * @type {{length: number, objs: Array}}
- * [{attrKey: String, type: String, layerName : string, obj : GeoJSON}]
+ * @type {boolean} WebSocket 사용 상태. 기본값: 'false'.
+ */
+openGDSMobile.WebSocketSW = false;
+
+
+/**
+ * @type {{length: number, objs: Array}} 지도 객체 관리 JSON 객체
+ * Array <br>
+ *   [
+ *      {
+ *      layerName : String,
+ *      attrKey: String,
+ *      type: String,
+ *      id : string,
+ *      obj : GeoJSON
+ *      },
+ *      ...
+ *   ]
  */
 openGDSMobile.geoJSONStatus = {
     length : 0,
@@ -33,19 +50,33 @@ openGDSMobile.geoJSONStatus = {
 }
 
 /**
- * 리스트 현황 JSON 객체
- * @type {{length: number, objs: [{title: string, obj : object}, ...]}
-     */
+ * @type {{length: number, objs: Array}} 지도 관리 리스트 현황 JSON 객체
+ * Array <br>
+ *  [
+ *      {
+ *      title: string,
+ *      obj : ol.Vector Object
+ *      },
+ *      ...
+ *  ]
+ */
 openGDSMobile.listStatus = {
     length : 0,
     objs : []
 };
 
-
 /**
- *
- * @type {{length: number, objs: Array}}
- * [{layerName : string, obj : Object, attr: Object }]
+ * @type {{length: number, objs: Array}} 속성 목록 현황 JSON 객체
+ * {length : number, objs : Array }]
+ * Array <br>
+ *  [
+ *      {
+ *      layerName: String,
+ *      obj : ol.layer.Vector(),
+ *      attr : ol.Features()
+ *      },
+ *      ...
+ *  ]
  */
 openGDSMobile.attrListStatus = {
    length : 0,

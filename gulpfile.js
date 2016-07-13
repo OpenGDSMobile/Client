@@ -34,5 +34,5 @@ gulp.task('closure-compiler-debug', function() {
 });
 
 //gulp.task('default', ['combine-js']);
-gulp.task('default', ['closure-compiler-debug']);
+gulp.task('default', ['doc']);
 

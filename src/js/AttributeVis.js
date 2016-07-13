@@ -17,7 +17,12 @@ openGDSMobile.Attribute.PANEL_STYLE = 'openGDSMobile-attr-panel';
 openGDSMobile.Attribute.PANEL_INPUT_STYLE = 'openGDSMobile-attr-textInput';
 
 
-
+/**
+ *
+ * @param _mapObj
+ * @param _options
+ * @constructor
+ */
 openGDSMobile.AttributeVis = function (_mapObj, _options) {
     _mapObj = (typeof (_mapObj) !== 'undefined') ? _mapObj : null;
     _options = (typeof (_options) !== 'undefined') ? _options : {};
@@ -55,13 +60,26 @@ openGDSMobile.AttributeVis = function (_mapObj, _options) {
     }
 };
 
-
+/**
+ *
+ * @param feature
+ * @param resolution
+ * @param attrKey
+ * @returns {ol.style.Text}
+ */
 openGDSMobile.AttributeVis.textStyleFunction = function (feature, resolution, attrKey) {
     return new ol.style.Text({
         text : resolution < 76 ? feature.get(attrKey) : ''
     });
 };
 
+/**
+ *
+ * @param feature
+ * @param resolution
+ * @param options
+ * @returns {ol.style.Style}
+ */
 openGDSMobile.AttributeVis.styleFunction = function (feature, resolution, options) {
     var type = feature.getGeometry().getType();
     if (type === 'MultiPolygon') {
@@ -93,12 +111,24 @@ openGDSMobile.AttributeVis.styleFunction = function (feature, resolution, option
         })
     }
 }
-
+/**
+ *
+ * @returns {boolean}
+ */
 openGDSMobile.AttributeVis.prototype.getEditMode = function () {
     return openGDSMobile.Attribute.editModeSW;
 };
 
+/**
+ *
+ * @type {boolean}
+ */
 openGDSMobile.Attribute.editModeSW = false;
+
+/**
+ *
+ * @param _sw
+ */
 openGDSMobile.AttributeVis.prototype.setEditMode = function (_sw) {
     if (_sw === true) {
         openGDSMobile.Attribute.editModeSW = true;
@@ -107,8 +137,16 @@ openGDSMobile.AttributeVis.prototype.setEditMode = function (_sw) {
         openGDSMobile.Attribute.editModeSW = false;
     }
 };
-
+/**
+ *
+ * @type {null}
+ */
 openGDSMobile.Attribute.curText = null;
+
+/**
+ *
+ * @param e
+ */
 openGDSMobile.AttributeVis.updateText = function(e) {
     var inputEl = e.target;
     if (e.type == 'focusin') {
@@ -141,6 +179,10 @@ openGDSMobile.AttributeVis.updateText = function(e) {
     }
 };
 
+/**
+ *
+ * @param _layerName
+ */
 openGDSMobile.AttributeVis.prototype.addAttr = function (_layerName) {
     var addr = this.addr;
     var mapObj = this.mapObj;
@@ -246,7 +288,11 @@ openGDSMobile.AttributeVis.prototype.addAttr = function (_layerName) {
     });
 };
 
-
+/**
+ *
+ * @param _tableName
+ * @param _layerName
+ */
 openGDSMobile.AttributeVis.prototype.removeAttr = function (_tableName, _layerName) {
     //////////////////////////// openGDSMobile.attrListStatus remove
 
@@ -254,6 +300,10 @@ openGDSMobile.AttributeVis.prototype.removeAttr = function (_tableName, _layerNa
 
 };
 
+/**
+ * 
+ * @param _layerName
+ */
 openGDSMobile.AttributeVis.prototype.allDisplay = function (_layerName) {
 
 
@@ -261,61 +311,3 @@ openGDSMobile.AttributeVis.prototype.allDisplay = function (_layerName) {
 
 
 goog.exportSymbol('openGDSMobile.AttributeVis', openGDSMobile.AttributeVis);
-
-
-/*
- openGDSMobile.AttributeVis.prototype.addAttr = function (_tableName, _layerName) {
- var addr = this.addr;
- var mapObj = this.mapObj;
- var options = this.options;
- var overlay = this.overlay;
- var data = {
- tableName : _tableName
- }
- var layer = openGDSMobile.util.getOlLayer(mapObj, _layerName);
- options.attrKey = layer.get('attrKey');
- console.log(openGDSMobile.attrListStatus.objs);
- var statusObj = openGDSMobile.attrListStatus.objs;
- $.ajax({
- type : 'POST',
- url : addr,
- data : JSON.stringify(data),
- contentType : "application/json;charset=UTF-8",
- dataType : 'json',
- success : function (msg) {
- console.log(msg);
- ++openGDSMobile.attrListStatus;
- var obj = {
- attrObj : msg.data,
- tableName : _tableName,
- layerName : _layerName
- }
-
- statusObj.push(obj);
- var select = new ol.interaction.Select({
- condition: ol.events.condition.click,
- style : (function (feature, resolution) {
- return openGDSMobile.AttributeVis.styleFunction(feature, resolution, options);
- })
- });
- mapObj.addInteraction(select);
- select.on('select', function(e) {
- // 여기에다가 ......
- console.log(e.selected);
- if (e.selected.length !== 0) {
- overlay.setPosition(e.mapBrowserEvent.coordinate);
- console.log(e.selected[0].getProperties());
- console.log(openGDSMobile.attrListStatus.objs);
-
- } else {
- overlay.setPosition(undefined);
- }
- });
-
- },
- error : function (error) {
- console.log(error);
- }
- });
- };
- */

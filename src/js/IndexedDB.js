@@ -2,9 +2,19 @@ goog.provide('openGDSMobile.IndexedDB');
 
 goog.require('openGDSMobile.util.applyOptions');
 
-
+/**
+ *
+ * @type {null}
+ */
 openGDSMobile.IndexedDB.db = null;
 
+
+/**
+ *
+ * @param _options
+ * @returns {number}
+ * @constructor
+ */
 openGDSMobile.IndexedDB = function (_options) {
     window.indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
     _options = (typeof (_options) !== 'undefined') ? _options : {};
@@ -41,20 +51,45 @@ openGDSMobile.IndexedDB = function (_options) {
     openGDSMobile.IndexedDBSW = true;
 };
 
+/**
+ *
+ * @param _name
+ */
 openGDSMobile.IndexedDB.prototype.setStoreName = function (_name) {
     this.options.storeName = _name;
 };
+
+/**
+ *
+ * @param _name
+ * @returns {string|string|*}
+ */
 openGDSMobile.IndexedDB.prototype.getStoreName = function (_name) {
     return this.options.storeName;
 };
+
+/**
+ *
+ * @param _key
+ */
 openGDSMobile.IndexedDB.prototype.setKeyPath = function (_key) {
     this.options.keyPath = _key;
 };
+
+/**
+ *
+ * @returns {string|*|string|string}
+ */
 openGDSMobile.IndexedDB.prototype.getKeyPath = function (){
     return this.options.keyPath;
 };
 
-
+/**
+ *
+ * @param _key
+ * @param _onsuccess
+ * @param _onerror
+ */
 openGDSMobile.IndexedDB.prototype.addData = function (_key, _onsuccess, _onerror) {
     _onsuccess = (typeof (_onsuccess) !== 'undefined') ? _onsuccess : null;
     _onerror = (typeof (_onerror) !== 'undefined') ? _onerror : null;
@@ -102,6 +137,12 @@ openGDSMobile.IndexedDB.prototype.addData = function (_key, _onsuccess, _onerror
     };
 };
 
+/**
+ *
+ * @param _key
+ * @param _onsuccess
+ * @param _onerror
+ */
 openGDSMobile.IndexedDB.prototype.removeData = function (_key, _onsuccess, _onerror) {
     _onsuccess = (typeof (_onsuccess) !== 'undefined') ? _onsuccess : null;
     _onerror = (typeof (_onerror) !== 'undefined') ? _onerror : null;
@@ -125,6 +166,11 @@ openGDSMobile.IndexedDB.prototype.removeData = function (_key, _onsuccess, _oner
     };
 };
 
+/**
+ *
+ * @param _onsuccess
+ * @param _onerror
+ */
 openGDSMobile.IndexedDB.prototype.clearData = function (_onsuccess, _onerror) {
     _onsuccess = (typeof (_onsuccess) !== 'undefined') ? _onsuccess : null;
     _onerror = (typeof (_onerror) !== 'undefined') ? _onerror : null;
@@ -148,6 +194,12 @@ openGDSMobile.IndexedDB.prototype.clearData = function (_onsuccess, _onerror) {
     };
 };
 
+/**
+ *
+ * @param _key
+ * @param _onsuccess
+ * @param _onerror
+ */
 openGDSMobile.IndexedDB.prototype.getData = function (_key, _onsuccess, _onerror) {
     _onsuccess = (typeof (_onsuccess) !== 'undefined') ? _onsuccess : null;
     _onerror = (typeof (_onerror) !== 'undefined') ? _onerror : null;
@@ -180,10 +232,17 @@ openGDSMobile.IndexedDB.prototype.getData = function (_key, _onsuccess, _onerror
     };
 };
 
+/**
+ *
+ * @param _objStoreName
+ */
 openGDSMobile.IndexedDB.prototype.deleteObjStore = function (_objStoreName) {
 
 };
 
+/**
+ * 
+ */
 openGDSMobile.IndexedDB.prototype.deleteDB = function () {
     window.indexedDB.deleteDatabase('OpenGDSMobileDB');
 };
