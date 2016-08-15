@@ -1,4 +1,4 @@
-OpenGDS Mobile Client 1.3
+OpenGDS Mobile Client 2.0
 ======
 > + Mobile Web Browsers Visualization Library using Open Source about Geo-spatial and Public Data
 > + Demo Web System
