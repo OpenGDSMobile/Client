@@ -7,7 +7,7 @@ goog.require('openGDSMobile.util.applyOptions');
  *
  * @type {null}
  */
-openGDSMobile.WebSocket.ws = null;
+/*openGDSMobile.WebSocket.ws = null;*/
 
 /**
  *
@@ -43,7 +43,7 @@ openGDSMobile.WebSocket.prototype.send = function (_data) {
 };
 
 /**
- * 
+ *
  */
 openGDSMobile.WebSocket.prototype.close = function () {
     openGDSMobile.WebSocket.ws.close();

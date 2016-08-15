@@ -3,6 +3,8 @@ goog.provide('openGDSMobile.listStatus');
 goog.provide('openGDSMobile.attrListStatus');
 
 
+
+
 /**
  * @type {boolean} IndexedDB 사용 상태. 기본값: 'false'.
  */

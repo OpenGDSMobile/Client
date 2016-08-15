@@ -56,6 +56,7 @@ openGDSMobile.AttributeVis = function (_mapObj, _options) {
                 duration: 250
             }
         }));
+        console.log(this.mapObj);
         this.mapObj.addOverlay(this.overlay);
     }
 };
@@ -301,7 +302,7 @@ openGDSMobile.AttributeVis.prototype.removeAttr = function (_tableName, _layerNa
 };
 
 /**
- * 
+ *
  * @param _layerName
  */
 openGDSMobile.AttributeVis.prototype.allDisplay = function (_layerName) {

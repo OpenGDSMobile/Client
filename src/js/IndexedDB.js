@@ -6,7 +6,7 @@ goog.require('openGDSMobile.util.applyOptions');
  *
  * @type {null}
  */
-openGDSMobile.IndexedDB.db = null;
+/*openGDSMobile.IndexedDB.db = null;*/
 
 
 /**

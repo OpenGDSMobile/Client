@@ -27,6 +27,7 @@ openGDSMobile.VWorld = function (_test, _apiKey, _domain) {
 openGDSMobile.VWorld.prototype.WMSRequest = function (title, _layers, _styles) {
     var apiKey = this.apiKey;
     var domain = this.domain;
+    console.log(_layers);
     return new ol.layer.Tile({
         title : title,
         source : new ol.source.TileWMS(({
@@ -47,7 +48,7 @@ openGDSMobile.VWorld.prototype.WMSRequest = function (title, _layers, _styles) {
 
 
 /**
- * 
+ *
  * @param _title
  * @param _layers
  * @param _styles
