@@ -14,6 +14,7 @@
 		module.exports = factory();
 	}
 	else if (typeof Package !== "undefined") {
+		//noinspection JSUnresolvedVariable
 		Sortable = factory();  // export for Meteor.js
 	}
 	else {

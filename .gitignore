@@ -1,6 +1,22 @@
+<<<<<<< HEAD
 /data
 /node_modules
 .idea/modules.xml
 .idea/openGDSMobileClient.iml
 .idea/workspace.xml
 .idea/
+=======
+data
+closure-library
+
+.idea
+favicon.ico
+.brackets.json
+node_modules/.bin/
+node_modules/gulp-concat/
+node_modules/gulp-jsdoc3/
+node_modules/gulp/
+bower_components/
+node_modules/gulp-closure-compiler/
+docs/
+>>>>>>> Closure

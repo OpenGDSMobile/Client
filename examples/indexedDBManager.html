@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>OpenGDS Mobile Visualization Example</title>
+
+    <link type="text/css" rel="stylesheet" href="../src/libs/css/ol3/ol.css" />
+
+    <link type="text/css" rel="stylesheet" href="../src/css/AttributeVis.css" />
+
+
+    <script type="text/javascript" src="../closure-library/closure/goog/base.js"></script>
+
+
+    <script type="text/javascript" src="../src/libs/js/egovframework/mbl/cmm/jquery-1.11.2.js"></script>
+    <script type="text/javascript" src="../src/libs/js/ol3/ol-3.14.2.js"></script>
+
+    <script type="text/javascript" src="../src/js/OpenGDSMobile.js"></script>
+    <script type="text/javascript" src="../src/js/Util.js"></script>
+    <script type="text/javascript" src="../src/js/MapsVis.js"></script>
+    <script type="text/javascript" src="../src/js/AttributeVis.js"></script>
+    <script type="text/javascript" src="../src/js/IndexedDB.js"></script>
+
+    <style>
+        html, body{
+            margin : 0;
+            padding : 0;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+    <script>
+        var indexedDBObj = new openGDSMobile.IndexedDB();
+
+        $(document).ready(function (){
+            var mapVis = new openGDSMobile.MapVis('MapVis');
+            var mapAttr = new openGDSMobile.AttributeVis(mapVis);
+
+            var addr = 'http://113.198.80.9/geoserver/wfs?service=WFS&version=1.1.0&request=GetFeature&typeNames=OpenGDSMobile:seoul_sig&outputFormat=json&srsname=EPSG:3857';
+            $.ajax({
+                type : 'POST',
+                url : addr,
+                crossDomain: true,
+                dataType : 'json',
+                success : function (evt) {
+                    var type = 'polygon';
+                    var title = 'seoul_vector';
+                    var attrKey = 'sig_kor_nm';
+
+                    indexedDBObj.getData('seoul_sig', function (data) {
+                        if (data !== null) {
+                            var cof = confirm('내부 저장소에 데이터 존재!! 내부 저장소 데이터를 불러오시겠습니까? \n ' +
+                                    '(주의: 불러오지 않을 경우 내부 저장소 데이터는 현재 불러오는 데이터로 업데이트됨)');
+                            if (cof === true) {
+                                evt = data.obj;
+                                type = data.type;
+                                title = data.layerName;
+                                attrKey = data.attrKey;
+                            }
+                        }
+
+                        mapVis.addGeoJSONLayer(evt, type, title, {
+                            attrKey : attrKey
+                        });
+                        mapAttr.addAttr('seoul_vector');
+                        indexedDBObj.addData('seoul_sig');
+
+                        mapAttr.setEditMode(true);
+                    });
+  //                 indexedDBObj.removeData('seoul_vector');
+  //                 indexedDBObj.deleteDB();
+
+
+
+                },
+                error : function (err) {
+
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+<div id="MapVis" style="width:100%; height: 100%;"></div>
+</body>
+</html>
