@@ -325,8 +325,11 @@ openGDSMobile.MapVis.prototype.removeLayer = function (_layerName) {
         return -1;
     }
     this.mapObj.removeLayer(layerObj);
-    --openGDSMobile.geoJSONStatus;
-    ////////////////////////// geoJSONStatus obj remove
+    //--openGDSMobile.geoJSONStatus;
+    if (openGDSMobile.geoJSONStatus.removeContentLayerName(_layerName) != false){
+        openGDSMobile.geoJSONStatus.length--;
+
+    }
 
     //////////////////////////
     /*

@@ -6899,8 +6899,11 @@ openGDSMobile.MapVis.prototype.removeLayer = function (_layerName) {
         return -1;
     }
     this.mapObj.removeLayer(layerObj);
-    --openGDSMobile.geoJSONStatus;
-    ////////////////////////// geoJSONStatus obj remove
+    //--openGDSMobile.geoJSONStatus;
+    if (openGDSMobile.geoJSONStatus.removeContentLayerName(_layerName) != false){
+        openGDSMobile.geoJSONStatus.length--;
+
+    }
 
     //////////////////////////
     /*
@@ -18023,7 +18026,7 @@ openGDSMobile.ChartVis = function (_data, _options) {
             return -1;
         }
         var data = _data[options.rootKey];
-
+        console.log(data);
         var d = null;
         if (options.max === null) {
             options.max = data[0][options.valueKey];
@@ -38282,6 +38285,15 @@ openGDSMobile.geoJSONStatus = {
         for (var i = 0; i < this.length; i++) {
             if (this.objs[i].id == _id) {
                 return this.objs[i];
+            }
+        }
+        return false;
+    },
+    removeContentLayerName : function (_layerName) {
+        for (var i = 0; i < this.length; i++) {
+            if (this.objs[i].layerName == _layerName) {
+                this.objs.splice(i, 1);
+                return true;
             }
         }
         return false;

@@ -35,7 +35,7 @@ openGDSMobile.ChartVis = function (_data, _options) {
             return -1;
         }
         var data = _data[options.rootKey];
-
+        console.log(data);
         var d = null;
         if (options.max === null) {
             options.max = data[0][options.valueKey];

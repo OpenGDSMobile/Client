@@ -40,7 +40,7 @@
             jsonData.dateTimeValue = dateTimeValue;
             jsonData.envType = envType;
 
-            var addr = 'http://113.198.80.60:8081/ApplicationServer/api/seoulOpenData.do';
+            var addr = 'http://113.198.80.60:8081/ApplicationServer/api/SeoulOpenData.do';
 
 
             $.ajax({
@@ -50,12 +50,14 @@
                 contentType : "application/json;charset=UTF-8",
                 dataType : 'json',
                 success : function (jsonResult) {
-                    console.log(jsonResult);
-                    var chart = new openGDSMobile.ChartVis(jsonResult.data, {
-                        rootKey : 'row',
-                        labelKey : 'MSRSTE_NM',
-                        valueKey : 'PM10'
-                    });
+                    console.log(jsonResult.data);
+
+                     var chart = new openGDSMobile.ChartVis(jsonResult.data, {
+                     rootKey : 'row',
+                     labelKey : 'MSRSTE_NM',
+                     valueKey : 'PM10'
+                     });
+
                     chart.vBarChart("chart");
 
                     var radioID = $('input:radio');
