@@ -2,3 +2,5 @@
 closure-library
 bower_components
 data
+node_modules
+npm-debug.log
