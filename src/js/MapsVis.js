@@ -58,6 +58,7 @@ openGDSMobile.MapVis = function (_mapDIV, _options) {
         layers : [baseLayer],
         view : baseView
     });
+    this.baseProj = options.baseProj;
 }
 
 /**
@@ -67,6 +68,14 @@ openGDSMobile.MapVis = function (_mapDIV, _options) {
 openGDSMobile.MapVis.prototype.getMapObj = function () {
     return this.mapObj;
 };
+
+/**
+ * 지도 좌표계 호출
+ * @returns {string|*}
+ */
+openGDSMobile.MapVis.prototype.getBaseProj = function () {
+    return this.baseProj;
+}
 
 
 /**
@@ -195,16 +204,21 @@ openGDSMobile.MapVis.prototype.addGeoJSONLayer = function (_geoJSON, _type, _tit
         strokeColor : '#000000',
         strokeWidth : 1,
         radius : 5,
-        opt : 0.7
+        opt : 0.7,
+        dataProj : 'EPSG:3857'
     };
     var options = openGDSMobile.util.applyOptions(defaultOptions, _options);
+    var baseProj = this.getBaseProj();
 
     
     var geoJSONLayer;
     geoJSONLayer = new ol.layer.Vector({
         title: _title,
         source : new ol.source.Vector({
-            features : (new ol.format.GeoJSON()).readFeatures(_geoJSON)
+            features : (new ol.format.GeoJSON()).readFeatures(_geoJSON, {
+                dataProjection : options.dataProj,
+                featureProjection : baseProj
+            })
         }),
         style : (function (feature, resolution) {
             return openGDSMobile.MapVis.styleFunction(feature, resolution, _type , options);
@@ -222,13 +236,19 @@ openGDSMobile.MapVis.prototype.addGeoJSONLayer = function (_geoJSON, _type, _tit
     }
     geoJSONLayer.setOpacity(options.opt);
     this.mapObj.addLayer(geoJSONLayer);
+    var id = null;
+    if (typeof(_geoJSON.features[0].id) === 'undefined'){
+        id = _title;
+    } else {
+        id = _geoJSON.features[0].id.split('.')[0]
+    }
 
     ++openGDSMobile.geoJSONStatus.length;
     openGDSMobile.geoJSONStatus.objs.push({
         layerName : _title,
         attrKey : options.attrKey,
         type : _type,
-        id : _geoJSON.features[0].id.split('.')[0],
+        id : id,
         obj : _geoJSON
     });
     return geoJSONLayer;
