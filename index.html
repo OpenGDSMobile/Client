@@ -16,8 +16,15 @@
     </style>
   </head>
   <body>
+  <header>
     <h1>오픈소스 기반 OpenGDS Mobile Client 라이브러리</h1>
     <p class="eng-title">(OpenGDS Mobile Client Library based on Open Source)</p>
+  </header>
+  <section>
+    <p>
+      OpenGDS Mobile Client는 공간정보와 시각화를 주제로 하고 있는 자바스크립트 라이브러리로 
+      여러 오픈소스를 활용하여 이를 편리하게 사용할 수 있는 기능 및 HTML5 API를 포함하고 있다.
+    </p>
     <h2>
       사용된 오픈소스(Usage Open Source)
     </h2>
@@ -26,20 +33,76 @@
         표준프레임워크 모바일 실행환경 (eGovframework in Korea)
       </li>
       <li>
-
+        오픈레이어 3 (OpenLayers 3)
       </li>
+      <li>
+        D3.js
+      </li>
+      <li>
+        부트스트랩 (BootStrap)  
+      </li>   
     </ul>
 
     <h2>
-      예제(Examples)
+      단위 기능 예제(Unit Examples)
     </h2>
     <ul>
       <li>
-
+        <a href="./examples/unitExamples/bgMapVis.html">배경 지도 시각화</a> 
+      </li>
+      <li>
+        <a href="./examples/unitExamples/addLayerByVector.html">벡터 레이어 시각화 *(GeoServer)</a>
+      </li>
+      <li>
+        <a href="./examples/unitExamples/mapManagerVis.html">벡터 레이어 다중 레이어 관리 * (GeoServer)</a>
+      </li>
+      <li>
+        <a href="./examples/unitExamples/changeLayerStyleByVector.html">벡터 레이어 스타일 변경 * (GeoServer)</a>
+      </li>    
+      <li>
+        <a href="./examples/unitExamples/attributeVis.html">속성정보 시각화 *(Application Server / GeoServer)</a>
+      </li>
+      <li>
+        <a href="./examples/unitExamples/attributeManager.html">속성정보 오프라인 편집 *(Application Server / GeoServer)</a>
+      </li>
+      <li>
+        <a href="./examples/unitExamples/chartVis.html">공공 데이터 차트 시각화 *(Application Server)</a>
+      </li>
+      <li>
+        <a href="./examples/unitExamples/VWorldWFS.html">VWorld Open API 시각화 - WFS</a>  
+      </li>
+      <li>
+        <a href="./examples/unitExamples/VWorldWMS.html">VWorld Open API 시각화 - WMS</a>
+      </li>
+      <li>
+        <a href="./examples/unitExamples/indexedDBManager.html">HTML5 API IndexedDB 저장소 관리 </a>
+      </li>
+      <li>
+        <a href="./examples/unitExamples/webSocket.html">HTML5 API WebSocket 활용 예제</a>
       </li>
     </ul>
     <span style="font-weight:bold; color: red; padding-left:5px; font-size:11px;">
-      ※ 일부 예제는 ApplicationServer 가 반드시 필요합니다.
+      ※ 예제는 ApplicationServer 또는 GeoServer가 반드시 필요합니다.
     </span>
+    <h2>
+      통합 예제(Intergated Examples)
+    </h2>
+    <ul>
+      <li>
+        <a href="#">공간 속성정보 오프라인 및 실시간 편집</a>    
+      </li>
+      <li>
+        <a href="#">수집 공공데이터 시각화</a>
+      </li>
+    </ul>
+  </section>
+  <footer>
+    <span>
+    MoWMaS는 국토교통부 국토공간정보연구사업 공간정보 SW활용을 위한 오픈소스 가공기술 개발 (모바일 공간정보 서비스 기술개발, No. 14NSIP-B080144-01)의 연구 성과를 일부 포함하고 있습니다.
+    </span>
+    <span>  
+    ⒞2016. 한성대학교 산학협력단 공간정보 웹 기술 연구실
+    </span>    
+  </footer>
   </body>
 </html>
