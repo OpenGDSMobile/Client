@@ -1,0 +1,7 @@
+
+#iconMenu{      list-style-type: none;      margin:0;      padding:1em;}
+#iconMenu li{   font-size:3rem;}
+.menu-show{     display: inline;  }
+.menu-hide{     display:none; }
+.link-none-line{text-decoration: none; }
+.btn-shadow{    text-shadow: 2px 2px #EEEEEE; }

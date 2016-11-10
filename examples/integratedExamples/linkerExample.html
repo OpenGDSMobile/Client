@@ -52,14 +52,13 @@
       clear:both;      height:14px;      background: #1c0064;      font-size:0.8em;      color : #FFFFFF;
       font-weight: bold;
     }
-    #iconMenu{
-      list-style-type: none;      margin:0;      padding:1em;
-    }
-    #iconMenu li{
-      font-size:3rem;
-    }
-    .btn-shdaow{
-      text-shadow: 2px 2px #EEEEEE;
+    .menu-detail{
+      float:left;
+      width:250px;
+      background: #FFFFFF;
+      position:absolute;
+      left:50px;
+      z-index:10000;
     }
   </style>
   <script>
@@ -69,15 +68,14 @@
     var map;
     $(function(){
       function resizeWindow(){
-        var headerHeight = (getComputedStyle(document.getElementsByTagName("header")[0]).height).replace(/[^-\d\.]/g,''),
-            footerHeight = (getComputedStyle(document.getElementsByTagName("footer")[0]).height).replace(/[^-\d\.]/g,''),
-            asideWidth = (getComputedStyle(document.getElementsByTagName("aside")[0]).width).replace(/[^-\d\.]/g,'');
-        console.log(window.innerHeight);
+        var headerHeight = parseInt((getComputedStyle(document.getElementsByTagName("header")[0]).height).replace(/[^-\d\.]/g,'')),
+            footerHeight = parseInt((getComputedStyle(document.getElementsByTagName("footer")[0]).height).replace(/[^-\d\.]/g,'')),
+            asideWidth = parseInt((getComputedStyle(document.getElementsByTagName("aside")[0]).width).replace(/[^-\d\.]/g,''));
         var frameWidth = window.innerWidth, frameHeight = window.innerHeight;
         var sectionTag = document.getElementsByTagName("section");
         var asideTag = document.getElementsByTagName("aside");
-        sectionTag[0].style.width = frameWidth - asideWidth + "px";
-        asideTag[0].style.height = sectionTag[0].style.height = frameHeight - (headerHeight + footerHeight) + "px";
+        sectionTag[0].style.width = (frameWidth - asideWidth) + "px";
+        asideTag[0].style.height = sectionTag[0].style.height = (frameHeight - (headerHeight + footerHeight)) + "px";
       }
       window.addEventListener('resize', function(event){
         resizeWindow();
@@ -85,10 +83,15 @@
       resizeWindow();
 
       map = new openGDSMobile.MapVis('map');
+      var controls = map.getMapObj().getControls();
+      controls.clear();
     });
   </script>
 
   <link type="text/css" rel="stylesheet" href="css/font-face-style.css">
+  <link type="text/css" rel="stylesheet" href="css/linker-style.css">
+
+  <script type="text/javascript" src="js/linker-main.js"></script>
 
   <body>
     <header>
@@ -99,30 +102,34 @@
       <nav>
         <ul id="iconMenu">
           <li>
-            <span class="icon-map btn-shdaow"></span>
+            <a href="javascript:void(0)" class="link-none-line menu-event" id="menuChangeMap">
+              <span class="icon-map btn-shadow"></span>
+            </a>
           </li>
           <li>
-            <span class="icon-library btn-shdaow"></span>
+            <span class="icon-library btn-shadow"></span>
           </li>
           <li>
-            <span class="icon-fusion btn-shdaow"></span>
+            <span class="icon-fusion btn-shadow"></span>
           </li>
           <li> </li>
           <li>
-            <span class="icon-zoom-in btn-shdaow"></span>
+            <span class="icon-zoom-in btn-shadow"></span>
           </li>
           <li>
-            <span class="icon-zoom-out btn-shdaow"></span>
+            <span class="icon-zoom-out btn-shadow"></span>
           </li>
           <li>
-            <span class="icon-stack btn-shdaow"></span>
+            <span class="icon-stack btn-shadow"></span>
           </li>
         </ul>
       </nav>
     </aside>
+    <div id="changeMap" class="menu-detail menu-hide">
+      eee
+    </div>
     <section>
       <div id="map" style="width:100%; height:100%;"></div>
-
     </section>
     <footer>
       This research was supported by National Land Space Information Research Program by Ministry of Land, Infrastructure and Transport of Korean government(No. 14NSIP-B080144-01).
