@@ -43,7 +43,7 @@
       height:25px;      background:#3862C4;      color : #FFFFFF;      font-size:1.6rem;      font-weight: bold;
     }
     aside{
-      float:left;      width:50px;      background: #aac8e8;
+      float:left;      width:54px;      background: #aac8e8;
     }
     section{
       float:right;      background: #EEEEEE;
@@ -60,10 +60,20 @@
       left:50px;
       z-index:10000;
     }
+    ul{
+      height:100%;
+    }
+    li{
+      height: 16.6%;
+      margin-top:10%;
+      margin-bottom:10%;
+    }
   </style>
   <script>
     var baseAddr = 'http://113.198.80.9';
-    var contextName = '/publicManager';
+    var publicDataContextName = '/publicManager';
+    var geoServerContextName = '/geoserver';
+    var asContextName = ':8081/ApplicationServer';
     var geoServerWS = "OpenGDSMobile";
     var map;
     $(function(){
@@ -74,8 +84,9 @@
         var frameWidth = window.innerWidth, frameHeight = window.innerHeight;
         var sectionTag = document.getElementsByTagName("section");
         var asideTag = document.getElementsByTagName("aside");
+        var ulTag = document.getElementById("iconMenu");
         sectionTag[0].style.width = (frameWidth - asideWidth) + "px";
-        asideTag[0].style.height = sectionTag[0].style.height = (frameHeight - (headerHeight + footerHeight)) + "px";
+        ulTag.style.height = asideTag[0].style.height = sectionTag[0].style.height = (frameHeight - (headerHeight + footerHeight)) + "px";
       }
       window.addEventListener('resize', function(event){
         resizeWindow();
@@ -102,25 +113,34 @@
       <nav>
         <ul id="iconMenu">
           <li>
-            <a href="javascript:void(0)" class="link-none-line menu-event" id="menuChangeMap">
+            <a href="javascript:void(0)" class="link-none-line menu-event" id="vectorMapVis">
               <span class="icon-map btn-shadow"></span>
             </a>
           </li>
           <li>
-            <span class="icon-library btn-shadow"></span>
+            <a href="javascript:void(0)" class="link-none-line menu-event" id="openDataVis">
+              <span class="icon-library btn-shadow"></span>
+            </a>
           </li>
           <li>
-            <span class="icon-fusion btn-shadow"></span>
-          </li>
-          <li> </li>
-          <li>
-            <span class="icon-zoom-in btn-shadow"></span>
+            <a href="javascript:void(0)" class="link-none-line menu-event" id="fusionVis">
+              <span class="icon-fusion btn-shadow"></span>
+            </a>
           </li>
           <li>
-            <span class="icon-zoom-out btn-shadow"></span>
+            <a href="javascript:void(0)" class="link-none-line menu-event" id="layerManger">
+              <span class="icon-stack btn-shadow"></span>
+            </a>
           </li>
           <li>
-            <span class="icon-stack btn-shadow"></span>
+            <a href="javascript:void(0)" class="link-none-line menu-event" id="zoomIn">
+              <span class="icon-zoom-in btn-shadow"></span>
+            </a>
+          </li>
+          <li>
+            <a href="javascript:void(0)" class="link-none-line menu-event" id="zoomOut">
+              <span class="icon-zoom-out btn-shadow"></span>
+            </a>
           </li>
         </ul>
       </nav>

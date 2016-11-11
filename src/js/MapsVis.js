@@ -434,5 +434,33 @@ openGDSMobile.MapVis.prototype.trackingGeoLocation = function (_sw) {
     }
 };
 
+/**
+ * 지도 확대
+ */
+openGDSMobile.MapVis.prototype.zoomIn = function () {
+  'use strict';
+  var view = this.mapObj.getView();
+  var newZoom = 0.5;
+  var zoom = ol.animation.zoom({
+    resolution : this.mapObj.getView().getResolution()
+  });
+  this.mapObj.beforeRender(zoom);
+  this.mapObj.getView().setResolution(this.mapObj.getView().getResolution() * newZoom);
+}
+
+/**
+ * 지도 축소
+ */
+openGDSMobile.MapVis.prototype.zoomOut = function () {
+  'use strict';
+  var view = this.mapObj.getView();
+  var newZoom = 2;
+  var zoom = ol.animation.zoom({
+    resolution : this.mapObj.getView().getResolution()
+  });
+  this.mapObj.beforeRender(zoom);
+  this.mapObj.getView().setResolution(this.mapObj.getView().getResolution() * newZoom);
+}
+
 
 goog.exportSymbol('openGDSMobile.MapVis', openGDSMobile.MapVis);
