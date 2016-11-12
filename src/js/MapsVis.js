@@ -59,6 +59,9 @@ openGDSMobile.MapVis = function (_mapDIV, _options) {
         view : baseView
     });
     this.baseProj = options.baseProj;
+
+
+    proj4.defs("EPSG:5179", "+proj=tmerc +lat_0=38 +lon_0=127.5 +k=0.9996 +x_0=1000000 +y_0=2000000 +ellps=GRS80 +units=m +no_defs");
 }
 
 /**
@@ -134,9 +137,9 @@ openGDSMobile.MapVis.styleFunction = function (feature, resolution, type, option
 
 /**
  * 배경지도 변경
- * @param {String} _mapType - 지도 스타일 이름 (OSM | VWorld)
+ * @param {String} _mapType - 지도 스타일 이름 (OSM | Stamen-water | VWorld)
  */
-openGDSMobile.MapVis.prototype.changeBgMap = function (_mapType) {
+openGDSMobile.MapVis.prototype.changeBgMap = function (_mapType, _key) {
     if (typeof (_mapType) === 'undefined' ) {
         console.error('Input map type parameter');
         return -1;
@@ -162,12 +165,75 @@ openGDSMobile.MapVis.prototype.changeBgMap = function (_mapType) {
     this.mapObj.setView(view);
     if (_mapType === 'OSM') {
         bgMapLayer.setSource(new ol.source.OSM());
+    } else if (_mapType === 'Stamen-water'){
+      bgMapLayer.setSource(
+        new ol.source.Stamen({
+          layer: 'watercolor'
+        })
+      );
+    } else if (_mapType === 'Stamen-terrain'){
+      bgMapLayer.setSource(
+        new ol.source.Stamen({
+          layer: 'terrain'
+        })
+      );
+    } else if (_mapType === 'Stamen-toner'){
+      bgMapLayer.setSource(
+        new ol.source.Stamen({
+          layer: 'toner'
+        })
+      );
     } else if (_mapType === 'VWorld') {
         bgMapLayer.setSource(
             new ol.source.XYZ(({
                 url : "http://xdworld.vworld.kr:8080/2d/Base/201310/{z}/{x}/{y}.png"
             }))
         );
+    } else if (_mapType === 'korSeoulMap') {
+      var proj5179 = new ol.proj.Projection({code : "EPSG:5179"});
+      var korNorMap = openGDSMobile.util.seoulMapInfo.tileMapInfos.tileMapInfo[15];
+      var tileGridObj = new ol.tilegrid.TileGrid({
+        origin : [korNorMap.originX, korNorMap.originY],
+        extent: [korNorMap.mbr.minx, korNorMap.mbr.miny, korNorMap.mbr.maxx, korNorMap.mbr.maxy],
+        resolutions: [128,64,32,16,8,4,2,1,0.5,0.25],
+        tileSize : [256, 256]
+      });
+
+      //proj5179.setDefaultTileGrid(tileGridObj);
+      if (typeof (_key) === 'undefined' ) {
+        console.error('must map key parameter');
+        return -1;
+      }
+      var mapUrlBase =
+        'http://map.seoul.go.kr/smgis/apps/mapsvr.do?cmd=getTileMap&key='
+        + _key
+        + '&URL=';
+      var xyz = new ol.source.XYZ({
+        projection: proj5179,
+        tileUrlFunction : function (coordinate, pixelRatio, projection) {
+          var url = mapUrlBase + korNorMap.url;
+          var z = coordinate[0];
+          var x = coordinate[1];
+          var y = ((coordinate[2]));
+          var xHalf = parseInt(x / 50);
+          var yHalf = parseInt(y / 50);
+          url = url + z + '/' + xHalf + '/' + yHalf + '/' + x + '_' + y + '.png';
+          return url;
+        },
+        tileGrid : tileGridObj
+      });
+      var center = ol.proj.fromLonLat([ 127.00767, 37.55720]);
+      var view = new ol.View({
+        center: center,
+        minZoom : 10,
+        maxZoom : 19,
+        zoom: zoom,
+        extent : ol.proj.transformExtent(
+          [korNorMap.mbr.minx, korNorMap.mbr.miny, korNorMap.mbr.maxx, korNorMap.mbr.maxy],
+          "EPSG:5179", "EPSG:3857")
+      });
+      this.mapObj.setView(view);
+      bgMapLayer.setSource(xyz);
     }
 };
 

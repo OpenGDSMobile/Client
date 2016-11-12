@@ -12,12 +12,14 @@
   <!-- dependency library CSS-->
   <link type="text/css" rel="stylesheet" href="../../src/libs/css/ol3/ol.css">                      <!-- OpenLayers 3 -->
   <link type="text/css" rel="stylesheet" href="../../src/libs/css/bootstrap/bootstrap.min.css">
+  <link type="text/css" rel="stylesheet" href="./css/bootstrap-select/bootstrap-select.min.css">
 
 
   <!-- dependency library JS-->
   <!-- egovFramework  KOREA-->
   <script type="text/javascript" src="../../src/libs/js/egovframework/mbl/cmm/jquery-1.11.2.js"></script>      <!-- jQuery -->
   <script type="text/javascript" src="../../src/libs/js/bootstrap/bootstrap.min.js"></script>
+  <script type="text/javascript" src="./js/bootstrap-select/bootstrap-select.min.js"></script>
 
   <!-- Proj, OpenLayers3, D3 -->
   <script type="text/javascript" src="../../src/libs/js/proj4js/2.2.2/proj4.js"></script>                         <!-- Proj4js -->
@@ -52,18 +54,13 @@
       clear:both;      height:14px;      background: #1c0064;      font-size:0.8em;      color : #FFFFFF;
       font-weight: bold;
     }
-    .menu-detail{
-      float:left;
-      width:250px;
-      background: #FFFFFF;
-      position:absolute;
-      left:50px;
-      z-index:10000;
+    nav {
+      box-shadow:inset -2px 0px 3px 0px #555;
     }
-    ul{
+    nav ul{
       height:100%;
     }
-    li{
+    nav li{
       height: 16.6%;
       margin-top:10%;
       margin-bottom:10%;
@@ -73,9 +70,10 @@
     var baseAddr = 'http://113.198.80.9';
     var publicDataContextName = '/publicManager';
     var geoServerContextName = '/geoserver';
-    var asContextName = ':8081/ApplicationServer';
+    var asContextName = '/ApplicationServer';
     var geoServerWS = "OpenGDSMobile";
     var map;
+    var contentHeight = '';
     $(function(){
       function resizeWindow(){
         var headerHeight = parseInt((getComputedStyle(document.getElementsByTagName("header")[0]).height).replace(/[^-\d\.]/g,'')),
@@ -85,8 +83,18 @@
         var sectionTag = document.getElementsByTagName("section");
         var asideTag = document.getElementsByTagName("aside");
         var ulTag = document.getElementById("iconMenu");
+        var menuClass = document.getElementsByClassName("menu-detail");
         sectionTag[0].style.width = (frameWidth - asideWidth) + "px";
-        ulTag.style.height = asideTag[0].style.height = sectionTag[0].style.height = (frameHeight - (headerHeight + footerHeight)) + "px";
+        contentHeight = ulTag.style.height = asideTag[0].style.height = sectionTag[0].style.height = (frameHeight - (headerHeight + footerHeight)) + "px";
+        for (var i = 0; i<menuClass.length; i++){
+          menuClass[i].style.height = (frameHeight - (headerHeight + footerHeight)) + "px";
+        }
+        var contents = ['content'];
+        for (var i =0; i<contents.length; i++){
+          var div = document.getElementById(contents[i]);
+          div.style.width = (300 - 2) + 'px';
+          div.style.height = (frameHeight - (headerHeight + footerHeight)) + "px";
+        }
       }
       window.addEventListener('resize', function(event){
         resizeWindow();
@@ -109,6 +117,25 @@
       <div style="width:100%; padding-left: 40px;">Link Service about Geo-Spatial & Open Data by Hansung University(Lab of Geo-Spatial Information)</div>
       <div style="width:100%; height:2px; background:#FFFFFF;"></div>
     </header>
+    <section>
+      <div id="map" style="width:100%; height:100%;">
+        <div id="selectMap" style="position:absolute; right:1px; top:26px;">
+          <select class="selectpicker" data-style="btn-success">
+            <optgroup label="World">
+              <option value="OSM">Open Street Map</option>
+              <option value="Stamen-water">Stamen - WaterColor</option>
+              <option value="Stamen-terrain">Stamen - Terrain</option>
+              <option value="Stamen-toner">Stamen - Toner</option>
+            </optgroup>
+            <optgroup label="Korea">
+              <option value="VWorld">VWorld</option>
+              <option value="korSeoulMap">Seoul Map</option>
+            </optgroup>
+          </select>
+        </div>
+      </div>
+    </section>
+
     <aside>
       <nav>
         <ul id="iconMenu">
@@ -145,12 +172,9 @@
         </ul>
       </nav>
     </aside>
-    <div id="changeMap" class="menu-detail menu-hide">
-      eee
+    <div id="container" class="menu-detail menu-hide">
+      <div id="content" class="list-group scroll-style"></div>
     </div>
-    <section>
-      <div id="map" style="width:100%; height:100%;"></div>
-    </section>
     <footer>
       This research was supported by National Land Space Information Research Program by Ministry of Land, Infrastructure and Transport of Korean government(No. 14NSIP-B080144-01).
     </footer>
