@@ -55,11 +55,11 @@
 
 .openGDSMobile-manager-setting-panel{
     position:absolute;
-    top:50%;
+    top:20%;
     left:50%;
-    width:500px;
-    height:200px;
-    background : #99ccff;
+    width:400px;
+    height:400px;
+    background : rgba(255, 255, 255, 0.5);
     margin:-100px 0 0 -250px;
     border-radius: 10px;
     z-index: 100;

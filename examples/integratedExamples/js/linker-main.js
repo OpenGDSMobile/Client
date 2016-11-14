@@ -6,7 +6,6 @@ $(function(){
   $(".menu-event").click(function(){
     var clickMenuDOM = $(this)[0];
     var id = $(clickMenuDOM).attr('id');
-    
     var container = $('#container');
     var content = $('#content');
     if (curShowMenu === id) {
@@ -14,6 +13,10 @@ $(function(){
       container.addClass('menu-hide');
       curShowMenu = null;
     } else {
+      if ($('#mapList').hasClass('menu-show')){
+        $('#mapList').removeClass('menu-show');
+        $('#mapList').addClass('menu-hide');
+      }
       if (!container.hasClass('menu-show')){
         container.removeClass('menu-hide');
         container.addClass('menu-show');
@@ -21,6 +24,7 @@ $(function(){
       if (!content.hasClass('list-group')){
         content.addClass('list-group');
       }
+      
       if (id === 'vectorMapVis') {
         content.empty();
         loadingGeoServerData();
@@ -32,6 +36,10 @@ $(function(){
         content.empty();
         loadingFusionData();
       } else if (id === 'layerManager') {
+        container.removeClass('menu-show');
+        container.addClass('menu-hide');
+        $('#mapList').removeClass('menu-hide');
+        $('#mapList').addClass('menu-show');
 
       } else if (id === 'zoomIn') {
         map.zoomIn();
@@ -49,9 +57,35 @@ $(function(){
       map.changeBgMap(value);
     }
   });
-  
-  
-  
+});
+
+$(document).on('click', '.layer-btn', function(evt){
+  var dataVal = $(this).data('val');
+  var requestVector = baseAddr + '/geoserver/wfs?service=WFS&version=1.1.0&request=GetFeature&outputFormat=json&srsname=EPSG:3857';
+  var layerName = geoServerWS + ':' + dataVal;
+  requestVector += '&typeNames=' + layerName;
+  var key = dataVal.split('_');
+  if (key[key.length - 1] == 'sig'){
+    key = 'sig_kor_nm';
+  } else {
+    key = 'emd_kor_nm';
+  }
+  $.ajax({
+    type : 'POST',
+    url : requestVector,
+    crossDomain: true,
+    dataType : 'json',
+    success : function (evt) {
+      map.addGeoJSONLayer(evt, 'polygon', dataVal, {
+        attrKey : key
+      });
+      mapManager.addItem(dataVal);
+    },
+    error : function (err) {
+
+    }
+  });
+
 });
 
 function loadingGeoServerData(callback){
@@ -69,7 +103,7 @@ function loadingGeoServerData(callback){
       $(viewContent).css('overflow', 'auto');
       var objs = res.names;
       for (var i=0; i < objs.length; i++){
-        $(viewContent).append('<button type="button" class="list-group-item list-group-item-action" data-val="' + objs[i] + '">' +
+        $(viewContent).append('<button type="button" class="list-group-item list-group-item-action layer-btn" data-val="' + objs[i] + '">' +
             objs[i] +
           '</button>');
       }

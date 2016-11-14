@@ -8,6 +8,8 @@
 
   <!-- Google Closure lib for test -->
   <script type="text/javascript" src="../../closure-library/closure/goog/base.js"></script>
+  <link type="text/css" rel="stylesheet" href="../../closure-library/closure/goog/css/button.css">
+  <link type="text/css" rel="stylesheet" href="../../closure-library/closure/goog/css/hsvpalette.css">
 
   <!-- dependency library CSS-->
   <link type="text/css" rel="stylesheet" href="../../src/libs/css/ol3/ol.css">                      <!-- OpenLayers 3 -->
@@ -26,6 +28,7 @@
   <script type="text/javascript" src="../../src/libs/js/ol3/ol-3.14.2.js"></script>                                      <!-- OpenLayers 3 -->
   <script type="text/javascript" src="../../src/libs/js/d3/d3.v4/d3.min.js"></script>                                       <!-- D3.js -->
 
+  <link type="text/css" rel="stylesheet"  href="../../src/css/MapsManager.css" />
 
   <script type="text/javascript" src="../../src/js/OpenGDSMobile.js"></script>
   <script type="text/javascript" src="../../src/js/Util.js"></script>
@@ -72,7 +75,7 @@
     var geoServerContextName = '/geoserver';
     var asContextName = '/ApplicationServer';
     var geoServerWS = "OpenGDSMobile";
-    var map;
+    var map, mapManager;
     var contentHeight = '';
     $(function(){
       function resizeWindow(){
@@ -104,6 +107,10 @@
       map = new openGDSMobile.MapVis('map');
       var controls = map.getMapObj().getControls();
       controls.clear();
+
+      mapManager = new openGDSMobile.MapManager('mapList', map, {
+        height : '50%'
+      });
     });
   </script>
 
@@ -155,7 +162,7 @@
             </a>
           </li>
           <li>
-            <a href="javascript:void(0)" class="link-none-line menu-event" id="layerManger">
+            <a href="javascript:void(0)" class="link-none-line menu-event" id="layerManager">
               <span class="icon-stack btn-shadow"></span>
             </a>
           </li>
@@ -174,6 +181,8 @@
     </aside>
     <div id="container" class="menu-detail menu-hide">
       <div id="content" class="list-group scroll-style"></div>
+    </div>
+    <div id="mapList" class="menu-detail menu-hide">
     </div>
     <footer>
       This research was supported by National Land Space Information Research Program by Ministry of Land, Infrastructure and Transport of Korean government(No. 14NSIP-B080144-01).

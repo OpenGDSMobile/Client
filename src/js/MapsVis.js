@@ -308,7 +308,11 @@ openGDSMobile.MapVis.prototype.addGeoJSONLayer = function (_geoJSON, _type, _tit
     } else {
         id = _geoJSON.features[0].id.split('.')[0]
     }
-
+    var extent = geoJSONLayer.getSource().getExtent();
+    var center = new Array(2);
+    center[0] = (extent[0] + extent[2]) / 2;
+    center[1] = (extent[1] + extent[3]) / 2;
+    this.mapObj.getView().setCenter(center);
     ++openGDSMobile.geoJSONStatus.length;
     openGDSMobile.geoJSONStatus.objs.push({
         layerName : _title,

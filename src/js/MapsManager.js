@@ -7,6 +7,14 @@ goog.require('goog.ui.Button');
 goog.require('goog.ui.ButtonRenderer');
 goog.require('goog.ui.CustomButton');
 goog.require('goog.ui.CustomButtonRenderer');
+
+goog.require('goog.dom.DomHelper');
+goog.require('goog.ui.Component');
+goog.require('goog.ui.HsvPalette');
+goog.require('goog.ui.Slider');
+goog.require('goog.style');
+
+
 goog.require('goog.events');
 goog.require('goog.events.EventType');
 
@@ -61,6 +69,7 @@ openGDSMobile.MapManager = function (_layerDIV, _visObj, _options) {
         height : '100%',
         fillColor : 'rgba(255, 255, 255, 0.5)'
     };
+
     var options = openGDSMobile.util.applyOptions(defaultOptions, _options);
     this.rootDOM = goog.dom.getElement(_layerDIV);
     this.listDOM = goog.dom.createDom('ul', {
@@ -68,6 +77,7 @@ openGDSMobile.MapManager = function (_layerDIV, _visObj, _options) {
         'class' : openGDSMobile.Manager.MANAGER_STYLE,
         'style' : 'background-color:' + options.fillColor
     });
+
     this.visObj = _visObj;
     goog.dom.append(this.rootDOM, this.listDOM);
     options.width = this.rootDOM.style.width;
@@ -162,7 +172,7 @@ openGDSMobile.MapManager.prototype.addItem = function (_layerName) {
             return -1;
         }
     }
-
+    var visObj = this.visObj;
     var layerObj = openGDSMobile.util.getOlLayer(this.visObj.mapObj, _layerName);
 
     var type = layerObj.get('type');
@@ -219,10 +229,10 @@ openGDSMobile.MapManager.prototype.addItem = function (_layerName) {
     setBtnDOM.addClassName(openGDSMobile.Manager.MANAGER_SETTING_BTN_STYLE);
     setBtnDOM.setTooltip(title + ' setting Button');
     setBtnDOM.setValue(title);
+
     goog.events.listen(setBtnDOM,
         goog.ui.Component.EventType.ACTION,
         function (e) {
-            //console.log(e.target.getValue());
             var settingBtns = goog.dom.getElementsByTagNameAndClass('button', openGDSMobile.Manager.MANAGER_SETTING_BTN_STYLE);
             goog.array.forEach(settingBtns, function (obj){
                 var tmpBtn = new goog.ui.Button();
@@ -241,8 +251,51 @@ openGDSMobile.MapManager.prototype.addItem = function (_layerName) {
                 'class' : openGDSMobile.Manager.MANAGER_SETTING_PANEL_TITLE
             }, title);
             panelDOM.appendChild(titleDOM);
-            //투명도 슬라이드..
             //색상 변경
+            var picker = new goog.ui.HsvPalette(null, layerObj.get('fillColor'));
+            picker.render(panelDOM);
+            goog.events.listen(picker,
+              goog.ui.Component.EventType.ACTION,
+              function(e){
+                var color = e.target.getColor();
+                visObj.changeVectorStyle(title, {
+                  fillColor : color
+                });
+                openGDSMobile.MapManager.drawCanvas('canvas-' + title, type, color, canvasDOM.width, canvasDOM.height);
+              }
+            );
+            //투명도 슬라이드..
+            var silderDOM = goog.dom.createDom('input', {
+                'type' : 'range',
+                'min' : '0',
+                'max' : '1',
+                'value' : '0',
+                'step' : '0.1'
+            });
+            goog.events.listen(silderDOM,
+              goog.ui.Component.EventType.ACTION,
+              function(e){
+                console.log(e);
+              });
+            panelDOM.appendChild(silderDOM);
+            /*
+            var silderDom = goog.dom.createDom('div', {
+                'id' : 'silder',
+                'class' : 'goog-slider',
+                'style' : 'width:100%; height: 20px;'
+            });
+            var styleDiv = goog.dom.createDom('div', {
+                'style' : 'position:absolute;width:100%;top:9px;border:1px inset white;overflow:hidden;height:0'
+            });
+            var thumb = goog.dom.createDom('div', {
+                'class' : 'goog-slider-thumb'
+            });
+            silderDom.appendChild(styleDiv);
+            silderDom.appendChild(thumb);
+            panelDOM.appendChild(silderDom);
+            var silder = new goog.ui.Slider;
+            silder.decorate(silderDom);
+            */
             //두깨 변경
             //글자 크기 변경
             //종료 버튼
