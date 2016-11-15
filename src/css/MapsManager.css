@@ -36,18 +36,27 @@
 #openGDSMobileCell{
     display:table-cell;
     vertical-align:middle;
-    padding : 0;
-    background-color: #b7ddda;
+    /*padding : 0;*/
+    background-color: rgb(81, 81, 81);
+    box-shadow:2px 2px 3px 0px #16284f;
+    cursor: pointer;
 }
-.openGDSMobile-manager-title{
-    font-size : 1.0em;
+.openGDSMobile-manager-title-check{
+    color : rgb(255, 255, 255);
+    background-color: rgb(81, 81, 81);
+}
+.openGDSmobile-manager-title-unCheck{
+    color : rgb(0, 0, 0 );
+    background-color: rgb(255, 255, 255);
 }
 .openGDSMobile-manager-setting{
     float :left;
-    width : 20%;
-    height : 100%;
-    margin : 0;
-    padding : 0;
+    width : 16%;
+    height : 99%;
+    text-align:center;
+    margin-left : 2px;
+    background-color: rgb(147, 147, 147);
+    box-shadow:2px 2px 3px 0px #16284f;
 }
 .openGDSMobile-manager-setting-btn{
     height: 100%;

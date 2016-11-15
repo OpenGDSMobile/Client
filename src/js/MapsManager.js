@@ -37,7 +37,9 @@ openGDSMobile.Manager.MANAGER_ITEM_TYPE_STYLE = 'openGDSMobile-manager-type';
 
 openGDSMobile.Manager.MANAGER_ITEM_TYPE_CANVAS_STYLE = 'openGDSMobile-manager-canvas';
 
-openGDSMobile.Manager.MANAGER_ITEM_TITLE_STYLE = 'openGDSMobile-manager-title';
+openGDSMobile.Manager.MANAGER_ITEM_TITLE_STYLE = 'openGDSMobile-manager-title-check';
+
+openGDSMobile.Manager.MANAGER_ITEM_TITLE_UNCHECK = 'openGDSmobile-manager-title-unCheck'
 
 openGDSMobile.Manager.MANAGER_ITEM_SETTING_STYLE = 'openGDSMobile-manager-setting';
 
@@ -46,6 +48,8 @@ openGDSMobile.Manager.MANAGER_SETTING_BTN_STYLE = 'openGDSMobile-manager-setting
 openGDSMobile.Manager.MANAGER_SETTING_PANEL = 'openGDSMobile-manager-setting-panel'
 
 openGDSMobile.Manager.MANAGER_SETTING_PANEL_TITLE = 'openGDSMobile-manager-setting-panel-title';
+
+openGDSMobile.Manager.MANAGER_SETTING_SLIDER = 'openGDSMobile-manager-setting-slider';
 
 openGDSMobile.Manager.MANAGER_SETTING_PANEL_CLOSE = 'openGDSMobile-manager-setting-panel-close';
 
@@ -222,9 +226,26 @@ openGDSMobile.MapManager.prototype.addItem = function (_layerName) {
         'class' : openGDSMobile.Manager.MANAGER_ITEM_TITLE_STYLE
     }, title);
     titleCellDOM.appendChild(titleDOM);
+    goog.events.listen(titleDOM,
+        goog.events.EventType.CLICK,
+        function (e){
+          var el = this;
+          if (el.classList.contains(openGDSMobile.Manager.MANAGER_ITEM_TITLE_UNCHECK)) {
+            el.classList.remove(openGDSMobile.Manager.MANAGER_ITEM_TITLE_UNCHECK);
+            layerObj.setVisible(true);
+          } else {
+            el.classList.add(openGDSMobile.Manager.MANAGER_ITEM_TITLE_UNCHECK);
+            layerObj.setVisible(false);
+          }
+        }
+    );
 
     /*Setting Content**/
-    var setBtnDOM = new goog.ui.Button('Setting');
+    var image = goog.dom.createDom('img', {
+      'src' : 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAApElEQVRYR+2WOw7AIAxDzcnbnrxV1koQbCyFAVYCeXE+0FC8WrF/jABuAFcH8AEQ+8trBPAmt1vUi0tYR5k9pcoB2EKBXs6yXNuKsAdQ3oZUNavGFhlV53HOCSClzAkgFe1MG7IK/4Magh2ALRRgc2ydnM4uKG9DSUmnAnYASVKW4vwJZ+YANVqVFLCPSGZPMWyhgHWyUeEnH5LyNmSDkezLJ+EHxxQqFZ+kK48AAAAASUVORK5CYII='}
+    );
+    //var setBtnDOM = new goog.ui.Button('Setting');
+    var setBtnDOM = new goog.ui.CustomButton(image);
     setBtnDOM.render(settingDOM);
     setBtnDOM.addClassName(openGDSMobile.Manager.MANAGER_SETTING_BTN_STYLE);
     setBtnDOM.setTooltip(title + ' setting Button');
@@ -265,39 +286,29 @@ openGDSMobile.MapManager.prototype.addItem = function (_layerName) {
               }
             );
             //투명도 슬라이드..
+            var optValue = layerObj.get('opt');
+            console.log(String(optValue));
             var silderDOM = goog.dom.createDom('input', {
                 'type' : 'range',
                 'min' : '0',
-                'max' : '1',
-                'value' : '0',
-                'step' : '0.1'
+                'max' : '100',
+                'value' : (layerObj.get('opt') * 100),
+                'step' : '10',
+                'class' : openGDSMobile.Manager.MANAGER_SETTING_SLIDER
             });
+            console.log(layerObj.get('opt'));
             goog.events.listen(silderDOM,
-              goog.ui.Component.EventType.ACTION,
+              goog.ui.Component.EventType.CHANGE,
               function(e){
-                console.log(e);
+                var val = e.target.value;
+                visObj.changeVectorStyle(title, {
+                  opt : ( parseFloat(val) * 0.01)
+                });
               });
             panelDOM.appendChild(silderDOM);
-            /*
-            var silderDom = goog.dom.createDom('div', {
-                'id' : 'silder',
-                'class' : 'goog-slider',
-                'style' : 'width:100%; height: 20px;'
-            });
-            var styleDiv = goog.dom.createDom('div', {
-                'style' : 'position:absolute;width:100%;top:9px;border:1px inset white;overflow:hidden;height:0'
-            });
-            var thumb = goog.dom.createDom('div', {
-                'class' : 'goog-slider-thumb'
-            });
-            silderDom.appendChild(styleDiv);
-            silderDom.appendChild(thumb);
-            panelDOM.appendChild(silderDom);
-            var silder = new goog.ui.Slider;
-            silder.decorate(silderDom);
-            */
             //두깨 변경
             //글자 크기 변경
+          
             //종료 버튼
             var closeBtnDOM = new goog.ui.Button('Close');
             closeBtnDOM.render(panelDOM);
