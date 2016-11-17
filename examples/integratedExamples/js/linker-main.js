@@ -8,6 +8,13 @@ $(function(){
     var id = $(clickMenuDOM).attr('id');
     var container = $('#container');
     var content = $('#content');
+
+    var panel = $('#openDataPanel');
+    if (panel.hasClass('menu-show')) {
+      panel.removeClass('menu-show');
+      panel.addClass('menu-hide');
+    }
+
     if (curShowMenu === id) {
       container.removeClass('menu-show');
       container.addClass('menu-hide');
@@ -59,35 +66,6 @@ $(function(){
   });
 });
 
-$(document).on('click', '.layer-btn', function(evt){
-  var dataVal = $(this).data('val');
-  var requestVector = baseAddr + '/geoserver/wfs?service=WFS&version=1.1.0&request=GetFeature&outputFormat=json&srsname=EPSG:3857';
-  var layerName = geoServerWS + ':' + dataVal;
-  requestVector += '&typeNames=' + layerName;
-  var key = dataVal.split('_');
-  if (key[key.length - 1] == 'sig'){
-    key = 'sig_kor_nm';
-  } else {
-    key = 'emd_kor_nm';
-  }
-  $.ajax({
-    type : 'POST',
-    url : requestVector,
-    crossDomain: true,
-    dataType : 'json',
-    success : function (evt) {
-      map.addGeoJSONLayer(evt, 'polygon', dataVal, {
-        attrKey : key
-      });
-      mapManager.addItem(dataVal);
-    },
-    error : function (err) {
-
-    }
-  });
-
-});
-
 function loadingGeoServerData(callback){
   callback = (typeof (callback) !== 'undefined') ? callback : null;
   var requestAddr = baseAddr + publicDataContextName;
@@ -131,7 +109,7 @@ function loadingOpenData(callback){
         var name = res[i].name;
         var comment = res[i].comment;
         var provider = res[i].provider;
-        $(viewContent).append('<a href="#" class="list-group-item list-group-item-action" data-val="' + name + '">' +
+        $(viewContent).append('<a href="#" class="list-group-item list-group-item-action openData-btn" data-val="' + name + '">' +
             '<span style="font-size:1.7rem; font-weight:bold;">' + name + '</span>' +
             '<br><span style="font-size:1.5rem; margin-left:4px; font-weight:bold;">provider : ' + provider + '</span>' +
             '<br><span style="font-size:1.2rem">' + comment +'</span>' +
@@ -156,6 +134,36 @@ function loadingFusionData(){
   });
 
 }
+/**
+ * Map Visualization
+ */
+$(document).on('click', '.layer-btn', function(evt){
+  var dataVal = $(this).data('val');
+  var requestVector = baseAddr + '/geoserver/wfs?service=WFS&version=1.1.0&request=GetFeature&outputFormat=json&srsname=EPSG:3857';
+  var layerName = geoServerWS + ':' + dataVal;
+  requestVector += '&typeNames=' + layerName;
+  var key = dataVal.split('_');
+  if (key[key.length - 1] == 'sig'){
+    key = 'sig_kor_nm';
+  } else {
+    key = 'emd_kor_nm';
+  }
+  $.ajax({
+    type : 'POST',
+    url : requestVector,
+    crossDomain: true,
+    dataType : 'json',
+    success : function (evt) {
+      map.addGeoJSONLayer(evt, 'polygon', dataVal, {
+        attrKey : key
+      });
+      mapManager.addItem(dataVal);
+    },
+    error : function (err) {
+
+    }
+  });
+});
 
 function enToko(name){
 

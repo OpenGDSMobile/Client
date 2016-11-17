@@ -49,7 +49,11 @@ openGDSMobile.Manager.MANAGER_SETTING_PANEL = 'openGDSMobile-manager-setting-pan
 
 openGDSMobile.Manager.MANAGER_SETTING_PANEL_TITLE = 'openGDSMobile-manager-setting-panel-title';
 
-openGDSMobile.Manager.MANAGER_SETTING_SLIDER = 'openGDSMobile-manager-setting-slider';
+openGDSMobile.Manager.MANAGER_SETTING_PANEL_PICKER='openGDSMobile-manager-setting-panel-picker';
+
+openGDSMobile.Manager.MANAGER_SETTING_PANEL_RANGE = 'openGDSMobile-manager-setting-panel-range';
+
+openGDSMobile.Manager.MANAGER_SETTING_PANEL_DELETE = 'openGDSMobile-manager-setting-panel-delete';
 
 openGDSMobile.Manager.MANAGER_SETTING_PANEL_CLOSE = 'openGDSMobile-manager-setting-panel-close';
 
@@ -177,6 +181,7 @@ openGDSMobile.MapManager.prototype.addItem = function (_layerName) {
         }
     }
     var visObj = this.visObj;
+    var managerObj = this;
     var layerObj = openGDSMobile.util.getOlLayer(this.visObj.mapObj, _layerName);
 
     var type = layerObj.get('type');
@@ -254,6 +259,13 @@ openGDSMobile.MapManager.prototype.addItem = function (_layerName) {
     goog.events.listen(setBtnDOM,
         goog.ui.Component.EventType.ACTION,
         function (e) {
+            var body = document.getElementsByTagName('body')[0];
+            var panel = document.getElementById('settingPanel');
+            if (panel != null){
+              body.removeChild(panel);
+            }
+
+
             var settingBtns = goog.dom.getElementsByTagNameAndClass('button', openGDSMobile.Manager.MANAGER_SETTING_BTN_STYLE);
             goog.array.forEach(settingBtns, function (obj){
                 var tmpBtn = new goog.ui.Button();
@@ -261,20 +273,26 @@ openGDSMobile.MapManager.prototype.addItem = function (_layerName) {
                 tmpBtn.setEnabled(false);
             });
             var title =  e.target.getValue();
-            //중앙 DIV 패널
+            //DIV 크기 패널
             var panelDOM = goog.dom.createDom('div', {
                 'id' : 'settingPanel',
                 'class' : openGDSMobile.Manager.MANAGER_SETTING_PANEL
             });
             document.body.appendChild(panelDOM);
             //Title
-            var titleDOM = goog.dom.createDom('h2', {
+
+            var titleDOM = goog.dom.createDom('h5', {
                 'class' : openGDSMobile.Manager.MANAGER_SETTING_PANEL_TITLE
-            }, title);
+            }, 'Layer: ' + title);
             panelDOM.appendChild(titleDOM);
+
             //색상 변경
-            var picker = new goog.ui.HsvPalette(null, layerObj.get('fillColor'));
-            picker.render(panelDOM);
+            var pickerDOM = goog.dom.createDom('div', {
+                'class' : openGDSMobile.Manager.MANAGER_SETTING_PANEL_PICKER
+            });
+            var picker = new goog.ui.HsvPalette(null, layerObj.get('fillColor'), 'goog-hsv-palette-sm');
+            panelDOM.appendChild(pickerDOM);
+            picker.render(pickerDOM);
             goog.events.listen(picker,
               goog.ui.Component.EventType.ACTION,
               function(e){
@@ -287,16 +305,17 @@ openGDSMobile.MapManager.prototype.addItem = function (_layerName) {
             );
             //투명도 슬라이드..
             var optValue = layerObj.get('opt');
-            console.log(String(optValue));
+
+            var rangeDOM = goog.dom.createDom('div', {
+              'class' : openGDSMobile.Manager.MANAGER_SETTING_PANEL_RANGE
+            });
             var silderDOM = goog.dom.createDom('input', {
                 'type' : 'range',
                 'min' : '0',
                 'max' : '100',
                 'value' : (layerObj.get('opt') * 100),
-                'step' : '10',
-                'class' : openGDSMobile.Manager.MANAGER_SETTING_SLIDER
+                'step' : '10'
             });
-            console.log(layerObj.get('opt'));
             goog.events.listen(silderDOM,
               goog.ui.Component.EventType.CHANGE,
               function(e){
@@ -305,10 +324,22 @@ openGDSMobile.MapManager.prototype.addItem = function (_layerName) {
                   opt : ( parseFloat(val) * 0.01)
                 });
               });
-            panelDOM.appendChild(silderDOM);
+            rangeDOM.appendChild(silderDOM);
+            panelDOM.appendChild(rangeDOM);
             //두깨 변경
             //글자 크기 변경
-          
+            //삭제
+            var deleteBtnDOM = new goog.ui.Button('Delete');
+            deleteBtnDOM.render(panelDOM);
+            deleteBtnDOM.addClassName(openGDSMobile.Manager.MANAGER_SETTING_PANEL_DELETE);
+            goog.events.listen(deleteBtnDOM,
+              goog.ui.Component.EventType.ACTION,
+              function (e){
+                managerObj.removeItem(layerObj.get('title'));
+                visObj.removeLayer(layerObj.get('title'));
+                document.body.removeChild(panelDOM);
+              }
+            );
             //종료 버튼
             var closeBtnDOM = new goog.ui.Button('Close');
             closeBtnDOM.render(panelDOM);
@@ -329,11 +360,13 @@ openGDSMobile.MapManager.prototype.addItem = function (_layerName) {
     
 
     /*********************/
+    
     openGDSMobile.listStatus.objs.push({
        title : title,
        obj : layerObj
     });
     layerObj.setZIndex(++openGDSMobile.listStatus.length);
+    
 };
 
 /**
@@ -376,7 +409,7 @@ openGDSMobile.MapManager.prototype.removeItem = function (_layerName) {
             obj);
         if (el[0].innerHTML === _layerName) {
             obj.parentNode.removeChild(obj);
-            openGDSMobile.listStatus.objs.splice(openGDSMobile.listStatus.length - index, 1);
+            openGDSMobile.listStatus.removeContentLayerName(_layerName);
         }
     });
 }

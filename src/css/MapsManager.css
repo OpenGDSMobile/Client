@@ -9,8 +9,8 @@
 }
 .openGDSMobile-manager-list{
     width : 100%;
-    height : 5%;
-    margin : 2px 0px 2px 0px; /*top right bottom left*/
+    height : 34px;
+    margin : 2px 0px 6px 0px; /*top right bottom left*/
 }
 
 .openGDSMobile-manager-type{
@@ -36,7 +36,6 @@
 #openGDSMobileCell{
     display:table-cell;
     vertical-align:middle;
-    /*padding : 0;*/
     background-color: rgb(81, 81, 81);
     box-shadow:2px 2px 3px 0px #16284f;
     cursor: pointer;
@@ -64,16 +63,84 @@
 
 .openGDSMobile-manager-setting-panel{
     position:absolute;
-    top:20%;
-    left:50%;
-    width:400px;
-    height:400px;
-    background : rgba(255, 255, 255, 0.5);
+    /*top:20%;
+    left:50%;*/
+    width:200px;
+    height:340px;
+    background : rgba(255, 255, 255, 0.7);
     margin:-100px 0 0 -250px;
     border-radius: 10px;
     z-index: 100;
+    box-shadow:2px 2px 3px 0px #16284f;
+}
+
+.openGDSMobile-manager-setting-panel-title{
+    margin-left: 2px;
+    padding-bottom:6px;
+    font-weight : bold;
+    border-bottom : 1px solid gray;
+}
+
+.openGDSMobile-manager-setting-panel-picker{
+  width:100%;
+  margin-bottom:10px;
+  margin-top:10px;
+  padding-left:10px;
+  padding-right:10px;
+}
+
+.openGDSMobile-manager-setting-panel-range{
+  width:100%;
+  margin-top:15px;
+  margin-bottom:15px;
+  padding-left:5px;
+  padding-right:5px;
+}
+
+.openGDSMobile-manager-setting-panel-range > input[type=range] {
+  -webkit-appearance: none;
+  -webkit-flex-basis: 90%;
+  -webkit-tap-highlight-color: transparent;
+  background: transparent;
+}
+
+.openGDSMobile-manager-setting-panel-range > input[type=range]::-webkit-slider-runnable-track {
+  width: 5rem;
+  height: 1rem;
+  background: transparent;
+  border: 2px solid #2b58e0;
+  border-radius: 10px;
+}
+
+.openGDSMobile-manager-setting-panel-range > input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  height: 2rem;
+  width: 2rem;
+  border-radius: 20%;
+  background: #0771e8;
+  margin-top: -0.8rem;
+  border: 2px solid #fff;
+  cursor: pointer;
+  box-shadow: 0px 5px 5px -3px #d9d9d9;
+}
+
+.openGDSMobile-manager-setting-panel-range > input[type=range]:focus {
+  outline: none;
+}
+.openGDSMobile-manager-setting-panel-delete{
+  position:absolute;
+  width: 100%;
+  height : 30px;
+  bottom: 30px;
+  border-radius: 10px;
+  background : rgb(180, 0, 0);
+  font-weight : bold;
 }
 .openGDSMobile-manager-setting-panel-close{
-    width: 100%;
-    height : 30px;
+  position:absolute;
+  width: 100%;
+  bottom: 0px;
+  height : 30px;
+  border-radius: 10px;
+  font-weight : bold;
 }

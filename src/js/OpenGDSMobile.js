@@ -73,7 +73,17 @@ openGDSMobile.geoJSONStatus = {
  */
 openGDSMobile.listStatus = {
     length : 0,
-    objs : []
+    objs : [],
+    removeContentLayerName : function (_layerName) {
+      for (var i = 0; i < this.length; i++) {
+        if (this.objs[i].title == _layerName) {
+          this.objs.splice(i, 1);
+          this.length--;
+          return true;
+        }
+      }
+      return false;
+    }
 };
 
 /**

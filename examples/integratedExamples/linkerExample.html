@@ -26,7 +26,7 @@
   <!-- Proj, OpenLayers3, D3 -->
   <script type="text/javascript" src="../../src/libs/js/proj4js/2.2.2/proj4.js"></script>                         <!-- Proj4js -->
   <script type="text/javascript" src="../../src/libs/js/ol3/ol-3.14.2.js"></script>                                      <!-- OpenLayers 3 -->
-  <script type="text/javascript" src="../../src/libs/js/d3/d3.v4/d3.min.js"></script>                                       <!-- D3.js -->
+  <script type="text/javascript" src="../../src/libs/js/d3/d3.min.js"></script>                                       <!-- D3.js -->
 
   <link type="text/css" rel="stylesheet"  href="../../src/css/MapsManager.css" />
 
@@ -68,14 +68,20 @@
       margin-top:10%;
       margin-bottom:10%;
     }
+    #openDataPanel{
+      position:absolute;
+      background : rgba(255, 255, 255, 1);
+      z-index: 100;
+      border-radius: 10px;
+    }
     .openGDSMobile-manager-title-check{
       font-size : 1.4rem;
       font-weight : bold;
     }
-    .openGDSMobile-manager-setting-btn{
-      background : rgba(0, 0, 0, 0);
+    .openGDSMobile-manager-setting-panel{
+      right : 10px;
+      top : 160px;
     }
-
   </style>
   <script>
     var baseAddr = 'http://113.198.80.9';
@@ -95,17 +101,25 @@
         var asideTag = document.getElementsByTagName("aside");
         var ulTag = document.getElementById("iconMenu");
         var menuClass = document.getElementsByClassName("menu-detail");
-        sectionTag[0].style.width = (frameWidth - asideWidth) + "px";
+        var openDataDIV = document.getElementById("openDataPanel");
+        openDataDIV.style.width = sectionTag[0].style.width = (frameWidth - asideWidth) + "px";
         contentHeight = ulTag.style.height = asideTag[0].style.height = sectionTag[0].style.height = (frameHeight - (headerHeight + footerHeight)) + "px";
         for (var i = 0; i<menuClass.length; i++){
           menuClass[i].style.height = (frameHeight - (headerHeight + footerHeight)) + "px";
         }
         var contents = ['content'];
+        var chartDIV = document.getElementById("chartVis");
         for (var i =0; i<contents.length; i++){
           var div = document.getElementById(contents[i]);
           div.style.width = (300 - 2) + 'px';
           div.style.height = (frameHeight - (headerHeight + footerHeight)) + "px";
         }
+        openDataDIV.style.width = (frameWidth - (asideWidth + 320) ) + 'px';
+        openDataDIV.style.height = (frameHeight - (headerHeight + footerHeight + 40)) + "px";
+        openDataDIV.style.left = (asideWidth + 300) + 'px';
+
+        chartDIV.style.width = (frameWidth - (asideWidth + 360) ) + 'px';
+        chartDIV.style.height= (frameHeight - (headerHeight + footerHeight)) * 0.5 + 'px';
       }
       window.addEventListener('resize', function(event){
         resizeWindow();
@@ -126,6 +140,7 @@
   <link type="text/css" rel="stylesheet" href="css/linker-style.css">
 
   <script type="text/javascript" src="js/linker-main.js"></script>
+  <script type="text/javascript" src="js/linker-chart.js"></script>
 
   <body>
     <header>
@@ -134,7 +149,7 @@
     </header>
     <section>
       <div id="map" style="width:100%; height:100%;">
-        <div id="selectMap" style="position:absolute; right:1px; top:26px;">
+        <div id="selectMap" style="position:absolute; right:1px; top:26px; ">
           <select class="selectpicker" data-style="btn-success">
             <optgroup label="World">
               <option value="OSM">Open Street Map</option>
@@ -187,11 +202,103 @@
         </ul>
       </nav>
     </aside>
+    <!-- Map / Open Data List -->
     <div id="container" class="menu-detail menu-hide">
       <div id="content" class="list-group scroll-style"></div>
     </div>
+    <!-- Layer Management DIV   -->
     <div id="mapList" class="menu-detail menu-hide">
     </div>
+    <!-- Open Data Vis Setting DIV -->
+    <form>
+    <div id="openDataPanel" class="menu-hide" style="padding:10px; margin:10px;">
+      <div id="settingPanel" class="scroll-style" style="height:100%; overflow-y: scroll; overflow-x: hidden; margin-bottom:20px;">
+        <div class="row">
+            <div class="col-sm-12 col-md-6 col-lg-4" style="margin-bottom:10px;">
+              <fieldset class="well">
+                <legend class="well-legend">Period (Start)</legend>
+                  <select class="selectpicker" data-style="btn-info" id="collectStartTime" data-width="100%" data-size="3"
+                          title="Select start date">
+                  </select>
+              </fieldset>
+            </div>
+            <div class="col-sm-12 col-md-6 col-lg-4" style="margin-bottom:10px;">
+              <fieldset class="well">
+                <legend class="well-legend">Period (End)</legend>
+                  <select class="selectpicker" data-style="btn-info" id="collectEndTime" data-width="100%" data-size="3"
+                          title="Select end date" disabled="disabled">
+                  </select>
+              </fieldset>
+            </div>
+          <div class="col-sm-12 col-md-12 col-lg-4" style="margin-bottom:10px;">
+            <fieldset class="well">
+              <legend class="well-legend">Key</legend>
+                <select class="selectpicker" data-style="btn-success" id="collectDataKey" data-width="100%" data-size="3"
+                        title="Select data key" disabled="disabled">
+                </select>
+            </fieldset>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-12 col-md-6 col-lg-6" style="margin-bottom:10px;">
+            <fieldset class="well">
+              <legend class="well-legend">Search Key (Only days)</legend>
+              <select class="bs-select-hidden" data-style="btn-success" id="collectSearchKey" data-width="100%" data-size="3"
+                      title="Select Search Key">
+              </select>
+            </fieldset>
+          </div>
+          <div class="col-sm-12 col-md-6 col-lg-6" style="margin-bottom:10px;">
+            <fieldset class="well">
+              <legend class="well-legend">Search Value (Only days)</legend>
+              <select class="bs-select-hidden" data-style="btn-success" id="collectSearchValue" data-width="100%" data-size="3"
+                      title="Select Search Value">
+              </select>
+            </fieldset>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-12 col-md-6 col-lg-6" style="margin-bottom:10px;">
+            <fieldset class="well">
+              <legend class="well-legend">Label (X axis)</legend>
+              <select class="bs-select-hidden" data-style="btn-success" id="collectKey" data-width="100%" data-size="3"
+                      title="Select Chart Label">
+              </select>
+            </fieldset>
+          </div>
+          <div class="col-sm-12 col-md-6 col-lg-6" style="margin-bottom:10px;">
+            <fieldset class="well">
+              <legend class="well-legend">Value (Y axis)</legend>
+              <select class="bs-select-hidden" data-style="btn-success" id="collectValue" data-width="100%" data-size="3"
+                      title="Select Chart Value">
+              </select>
+            </fieldset>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-12 col-md-12 col-lg-12" style="margin-bottom:10px;">
+            <fieldset class="well">
+              <legend class="well-legend">Chart Type</legend>
+                <select class="selectpicker" data-style="btn btn-outline-primary" id="chartType" data-width="100%" title="Select chart">
+                  <option value="vBar">Vertical Bar</option>
+                  <option value="hBar">Horizontal Bar</option>
+                  <option value="line">Line</option>
+                  <option value="area">Area</option>
+                </select>
+            </fieldset>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-12 col-md-12 col-lg-12" style="margin-bottom:10px;">
+              <button id="visStart" type="button" class="btn btn-warning" style="width:100%;" data-text="Visualization">Show</button>
+          </div>
+        </div>
+      </div>
+      <div id="chartVis">
+
+      </div>
+    </div>
+    </form>
     <footer>
       This research was supported by National Land Space Information Research Program by Ministry of Land, Infrastructure and Transport of Korean government(No. 14NSIP-B080144-01).
     </footer>

@@ -422,11 +422,11 @@ openGDSMobile.MapVis.prototype.removeLayer = function (_layerName) {
     }
 
     //////////////////////////
-    /*
      if (typeof (this.layerListObj) !== 'undefined') {
         this.layerListObj.removeList(layerName);
+       console.log("TTTT");
      }
-     */
+
 }
 
 
