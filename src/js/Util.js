@@ -56,6 +56,24 @@ openGDSMobile.util.getOlLayer = function (_olObj, _name) {
     });
     return result;
 }
+/**
+ * JSON 객체 모든 키 받아오기
+ * @param _json  JSON 객체
+ * @param _array 저장할 배열 값
+ * @returns {number}
+ */
+openGDSMobile.util.getJsonKey = function(_json, _array){
+  for (key in _json){
+    if (_json[key].constructor === Array){
+      getJsonKey(_json[key][0], _array);
+    }else if (_json[key].constructor === Object){
+      getJsonKey(_json[key], _array);
+    }else {
+      _array.push(key);
+    }
+  }
+  return 0;
+}
 
 /**
  * 서울 지도 정보 (업데이트날짜: 2016. 11. 14.)

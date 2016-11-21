@@ -531,6 +531,26 @@ openGDSMobile.MapVis.prototype.zoomOut = function () {
   this.mapObj.beforeRender(zoom);
   this.mapObj.getView().setResolution(this.mapObj.getView().getResolution() * newZoom);
 }
+/**
+ * 레이어 속성 정보 받아오기
+ * @param _layerName
+ * @returns {Array}
+ */
+openGDSMobile.MapVis.prototype.getAttribute = function (_layerName) {
+  var layer = openGDSMobile.util.getOlLayer(this.mapObj, _layerName);
+  if (layer ==false){
+    console.error('Not exist layer');
+  }
+  var obj = layer.getSource().getFeatures()[0];
+  obj = obj.getProperties();
+  var keys = [];
+  for (var k in obj) {
+    if (k !== 'geometry') {
+      keys.push(k);
+    }
+  }
+  return keys;
+}
 
 
 goog.exportSymbol('openGDSMobile.MapVis', openGDSMobile.MapVis);

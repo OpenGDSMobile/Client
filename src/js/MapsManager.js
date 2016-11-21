@@ -260,8 +260,9 @@ openGDSMobile.MapManager.prototype.addItem = function (_layerName) {
         goog.ui.Component.EventType.ACTION,
         function (e) {
             var body = document.getElementsByTagName('body')[0];
-            var panel = document.getElementById('settingPanel');
+            var panel = document.getElementById('openGDSMobileSettingPanel');
             if (panel != null){
+              console.log(panel);
               body.removeChild(panel);
             }
 
@@ -275,7 +276,7 @@ openGDSMobile.MapManager.prototype.addItem = function (_layerName) {
             var title =  e.target.getValue();
             //DIV 크기 패널
             var panelDOM = goog.dom.createDom('div', {
-                'id' : 'settingPanel',
+                'id' : 'openGDSMobileSettingPanel',
                 'class' : openGDSMobile.Manager.MANAGER_SETTING_PANEL
             });
             document.body.appendChild(panelDOM);

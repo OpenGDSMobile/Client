@@ -65,7 +65,10 @@ $(function(){
     }
   });
 });
-
+/**
+ * 지오서버 데이터 리스트 요청
+ * @param callback
+ */
 function loadingGeoServerData(callback){
   callback = (typeof (callback) !== 'undefined') ? callback : null;
   var requestAddr = baseAddr + publicDataContextName;
@@ -91,7 +94,10 @@ function loadingGeoServerData(callback){
     }
   });
 }
-
+/**
+ * 공공 데이터 요청
+ * @param callback
+ */
 function loadingOpenData(callback){
   callback = (typeof (callback) !== 'undefined') ? callback : null;
   var requestAddr = baseAddr + publicDataContextName;
@@ -121,21 +127,50 @@ function loadingOpenData(callback){
     }
   });
 }
+/**
+ * 융합 시각화 메뉴 패널 (menu panel - fusion visualization)
+ */
 function loadingFusionData(){
-  // select box....로 데이터 선택..
-  // json 데이터 불러와 동적으로 데이터... 선택할 수 있는 
+  var content = $('#content');
+  /**GeoServer data select**/
+  $(content).append('<fieldset class="well">' +
+    '<legend class="well-legend">Geo-spatial(GeoServer/Open Data)</legend>' +
+    '<select class="selectpicker" data-style="btn-info" id="fusionGeoData" data-width="100%" title="Select Geo-Data" data-size=6>' +
+    '<optgroup label="GeoServer" id="optGeoServer"></optgroup>' +
+    '<optgroup label="Open Data" id="optOpenData"></optgroup>' +
+    '</select>'+
+    '</fieldset>');
+  $(content).append('<fieldset class="well">' +
+    '<legend class="well-legend">Open Data</legend>' +
+    '<select class="selectpicker" data-style="btn-info" id="fusionOpenData" data-width="100%" title="Select Open Data" data-size=6></select>'+
+    '</fieldset>');
+  $(content).append('<fieldset class="well">' +
+    '<legend class="well-legend">Matching Attribute</legend>' +
+    '<select class="selectpicker col-sm-6 col-md-6 col-lg-6" data-style="btn-success" id="geoKey" data-width="50%" title="Select Geo Key" data-size=6></select>'+
+    '<select class="selectpicker col-sm-6 col-md-6 col-lg-6" data-style="btn-success" id="openKey" data-width="50%" title="Select Open Key" data-size=6></select>'+
+    '</fieldset>');
+  $(content).append('<fieldset class="well">' +
+    '<legend class="well-legend">Day</legend>' +
+    '<select class="selectpicker" data-style="btn-success" id="dateKey" data-width="100%" title="Select Day" data-size=6></select>'+
+    '</fieldset>');
   loadingGeoServerData(function(data){
-    console.log(data);
-    
-    
+    var layerNames = data.names;
+    for (var i=0; i<layerNames.length; i++){
+      $('#optGeoServer').append('<option value="' + layerNames[i] +'">' + layerNames[i] + '</option>');
+    }
+    $('#fusionGeoData').selectpicker('refresh');
   });
   loadingOpenData(function(data){
-    console.log(data);
+    for (var i=0; i<data.length; i++){
+      $('#optOpenData').append('<option value="' + data[i].name +'">' + data[i].name + '</option>');
+      $('#fusionOpenData').append('<option value="' + data[i].name +'">' + data[i].name + '</option>');
+    }
+    $('#fusionGeoData').selectpicker('refresh');
+    $('#fusionOpenData').selectpicker('refresh');
   });
-
 }
 /**
- * Map Visualization
+ * 지도 시각화 함수 (Layer visulization)
  */
 $(document).on('click', '.layer-btn', function(evt){
   var dataVal = $(this).data('val');
@@ -164,6 +199,7 @@ $(document).on('click', '.layer-btn', function(evt){
     }
   });
 });
+
 
 function enToko(name){
 
