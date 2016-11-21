@@ -9,9 +9,11 @@ var openAttr = '';
 $(function(){
 
 
+
 });
 $(document).on('changed.bs.select', '#fusionGeoData', fusionVisGeoData);
 $(document).on('changed.bs.select', '#fusionOpenData', fusionVisOpenData);
+$(document).on('click', '.open-data-select', previewData);
 
 function fusionVisGeoData(evt){
   var selectObj = $(this).val();
@@ -59,6 +61,7 @@ function fusionVisGeoData(evt){
 function fusionVisOpenData(evt){
   var collection = $(this).val();
   var publicRequestUrl = baseAddr + publicDataContextName
+  //key list
   $.ajax({
     url: publicRequestUrl + '/api/MongoDB/selectOne/' + collection,
     type: 'GET',
@@ -89,7 +92,34 @@ function fusionVisOpenData(evt){
       selectObj.selectpicker('refresh');
     }
   });
+}
 
+function previewData(){
+  var publicRequestUrl = baseAddr + publicDataContextName
+  var openData = $('#fusionOpenData').val();
+  var key = $('#openKey').val();
+  var day = $('#dateKey').val();
+  console.log(openData + ' ' + key + ' ' + day);
+
+  if (openData != null && key != null && day != null && key != '' && day != ''){
+    var jsonQuery = {
+      queryType : '=',
+      field : 'saveTime',
+      value : day.split(',')[1]
+    };
+    console.log(day.split(',')[1]);
+    $.ajax({
+      url: publicRequestUrl + '/api/MongoDB/query/' + openData,
+      data :jsonQuery,
+      type: 'GET',
+      success: function (evt) {
+        var result = $('#dataPreView');
+        var jsonStr = JSON.stringify(evt, undefined, 2);
+        result.html(jsonStr);
+        console.log(evt);
+      }
+    });
+  }
 }
 
 function getJsonKey(_json, _array){

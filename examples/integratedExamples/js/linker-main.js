@@ -142,17 +142,34 @@ function loadingFusionData(){
     '</fieldset>');
   $(content).append('<fieldset class="well">' +
     '<legend class="well-legend">Open Data</legend>' +
-    '<select class="selectpicker" data-style="btn-info" id="fusionOpenData" data-width="100%" title="Select Open Data" data-size=6></select>'+
+    '<select class="selectpicker open-data-select" data-style="btn-info" id="fusionOpenData" data-width="100%" title="Select Open Data" data-size=6></select>'+
     '</fieldset>');
   $(content).append('<fieldset class="well">' +
     '<legend class="well-legend">Matching Attribute</legend>' +
     '<select class="selectpicker col-sm-6 col-md-6 col-lg-6" data-style="btn-success" id="geoKey" data-width="50%" title="Select Geo Key" data-size=6></select>'+
-    '<select class="selectpicker col-sm-6 col-md-6 col-lg-6" data-style="btn-success" id="openKey" data-width="50%" title="Select Open Key" data-size=6></select>'+
+    '<select class="selectpicker col-sm-6 col-md-6 col-lg-6 open-data-select" data-style="btn-success" id="openKey" data-width="50%" title="Select Open Key" data-size=6></select>'+
     '</fieldset>');
   $(content).append('<fieldset class="well">' +
     '<legend class="well-legend">Day</legend>' +
-    '<select class="selectpicker" data-style="btn-success" id="dateKey" data-width="100%" title="Select Day" data-size=6></select>'+
+    '<select class="selectpicker open-data-select" data-style="btn-success" id="dateKey" data-width="100%" title="Select Day" data-size=6></select>'+
     '</fieldset>');
+  $(content).append('<fieldset class="well">' +
+    '<legend class="well-legend">Preset</legend>' +
+    '<select class="selectpicker" data-style="btn-success" id="preset" data-width="100%" title="Select Day" data-size=6>' +
+    '<option value="PM10">PM10</option>' +
+    '<option value="PM25">PM25</option>' +
+    '<option value="SO2">SO2</option>' +
+    '<option value="O3">O3</option>' +
+    '<option value="NO2">NO2</option>' +
+    '<option value="CO">CO</option>' +
+    '</select>'+
+    '</fieldset>');
+  $(content).append('<fieldset class="well">' +
+    '<legend class="well-legend">Data</legend>' +
+    '<div id="dataPreView" class="scroll-style" style="height:100px;">' +
+    '</div>'+
+    '</fieldset>');
+  $('#preset').selectpicker('refresh');
   loadingGeoServerData(function(data){
     var layerNames = data.names;
     for (var i=0; i<layerNames.length; i++){
