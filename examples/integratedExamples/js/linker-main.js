@@ -150,24 +150,31 @@ function loadingFusionData(){
     '<select class="selectpicker col-sm-6 col-md-6 col-lg-6 open-data-select" data-style="btn-success" id="openKey" data-width="50%" title="Select Open Key" data-size=6></select>'+
     '</fieldset>');
   $(content).append('<fieldset class="well">' +
+    '<legend class="well-legend">Value</legend>' +
+    '<select class="selectpicker open-data-select" data-style="btn-success" id="valueKey" data-width="100%" title="Select Value" data-size=6></select>'+
+    '</fieldset>');
+  $(content).append('<fieldset class="well">' +
     '<legend class="well-legend">Day</legend>' +
-    '<select class="selectpicker open-data-select" data-style="btn-success" id="dateKey" data-width="100%" title="Select Day" data-size=6></select>'+
+    '<select class="selectpicker open-data-select data-view" data-style="btn-success" id="dateKey" data-width="100%" title="Select Day" data-size=6></select>'+
     '</fieldset>');
   $(content).append('<fieldset class="well">' +
     '<legend class="well-legend">Preset</legend>' +
-    '<select class="selectpicker" data-style="btn-success" id="preset" data-width="100%" title="Select Day" data-size=6>' +
+    '<select class="selectpicker data-view" data-style="btn-success" id="preset" data-width="100%" title="Select Day" data-size=6>' +
     '<option value="PM10">PM10</option>' +
-    '<option value="PM25">PM25</option>' +
+    '<option value="PM25">PM2.5</option>' +
     '<option value="SO2">SO2</option>' +
     '<option value="O3">O3</option>' +
     '<option value="NO2">NO2</option>' +
     '<option value="CO">CO</option>' +
+    '<option value="Wind">Wind Flow</option>' +
+    '<option value="Temperatures">Temperatiures</option>' +
     '</select>'+
+    '<div id="rangeSpectrum" style="width:100%; height:20px;"></div>'+
     '</fieldset>');
   $(content).append('<fieldset class="well">' +
     '<legend class="well-legend">Data</legend>' +
-    '<div id="dataPreView" class="scroll-style" style="height:100px;">' +
-    '</div>'+
+    '<pre id="dataPreView" class="scroll-style" style="height:100px;  overflow-y: scroll;">' +
+    '</pre>'+
     '</fieldset>');
   $('#preset').selectpicker('refresh');
   loadingGeoServerData(function(data){

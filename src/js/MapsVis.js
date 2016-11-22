@@ -374,7 +374,7 @@ openGDSMobile.MapVis.prototype.changeVectorStyle = function (_layerName, _option
     layerObj.set('fillColor', options.fillColor);
     layerObj.set('strokeColor', options.strokeColor);
     layerObj.set('strokeWidth', options.strokeWidth);
-    
+
     layerObj.setStyle(function(feature, resolution){
         if (options.data === null) {
             return openGDSMobile.MapVis.styleFunction(feature, resolution, type, options);
@@ -384,11 +384,13 @@ openGDSMobile.MapVis.prototype.changeVectorStyle = function (_layerName, _option
             var text = resolution < 76 ? feature.get(options.attrKey) : '';
             if (!styleCache[text]){
                 if (Array.isArray(options.fillColor)) {
-                    for (i = 0; i < data.length; i += 1) {
-                        if (text == data[i][options.labelKey]) {
+                    for (i = 0; i < options.data.length; i += 1) {
+                     //   if (text == options.data[i][options.labelKey]) {
+                        if (text.indexOf(options.data[i][options.labelKey]) != -1) {
                             for (j = 0; j < options.range.length; j += 1) {
-                                if (data[i][options.valueKey] <= options.range[j]){
+                                if (options.data[i][options.valueKey] <= options.range[j]){
                                     tmpColor = options.fillColor[j];
+                                    break;
                                 }
                             }
                         }
@@ -396,7 +398,15 @@ openGDSMobile.MapVis.prototype.changeVectorStyle = function (_layerName, _option
                 } else {
                     console.error('Color is not array.')
                 }
-                styleCache[text] = [openGDSMobile.MapVis.styleFunction(feature, resolution, type, options)];
+                var tmpOpt = {
+                  fillColor : tmpColor,
+                  strokeColor : options.strokeColor,
+                  radius : options.radius,
+                  strokeWidth : options.strokeWidth,
+                  opt : options.opt,
+                  attrKey : options.attrKey,
+                };
+                styleCache[text] = [openGDSMobile.MapVis.styleFunction(feature, resolution, type, tmpOpt)];
             }
             return styleCache[text];
         }
@@ -424,7 +434,6 @@ openGDSMobile.MapVis.prototype.removeLayer = function (_layerName) {
     //////////////////////////
      if (typeof (this.layerListObj) !== 'undefined') {
         this.layerListObj.removeList(layerName);
-       console.log("TTTT");
      }
 
 }
