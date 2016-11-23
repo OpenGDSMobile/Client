@@ -189,9 +189,16 @@ openGDSMobile.MapVis.prototype.changeBgMap = function (_mapType, _key) {
                 url : "http://xdworld.vworld.kr:8080/2d/Base/201310/{z}/{x}/{y}.png"
             }))
         );
-    } else if (_mapType === 'korSeoulMap') {
+    } else if (_mapType.indexOf('SeoulMap') != -1) {
       var proj5179 = new ol.proj.Projection({code : "EPSG:5179"});
       var korNorMap = openGDSMobile.util.seoulMapInfo.tileMapInfos.tileMapInfo[15];
+      if (_mapType === 'enSeoulMap') {
+        korNorMap = openGDSMobile.util.seoulMapInfo.tileMapInfos.tileMapInfo[16];
+      } else if (_mapType === 'jpSeoulMap') {
+        korNorMap = openGDSMobile.util.seoulMapInfo.tileMapInfos.tileMapInfo[17];
+      } else if (_mapType === 'cnSeoulMap') {
+        korNorMap = openGDSMobile.util.seoulMapInfo.tileMapInfos.tileMapInfo[18];
+      }
       var tileGridObj = new ol.tilegrid.TileGrid({
         origin : [korNorMap.originX, korNorMap.originY],
         extent: [korNorMap.mbr.minx, korNorMap.mbr.miny, korNorMap.mbr.maxx, korNorMap.mbr.maxy],
