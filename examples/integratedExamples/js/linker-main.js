@@ -58,7 +58,7 @@ $(function(){
   });
   $('#selectMap select').on('changed.bs.select', function(e){
     var value = $(this).val();
-    if (value === 'korSeoulMap'){
+    if (value.indexOf('SeoulMap') != -1){
       map.changeBgMap(value, '51b32cf8444d4b6592a290bc64a88dc8');
     } else {
       map.changeBgMap(value);
@@ -112,9 +112,10 @@ function loadingOpenData(callback){
       }
       for (var i=0; i<res.length; i++) {
         $(viewContent).css('overflow', 'auto');
-        var name = res[i].name;
+        var name = res[i].visname;
         var comment = res[i].comment;
         var provider = res[i].provider;
+        console.log(name);
         $(viewContent).append('<a href="#" class="list-group-item list-group-item-action openData-btn" data-val="' + name + '">' +
             '<span style="font-size:1.7rem; font-weight:bold;">' + name + '</span>' +
             '<br><span style="font-size:1.5rem; margin-left:4px; font-weight:bold;">provider : ' + provider + '</span>' +
