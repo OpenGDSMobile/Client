@@ -62,6 +62,25 @@ openGDSMobile.MapVis = function (_mapDIV, _options) {
 
 
     proj4.defs("EPSG:5179", "+proj=tmerc +lat_0=38 +lon_0=127.5 +k=0.9996 +x_0=1000000 +y_0=2000000 +ellps=GRS80 +units=m +no_defs");
+
+/*
+
+    var jsHttp;
+  if (window.XMLHttpRequest) {
+    jsHttp = new XMLHttpRequest();
+  } else {
+    js = new ActiveXObject("Microsoft.XMLHTTP");
+  }
+  jsHttp.onreadystatechange = function() {
+    if (jsHttp.readyState == 4 && jsHttp.status == 200) {
+      var jsString = jsHttp.responseText;
+      console.log(jsString);
+    }
+  }
+  jsHttp.open("GET", "http://map.vworld.kr/js/apis.do?type=Base&apiKey=80E403B5-D3F1-377E-A24D-A7143492B2F3", true);
+  jsHttp.send();
+*/
+
 }
 
 /**
@@ -183,12 +202,69 @@ openGDSMobile.MapVis.prototype.changeBgMap = function (_mapType, _key) {
           layer: 'toner'
         })
       );
-    } else if (_mapType === 'VWorld') {
-        bgMapLayer.setSource(
-            new ol.source.XYZ(({
-                url : "http://xdworld.vworld.kr:8080/2d/Base/201310/{z}/{x}/{y}.png"
-            }))
-        );
+    } else if (_mapType.indexOf('VWorld') != -1) {
+      if (typeof (_key) === 'undefined' ) {
+        console.error('must map key parameter');
+        return -1;
+      }
+      <!-- version : 2.0  2016-11-26 by intruder -->
+      var vworldUrl = 'http://map.vworld.kr';
+      var vworldBaseMapUrl = 'http://xdworld.vworld.kr:8080/2d';
+      var vworldStyledMapUrl = 'http://2d.vworld.kr:8895/stmap';
+      var vworldApiKey = _key; //'80E403B5-D3F1-377E-A24D-A7143492B2F3';
+
+      var vworldVers = { Base: '201512', Hybrid: '201512', Satellite: '201301', Gray: '201512', Midnight: '201512' };
+      var vworldUrls = {
+        base: vworldBaseMapUrl + "/Base/" + vworldVers.Base,
+        hybrid: vworldBaseMapUrl + "/Hybrid/" + vworldVers.Hybrid,
+        raster: vworldBaseMapUrl + "/Satellite/" + vworldVers.Satellite,
+        gray: vworldBaseMapUrl + "/gray/" + vworldVers.Gray,
+        midnight: vworldBaseMapUrl + "/midnight/" + vworldVers.Midnight,
+        apiCheck: vworldUrl + "/checkAPINum.do?key=" + vworldApiKey + "&type=TMS"
+      };
+      var vworldUrlsExt = { blankimage: vworldUrl + "/images/maps/no_service.gif" };
+      function VScript(src){
+        var js = document.createElement("script");
+        js.type = "text/javascript";
+        js.src = src;
+        document.body.appendChild(js);
+      }
+      VScript(vworldUrls.apiCheck);
+      var baseURL = vworldUrls.base;
+      var imgType = 'png'
+      if (_mapType === 'hybridVWorld') {
+        baseURL = vworldUrls.hybrid;
+      } else if (_mapType === 'satVWorld'){
+        baseURL = vworldUrls.raster;
+        imgType = 'jpeg';
+      } else if (_mapType === 'grayVWorld'){
+        baseURL = vworldUrls.gray;
+      } else if (_mapType === 'midVWorld') {
+        baseURL = vworldUrls.midnight;
+      }
+      bgMapLayer.setSource(
+        new ol.source.XYZ({
+          minZoom : 6,
+          maxZoom : 18,
+          projection : 'EPSG:3857',
+          tileUrlFunction : function (coordinate, pixelRatio, projection){
+            var z = coordinate[0];
+            var x = coordinate[1];
+            var y = (-(coordinate[2])) - 1;
+            return  baseURL + "/" + z + "/" + x + "/" + y + "." + imgType;
+          }
+        })
+      )
+      var view = new ol.View({
+        center: center,
+        minZoom : 7,
+        maxZoom : 19,
+        zoom: zoom,
+        extent : [-20037508.34, -20037508.34, 20037508.34, 20037508.34]
+      });
+      this.mapObj.setView(view);
+
+
     } else if (_mapType.indexOf('SeoulMap') != -1) {
       var proj5179 = new ol.proj.Projection({code : "EPSG:5179"});
       var korNorMap = openGDSMobile.util.seoulMapInfo.tileMapInfos.tileMapInfo[15];

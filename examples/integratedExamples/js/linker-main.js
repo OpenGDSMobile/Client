@@ -60,8 +60,11 @@ $(function(){
     var value = $(this).val();
     if (value.indexOf('SeoulMap') != -1){
       map.changeBgMap(value, '51b32cf8444d4b6592a290bc64a88dc8');
-    } else {
-      map.changeBgMap(value);
+    } else if (value.indexOf('VWorld') != -1){
+      map.changeBgMap(value, '')
+    }
+    else {
+      map.changeBgMap(value, '80E403B5-D3F1-377E-A24D-A7143492B2F3');
     }
   });
 });
