@@ -115,12 +115,12 @@ function loadingOpenData(callback){
       }
       for (var i=0; i<res.length; i++) {
         $(viewContent).css('overflow', 'auto');
-        var name = res[i].visname;
+        var visName = res[i].visname;
+        var name = res[i].name;
         var comment = res[i].comment;
         var provider = res[i].provider;
-        console.log(name);
-        $(viewContent).append('<a href="#" class="list-group-item list-group-item-action openData-btn" data-val="' + name + '">' +
-            '<span style="font-size:1.7rem; font-weight:bold;">' + name + '</span>' +
+        $(viewContent).append('<a href="#" class="list-group-item list-group-item-action openData-btn" data-val="' + name + '" data-type="' + res[i].type + '">' +
+            '<span style="font-size:1.7rem; font-weight:bold;">' + visName + '</span>' +
             '<br><span style="font-size:1.5rem; margin-left:4px; font-weight:bold;">provider : ' + provider + '</span>' +
             '<br><span style="font-size:1.2rem">' + comment +'</span>' +
           '</a>');

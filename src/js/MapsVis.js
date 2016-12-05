@@ -464,7 +464,7 @@ openGDSMobile.MapVis.prototype.changeVectorStyle = function (_layerName, _option
         } else {
             var i, j;
             var tmpColor = '#FFFFFF';
-            var text = resolution < 76 ? feature.get(options.attrKey) : '';
+            var text = resolution < 100 ? feature.get(options.attrKey) : '';
             if (!styleCache[text]){
                 if (Array.isArray(options.fillColor)) {
                     for (i = 0; i < options.data.length; i += 1) {

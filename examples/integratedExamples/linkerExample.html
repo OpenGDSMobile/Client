@@ -22,6 +22,7 @@
   <script type="text/javascript" src="../../src/libs/js/egovframework/mbl/cmm/jquery-1.11.2.js"></script>      <!-- jQuery -->
   <script type="text/javascript" src="../../src/libs/js/bootstrap/bootstrap.min.js"></script>
   <script type="text/javascript" src="./js/bootstrap-select/bootstrap-select.min.js"></script>
+  <script type="text/javascript" src="./js/geojson.min.js"></script>
 
   <!-- Proj, OpenLayers3, D3 -->
   <script type="text/javascript" src="../../src/libs/js/proj4js/2.2.2/proj4.js"></script>                         <!-- Proj4js -->
@@ -222,7 +223,73 @@
     <!-- Open Data Vis Setting DIV -->
     <form>
     <div id="openDataPanel" class="menu-hide" style="padding:10px; margin:10px;">
-      <div id="settingPanel" class="scroll-style" style="height:100%; overflow-y: scroll; overflow-x: hidden; margin-bottom:20px;">
+      <div id="settingPanelGeoData" class="scroll-style" style="display:none;">
+        <div class="row">
+          <div class="col-sm-12 col-md-8 col-lg-8" style="margin-bottom:10px;">
+            <fieldset class="well">
+              <legend class="well-legend">Collection date</legend>
+              <select class="selectpicker" data-style="btn-info" id="collectTime" data-width="100%" data-size="3"
+                      title="Select date">
+              </select>
+            </fieldset>
+          </div>
+          <div class="col-sm-12 col-md-4 col-lg-4" style="margin-bottom:10px;">
+            <fieldset class="well">
+              <legend class="well-legend">Key</legend>
+              <select class="selectpicker" data-style="btn-success" id="geoCollectDataKey" data-width="100%" data-size="3"
+                      title="Select data key" disabled="disabled">
+              </select>
+            </fieldset>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-12 col-md-6 col-lg-6" style="margin-bottom:10px;">
+            <fieldset class="well">
+              <legend class="well-legend">Latitude</legend>
+              <select class="selectpicker" data-style="btn-info" id="lat" data-width="100%" data-size="4"
+                      title="Select latitude">
+
+              </select>
+            </fieldset>
+          </div>
+          <div class="col-sm-12 col-md-6 col-lg-6" style="margin-bottom:10px;">
+            <fieldset class="well">
+              <legend class="well-legend">Longitude</legend>
+              <select class="selectpicker" data-style="btn-info" id="long" data-width="100%" data-size="4"
+                      title="Select longitude">
+              </select>
+            </fieldset>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-12 col-md-6 col-lg-6" style="margin-bottom:10px;">
+            <fieldset class="well">
+              <legend class="well-legend">Data type</legend>
+              <select class="selectpicker" data-style="btn-info" id="dataType" data-width="100%" data-size="4"
+                      title="Select data type">
+                <option value="point">Point</option>
+                <option value="polygon">Polygon</option>
+              </select>
+            </fieldset>
+          </div>
+          <div class="col-sm-12 col-md-6 col-lg-6" style="margin-bottom:10px;">
+            <fieldset class="well">
+              <legend class="well-legend">Coordinate type</legend>
+              <select class="selectpicker" data-style="btn-info" id="coordType" data-width="100%" data-size="4"
+                      title="Select coordinate">
+                <option value="EPSG:4326">EPSG:4326(WGS84)</option>
+                <option value="EPSG:3857">EPSG:3857(Wpherical Mercator)</option>
+              </select>
+            </fieldset>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-12 col-md-12 col-lg-12" style="margin-bottom:10px;">
+            <button id="GeoVisStart" type="button" class="btn btn-warning" style="width:100%;" data-text="Visualization">Show</button>
+          </div>
+        </div>
+      </div>
+      <div id="settingPanel" class="scroll-style" style="height:100%; overflow-y: scroll; overflow-x: hidden; margin-bottom:20px; display:none;">
         <div class="row">
             <div class="col-sm-12 col-md-6 col-lg-4" style="margin-bottom:10px;">
               <fieldset class="well">
