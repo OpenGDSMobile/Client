@@ -32,6 +32,7 @@ $(document).on('click', '.openData-btn', function(evt){
     $('#collectTime').empty().selectpicker('refresh');
     $('#lat').empty().selectpicker('refresh');
     $('#lon').empty().selectpicker('refresh');
+    $('#attrKey').empty().selectpicker('refresh');
   } else {
     $('#settingPanelGeoData').css('display', "none");
     $('#settingPanel').css('display', "block");
@@ -76,11 +77,12 @@ $(document).on('click', '.openData-btn', function(evt){
     type : 'GET',
     success : function (evt){
       var searchKeySelect = null;
-      var keySelect, valueSelect;
+      var keySelect, valueSelect, attrKey = null;
 
       if (type === 'GeoData'){
         keySelect = $('#lat');
         valueSelect = $('#long');
+        attrKey = $('#attrKey');
       } else {
         keySelect = $('#collectKey');
         valueSelect = $('#collectValue');
@@ -118,6 +120,9 @@ $(document).on('click', '.openData-btn', function(evt){
           }
           keySelect.append('<option value="' + key + '">' + key + '</option>');
           valueSelect.append('<option value="' + key + '">' + key + '</option>');
+          if (attrKey !=null){
+            attrKey.append('<option value="' + key + '">' + key + '</option>');
+          }
         }
 
         var timeArray = $('#collectEndTime').find('option:selected').val().split(',');
@@ -131,6 +136,7 @@ $(document).on('click', '.openData-btn', function(evt){
         }
         valueSelect.attr('disabled', false);
         valueSelect.selectpicker('refresh');
+        attrKey.selectpicker('refresh');
       });
 
     },
@@ -329,6 +335,9 @@ function geoVisStartFunc(){
   var dataType = $('#dataType').find('option:selected').val();
   var coordType = $('#coordType').find('option:selected').val();
 
+  var attrKey = $('#attrKey').find('option:selected').val();
+
+  console.log(attrKey);
 
   var searchWhere = collectionTime;
   var queryType = '=';
@@ -341,26 +350,30 @@ function geoVisStartFunc(){
     unwind : unwind,
     queryType : queryType,
     field : searchField,
-    value : searchWhere,
-    sFields : sFields
+    value : searchWhere
+    //sFields : sFields
   }
   $.ajax({
     url : publicRequestUrl + '/api/MongoDB/query/' + name,
     data : jsonData,
     success : function(evt){
       var data = evt[0][collectionDataKey];
-      console.log(data);
+
       for (var key in data) {
         for (var subKey in data[key]){
-          data[key][subKey] = Number(data[key][subKey]);
+          if (subKey == lat || subKey == lon) {
+            data[key][subKey] = Number(data[key][subKey]);
+          }
         }
       }
       var geoJsonData = GeoJSON.parse(data, {Point: [lat, lon]});
-
+      console.log(geoJsonData);
       map.addGeoJSONLayer(geoJsonData, dataType, collectionTime, {
-        dataProj : coordType
+        dataProj : coordType,
+        attrKey : attrKey
       });
-      mapManager.addItem(name + collectionTime);
+      mapManager.addItem(collectionTime);
+      mapAttr.addAttr(collectionTime);
 
       $('#openDataPanel').addClass('menu-hide').removeClass('menu-show');
 

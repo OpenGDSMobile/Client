@@ -221,6 +221,7 @@ $(document).on('click', '.layer-btn', function(evt){
         attrKey : key
       });
       mapManager.addItem(dataVal);
+      mapAttr.addAttr(dataVal);
     },
     error : function (err) {
 

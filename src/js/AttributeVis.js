@@ -260,8 +260,10 @@ openGDSMobile.AttributeVis.prototype.addAttr = function (_layerName) {
                 var inputDOM = new goog.ui.LabelInput('');
                 inputDOM.render(tdDOM);
                 inputDOM.setValue(obj[keys[j]]);
-                var id = e.selected[0].getId().split('.')[0];
-                inputDOM.getElement().setAttribute('data-info', id + ',' + _layerName + ',' + keys[j]);
+                //console.log(e.selected[0]);
+                //var id = e.selected[0].getId().split('.')[0];
+                //inputDOM.getElement().setAttribute('data-info', id + ',' + _layerName + ',' + keys[j]);
+                inputDOM.getElement().setAttribute('data-info', j + ',' + _layerName + ',' + keys[j]);
                 goog.dom.classlist.add(inputDOM.getElement(), 'openGDSMobile-sw-class');
                 goog.dom.classlist.add(inputDOM.getElement(), openGDSMobile.Attribute.PANEL_INPUT_STYLE);
                 var inputHandler = new goog.events.InputHandler(inputDOM.getElement());
